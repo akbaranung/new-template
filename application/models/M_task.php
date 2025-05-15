@@ -72,4 +72,25 @@ class M_task extends CI_Model
     $query = $this->db->query($sql2);
     return $query->row();
   }
+
+  public function sendto($level_jabatan, $bagian)
+  {
+    if ($level_jabatan == 2) {
+      $sql = "SELECT * FROM users WHERE ((level_jabatan <= '$level_jabatan' AND bagian = '$bagian') OR (level_jabatan >= 1)) ORDER BY level_jabatan DESC";
+    } elseif ($level_jabatan == 3) {
+      $sql = "SELECT * FROM users WHERE ((level_jabatan <= '$level_jabatan' AND bagian = '$bagian') OR (level_jabatan >= 1)) AND level like '%601%' ORDER BY level_jabatan DESC";
+    } elseif ($level_jabatan == 4) {
+      $sql = "SELECT * FROM users WHERE ((level_jabatan <= '$level_jabatan' AND bagian = '$bagian') OR (level_jabatan >= 1)) ORDER BY level_jabatan DESC";
+    } elseif ($level_jabatan == 5 and $bagian <> 11) {
+      $sql = "SELECT * FROM users WHERE level_jabatan >= 1 ORDER BY level_jabatan DESC";
+    } elseif ($level_jabatan == 5 and $bagian == 11) {
+      $sql = "SELECT * FROM users WHERE (level_jabatan >= 1 OR bagian = 4) ORDER BY level_jabatan DESC";
+    } elseif ($level_jabatan == 6) {
+      $sql = "SELECT * FROM users WHERE level_jabatan >= 1 ORDER BY level_jabatan DESC";
+    } elseif ($level_jabatan == 1) {
+      $sql = "SELECT * FROM users WHERE bagian = '$bagian' ORDER BY level_jabatan DESC";
+    }
+    $query = $this->db->query($sql);
+    return $query->result();
+  }
 }

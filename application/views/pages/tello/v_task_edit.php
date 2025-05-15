@@ -30,10 +30,9 @@
               <label for="tujuan" class="col-sm-3 col-form-label">Task Member <strong>(*)</strong></label>
               <div class="col-sm-9">
                 <select name="member[]" id="member" class="form-control select2" multiple>
-                  <?php foreach ($member as $m) :
-                    $user = $this->db->select('nama')->from('users')->where('nip', $m)->get()->row();
+                  <?php foreach ($sendto as $val) :
                   ?>
-                    <option value="<?= $m ?>" <?= (strpos($task->member, $m) !== false) ? 'selected' : '' ?>><?= $user->nama ?></option>
+                    <option value="<?= $val->nip ?>" <?= (strpos($task->member, $val->nip) !== false) ? 'selected' : '' ?>><?= $val->nama ?></option>
                   <?php endforeach ?>
                 </select>
               </div>

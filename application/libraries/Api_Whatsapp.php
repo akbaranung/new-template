@@ -11,8 +11,8 @@ class Api_Whatsapp
     $phone = $phonee;
     $msg = $msgg;
 
-    // $token = "whvSyvdbM5CDv1wKvXhQmajGAbTgJfyxfV5xuX1g7hpuMktyj4xxx";
-    $token = "whvSyvdbM5CDv1wKvXhQmajGAbTgJfyxfV5xuX1g7hpuMktyj4";
+    $token = "whvSyvdbM5CDv1wKvXhQmajGAbTgJfyxfV5xuX1g7hpuMktyj4xxx";
+    // $token = "whvSyvdbM5CDv1wKvXhQmajGAbTgJfyxfV5xuX1g7hpuMktyj4";
     // $phone= "62812xxxxxx"; //untuk group pakai groupid contoh: 62812xxxxxx-xxxxx
     // $message = "Testing by API ruangwa";
 

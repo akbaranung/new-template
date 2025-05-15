@@ -27,6 +27,7 @@
   <link rel="stylesheet" href="<?= base_url('assets') ?>/css/app-dark.css" id="darkTheme" disabled>
   <!-- Sweetalert2 -->
   <link rel="stylesheet" href="<?= base_url('assets') ?>/sweetalert2/css/sweetalert2.min.css">
+
 </head>
 
 <body class="vertical  light  ">
@@ -76,6 +77,8 @@
   <script type="text/javascript" src="<?= base_url(); ?>/assets/ckeditor/ckeditor.js"></script>
   <!-- Sweetalert -->
   <script src="<?= base_url('assets') ?>/sweetalert2/js/sweetalert2.all.min.js"></script>
+  <!-- Cleave JS -->
+  <script src="<?= base_url('assets') ?>/js/cleave.min.js"></script>
   <script>
     $('.select2').select2({
       theme: 'bootstrap4',
