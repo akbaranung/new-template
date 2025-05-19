@@ -73,7 +73,7 @@
   });
 
   $("#uraian-pengajuan").on('click', '.add-row', function() {
-    var row = $(this).parents().closest('tr');
+    var row = $(this).parents().closest('tr#clone');
     var newId = Date.now();
 
     // Membuat baris baru
@@ -114,22 +114,24 @@
     hitungGrandTotal();
   });
 
-  function formatRupiah(number) {
-    return new Intl.NumberFormat('id-ID', {
+  function formatToRupiah(num) {
+    return num.toLocaleString('id-ID', {
       style: 'currency',
       currency: 'IDR',
       minimumFractionDigits: 2
-    }).format(number);
+    });
   }
 
   // Fungsi pasang event pada satu baris
   function attachEvents(row) {
     row.find('input[name="qty[]"], input[name="price[]"]').off('input').on('input', function() {
       hitungSubtotal(row);
+      applyPriceFormat()
     });
 
     // Hitung pertama kali juga
     hitungSubtotal(row);
+    applyPriceFormat()
   }
 
   // Fungsi hitung subtotal satu baris
@@ -138,19 +140,19 @@
     const priceFormatted = row.find('input[name="price[]"]').val();
     const price = unformatRupiah(priceFormatted);
     const subtotal = qty * price;
-    row.find('input[name="subtotal[]"]').val(formatRupiah(subtotal));
+    row.find('input[name="subtotal[]"]').val(formatToRupiah(subtotal));
     hitungGrandTotal();
   }
 
   // Pasang event listener awal saat halaman load
-  $('#uraian-pengajuan tr').each(function() {
+  $('#uraian-pengajuan tr#clone').each(function() {
     attachEvents($(this));
   });
 
   // Fungsi untuk menghapus format rupiah menjadi angka
   function unformatRupiah(rp) {
     if (!rp) return 0;
-    return parseFloat(rp.replace(/[^0-9,-]+/g, '').replace(',', '.')) || 0;
+    return parseFloat(rp.replace(/[^0-9,-]/g, '').replace(',', '.')) || 0;
   }
 
   // Hitung total dari semua subtotal
@@ -160,11 +162,11 @@
       total += unformatRupiah($(this).val());
     });
 
-    $('input[name="total"]').val(formatRupiah(total));
+    $('input[name="total"]').val(formatToRupiah(total));
   }
 
   function applyPriceFormat() {
-    $('input[name="price[]"]').each(function() {
+    $('.price, .subtotal, .total').each(function() {
       new Cleave(this, {
         numeral: true,
         numeralThousandsGroupStyle: 'thousand',

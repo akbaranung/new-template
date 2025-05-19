@@ -57,22 +57,24 @@
                     </tr>
                   </thead>
                   <tbody id="uraian-pengajuan">
-                    <tr>
+                    <tr id="clone">
                       <td><input type="text" class="form-control" name="uraian[]" id="item"></td>
-                      <td><input type="text" class="form-control qty" name="qty[]" id="qty" value="0"></td>
-                      <td><input type="text" class="form-control price" name="price[]" id="price" value="0"></td>
-                      <td><input type="text" class="form-control subtotal" name="subtotal[]" id="subtotal" value="0" readonly></td>
+                      <td><input type="text" class="form-control qty" name="qty[]" id="qty"></td>
+                      <td><input type="text" class="form-control price" name="price[]" id="price"></td>
+                      <td><input type="text" class="form-control subtotal" name="subtotal[]" id="subtotal" readonly></td>
                       <td>
                         <span class="btn btn-success add-row btn-sm"><i class="fe fe-plus-square fe-12"></i></span>
                         <span class="btn btn-danger hapus-row btn-sm"><i class="fe fe-trash-2 fe-12"></i></span>
                       </td>
                     </tr>
+                  </tbody>
+                  <tfoot>
                     <tr>
                       <td colspan="3" style="text-align: end;"><span>TOTAL</span></td>
-                      <td><input type="text" class="form-control" name="total" id="total" value="0" readonly></td>
+                      <td><input type="text" class="form-control total" name="total" id="total" readonly></td>
                       <td></td>
                     </tr>
-                  </tbody>
+                  </tfoot>
                 </table>
                 <div class="row">
                   <div class="col-lg-12 col-md-12 col-sm-12 col-12">
