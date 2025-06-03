@@ -26,8 +26,8 @@
                   <label for="metode" class="form-label">Metode Pembayaran</label>
                   <select name="metode" id="metode" class="form-control">
                     <option value=""> :: Pilih Metode Pembayaran</option>
-                    <option value="1">Reimburse</option>
-                    <option value="2">Transfer</option>
+                    <option value="Reimburse">Reimburse</option>
+                    <option value="Transfer">Transfer</option>
                   </select>
                 </div>
               </div>
@@ -58,7 +58,7 @@
                   </thead>
                   <tbody id="uraian-pengajuan">
                     <tr id="clone">
-                      <td><input type="text" class="form-control" name="uraian[]" id="item"></td>
+                      <td><textarea name="uraian[]" id="uraian" class="form-control"></textarea></td>
                       <td><input type="text" class="form-control qty" name="qty[]" id="qty"></td>
                       <td><input type="text" class="form-control price" name="price[]" id="price"></td>
                       <td><input type="text" class="form-control subtotal" name="subtotal[]" id="subtotal" readonly></td>
@@ -78,6 +78,7 @@
                 </table>
                 <div class="row">
                   <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                    <a href="<?= site_url('pengajuan/list') ?>" class="btn btn-warning">Kembali</a>
                     <button class="btn btn-primary btn-submit" type="submit">Simpan</button>
                   </div>
                 </div>

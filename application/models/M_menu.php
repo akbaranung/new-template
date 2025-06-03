@@ -16,6 +16,7 @@ class M_menu extends CI_Model
     $this->db->from('menus');
     $this->db->join('user_menu_access', 'menus.id = user_menu_access.menu_id');
     $this->db->where('user_menu_access.user_id', $user_id);
+    $this->db->where('menus.is_active', 1);
     $this->db->order_by('menus.sort_order', 'ASC');
     $query = $this->db->get();
     $menus = $query->result();

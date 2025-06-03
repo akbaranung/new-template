@@ -1,6 +1,14 @@
 <script>
   $(document).ready(function() {
     applyPriceFormat(); // pasang ke baris awal
+    $("select[name='direksi']").change(function() {
+      var val = $(this).val();
+      if (val == 1) {
+        $('#nama_direksi').attr('disabled', false);
+      } else {
+        $('#nama_direksi').attr('disabled', true);
+      }
+    })
   });
 
   $(".btn-submit").click(function(e) {
@@ -45,7 +53,7 @@
                 timer: 1500,
               }).then(function() {
                 Swal.close();
-                location.reload();
+                location.href = `${res.reload}`
               });
             } else {
               Swal.fire({
@@ -62,7 +70,7 @@
             console.log(xhr);
             Swal.fire({
               icon: "error",
-              title: `${error}`,
+              title: `${status}`,
               showConfirmButton: false,
               timer: 1500,
             });
@@ -79,7 +87,7 @@
     // Membuat baris baru
     var newRow = row.clone();
 
-    newRow.find('input[name="uraian[]"]').each(function(index, value) {
+    newRow.find('textarea[name="uraian[]"]').each(function(index, value) {
       $(this).attr('id', newId)
       $(this).val('')
     })
@@ -166,7 +174,7 @@
   }
 
   function applyPriceFormat() {
-    $('.price, .subtotal, .total').each(function() {
+    $('.price, .subtotal, .total, .realisasi').each(function() {
       new Cleave(this, {
         numeral: true,
         numeralThousandsGroupStyle: 'thousand',

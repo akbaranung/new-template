@@ -82,6 +82,7 @@
   <script>
     $('.select2').select2({
       theme: 'bootstrap4',
+      width: '100%'
     });
     $('.select2-multi').select2({
       theme: 'bootstrap4',
