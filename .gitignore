@@ -13,6 +13,7 @@ tests/mocks/database/ci_test.sqlite
 
 ci_sessions/
 /application/config/database.php
+uploads/
 
 user_guide_src/build/*
 user_guide_src/cilexer/build/*
