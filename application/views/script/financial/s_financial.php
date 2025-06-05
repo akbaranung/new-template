@@ -279,3 +279,16 @@
     }
   }
 </script>
+
+<script>
+  $(document).ready(function() {
+    $(document).on('click', '.arus_kas', function() {
+      var id = $(this).data('id');
+
+      $('#detailModal2 .modal-title').text('Arus kas ' + id);
+      // $('#detailModal2 .modal-body').html(id);
+      $('#detailModal2 input[name="no_coa"]').val(id);
+      $('#detailModal2').modal('show');
+    });
+  });
+</script>

@@ -53,11 +53,11 @@
                   <tbody>
                     <?php
                     foreach ($biaya as $a) :
-                      $coa = $this->m_coa->getCoa($a->no_sbb);
+                      $coa = $this->M_coa->getCoa($a->no_sbb);
 
                       if ($coa['table_source'] == "t_coalr_sbb" && $coa['posisi'] == 'AKTIVA') { ?>
                         <tr>
-                          <td><button class="bg-blue arus_kas" data-id="<?= $a->no_sbb ?>"><?= $a->no_sbb ?></td>
+                          <td><button class="btn btn-primary arus_kas" data-id="<?= $a->no_sbb ?>"><?= $a->no_sbb ?></td>
                           <td><?= $coa['nama_perkiraan'] ?></td>
                           <td class="text-right"><?= number_format($a->saldo_awal, 2) ?></td>
                         </tr>
@@ -83,11 +83,11 @@
                   <tbody>
                     <?php
                     foreach ($pendapatan as $a) :
-                      $coa = $this->m_coa->getCoa($a->no_sbb);
+                      $coa = $this->M_coa->getCoa($a->no_sbb);
 
                       if ($coa['table_source'] == "t_coalr_sbb" && $coa['posisi'] == 'PASIVA') { ?>
                         <tr>
-                          <td><button class="bg-blue arus_kas" data-id="<?= $a->no_sbb ?>"><?= $a->no_sbb ?></td>
+                          <td><button class="btn btn-primary arus_kas" data-id="<?= $a->no_sbb ?>"><?= $a->no_sbb ?></td>
                           <td><?= $coa['nama_perkiraan'] ?></td>
                           <td class="text-right"><?= number_format($a->saldo_awal, 2) ?></td>
                         </tr>

@@ -34,31 +34,33 @@
 
     <ul class="navbar-nav flex-fill w-100 mb-2">
       <?php
-      foreach ($menus as $menu): ?>
-        <?php if (empty($menu->submenus)): ?>
-          <li class="nav-item w-100">
-            <a class="nav-link <?= ($controller == $menu->controller) ? 'active' : '' ?>" href="<?= site_url($menu->url) ?>">
-              <i class="<?= $menu->icon ?>"></i>
-              <span class="ml-3 item-text"><?= $menu->menu_name ?></span>
-            </a>
-          </li>
-        <?php else: ?>
-          <li class="nav-item <?= ($controller == $menu->controller) ? 'active' : '' ?> dropdown">
-            <a href="#<?= $menu->url ?>" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
-              <i class="<?= $menu->icon ?>"></i>
-              <span class="ml-3 item-text"><?= $menu->menu_name ?></span>
-            </a>
-            <ul class="collapse <?= ($controller == $menu->controller) ? 'show' : '' ?> list-unstyled pl-4 w-100" id="<?= $menu->url ?>">
-              <?php foreach ($menu->submenus as $submenu): ?>
-                <li class="nav-item">
-                  <a class="nav-link <?= ($current_uri == $submenu->url) ? 'active' : '' ?> pl-3" href="<?= site_url($submenu->url) ?>"><i class="<?= $submenu->icon ?>"></i><span class="ml-1 item-text"><?= $submenu->menu_name ?></span>
-                  </a>
-                </li>
-              <?php endforeach; ?>
-            </ul>
-          </li>
-        <?php endif; ?>
-      <?php endforeach; ?>
+      if ($menus) {
+        foreach ($menus as $menu): ?>
+          <?php if (empty($menu->submenus)): ?>
+            <li class="nav-item w-100">
+              <a class="nav-link <?= ($controller == $menu->controller) ? 'active' : '' ?>" href="<?= site_url($menu->url) ?>">
+                <i class="<?= $menu->icon ?>"></i>
+                <span class="ml-3 item-text"><?= $menu->menu_name ?></span>
+              </a>
+            </li>
+          <?php else: ?>
+            <li class="nav-item <?= ($controller == $menu->controller) ? 'active' : '' ?> dropdown">
+              <a href="#<?= $menu->url ?>" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
+                <i class="<?= $menu->icon ?>"></i>
+                <span class="ml-3 item-text"><?= $menu->menu_name ?></span>
+              </a>
+              <ul class="collapse <?= ($controller == $menu->controller) ? 'show' : '' ?> list-unstyled pl-4 w-100" id="<?= $menu->url ?>">
+                <?php foreach ($menu->submenus as $submenu): ?>
+                  <li class="nav-item">
+                    <a class="nav-link <?= ($current_uri == $submenu->url) ? 'active' : '' ?> pl-3" href="<?= site_url($submenu->url) ?>"><i class="<?= $submenu->icon ?>"></i><span class="ml-1 item-text"><?= $submenu->menu_name ?></span>
+                    </a>
+                  </li>
+                <?php endforeach; ?>
+              </ul>
+            </li>
+          <?php endif; ?>
+      <?php endforeach;
+      } ?>
     </ul>
 
     <ul class="navbar-nav flex-fill w-100 mb-2">

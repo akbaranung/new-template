@@ -54,11 +54,11 @@
                     <?php
                     if (isset($activa)) :
                       foreach ($activa as $a) :
-                        $coa = $this->m_coa->getCoa($a->no_sbb);
+                        $coa = $this->M_coa->getCoa($a->no_sbb);
 
                         if ($coa['table_source'] == "t_coa_sbb" && $coa['posisi'] == 'AKTIVA' && $a->saldo_awal != '0') : ?>
                           <tr>
-                            <td><button class="bg-blue arus_kas" data-id="<?= $a->no_sbb ?>"><?= $a->no_sbb ?></button></td>
+                            <td><button class="btn btn-primary arus_kas btn-sm" data-id="<?= $a->no_sbb ?>"><?= $a->no_sbb ?></button></td>
                             <td><?= $coa['nama_perkiraan'] ?></td>
                             <td class="text-right"><?= number_format($a->saldo_awal, 2) ?></td>
                           </tr>
@@ -91,11 +91,11 @@
                     <?php
                     if (isset($pasiva)) :
                       foreach ($pasiva as $a) :
-                        $coa = $this->m_coa->getCoa($a->no_sbb);
+                        $coa = $this->M_coa->getCoa($a->no_sbb);
 
                         if ($coa['table_source'] == "t_coa_sbb" && $coa['posisi'] == 'PASIVA' && $a->saldo_awal != '0') : ?>
                           <tr>
-                            <td><button class="bg-blue arus_kas" data-id="<?= $a->no_sbb ?>"><?= $a->no_sbb ?></td>
+                            <td><button class="btn btn-primary arus_kas btn-sm" data-id="<?= $a->no_sbb ?>"><?= $a->no_sbb ?></td>
                             <td><?= $coa['nama_perkiraan'] ?></td>
                             <td class="text-right"><?= number_format($a->saldo_awal, 2) ?></td>
                           </tr>
@@ -124,3 +124,67 @@
     </div> <!-- .col-12 -->
   </div> <!-- .row -->
 </div> <!-- .container-fluid -->
+
+<div class="modal fade" id="detailModal2" tabindex="-1" role="dialog" aria-labelledby="detailModal2" aria-modal="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="defaultModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <form class="form-horizontal form-label-left" method="POST" action="<?= base_url('financial/coa_report') ?>" target="_blank">
+        <div class="modal-body">
+          <div class="modal-body">
+            <div class="row">
+              <input type="hidden" class="form-control" name="no_coa">
+              <div class="col-md-6 col-xs-12">
+                <label for="tgl_dari" class="form-label">Dari</label>
+                <input type="date" class="form-control" name="tgl_dari" required>
+              </div>
+              <div class="col-md-6 col-xs-12">
+                <label for="tgl_sampai" class="form-label">Sampai</label>
+                <input type="date" class="form-control" name="tgl_sampai" value="<?= date('Y-m-d') ?>" required>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Lihat</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- <div class="modal fade" id="detailModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title" id="myModalLabel2">Lacak arus kas</h4>
+      </div>
+      <form class="form-horizontal form-label-left" method="POST" action="<?= base_url('financial/coa_report') ?>" target="_blank">
+        <div class="modal-body">
+          <div class="row">
+            <input type="hidden" class="form-control" name="no_coa">
+            <div class="col-md-6 col-xs-12">
+              <label for="tgl_dari" class="form-label">Dari</label>
+              <input type="date" class="form-control" name="tgl_dari" required>
+            </div>
+            <div class="col-md-6 col-xs-12">
+              <label for="tgl_sampai" class="form-label">Sampai</label>
+              <input type="date" class="form-control" name="tgl_sampai" value="<?= date('Y-m-d') ?>" required>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Lihat</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div> -->

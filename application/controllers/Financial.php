@@ -1129,6 +1129,228 @@ class Financial extends CI_Controller
     }
   }
 
+  public function closing($slug = NULL)
+  {
+    $has_access = $this->M_menu->has_access();
+
+    if (!$slug) {
+      if (!$has_access) {
+        show_error('Forbidden Access: You do not have permission to view this page.', 403, '403 Forbidden');
+      }
+    } else {
+      $segment1 = $this->uri->segment(1); // 'financial'
+      $segment2 = $this->uri->segment(2); // 'closing'
+      $route = $segment1 . '/' . $segment2; // hasil: 'financial/closing'
+
+      $nip = $this->session->userdata('nip');
+      $allowed_routes = $this->M_menu->get_allowed_routes($nip);
+
+      if (!in_array($route, $allowed_routes)) {
+        show_error('Forbidden Access: You do not have permission to view this page.', 403, '403 Forbidden');
+      }
+    }
+
+    $data['utility'] = $this->db->get('utility')->row_array();
+    $data['pages_script'] = 'script/financial/s_financial';
+    $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
+
+    if ($slug) {
+      $data['title'] = "Detail saldo";
+      $data['saldo'] = $this->M_coa->get_saldo_awal($slug);
+      $data['coa'] = json_decode($data['saldo']['coa']);
+      $data['pages'] = 'pages/financial/v_saldo_view';
+      // $this->load->view('saldo_view', $data);
+    } else if ($this->input->post('periode')) {
+      $data['title'] = "Detail saldo";
+      $data['saldo'] = $this->M_coa->get_saldo_awal($this->input->post('periode'));
+      $data['coa'] = json_decode($data['saldo']['coa']);
+      $data['pages'] = 'pages/financial/v_saldo_view';
+      // $this->load->view('saldo_view', $data);
+    } else {
+      $data['title'] = "Saldo awal";
+      $data['saldo'] = $this->M_coa->list_saldo();
+      $data['pages'] = 'pages/financial/v_saldo_awal';
+      // $this->load->view('saldo_awal', $data);
+    }
+
+    $this->load->view('index', $data);
+  }
+
+  public function save_saldo_awal()
+  {
+    $periode = $this->input->post('periode');
+
+    $cek = $this->M_coa->cek_saldo_awal($periode);
+
+    $date = new DateTime($periode);
+
+    $bulan = $date->format('m');
+    $tahun = $date->format('Y');
+
+    $last_periode = new DateTime($periode);
+    $last_periode = $last_periode->modify('-1 month');
+    $last_periode = $last_periode->format('Y-m');
+
+    $getLastPeriod = $this->M_coa->cek_saldo_awal($last_periode);
+
+    if (empty($getLastPeriod)) {
+      $updated_saldo_awal = $this->M_coa->calculate_saldo_awal($bulan, $tahun);
+    } else {
+      $coaLastPeriod = json_decode($getLastPeriod['coa']);
+      $saldo_bulan_ini = $this->M_coa->calculate_saldo_awal($bulan, $tahun);
+
+      $saldo_awal_map = [];
+      foreach ($coaLastPeriod as $saldo_awal) {
+        $saldo_awal_map[$saldo_awal->no_sbb] = $saldo_awal;
+      }
+
+      foreach ($saldo_bulan_ini as $saldo_baru) {
+        if (isset($saldo_awal_map[$saldo_baru->no_sbb])) {
+          $saldo_awal_map[$saldo_baru->no_sbb]->saldo_awal += (float) $saldo_baru->saldo_awal;
+        } else {
+          $saldo_awal_map[$saldo_baru->no_sbb] = (object) [
+            'no_sbb' => $saldo_baru->no_sbb,
+            'saldo_awal' => (float) $saldo_baru->saldo_awal,
+            'posisi' => $saldo_baru->posisi,
+            'table_source' => $saldo_baru->table_source,
+          ];
+        }
+      }
+      $updated_saldo_awal = array_values($saldo_awal_map);
+    }
+
+    $nextMonth = ($date->modify('+1 month'));
+    $nextMonth = $date->format('Y-m');
+
+    $data = [
+      'periode' => $periode,
+      'created_by' => $this->session->userdata('nip'),
+      'created_at' => date('Y-m-d H:i:s'),
+      'slug' => 'saldo-awal-' . $nextMonth,
+      'coa' => json_encode($updated_saldo_awal),
+      'keterangan' => 'Saldo awal ' . format_indo($nextMonth),
+      'id_cabang' => $this->session->userdata('kode_cabang')
+    ];
+
+    if (!$cek) {
+      $this->M_coa->insert_saldo_awal($data);
+      $this->session->set_flashdata('message_name', 'Closing bulan ' . format_indo($periode) . 'Saldo awal periode ' . format_indo($nextMonth) . ' berhasil ditetapkan');
+    } else {
+      $this->M_coa->update_saldo_awal($periode, $data);
+      $this->session->set_flashdata('message_name', 'Closing bulan ' . format_indo($periode) . ' sudah diperbarui');
+    }
+
+    redirect($_SERVER['HTTP_REFERER']);
+  }
+
+  public function coa_report()
+  {
+
+    $has_access = $this->M_menu->has_access();
+
+    if (!$has_access) {
+      show_error('Forbidden Access: You do not have permission to view this page.', 403, '403 Forbidden');
+    }
+
+    $nip = $this->session->userdata('nip');
+    // Fetch counts
+    $result = $this->db->query("SELECT COUNT(Id) FROM memo WHERE (nip_kpd LIKE '%$nip%' OR nip_cc LIKE '%$nip%') AND (`read` NOT LIKE '%$nip%');")->row()->{'COUNT(Id)'};
+    $result2 = $this->db->query("SELECT COUNT(id) FROM task WHERE (`member` LIKE '%$nip%' or `pic` LIKE '%$nip%') AND activity='1'")->row()->{'COUNT(id)'};
+    $data = [
+      'count_inbox' => $result,
+      'count_inbox2' => $result2,
+      'coas' => $this->M_coa->list_coa(),
+    ];
+
+    $no_coa = $this->input->post('no_coa');
+
+    if ($no_coa) {
+      $this->prepareCoaReport($data, $no_coa);
+    } else {
+      $data['title'] = "Report CoA";
+      $data['pages'] = "pages/financial/v_report_per_coa";
+      $data['utility'] = $this->db->get('utility')->row_array();
+      $data['pages_script'] = 'script/financial/s_financial';
+      $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
+
+      $this->load->view('index', $data);
+    }
+  }
+
+
+  private function prepareCoaReport(&$data, $no_coa)
+  {
+    $from = $this->input->post('tgl_dari');
+    $to = $this->input->post('tgl_sampai');
+    $kode_cabang = $this->session->userdata('kode_cabang');
+    // return $this->cb->where('id_cabang', $kode_cabang);
+
+    // Saldo awal periode sebelumnya
+    $last_periode = new DateTime($from);
+    $last_periode->modify('-1 month');
+    $last_periode = $last_periode->format('Y-m');
+    $coaBefore = $this->cb->where('id_cabang', $kode_cabang)
+      ->where('periode', $last_periode)
+      ->get('saldo_awal')
+      ->row_array();
+
+    $coaBefore = $coaBefore['coa'] ?? 0; // Pastikan tidak error jika NULL
+
+    $coa = json_decode($coaBefore);
+    $saldo_awal = null;
+
+    // echo '<pre>';
+    // print_r($coa);
+    // echo '</pre>';
+    // exit;
+    // Iterasi untuk mencari saldo awal
+    if ($coa) {
+      foreach ($coa as $item) {
+        if ($item->no_sbb == $no_coa) {
+          $saldo_awal = $item->saldo_awal;
+          break;
+        }
+      }
+    }
+
+    // Hitung transaksi dari 1-14 November
+    $mid_start = (new DateTime($from))->modify('first day of this month')->format('Y-m-d');
+    $mid_end = (new DateTime($from))->modify('-1 day')->format('Y-m-d');
+
+    $transactions_before = $this->M_coa->getCoaReport($no_coa, $mid_start, $mid_end);
+    foreach ($transactions_before as $trans) {
+      if ($trans->akun_debit == $no_coa) {
+        $saldo_awal += $trans->jumlah_debit;
+      } else {
+        $saldo_awal -= $trans->jumlah_kredit;
+      }
+    }
+
+    // Set saldo awal untuk 15 November
+    $data['saldo_awal'] = ($saldo_awal) ? $saldo_awal : 0;
+    // print_r($saldo_awal);
+    // exit;
+
+    // Hitung transaksi dari 15 November - 31 Desember
+    $data['coa'] = $this->M_coa->getCoaReport($no_coa, $from, $to);
+
+    $data['sum_debit'] = array_sum(array_map(function ($sum) use ($no_coa) {
+      return $sum->akun_debit == $no_coa ? $sum->jumlah_debit : 0;
+    }, $data['coa']));
+
+    $data['sum_kredit'] = array_sum(array_map(function ($sum) use ($no_coa) {
+      return $sum->akun_kredit == $no_coa ? $sum->jumlah_kredit : 0;
+    }, $data['coa']));
+
+    $data['detail_coa'] = $this->M_coa->getCoa($no_coa);
+    $data['pages'] = 'pages/financial/v_report_per_coa';
+    $data['utility'] = $this->db->get('utility')->row_array();
+    $data['pages_script'] = 'script/financial/s_financial';
+    $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
+
+    $this->load->view('index', $data);
+  }
+
   private function processDate($dateValue)
   {
     if (is_numeric($dateValue)) {
