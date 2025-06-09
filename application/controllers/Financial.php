@@ -8,7 +8,7 @@ class Financial extends CI_Controller
   {
 
     parent::__construct();
-    $this->load->model(['M_coa', 'M_customer', 'M_invoice']);
+    $this->load->model(['M_coa', 'M_Customer', 'M_invoice']);
     $this->load->helper(['number']);
     $this->load->library(['pdfgenerator']);
 
@@ -1341,7 +1341,7 @@ class Financial extends CI_Controller
       'coa_pendapatan' => $this->M_coa->getCoaByCode('410'),
       'keyword' => $keyword,
       'title' => "Invoice",
-      'customers' => $this->M_customer->list_customer(''),
+      'customers' => $this->M_Customer->list_customer(''),
     ];
 
     $data['title'] = "Daftar Invoice";
@@ -1373,7 +1373,7 @@ class Financial extends CI_Controller
     $data = [
       'title' => 'Create Invoice',
       // 'no_invoice' => $no_inv,
-      'customers' => $this->M_customer->list_customer(),
+      'customers' => $this->M_Customer->list_customer(),
       'pendapatan' => $this->M_coa->getCoaByCode('1'),
       'persediaan' => $this->M_coa->getCoaByCode('4'),
       'count_inbox' => $result,
@@ -1556,7 +1556,7 @@ class Financial extends CI_Controller
       'inv' => $inv,
       'details' => $this->M_invoice->item_list($inv['Id']),
       'user' => $this->M_invoice->cek_user($inv['user_create']),
-      'customers' => $this->M_customer->list_customer(),
+      'customers' => $this->M_Customer->list_customer(),
       'count_inbox' => $result,
       'count_inbox2' => $result2,
       'pendapatan' => $this->M_coa->getCoaByCode('1'),
