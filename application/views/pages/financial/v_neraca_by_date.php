@@ -43,7 +43,7 @@
               <p class="text-right">Total: <strong><?= (isset($sum_activa)) ? number_format($sum_activa, 2) : 0 ?></strong></p>
               <div class="table-responsive">
                 <table class="table" style="width:100%">
-                  <thead>
+                  <thead class="thead-dark">
                     <tr>
                       <th>No. Coa</th>
                       <th>Nama Coa</th>
@@ -80,7 +80,7 @@
               <p class="text-right">Total: <strong><?= (isset($sum_pasiva)) ? number_format($sum_pasiva, 2) : 0 ?></strong></p>
               <div class="table-responsive">
                 <table id="" class="table" style="width:100%">
-                  <thead>
+                  <thead class="thead-dark">
                     <tr>
                       <th>No. Coa</th>
                       <th>Nama Coa</th>

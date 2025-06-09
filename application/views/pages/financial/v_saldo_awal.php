@@ -19,7 +19,7 @@
           </form>
           <div class="table-responsive">
             <table id="datatable" class="table table-stripped" style="width:100%">
-              <thead>
+              <thead class="thead-dark">
                 <tr>
                   <th class="text-center">No.</th>
                   <th class="text-center">Closing Periode</th>

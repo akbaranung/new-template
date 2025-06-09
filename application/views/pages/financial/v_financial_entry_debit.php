@@ -34,7 +34,7 @@
               </select>
             </div>
             <table class="table">
-              <thead>
+              <thead class="thead-dark">
                 <tr>
                   <th>Coa Kredit</th>
                   <th>Nominal</th>

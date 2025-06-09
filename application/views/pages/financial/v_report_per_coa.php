@@ -39,7 +39,7 @@
             <div class="row" style="margin-top: 10px;">
               <div class="col-md-12 col-xs-12 table-responsive">
                 <table id="datatable" class="table table-bordered" style="width:100%">
-                  <thead>
+                  <thead class="thead-dark">
                     <tr>
                       <th class="text-right" colspan="2">Total:</th>
                       <th class="text-right"><?= number_format($sum_debit, 2) ?></th>

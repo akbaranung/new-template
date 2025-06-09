@@ -23,7 +23,7 @@
           </div>
           <form class="form-label-left input_mask" method="POST" action="<?= base_url('financial/process_financial_entry/multi_debit') ?>" enctype="multipart/form-data">
             <table class="table">
-              <thead>
+              <thead class="thead-dark">
                 <tr>
                   <th>Coa Debit</th>
                   <th>Nominal</th>

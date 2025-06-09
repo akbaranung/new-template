@@ -43,7 +43,7 @@
               <p class="text-right">Total: <strong><?= number_format($sum_biaya, 2) ?></strong></p>
               <div class="table-responsive">
                 <table id="" class="table" style="width:100%">
-                  <thead>
+                  <thead class="thead-dark">
                     <tr>
                       <th>No. Coa</th>
                       <th>Nama Coa</th>
@@ -72,8 +72,8 @@
               <h2 class="text-center">Pendapatan</h2>
               <p class="text-right">Total: <strong><?= number_format($sum_pendapatan, 2) ?></strong></p>
               <div class="table-responsive">
-                <table id="" class="table" style="width:100%">
-                  <thead>
+                <table id="" class="table" style="width:100%;">
+                  <thead class="thead-dark">
                     <tr>
                       <th>No. Coa</th>
                       <th>Nama Coa</th>

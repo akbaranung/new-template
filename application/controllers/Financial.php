@@ -8,7 +8,9 @@ class Financial extends CI_Controller
   {
 
     parent::__construct();
-    $this->load->model(['M_coa', 'M_customer']);
+    $this->load->model(['M_coa', 'M_customer', 'M_invoice']);
+    $this->load->helper(['number']);
+    $this->load->library(['pdfgenerator']);
 
     $this->cb = $this->load->database('corebank', TRUE);
 
@@ -258,7 +260,7 @@ class Financial extends CI_Controller
       $numrowActiva = 5;
 
       foreach ($combinedActiva as $t) {
-        $coa = $this->m_coa->getCoa($t->no_sbb);
+        $coa = $this->M_coa->getCoa($t->no_sbb);
         if ($coa['table_source'] == "t_coa_sbb" && $coa['posisi'] == 'AKTIVA' && $t->saldo_awal != 0) :
           $sheet->setCellValue('A' . $numrowActiva, $t->no_sbb);
           $sheet->setCellValue('B' . $numrowActiva, $coa['nama_perkiraan']);
@@ -271,7 +273,7 @@ class Financial extends CI_Controller
       // Tambahkan data Pasiva
       $numrowPasiva = 5;
       foreach ($combinedPasiva as $t) {
-        $coa = $this->m_coa->getCoa($t->no_sbb);
+        $coa = $this->M_coa->getCoa($t->no_sbb);
         if ($coa['table_source'] == "t_coa_sbb" && $coa['posisi'] == 'PASIVA' && $t->saldo_awal != 0) :
           $sheet->setCellValue('E' . $numrowPasiva, $t->no_sbb);
           $sheet->setCellValue('F' . $numrowPasiva, $coa['nama_perkiraan']);
@@ -436,7 +438,7 @@ class Financial extends CI_Controller
       // Tambahkan data Aktiva
       $numrowActiva = 5;
       foreach ($combinedBeban as $t) {
-        $coa = $this->m_coa->getCoa($t->no_sbb);
+        $coa = $this->M_coa->getCoa($t->no_sbb);
         if ($coa['table_source'] == "t_coalr_sbb" && $coa['posisi'] == 'AKTIVA' && $t->saldo_awal != 0) :
           $sheet->setCellValue('A' . $numrowActiva, $t->no_sbb);
           $sheet->setCellValue('B' . $numrowActiva, $coa['nama_perkiraan']);
@@ -448,7 +450,7 @@ class Financial extends CI_Controller
       // Tambahkan data Pasiva
       $numrowPasiva = 5;
       foreach ($combinedPendapatan as $t) {
-        $coa = $this->m_coa->getCoa($t->no_sbb);
+        $coa = $this->M_coa->getCoa($t->no_sbb);
         if ($coa['table_source'] == "t_coalr_sbb" && $coa['posisi'] == 'PASIVA' && $t->saldo_awal != 0) :
           $sheet->setCellValue('E' . $numrowPasiva, $t->no_sbb);
           $sheet->setCellValue('F' . $numrowPasiva, $coa['nama_perkiraan']);
@@ -484,7 +486,7 @@ class Financial extends CI_Controller
     $date->modify('first day of previous month');
     $periode = $date->format('Y-m');
 
-    $cek = $this->m_coa->cek_saldo_awal($periode);
+    $cek = $this->M_coa->cek_saldo_awal($periode);
 
     if ($cek) {
       $coaLastPeriod = json_decode($cek['coa']);
@@ -492,10 +494,10 @@ class Financial extends CI_Controller
         return $item->posisi === 'AKTIVA' && $item->table_source === 't_coa_sbb';
       });
 
-      $activa = $this->m_coa->getNeracaByDate('t_coa_sbb', 'AKTIVA', $tanggal, $periode);
-      $pasiva = $this->m_coa->getNeracaByDate('t_coa_sbb', 'PASIVA', $tanggal, $periode);
-      $pendapatan = $this->m_coa->getNeracaByDate('t_coalr_sbb', 'PASIVA', $tanggal, $periode);
-      $beban = $this->m_coa->getNeracaByDate('t_coalr_sbb', 'AKTIVA', $tanggal, $periode);
+      $activa = $this->M_coa->getNeracaByDate('t_coa_sbb', 'AKTIVA', $tanggal, $periode);
+      $pasiva = $this->M_coa->getNeracaByDate('t_coa_sbb', 'PASIVA', $tanggal, $periode);
+      $pendapatan = $this->M_coa->getNeracaByDate('t_coalr_sbb', 'PASIVA', $tanggal, $periode);
+      $beban = $this->M_coa->getNeracaByDate('t_coalr_sbb', 'AKTIVA', $tanggal, $periode);
 
       // Part Aktiva
       $combinedActiva = [];
@@ -700,7 +702,7 @@ class Financial extends CI_Controller
       // Tambahkan data Aktiva
       $numrowActiva = 5;
       foreach ($groupedActiva as $t) {
-        $coa = $this->m_coa->getCoaBB($t->no_bb);
+        $coa = $this->M_coa->getCoaBB($t->no_bb);
 
         $sheet->setCellValue('A' . $numrowActiva, $t->no_bb);
         $sheet->setCellValue('B' . $numrowActiva, $coa['nama_perkiraan']);
@@ -712,7 +714,7 @@ class Financial extends CI_Controller
       // Tambahkan data Pasiva
       $numrowPasiva = 5;
       foreach ($groupedPasiva as $t) {
-        $coa = $this->m_coa->getCoaBB($t->no_bb);
+        $coa = $this->M_coa->getCoaBB($t->no_bb);
 
         $sheet->setCellValue('E' . $numrowPasiva, $t->no_bb);
         $sheet->setCellValue('F' . $numrowPasiva, $coa['nama_perkiraan']);
@@ -751,13 +753,13 @@ class Financial extends CI_Controller
     $date->modify('first day of previous month');
     $periode = $date->format('Y-m');
 
-    $cek = $this->m_coa->cek_saldo_awal($periode);
+    $cek = $this->M_coa->cek_saldo_awal($periode);
 
     if ($cek) {
       $coaLastPeriod = json_decode($cek['coa']);
 
-      $pendapatan = $this->m_coa->getNeracaByDate('t_coalr_sbb', 'PASIVA', $tanggal, $periode);
-      $beban = $this->m_coa->getNeracaByDate('t_coalr_sbb', 'AKTIVA', $tanggal, $periode);
+      $pendapatan = $this->M_coa->getNeracaByDate('t_coalr_sbb', 'PASIVA', $tanggal, $periode);
+      $beban = $this->M_coa->getNeracaByDate('t_coalr_sbb', 'AKTIVA', $tanggal, $periode);
 
       // Part Pendapatan
       $filteredCoaPendapatan = array_filter($coaLastPeriod, function ($item) {
@@ -901,7 +903,7 @@ class Financial extends CI_Controller
       // Tambahkan data Aktiva
       $numrowActiva = 5;
       foreach ($groupedActiva as $t) {
-        $coa = $this->m_coa->getCoaBB($t->no_bb);
+        $coa = $this->M_coa->getCoaBB($t->no_bb);
 
         $sheet->setCellValue('A' . $numrowActiva, $t->no_bb);
         $sheet->setCellValue('B' . $numrowActiva, $coa['nama_perkiraan']);
@@ -913,7 +915,7 @@ class Financial extends CI_Controller
       // Tambahkan data Pasiva
       $numrowPasiva = 5;
       foreach ($groupedPasiva as $t) {
-        $coa = $this->m_coa->getCoaBB($t->no_bb);
+        $coa = $this->M_coa->getCoaBB($t->no_bb);
 
         $sheet->setCellValue('E' . $numrowPasiva, $t->no_bb);
         $sheet->setCellValue('F' . $numrowPasiva, $coa['nama_perkiraan']);
@@ -1277,6 +1279,609 @@ class Financial extends CI_Controller
     }
   }
 
+  public function invoice()
+  {
+
+    $has_access = $this->M_menu->has_access();
+
+    if (!$has_access) {
+      show_error('Forbidden Access: You do not have permission to view this page.', 403, '403 Forbidden');
+    }
+
+    $customer_id = $this->input->post('customer_id');
+    $keyword = trim($this->input->post('keyword', true) ?? '');
+
+    $config = [
+      'base_url' => site_url('financial/invoice'),
+      'total_rows' => $this->M_invoice->invoice_count($keyword, $customer_id),
+      'per_page' => 20,
+      'uri_segment' => 3,
+      'num_links' => 10,
+      'full_tag_open' => '<ul class="pagination" style="margin: 0 0">',
+      'full_tag_close' => '</ul>',
+      'first_link' => false,
+      'last_link' => false,
+      'first_tag_open' => '<li>',
+      'first_tag_close' => '</li>',
+      'prev_link' => '«',
+      'prev_tag_open' => '<li class="prev">',
+      'prev_tag_close' => '</li>',
+      'next_link' => '»',
+      'next_tag_open' => '<li>',
+      'next_tag_close' => '</li>',
+      'last_tag_open' => '<li>',
+      'last_tag_close' => '</li>',
+      'cur_tag_open' => '<li class="active"><a href="#">',
+      'cur_tag_close' => '</a></li>',
+      'num_tag_open' => '<li>',
+      'num_tag_close' => '</li>'
+    ];
+
+    $this->pagination->initialize($config);
+
+    $page = $this->uri->segment(3) ? $this->uri->segment(3) : 0;
+    $invoices = $this->M_invoice->list_invoice($config["per_page"], $page, $keyword, $customer_id);
+
+    $nip = $this->session->userdata('nip');
+    $sql = "SELECT COUNT(Id) FROM memo WHERE (nip_kpd LIKE '%$nip%' OR nip_cc LIKE '%$nip%') AND (`read` NOT LIKE '%$nip%');";
+    $query = $this->db->query($sql);
+    $result = $query->row_array()['COUNT(Id)'];
+
+    $sql2 = "SELECT COUNT(id) FROM task WHERE (`member` LIKE '%$nip%' or `pic` like '%$nip%') and activity='1'";
+    $query2 = $this->db->query($sql2);
+    $result2 = $query2->row_array()['COUNT(id)'];
+
+    $data = [
+      'page' => $page,
+      'invoices' => $invoices,
+      'count_inbox' => $result,
+      'count_inbox2' => $result2,
+      'coa' => $this->M_coa->list_coa(),
+      'coa_kas' => $this->M_coa->getCoaByCode('1201'),
+      'coa_pendapatan' => $this->M_coa->getCoaByCode('410'),
+      'keyword' => $keyword,
+      'title' => "Invoice",
+      'customers' => $this->M_customer->list_customer(''),
+    ];
+
+    $data['title'] = "Daftar Invoice";
+    $data['pages'] = "pages/financial/v_invoice";
+    $data['utility'] = $this->db->get('utility')->row_array();
+    $data['pages_script'] = 'script/financial/s_financial';
+    $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
+    // echo '<pre>';
+    // print_r($data['invoices']);
+    // echo '</pre>';
+    // exit;
+
+    $this->load->view('index', $data);
+  }
+
+  public function create_invoice()
+  {
+    $nip = $this->session->userdata('nip');
+    $sql = "SELECT COUNT(Id) FROM memo WHERE (nip_kpd LIKE '%$nip%' OR nip_cc LIKE '%$nip%') AND (`read` NOT LIKE '%$nip%');";
+    $query = $this->db->query($sql);
+    $res2 = $query->result_array();
+    $result = $res2[0]['COUNT(Id)'];
+
+    $sql2 = "SELECT COUNT(id) FROM task WHERE (`member` LIKE '%$nip%' or `pic` like '%$nip%') and activity='1'";
+    $query2 = $this->db->query($sql2);
+    $res2 = $query2->result_array();
+    $result2 = $res2[0]['COUNT(id)'];
+
+    $data = [
+      'title' => 'Create Invoice',
+      // 'no_invoice' => $no_inv,
+      'customers' => $this->M_customer->list_customer(),
+      'pendapatan' => $this->M_coa->getCoaByCode('1'),
+      'persediaan' => $this->M_coa->getCoaByCode('4'),
+      'count_inbox' => $result,
+      'count_inbox2' => $result2,
+    ];
+
+    $data['title'] = "Create Invoice";
+    $data['pages'] = "pages/financial/v_create_invoice";
+    $data['utility'] = $this->db->get('utility')->row_array();
+    $data['pages_script'] = 'script/financial/s_financial';
+    $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
+    $this->load->view('index', $data);
+  }
+
+  public function store_invoice($jenis)
+  {
+    $id_user = $this->session->userdata('nip');
+    $diskon = $this->input->post('diskon');
+    $ppn = $this->input->post('ppn');
+    $nominal = $this->convertToNumberWithComma($this->input->post('nominal'));
+    $besaran_diskon = $this->convertToNumberWithComma(($this->input->post('besaran_diskon')) ? $this->input->post('besaran_diskon') : '0');
+    $besaran_ppn = $this->convertToNumberWithComma($this->input->post('besaran_ppn'));
+    $besaran_pph = $this->convertToNumberWithComma($this->input->post('besaran_pph'));
+    $nominal_bayar = $this->convertToNumberWithComma($this->input->post('nominal_bayar'));
+    // $total_chargeable = $this->convertToNumberWithComma($this->input->post('total_chargeable'));
+    $total_nonpph = $this->convertToNumberWithComma($this->input->post('total_nonpph'));
+    $total_denganpph = $this->convertToNumberWithComma($this->input->post('total_denganpph'));
+    $nominal_pendapatan = $this->convertToNumberWithComma($this->input->post('nominal_pendapatan'));
+
+    // print_r($nominal);
+    // exit;
+
+    $no_inv = $this->input->post('no_invoice');
+
+    // $status_pendapatan = $this->input->post('status_pendapatan');
+    $opsi_termin = $this->input->post('opsi_termin');
+    $opsi_pph = $this->input->post('opsi_pph');
+    $opsi_ppn = $this->input->post('opsi_ppn');
+    $coa_debit = $this->input->post('coa_debit');
+    $coa_kredit = $this->input->post('coa_kredit');
+
+
+    $pph = isset($opsi_pph) ? '0.02' : 0;
+
+    $tgl_invoice = $this->input->post('tgl_invoice');
+    $tahun = substr($tgl_invoice, 0, 4);
+
+    $max_num = $this->M_invoice->select_max($tahun);
+
+    if (!$max_num['max']) {
+      $bilangan = 1; // Nilai Proses
+    } else {
+      $bilangan = $max_num['max'] + 1;
+    }
+
+    $month = substr($tgl_invoice, 5, 2);
+    $year = substr($tgl_invoice, 2, 2);
+
+    $no_inv = sprintf("%04d", $bilangan);
+    $kode_cabang = sprintf("%02d", $this->session->userdata('kode_cabang'));
+
+
+
+    $kop_invoice = $this->session->userdata('nama_akronim') . "-" . $kode_cabang;
+
+    $slug = $no_inv . '/' . strtoupper($kop_invoice) . '/' . intToRoman($month) . '/' . $year;
+
+    $keterangan = trim($this->input->post('keterangan'));
+
+    if ($jenis == 'reguler') {
+      $jenis_invoice = 'reguler';
+    } else {
+      $jenis_invoice = 'khusus';
+    }
+
+    // Insert ke tabel invoice
+    $invoice_data = [
+      'no_invoice' => $no_inv,
+      'tanggal_invoice' => $tgl_invoice,
+      'created_by' => $id_user,
+      'keterangan' => $keterangan,
+      'id_customer' => $this->input->post('customer'),
+      'subtotal' => $nominal,
+      'diskon' => isset($diskon) ? $diskon : '0',
+      'besaran_diskon' => $besaran_diskon,
+      'ppn' => $ppn,
+      'besaran_ppn' => $besaran_ppn,
+      'opsi_pph23' => isset($opsi_pph) ? $opsi_pph : '0',
+      'opsi_ppn' => isset($opsi_ppn) ? $opsi_ppn : '0',
+      'pph' => $pph,
+      'besaran_pph' => $besaran_pph,
+      'total_nonpph' => $total_nonpph,
+      'total_denganpph' => $total_denganpph,
+      'coa_debit' => $coa_debit,
+      'coa_kredit' => $coa_kredit,
+      'nominal_bayar' => $nominal_bayar,
+      'nominal_pendapatan' => $nominal_pendapatan,
+      'jenis_invoice' => $jenis_invoice,
+      // 'status_pendapatan' => isset($status_pendapatan) ? $status_pendapatan : '0'
+      'opsi_termin' => isset($opsi_termin) ? $opsi_termin : '0',
+      'status_pendapatan' => '1',
+      'slug' => $slug,
+      'id_cabang' => $this->session->userdata('kode_cabang'),
+    ];
+
+    $this->cb->trans_begin();
+    $id_invoice = $this->M_invoice->insert($invoice_data);
+
+    if (!$id_invoice) {
+      $this->cb->trans_rollback();
+      $this->session->set_flashdata('message_name', 'Failed to create invoice.');
+      redirect("financial/invoice");
+    }
+
+    $items = $this->input->post('item');
+    $jumlahs = $this->input->post('jumlah');
+    $totals = $this->input->post('total');
+    $total_amounts = $this->input->post('total_amount');
+
+    $detail_data = [];
+
+    if (is_array($items)) {
+
+      for ($i = 0; $i < count($items); $i++) {
+        $item = trim($items[$i]);
+        $total = $this->convertToNumberWithComma($totals[$i]);
+        $jumlah = $this->convertToNumberWithComma($jumlahs[$i]);
+        $total_amount = $this->convertToNumberWithComma($total_amounts[$i]);
+
+        $detail_data[] = [
+          'id_invoice' => $id_invoice,
+          'item' => strtoupper($item),
+          'total' => $total,
+          'qty' => $jumlah,
+          'total_amount' => $total_amount,
+          'created_by' => $id_user,
+          'id_cabang' => $this->session->userdata('kode_cabang'),
+        ];
+      }
+
+      if (!empty($detail_data)) {
+        $insert = $this->M_invoice->insert_batch($detail_data);
+
+        if ($insert === FALSE) {
+          $this->cb->trans_rollback();
+          $this->session->set_flashdata('message_name', 'Failed to insert invoice details.');
+          redirect("financial/invoice");
+        }
+
+        // Pastikan fungsi posting tidak mengganggu transaksi
+        $this->posting($coa_debit, $coa_kredit, $keterangan, $total_denganpph, $tgl_invoice, $id_invoice);
+
+        $this->cb->trans_commit();
+        $this->session->set_flashdata('message_name', 'The invoice has been successfully created. ' . $no_inv);
+        redirect("financial/invoice");
+      } else {
+        $this->cb->trans_rollback();
+        $this->session->set_flashdata('message_name', 'Invoice detail data is empty.');
+        redirect("financial/invoice");
+      }
+    }
+  }
+
+  public function edit_invoice($id)
+  {
+    $inv =  $this->M_invoice->showById($id);
+    $nip = $this->session->userdata('nip');
+    $sql = "SELECT COUNT(Id) FROM memo WHERE (nip_kpd LIKE '%$nip%' OR nip_cc LIKE '%$nip%') AND (`read` NOT LIKE '%$nip%');";
+    $query = $this->db->query($sql);
+    $res2 = $query->result_array();
+    $result = $res2[0]['COUNT(Id)'];
+
+    $sql2 = "SELECT COUNT(id) FROM task WHERE (`member` LIKE '%$nip%' or `pic` like '%$nip%') and activity='1'";
+    $query2 = $this->db->query($sql2);
+    $res2 = $query2->result_array();
+    $result2 = $res2[0]['COUNT(id)'];
+
+    $data = [
+      'title' => 'Invoice No. ' . $inv['no_invoice'],
+      'inv' => $inv,
+      'details' => $this->M_invoice->item_list($inv['Id']),
+      'user' => $this->M_invoice->cek_user($inv['user_create']),
+      'customers' => $this->M_customer->list_customer(),
+      'count_inbox' => $result,
+      'count_inbox2' => $result2,
+      'pendapatan' => $this->M_coa->getCoaByCode('1'),
+      'persediaan' => $this->M_coa->getCoaByCode('4'),
+    ];
+
+    $data['pages'] = "pages/financial/v_invoice_edit";
+    $data['utility'] = $this->db->get('utility')->row_array();
+    $data['pages_script'] = 'script/financial/s_financial';
+    $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
+    $this->load->view('index', $data);
+
+    // $pages = "invoice_edit";
+
+    // $this->load->view($pages, $data);
+  }
+
+  public function update_invoice($id)
+  {
+    $id_user = $this->session->userdata('nip');
+    $diskon = $this->input->post('diskon');
+    $ppn = $this->input->post('ppn');
+    $nominal = $this->convertToNumberWithComma($this->input->post('nominal'));
+    $besaran_diskon = $this->convertToNumberWithComma(($this->input->post('besaran_diskon')) ? $this->input->post('besaran_diskon') : '0');
+    $besaran_ppn = $this->convertToNumberWithComma($this->input->post('besaran_ppn'));
+    $besaran_pph = $this->convertToNumberWithComma($this->input->post('besaran_pph'));
+    $nominal_bayar = $this->convertToNumberWithComma($this->input->post('nominal_bayar'));
+    // $total_chargeable = $this->convertToNumberWithComma($this->input->post('total_chargeable'));
+    $total_nonpph = $this->convertToNumberWithComma($this->input->post('total_nonpph'));
+    $total_denganpph = $this->convertToNumberWithComma($this->input->post('total_denganpph'));
+    $nominal_pendapatan = $this->convertToNumberWithComma($this->input->post('nominal_pendapatan'));
+
+    $no_inv = $this->input->post('no_invoice');
+
+    // $status_pendapatan = $this->input->post('status_pendapatan');
+    $opsi_termin = $this->input->post('opsi_termin');
+    $opsi_pph = $this->input->post('opsi_pph');
+    $opsi_ppn = $this->input->post('opsi_ppn');
+    $coa_debit = $this->input->post('coa_debit');
+    $coa_kredit = $this->input->post('coa_kredit');
+
+    $pph = ($opsi_pph == 1) ? '0.02' : 0;
+
+
+    $tgl_invoice = $this->input->post('tgl_invoice');
+
+    $keterangan = trim($this->input->post('keterangan'));
+
+
+    // Insert ke tabel invoice
+    $invoice_data = [
+      'no_invoice' => $no_inv,
+      'tanggal_invoice' => $tgl_invoice,
+      'created_by' => $id_user,
+      'keterangan' => $keterangan,
+      'id_customer' => $this->input->post('customer'),
+      'subtotal' => $nominal,
+      'diskon' => isset($diskon) ? $diskon : '0',
+      'besaran_diskon' => $besaran_diskon,
+      'ppn' => $ppn,
+      'besaran_ppn' => $besaran_ppn,
+      'opsi_pph23' => isset($opsi_pph) ? $opsi_pph : '0',
+      'opsi_ppn' => isset($opsi_ppn) ? $opsi_ppn : '0',
+      'pph' => $pph,
+      'besaran_pph' => $besaran_pph,
+      'total_nonpph' => $total_nonpph,
+      'total_denganpph' => $total_denganpph,
+      'coa_debit' => $coa_debit,
+      'coa_kredit' => $coa_kredit,
+      'nominal_bayar' => $nominal_bayar,
+      'nominal_pendapatan' => $nominal_pendapatan,
+      // 'status_pendapatan' => isset($status_pendapatan) ? $status_pendapatan : '0'
+      'opsi_termin' => isset($opsi_termin) ? $opsi_termin : '0',
+      'status_pendapatan' => '1'
+    ];
+
+    $this->cb->trans_begin();
+
+    $inv =  $this->M_invoice->showById($id);
+
+    $keterangan_lama = "Jurnal balik edit invoice " . $inv['no_invoice'];
+
+    // Jurnal balik sebelum update invoice
+    $coa_kredit_lama = $inv['coa_kredit'];
+    $coa_debit_lama = $inv['coa_debit'];
+
+    $this->posting($coa_kredit_lama, $coa_debit_lama, $keterangan_lama, $inv['nominal_pendapatan'], $inv['tanggal_invoice'], $inv['Id']);
+
+    if (!$this->M_invoice->update_invoice($id, $invoice_data)) {
+      $this->cb->trans_rollback();
+      $this->session->set_flashdata('message_name', 'Failed to update invoice.');
+      redirect('financial/invoice');
+    }
+
+    $items = $this->input->post('item');
+    $jumlahs = $this->input->post('jumlah');
+    $totals = $this->input->post('total');
+    $total_amounts = $this->input->post('total_amount');
+
+    // Hapus detail invoice lama
+    $this->cb->where('id_invoice', $id)->delete('invoice_details');
+
+    // Handle detail data
+    if (!empty($items)) {
+      $detail_data = [];
+
+      for ($i = 0; $i < count($items); $i++) {
+        $detail_data[] = [
+          'id_invoice' => $id,
+          'item' => strtoupper(trim($items[$i])),
+          'total' => $this->convertToNumberWithComma($totals[$i]),
+          'qty' => $this->convertToNumberWithComma($jumlahs[$i]),
+          'total_amount' => $this->convertToNumberWithComma($total_amounts[$i]),
+          'created_by' => $id_user
+        ];
+      }
+
+      if (!empty($detail_data)) {
+        if (!$this->M_invoice->insert_batch($detail_data)) {
+          $this->cb->trans_rollback();
+          $this->session->set_flashdata('message_name', 'Failed to insert invoice details.');
+          redirect("financial/invoice");
+        }
+      }
+    }
+
+    // Update jurnal
+    // $dt_jurnal = [
+    //     'tanggal' => $tgl_invoice,
+    //     'akun_debit' => $coa_debit,
+    //     'jumlah_debit' => $nominal_bayar,
+    //     'akun_kredit' => $coa_kredit,
+    //     'jumlah_kredit' => $nominal_bayar,
+    //     'keterangan' => trim($keterangan),
+    //     'created_by' => $id_user,
+    // ];
+
+    // if (!$this->cb->where('id_invoice', $id)->update('jurnal_neraca', $dt_jurnal)) {
+    //     $this->cb->trans_rollback();
+    //     $this->session->set_flashdata('message_name', 'Failed to update journal.');
+    //     redirect("financial/invoice");
+    // }
+
+    $this->posting(
+      $coa_debit,
+      $coa_kredit,
+      $keterangan,
+      $total_denganpph,
+      $tgl_invoice,
+      $id
+    );
+
+    // Commit transaksi
+    if ($this->cb->trans_status() === FALSE) {
+      $this->cb->trans_rollback();
+      $this->session->set_flashdata('message_name', 'Transaction failed.');
+    } else {
+      $this->cb->trans_commit();
+      $this->session->set_flashdata('message_name', 'Invoice updated successfully.');
+    }
+
+    redirect('financial/invoice');
+  }
+
+  public function paid()
+  {
+    // print_r($_POST);
+    // exit;
+    $id = $this->uri->segment(3);
+
+    $inv =  $this->M_invoice->showById($id);
+    $coa_debit = $this->input->post('coa_debit');
+    $coa_kredit = $this->input->post('coa_kredit');
+    $nominal_bayar = $this->convertToNumber(($this->input->post('nominal_bayar')));
+    $keterangan = $this->input->post('keterangan');
+    $status_bayar = $this->input->post('status_bayar');
+    $tanggal_bayar = $this->input->post('tanggal_bayar');
+
+    $nominal_j2 = $inv['subtotal'] - $inv['besaran_pph'];
+    // if ($inv['besaran_ppn'] !== '0.00') {
+    //     echo 'true';
+    // } else {
+    //     echo 'false';
+    // }
+    // exit;
+    // kalau tidak 
+
+    // J1: PAD berkurang sebesar nominal pendapatan, Pendapatan bertambah sebesar nominal pendapatan
+    $j1_coa_debit = $inv['coa_kredit'];
+    $j1_coa_kredit = $coa_kredit;
+    $this->posting($j1_coa_debit, $j1_coa_kredit, $keterangan, $inv['nominal_pendapatan'], $tanggal_bayar);
+
+    // J3: Kas/Bank bertambah sebesar nominal bayar, piutang usaha keluaran berkurang sebesar nominal bayar
+    $j1_coa_debit = $coa_debit;
+    $j1_coa_kredit = $inv['coa_debit'];
+    $this->posting($j1_coa_debit, $j1_coa_kredit, $keterangan, $nominal_bayar, $tanggal_bayar);
+
+    // J2: Kas/Bank bertambah sebesar ppn, ppn keluaran bertambah sebesar ppn keluaran
+    if ($inv['besaran_ppn'] !== '0.00') {
+      $j1_coa_debit = $inv['coa_debit'];
+      $j1_coa_kredit = "23011";
+      $this->posting($j1_coa_debit, $j1_coa_kredit, $keterangan, $inv['besaran_ppn'], $tanggal_bayar);
+
+      $j2_coa_debit = $inv['coa_kredit'];
+      $j2_coa_kredit = $inv['coa_debit'];
+      $this->posting($j2_coa_debit, $j2_coa_kredit, $keterangan, $inv['besaran_ppn'], $tanggal_bayar);
+    }
+
+    if ($inv['opsi_pph23'] == '1') {
+      // J4: Kas/Bank bertambah sebesar pph, utang pph 23 bertambah sebesar pph
+      $j1_coa_debit = $coa_debit;
+      $j1_coa_kredit = "23014";
+      $this->posting($j1_coa_debit, $j1_coa_kredit, $keterangan, $inv['besaran_pph'], $tanggal_bayar);
+    }
+
+    $this->log_pembayaran("invoice", $inv['Id'], $nominal_bayar, $keterangan);
+
+    $data_invoice = [
+      'status_pendapatan' => ($status_bayar == 1) ? '2' : '1',
+      'status_bayar' => ($status_bayar == 1) ? '1' : '0',
+      'total_termin' => $inv['total_termin'] + $nominal_bayar,
+      'tanggal_bayar' => $this->input->post('tanggal_bayar'),
+    ];
+
+    $this->M_invoice->update_invoice($inv['Id'], $data_invoice);
+
+    $this->session->set_flashdata('message_name', 'The invoice has been successfully updated. ' . $inv['no_invoice']);
+    // After that you need to used redirect function instead of load view such as 
+    redirect("financial/invoice");
+  }
+
+  public function void_invoice()
+  {
+    $no_inv = $this->uri->segment(3);
+
+    $inv =  $this->M_invoice->show($no_inv);
+    $coa_persediaan = $inv['coa_persediaan'];
+    $jenis = $inv['jenis_invoice'];
+    $keterangan = $this->input->post('keterangan');
+    $total_biaya = $inv['total_biaya'];
+    $nominal_pendapatan = $inv['nominal_pendapatan'];
+    $tgl_void = date('Y-m-d');
+
+    $data_void = [
+      'status_void' => '1',
+      'alasan_void' => $keterangan,
+      'tanggal_void' => $tgl_void
+    ];
+
+    if ($inv) {
+      // update 24 Juni 2024 jam 17:07
+
+      $this->posting($inv['coa_kredit'], $inv['coa_debit'], $keterangan, $nominal_pendapatan, $tgl_void);
+
+      $this->M_invoice->update_invoice($inv['Id'], $data_void);
+
+      $this->session->set_flashdata('message_name', 'The invoice has been successfully void. ' . $no_inv);
+      // After that you need to used redirect function instead of load view such as 
+      redirect("financial/invoice");
+    }
+  }
+
+  private function log_pembayaran($jenis, $id_invoice, $nominal, $keterangan)
+  {
+    $data = [
+      'kategori_pembayaran' => $jenis,
+      'id_invoice' => $id_invoice,
+      'nominal_bayar' => $nominal,
+      'keterangan' => $keterangan,
+      'user_input' => $this->session->userdata('nip'),
+    ];
+
+    $this->M_invoice->addLogPayment($data);
+  }
+
+  function convertToNumberWithComma($formattedNumber)
+  {
+    // Mengganti titik sebagai pemisah ribuan dengan string kosong
+    $numberWithoutThousandsSeparator = str_replace(',', '', $formattedNumber);
+
+    // Mengganti koma sebagai pemisah desimal dengan titik
+    // $standardNumber = str_replace(',', '.', $numberWithoutThousandsSeparator);
+    $standardNumber = $numberWithoutThousandsSeparator;
+
+    // Mengonversi string ke float
+    return (float) $standardNumber;
+  }
+
+  function convertToNumber($formattedNumber)
+  {
+    // Mengganti titik sebagai pemisah ribuan dengan string kosong
+    $numberWithoutThousandsSeparator = str_replace('.', '', $formattedNumber);
+
+    // Mengganti koma sebagai pemisah desimal dengan titik
+    $standardNumber = str_replace(',', '.', $numberWithoutThousandsSeparator);
+
+    // Mengonversi string ke float
+    return (float) $standardNumber;
+  }
+
+  public function print_invoice($id)
+  {
+    $inv =  $this->M_invoice->showById($id);
+    $data = [
+      'title_pdf' => 'Invoice No. ' . $inv['no_invoice'],
+      'invoice' => $inv,
+      'details' => $this->M_invoice->item_list($inv['Id']),
+      'user' => $this->M_invoice->cek_user($inv['user_create'])
+    ];
+
+    // filename dari pdf ketika didownload
+    $file_pdf = 'Invoice No. ' . $inv['no_invoice'];
+
+    // setting paper
+    $paper = 'A4';
+
+    //orientasi paper potrait / landscape
+    $orientation = "portrait";
+
+    $html = $this->load->view('pages/financial/v_invoice_pdf', $data, true);
+
+    // run dompdf
+    $this->pdfgenerator->generate($html, $file_pdf, $paper, $orientation);
+  }
+
 
   private function prepareCoaReport(&$data, $no_coa)
   {
@@ -1342,6 +1947,7 @@ class Financial extends CI_Controller
       return $sum->akun_kredit == $no_coa ? $sum->jumlah_kredit : 0;
     }, $data['coa']));
 
+    $data['title'] = "Report CoA " . $no_coa;
     $data['detail_coa'] = $this->M_coa->getCoa($no_coa);
     $data['pages'] = 'pages/financial/v_report_per_coa';
     $data['utility'] = $this->db->get('utility')->row_array();
