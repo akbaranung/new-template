@@ -27,6 +27,13 @@
   <link rel="stylesheet" href="<?= base_url('assets') ?>/css/app-dark.css" id="darkTheme" disabled>
   <!-- Sweetalert2 -->
   <link rel="stylesheet" href="<?= base_url('assets') ?>/sweetalert2/css/sweetalert2.min.css">
+  <!-- Datatables -->
+  <!-- <link rel="stylesheet" href="<?= base_url('assets') ?>/vendors/bootstrap/dist/css/bootstrap.min.css"> -->
+
+  <!-- <link rel="stylesheet" href="<?= base_url('assets') ?>/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css"> -->
+  <!-- <link rel="stylesheet" href="<?= base_url('assets') ?>/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css"> -->
+  <!-- <link rel="stylesheet" href="<?= base_url('assets') ?>/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css"> -->
+  <link rel="stylesheet" href="<?= base_url('assets') ?>/dataTables/css/dataTables.min.css">
 
 </head>
 
@@ -79,6 +86,9 @@
   <script src="<?= base_url('assets') ?>/sweetalert2/js/sweetalert2.all.min.js"></script>
   <!-- Cleave JS -->
   <script src="<?= base_url('assets') ?>/js/cleave.min.js"></script>
+  <!-- DataTables -->
+  <script src="<?= base_url('assets') ?>/dataTables/js/dataTables.min.js"></script>
+
   <script>
     $('.select2').select2({
       theme: 'bootstrap4',
