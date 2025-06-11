@@ -323,8 +323,8 @@ class Financial extends CI_Controller
     if ($cek) {
       $coaLastPeriod = json_decode($cek['coa']);
 
-      $pendapatan = $this->M_coa->getNeracaByDate('t_coalr_sbb', 'PASIVA', $tanggal, $periode);
-      $beban = $this->M_coa->getNeracaByDate('t_coalr_sbb', 'AKTIVA', $tanggal, $periode);
+      $pendapatan = $this->M_coa->getNeracaByDate('t_coalr_sbb', 'PASIVA', $tanggal);
+      $beban = $this->M_coa->getNeracaByDate('t_coalr_sbb', 'AKTIVA', $tanggal);
 
       // Part Pendapatan
       $filteredCoaPendapatan = array_filter($coaLastPeriod, function ($item) {
