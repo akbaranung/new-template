@@ -107,17 +107,17 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
-      <h1 class="page-title">User Photo</h1>
+      <h1 class="page-title">Foto User</h1>
       <div class="card shadow mb-4">
         <div class="card-header">
           <p class="card-title">
-            <strong>Form User Photo</strong>
+            <strong>Form Foto User</strong>
           </p>
         </div>
         <div class="card-body">
           <div align="center">
             <font style="font-size:17px;">
-              User Photo
+              Foto User
               <hr />
             </font>
           </div>
@@ -132,7 +132,7 @@
                 </td>
               </tr>
               <tr>
-                <th width="200">Name</th>
+                <th width="200">Nama</th>
                 <td>
                   <input type="text" name="nama" class="form-control" value="<?= $user->nama ?>" readonly>
                 </td>
