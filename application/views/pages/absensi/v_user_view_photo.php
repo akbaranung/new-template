@@ -171,7 +171,9 @@
               <tr>
                 <th>
                   <a href="<?= base_url('app/user') ?>" class="btn btn-warning"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</a>
-                  <button type="submit" class="btn btn-primary">Submit</button>
+                  <?php if (empty($user->userImage)) { ?>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                  <?php } ?>
                 </th>
               </tr>
             </table>
