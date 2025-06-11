@@ -34,6 +34,7 @@
   <!-- <link rel="stylesheet" href="<?= base_url('assets') ?>/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css"> -->
   <!-- <link rel="stylesheet" href="<?= base_url('assets') ?>/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css"> -->
   <link rel="stylesheet" href="<?= base_url('assets') ?>/dataTables/css/dataTables.min.css">
+  <link rel="manifest" href="<?= base_url() ?>assets/_manifest.json" />
 
 </head>
 
