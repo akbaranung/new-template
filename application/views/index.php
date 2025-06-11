@@ -27,6 +27,14 @@
   <link rel="stylesheet" href="<?= base_url('assets') ?>/css/app-dark.css" id="darkTheme" disabled>
   <!-- Sweetalert2 -->
   <link rel="stylesheet" href="<?= base_url('assets') ?>/sweetalert2/css/sweetalert2.min.css">
+  <!-- Datatables -->
+  <!-- <link rel="stylesheet" href="<?= base_url('assets') ?>/vendors/bootstrap/dist/css/bootstrap.min.css"> -->
+
+  <!-- <link rel="stylesheet" href="<?= base_url('assets') ?>/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css"> -->
+  <!-- <link rel="stylesheet" href="<?= base_url('assets') ?>/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css"> -->
+  <!-- <link rel="stylesheet" href="<?= base_url('assets') ?>/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css"> -->
+  <link rel="stylesheet" href="<?= base_url('assets') ?>/dataTables/css/dataTables.min.css">
+  <link rel="manifest" href="<?= base_url() ?>assets/_manifest.json" />
 
 </head>
 
@@ -58,8 +66,8 @@
   <script src="<?= base_url('assets') ?>/js/Chart.min.js"></script>
   <script>
     /* defind global options */
-    Chart.defaults.global.defaultFontFamily = base.defaultFontFamily;
-    Chart.defaults.global.defaultFontColor = colors.mutedColor;
+    // Chart.defaults.global.defaultFontFamily = base.defaultFontFamily;
+    // Chart.defaults.global.defaultFontColor = colors_dashboard.mutedColor;
   </script>
   <script src="<?= base_url('assets') ?>/js/gauge.min.js"></script>
   <script src="<?= base_url('assets') ?>/js/jquery.sparkline.min.js"></script>
@@ -79,6 +87,9 @@
   <script src="<?= base_url('assets') ?>/sweetalert2/js/sweetalert2.all.min.js"></script>
   <!-- Cleave JS -->
   <script src="<?= base_url('assets') ?>/js/cleave.min.js"></script>
+  <!-- DataTables -->
+  <script src="<?= base_url('assets') ?>/dataTables/js/dataTables.min.js"></script>
+
   <script>
     $('.select2').select2({
       theme: 'bootstrap4',
@@ -245,6 +256,117 @@
 
   <!-- My Script -->
   <?php if (isset($pages_script)) $this->load->view($pages_script); ?>
+
+  <script>
+    const chartColors_dashboard = ["#5E72E4", "#e91e63"];
+    const colors_dashboard = {
+      mutedColor: "#8898aa",
+      borderColor: "#e3e3e3",
+      chartTheme: "light",
+    };
+    const base_dashboard = {
+      defaultFontFamily: "inherit",
+    };
+
+    var areaChartOptions = {
+      series: [{
+          name: "Pendapatan",
+          data: <?= $json_pendapatan ?>
+        },
+        {
+          name: "Biaya",
+          data: <?= $json_biaya ?>
+        }
+      ],
+      chart: {
+        type: "area",
+        height: 350,
+        stacked: false,
+        toolbar: {
+          show: true
+        },
+        zoom: {
+          enabled: false
+        },
+        background: "transparent"
+      },
+      theme: {
+        mode: colors_dashboard.chartTheme
+      },
+      xaxis: {
+        categories: <?= $json_categories ?>,
+        labels: {
+          style: {
+            colors: colors_dashboard.mutedColor,
+            cssClass: "text-muted",
+            fontFamily: base_dashboard.defaultFontFamily,
+          }
+        },
+        axisBorder: {
+          show: true
+        },
+        tooltip: {
+          enabled: true
+        }
+      },
+      yaxis: {
+        labels: {
+          style: {
+            colors: colors_dashboard.mutedColor,
+            cssClass: "text-muted",
+            fontFamily: base_dashboard.defaultFontFamily,
+          }
+        }
+      },
+      stroke: {
+        curve: "smooth",
+        lineCap: "round",
+        width: 2
+      },
+      fill: {
+        type: "solid",
+        opacity: 0.3
+      },
+      markers: {
+        size: 4,
+        strokeColors: "#fff",
+        strokeWidth: 2,
+      },
+      colors: chartColors_dashboard,
+      dataLabels: {
+        enabled: false
+      },
+      grid: {
+        borderColor: colors_dashboard.borderColor,
+        yaxis: {
+          lines: {
+            show: true
+          }
+        },
+        xaxis: {
+          lines: {
+            show: false
+          }
+        }
+      },
+      legend: {
+        position: "top",
+        labels: {
+          colors: colors_dashboard.mutedColor
+        }
+      },
+      tooltip: {
+        y: {
+          formatter: val => new Intl.NumberFormat('id-ID').format(val)
+        }
+      }
+    };
+
+    var areaChart = new ApexCharts(document.querySelector("#areaChart"), areaChartOptions);
+    areaChart.render();
+  </script>
+
+
 </body>
 
 </html>

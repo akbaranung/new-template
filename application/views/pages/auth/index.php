@@ -21,6 +21,7 @@
   <link rel="stylesheet" href="<?= base_url('assets/') ?>/css/app-dark.css" id="darkTheme" disabled>
   <!-- Sweetalert -->
   <link rel="stylesheet" href="<?= base_url('assets') ?>/sweetalert2/css/sweetalert2.min.css">
+  <link rel="manifest" href="<?= base_url() ?>assets/_manifest.json" />
 </head>
 
 <body class="light ">

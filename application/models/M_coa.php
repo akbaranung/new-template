@@ -271,6 +271,7 @@ class M_coa extends CI_Model
     public function getNeracaByDate($table, $posisi, $tanggal_akhir)
     {
         $date = new DateTime($tanggal_akhir);
+
         $tanggal_awal = $date->format('Y-m') . '-01';
         $kode_cabang = $this->session->userdata('kode_cabang');
 
@@ -329,11 +330,6 @@ class M_coa extends CI_Model
                 coa.no_sbb ASC
         ");
         }
-
-        // echo '<pre>';
-        // print_r($query->result());
-        // echo '</pre>';
-        // exit;
 
         return $query->result();
     }
