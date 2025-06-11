@@ -53,7 +53,8 @@ class Home extends CI_Controller
 
       $row = $this->M_coa->cek_saldo_awal($periode);
 
-      if (!$row['coa']) {
+      if (!$row || !isset($row['coa']) || empty($row['coa'])) {
+
         $tanggal_awal = date('Y-m-d', $date); // gunakan tanggal periode
         $tanggal = new DateTime($tanggal_awal);
         $tanggal->modify('first day of previous month');
