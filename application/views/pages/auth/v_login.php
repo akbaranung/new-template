@@ -4,7 +4,7 @@
       <img src="<?= base_url('assets') ?>/images/logo.png" alt="logo" class="w-100">
     </a>
     <br>
-    <?php if ($this->session->flashdata('error')): ?>
+    <?php if ($this->session->flashdata('error')) : ?>
       <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <strong><?= $this->session->flashdata('error'); ?>!</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close">
           <span aria-hidden="true">×</span>
