@@ -1,6 +1,6 @@
 <div class="row align-items-center h-100 w-100 m-0">
   <form class="col-lg-3 col-md-4 col-10 mx-auto my-auto" action="<?= site_url('auth/login') ?>" method="post">
-    <div class="card p-4">
+    <div class="card shadow p-4">
       <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="<?= base_url('/') ?>">
         <img src="<?= base_url('assets') ?>/images/logo.png" alt="logo" class="w-100">
       </a>
