@@ -42,7 +42,7 @@
                 enableHighAccuracy: false
             });
         } else {
-            Swal.fire('Error', 'Geolocation is not supported by this browser.', 'error');
+            Swal.fire('Error', 'Geolocation tidak support dengan browser.', 'error');
         }
     }
 
@@ -62,13 +62,14 @@
 
         if (isWithinRange) {
             $('#lokasi_sekarang').text('Lokasi Sekarang ' + locationName);
-            Swal.fire('Success', `You are within range of ${locationName}. Updating table...`, 'success');
+            Swal.fire('Success', `Kamu berada di jarak lokasi ${locationName}. Memperbarui tabel...`, 'success');
             updateTable();
         } else {
             $('#lokasi_sekarang').text('Lokasi Sekarang Di Luar Jangkauan');
             // Swal.fire('Alert', `You are not within range. Updating table...`, 'warning');
             Swal.fire({
-                title: 'You are not within range! Ingin Tetap Absen?',
+                // title: 'You are not within range! Ingin Tetap Absen?',
+                title: 'Kamu di luar jangkauan lokasi! Ingin Tetap Absen?',
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonText: 'Ya, Absen',
@@ -83,16 +84,20 @@
     function showError(error) {
         switch (error.code) {
             case error.PERMISSION_DENIED:
-                Swal.fire('Error', 'Permission to access location was denied.', 'error');
+                // Swal.fire('Error', 'Permission to access location was denied.', 'error');
+                Swal.fire('Error', 'Izin untuk akses lokasi ditolak.', 'error');
                 break;
             case error.POSITION_UNAVAILABLE:
-                Swal.fire('Error', 'Location information is unavailable.', 'error');
+                // Swal.fire('Error', 'Location information is unavailable.', 'error');
+                Swal.fire('Error', 'Informasi lokasi tidak tersedia.', 'error');
                 break;
             case error.TIMEOUT:
-                Swal.fire('Error', 'The request to get your location timed out.', 'error');
+                // Swal.fire('Error', 'The request to get your location timed out.', 'error');
+                Swal.fire('Error', 'Permintaan untuk mendapatkan lokasi Anda habis waktunya.', 'error');
                 break;
             case error.UNKNOWN_ERROR:
-                Swal.fire('Error', 'An unknown error occurred.', 'error');
+                // Swal.fire('Error', 'An unknown error occurred.', 'error');
+                Swal.fire('Error', 'Terjadi kesalahan yang tidak diketahui.', 'error');
                 break;
         }
     }
@@ -133,7 +138,8 @@
 
 
                 } else if (response.status === "No Picture") {
-                    Swal.fire('Alert', 'Picture Not Found, Please take Picture first', 'warning');
+                    // Swal.fire('Alert', 'Picture Not Found, Please take Picture first', 'warning');
+                    Swal.fire('Alert', 'Gambar Tidak Ditemukan, Mohon Ambil Gambar Terlebih Dahulu', 'warning');
 
                 } else {
                     console.error("Error:", response.message);
@@ -162,8 +168,8 @@
                     console.log(labels);
 
                 } else if (response.status === "No Picture") {
-                    Swal.fire('Alert', 'Picture Not Found, Please take Picture first', 'warning');
-
+                    // Swal.fire('Alert', 'Picture Not Found, Please take Picture first', 'warning');
+                    Swal.fire('Alert', 'Gambar Tidak Ditemukan, Mohon Ambil Gambar Terlebih Dahulu', 'warning');
                 } else {
                     console.error("Error:", response.message);
                 }
@@ -191,7 +197,8 @@
                     console.log(labels);
 
                 } else if (response.status === "No Picture") {
-                    Swal.fire('Alert', 'Picture Not Found, Please take Picture first', 'warning');
+                    // Swal.fire('Alert', 'Picture Not Found, Please take Picture first', 'warning');
+                    Swal.fire('Alert', 'Gambar Tidak Ditemukan, Mohon Ambil Gambar Terlebih Dahulu', 'warning');
 
                 } else {
                     console.error("Error:", response.message);
@@ -220,7 +227,8 @@
                     console.log(labels);
 
                 } else if (response.status === "No Picture") {
-                    Swal.fire('Alert', 'Picture Not Found, Please take Picture first', 'warning');
+                    // Swal.fire('Alert', 'Picture Not Found, Please take Picture first', 'warning');
+                    Swal.fire('Alert', 'Gambar Tidak Ditemukan, Mohon Ambil Gambar Terlebih Dahulu', 'warning');
 
                 } else {
                     console.error("Error:", response.message);
@@ -375,7 +383,8 @@
                                 descriptions.push(detections.descriptor);
                             } else {
                                 console.log(`No face detected in ${label}/${i}.png`);
-                                Swal.fire('Alert', 'Picture Not Found, Please take Picture first', 'warning');
+                                // Swal.fire('Alert', 'Picture Not Found, Please take Picture first', 'warning');
+                                Swal.fire('Alert', 'Gambar Tidak Ditemukan, Mohon Ambil Gambar Terlebih Dahulu', 'warning');
                                 break;
                             }
                         } catch (error) {
