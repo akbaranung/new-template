@@ -125,3 +125,137 @@
     location.href = "<?= site_url('app/memo_view/') ?>" + id
   }
 </script>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const isPremium = <?php echo json_encode($this->session->userdata('is_premium')); ?>;
+    const upgradeUrl = '<?= base_url('subscription/upgrade') ?>'; // Adjust this URL as needed
+
+    function showPremiumDeniedSwal() {
+      Swal.fire({
+        title: 'Access Denied!',
+        text: 'You need a premium account to access this feature. Please upgrade your subscription.',
+        icon: 'warning',
+        confirmButtonText: 'Upgrade Now',
+        showCancelButton: true,
+        cancelButtonText: 'No Thanks'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = upgradeUrl;
+        }
+      });
+    }
+
+    // ... (your existing JavaScript for other buttons) ...
+
+    // Disable Attachment Input if Not Premium
+    const attachmentInput = document.getElementById('attach');
+    if (attachmentInput) { // Check if the element exists
+      if (!isPremium) {
+        attachmentInput.disabled = true; // Disable the input field
+        // Optional: Add a tooltip or message near the input to explain why it's disabled
+        const parentDiv = attachmentInput.closest('.col-sm-9'); // Find the parent div
+        if (parentDiv) {
+          const message = document.createElement('small');
+          message.classList.add('text-danger', 'form-text');
+          message.textContent = 'Upgrade to premium to upload attachments.';
+          parentDiv.appendChild(message);
+        }
+      }
+    }
+
+    const editorElement = document.getElementById('ckeditor');
+    if (typeof CKEDITOR !== 'undefined' && editorElement) {
+      let editorConfig = {}; // Start with an empty config object
+
+      // Initialize CKEditor first, potentially with its default toolbar
+      // We are NOT using removeButtons or removePlugins here
+      if (CKEDITOR.instances.ckeditor) {
+        CKEDITOR.instances.ckeditor.destroy(true);
+      }
+      CKEDITOR.replace('ckeditor', editorConfig); // Initialize with default or basic config
+
+      // Once the editor is ready, attach event listeners if not premium
+      CKEDITOR.on('instanceReady', function(evt) {
+        const editor = evt.editor; // Get the editor instance
+
+        if (!isPremium) {
+          // Make the editor content area read-only (optional but good for non-premium)
+          // editor.setReadOnly(true);
+
+          // Add a visual cue to the editor itself
+          const editorContainer = editor.container.$;
+          if (editorContainer) {
+            editorContainer.style.opacity = '0.7';
+            editorContainer.style.backgroundColor = '#f0f0f0';
+            // You might also disable the toolbar visually to indicate read-only
+            // editor.ui.space('toolbar').setStyle('pointer-events', 'none');
+          }
+
+          // --- Add the message below the CKEditor ---
+          const parentDiv = editorElement.closest('.col-sm-12'); // Find the parent div of the textarea
+          if (parentDiv) {
+            const message = document.createElement('small');
+            message.classList.add('text-danger', 'form-text');
+            message.textContent = 'Upgrade to premium to Use Image, Link, and Table feature.';
+            parentDiv.appendChild(message);
+          }
+
+          // --- Event Listeners for Premium Features ---
+
+          // 1. Image (e.g., clicking image button, drag & drop, paste)
+          editor.on('fileUploadRequest', function(event) {
+            // This event fires when an image is dragged & dropped or pasted
+            event.cancel(); // Prevent the upload
+            showPremiumDeniedSwal();
+            editor.execCommand('undo'); // Undo the paste/drop if possible (might vary)
+          });
+          editor.on('paste', function(event) {
+            // Check if the paste data contains image data (e.g., base64)
+            if (event.data.dataTransfer && event.data.dataTransfer.getFilesCount() > 0) {
+              event.cancel(); // Prevent the paste
+              showPremiumDeniedSwal();
+            }
+          }, null, null, 999); // Higher priority to ensure it runs first
+
+          // Prevent opening the image dialog directly if the button is clicked
+          editor.on('beforeCommandExec', function(event) {
+            // The 'image' command is triggered by the image button
+            if (event.data.name === 'image' || event.data.name === 'imagebutton') {
+              event.cancel(); // Stop the command from executing
+              showPremiumDeniedSwal();
+            }
+            // Also for "table" and "link"
+            if (event.data.name === 'table' || event.data.name === 'link') {
+              event.cancel();
+              showPremiumDeniedSwal();
+            }
+          });
+
+          // You might also need to explicitly handle context menu options if they allow inserting these
+          // This often requires specific plugin knowledge or overriding context menu behavior.
+          // For example, to prevent 'Image Properties' or 'Table Properties' from context menu:
+          editor.on('menuShow', function(event) {
+            if (event.data.editor.contextMenu) {
+              const items = event.data.editor.contextMenu._.menuItems;
+              for (const name in items) {
+                if (items.hasOwnProperty(name)) {
+                  // Common commands related to images, tables, links
+                  if (name === 'image' || name === 'table' || name === 'link' ||
+                    name.startsWith('table') || name.startsWith('cell') || name.startsWith('row') || name.startsWith('column')) {
+                    items[name].state = CKEDITOR.TRISTATE_DISABLED; // Disable the menu item
+                  }
+                }
+              }
+            }
+          });
+
+        } else {
+          // Premium user: editor remains fully functional (no readOnly, no event listeners)
+        }
+      });
+    }
+
+  });
+</script>

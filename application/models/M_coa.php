@@ -4,6 +4,15 @@ class M_coa extends CI_Model
 {
     // $this->cb untuk koneksi ke database corebank
 
+
+    protected $cb; // Declare the property
+
+    public function __construct()
+    {
+        parent::__construct(); // Call the parent constructor
+        $this->cb = $this->load->database('corebank', TRUE);
+    }
+
     private function apply_cabang_filter()
     {
         $kode_cabang = $this->session->userdata('kode_cabang');

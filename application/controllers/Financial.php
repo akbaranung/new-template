@@ -977,12 +977,27 @@ class Financial extends CI_Controller
 
 
 
-    if ($jenis == "debit") {
-      $data['pages'] = 'pages/financial/v_financial_entry_debit';
-    } else if ($jenis == "kredit") {
-      $data['pages'] = 'pages/financial/v_financial_entry_kredit';
+    if ($this->session->userdata('is_premium')) {
+      if ($jenis == "debit") {
+        $data['pages'] = 'pages/financial/v_financial_entry_debit';
+      } else if ($jenis == "kredit") {
+        $data['pages'] = 'pages/financial/v_financial_entry_kredit';
+      } else {
+        $data['pages'] = 'pages/financial/v_financial_entry';
+      }
     } else {
       $data['pages'] = 'pages/financial/v_financial_entry';
+      if ($jenis) {
+        $this->session->set_flashdata('swal_message', [
+          'icon' => 'error', // or 'success', 'warning', 'info', 'question'
+          'title' => 'Access Denied!',
+          'text' => 'You need a premium account to access this feature. Please upgrade your subscription.',
+          'confirmButtonText' => 'Upgrade Now',
+          'showCancelButton' => true,
+          'cancelButtonText' => 'No Thanks',
+          'redirectUrl' => base_url('subscription/upgrade') // URL to redirect if confirmed
+        ]);
+      }
     }
 
     $this->load->view('index', $data);

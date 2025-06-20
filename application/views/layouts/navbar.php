@@ -3,6 +3,10 @@
     <i class="fe fe-menu navbar-toggler-icon"></i>
   </button>
   <ul class="nav">
+
+    <li class="nav-item">
+      <a href="#" onclick="upgrade_premium()" class="nav-link my-2 btn btn-<?= ($this->session->userdata('is_premium') == '1') ? 'primary' : 'secondary' ?>"><?= ($this->session->userdata('is_premium') == '1') ? 'Premium' : 'Not Premium' ?></a>
+    </li>
     <li class="nav-item">
       <a class="nav-link text-muted my-2" href="#" id="modeSwitcher" data-mode="light">
         <i class="fe fe-sun fe-16"></i>

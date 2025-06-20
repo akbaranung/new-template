@@ -365,7 +365,22 @@
     var areaChart = new ApexCharts(document.querySelector("#areaChart"), areaChartOptions);
     areaChart.render();
   </script>
-
+  <script>
+    function upgrade_premium() {
+      Swal.fire({
+        title: 'Access Denied!',
+        text: 'You need a premium account to access this feature. Please upgrade your subscription.',
+        icon: 'warning',
+        confirmButtonText: 'Upgrade Now',
+        showCancelButton: true,
+        cancelButtonText: 'No Thanks'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = '<?= base_url('subscription/upgrade') ?>';
+        }
+      });
+    }
+  </script>
 
 </body>
 

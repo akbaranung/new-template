@@ -207,3 +207,101 @@
     location.href = "<?= site_url('task/card_view/') ?>" + id
   }
 </script>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const isPremium = <?php echo json_encode($this->session->userdata('is_premium')); ?>;
+    const upgradeUrl = '<?= base_url('subscription/upgrade') ?>'; // Adjust this URL as needed
+
+    function showPremiumDeniedSwal() {
+      Swal.fire({
+        title: 'Access Denied!',
+        text: 'You need a premium account to access this feature. Please upgrade your subscription.',
+        icon: 'warning',
+        confirmButtonText: 'Upgrade Now',
+        showCancelButton: true,
+        cancelButtonText: 'No Thanks'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = upgradeUrl;
+        }
+      });
+    }
+
+    // ... (your existing JavaScript for other buttons) ...
+
+    // Disable Attachment Input if Not Premium
+    const attachmentInput = document.getElementById('attach');
+    if (attachmentInput) { // Check if the element exists
+      if (!isPremium) {
+        attachmentInput.disabled = true; // Disable the input field
+        // Optional: Add a tooltip or message near the input to explain why it's disabled
+        const parentDiv = attachmentInput.closest('.col-sm-6'); // Find the parent div
+        if (parentDiv) {
+          const message = document.createElement('small');
+          message.classList.add('text-danger', 'form-text');
+          message.textContent = 'Upgrade to premium to upload attachments.';
+          parentDiv.appendChild(message);
+        }
+      }
+    }
+
+    // --- Uppy Initialization for Premium Users ---
+    const uppyContainer = document.getElementById('uppy-container');
+    const premiumUppyMessage = document.getElementById('premium-uppy-message');
+
+    if (uppyContainer && premiumUppyMessage) { // Ensure both elements exist
+      if (isPremium) {
+        // If premium, show the Uppy container and initialize Uppy
+        uppyContainer.style.display = ''; // Show the container
+        premiumUppyMessage.style.display = 'none'; // Hide the message
+
+        const uppy = new Uppy.Core({
+          autoProceed: false // Keep this false if you handle submission manually
+        }).use(Uppy.Dashboard, {
+          inline: true,
+          target: '#drag-drop-area',
+          proudlyDisplayPoweredByUppy: false,
+          theme: 'dark',
+          width: '100%',
+          height: '100%',
+        }).use(Uppy.Form, {
+          target: '#form-comment', // Assuming this is the ID of your form
+          getMetaFromForm: true
+        });
+
+        // Optional: Attach an XHRUpload plugin if you're uploading directly with Uppy
+        // uppy.use(Uppy.XHRUpload, {
+        //     endpoint: '<?= base_url('your_upload_endpoint') ?>', // Replace with your actual upload URL
+        //     fieldName: 'files[]', // Name expected by your server for multiple files
+        //     formData: true, // Send as FormData
+        //     headers: {
+        //         'X-Requested-With': 'XMLHttpRequest' // Example header
+        //     }
+        // });
+
+        // You might need to handle the Uppy.Form submission manually or via a separate Uppy plugin
+        // if you're not using Uppy's built-in uploaders with the Form plugin.
+        // Uppy.Form primarily helps with form data, not necessarily the file upload itself.
+        // For actual file upload, you'd typically add Uppy.XHRUpload, Uppy.AwsS3, etc.
+        // If you submit the form normally and process files via $_FILES in PHP,
+        // ensure Uppy is configured to allow that or just hide the dashboard entirely.
+
+      } else {
+        // If not premium, hide the Uppy container and show the message
+        uppyContainer.style.display = 'none';
+        premiumUppyMessage.style.display = ''; // Show the message
+
+        // Attach event listener to the "Upgrade Now" button in the message
+        const upgradeUppyBtn = document.getElementById('upgrade-uppy-btn');
+        if (upgradeUppyBtn) {
+          upgradeUppyBtn.addEventListener('click', function() {
+            showPremiumDeniedSwal(); // Re-use your existing Swal function
+          });
+        }
+      }
+    }
+
+  });
+</script>

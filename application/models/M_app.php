@@ -3,20 +3,23 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class M_app extends CI_Model
 {
+  protected $cb; // Declare the property
 
   public function __construct()
   {
-    parent::__construct();
+    parent::__construct(); // Call the parent constructor
+    $this->cb = $this->load->database('corebank', TRUE);
   }
-
   public function search_user_memo($keyword = '', $limit = 10, $offset = 0)
   {
     $this->db->select('nip, nama');
     $this->db->from('users');
 
+    $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
     if (!empty($keyword)) {
       $this->db->like('nama', $keyword);
     }
+    $this->db->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
     $this->db->where('nip !=', $this->session->userdata('nip'));
     $this->db->limit($limit, $offset);
     $query = $this->db->get();
@@ -68,7 +71,7 @@ class M_app extends CI_Model
 
     $nip = $this->session->userdata('nip');
 
-    $query = $this->db->select('a.*,b.nama_jabatan,b.nama,b.supervisi,c.kode_nama,b.level_jabatan')->from('memo a')->join('users b', 'b.nip = a.nip_dari', 'LEFT')->join('bagian c', 'b.bagian = c.kode')->where('a.Id', $id)->group_start()->like('a.nip_dari', $nip, 'both')->or_like('a.nip_kpd', $nip, 'both')->or_like('a.nip_cc', $nip, 'both')->group_end()->get();
+    $query = $this->db->select('a.*,b.nama_jabatan,b.nama,b.supervisi,c.kode_nama,b.level_jabatan')->from('memo a')->join('users b', 'b.nip = a.nip_dari', 'LEFT')->join('bagian c', 'b.bagian = c.kode', 'left')->where('a.Id', $id)->group_start()->like('a.nip_dari', $nip, 'both')->or_like('a.nip_kpd', $nip, 'both')->or_like('a.nip_cc', $nip, 'both')->group_end()->get();
     return $query->row();
   }
 

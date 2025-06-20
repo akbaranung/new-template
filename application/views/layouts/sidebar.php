@@ -31,38 +31,49 @@
         </a>
       </li>
     </ul>
+    <?php
+    $this->cb = $this->load->database('corebank', TRUE);
 
-    <ul class="navbar-nav flex-fill w-100 mb-2">
-      <?php
-      if ($menus) {
-        foreach ($menus as $menu): ?>
-          <?php if (empty($menu->submenus)): ?>
-            <li class="nav-item w-100">
-              <a class="nav-link <?= ($controller == $menu->controller) ? 'active' : '' ?>" href="<?= site_url($menu->url) ?>">
-                <i class="<?= $menu->icon ?>"></i>
-                <span class="ml-3 item-text"><?= $menu->menu_name ?></span>
-              </a>
-            </li>
-          <?php else: ?>
-            <li class="nav-item <?= ($controller == $menu->controller) ? 'active' : '' ?> dropdown">
-              <a href="#<?= $menu->url ?>" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
-                <i class="<?= $menu->icon ?>"></i>
-                <span class="ml-3 item-text"><?= $menu->menu_name ?></span>
-              </a>
-              <ul class="collapse <?= ($controller == $menu->controller) ? 'show' : '' ?> list-unstyled pl-4 w-100" id="<?= $menu->url ?>">
-                <?php foreach ($menu->submenus as $submenu): ?>
-                  <li class="nav-item">
-                    <a class="nav-link <?= ($current_uri == $submenu->url) ? 'active' : '' ?> pl-3" href="<?= site_url($submenu->url) ?>"><i class="<?= $submenu->icon ?>"></i><span class="ml-1 item-text"><?= $submenu->menu_name ?></span>
-                    </a>
-                  </li>
-                <?php endforeach; ?>
-              </ul>
-            </li>
-          <?php endif; ?>
-      <?php endforeach;
-      } ?>
-    </ul>
+    $this->db->from('users');
+    $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
+    $this->db->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
+    $total_user = $this->db->get()->num_rows(); // Get the number of rows
+    if ($total_user >= 5) {
+    ?>
+      <ul class="navbar-nav flex-fill w-100 mb-2">
+        <?php
+        if ($menus) {
+          foreach ($menus as $menu): ?>
+            <?php if (empty($menu->submenus)): ?>
+              <li class="nav-item w-100">
+                <a class="nav-link <?= ($controller == $menu->controller) ? 'active' : '' ?>" href="<?= site_url($menu->url) ?>">
+                  <i class="<?= $menu->icon ?>"></i>
+                  <span class="ml-3 item-text"><?= $menu->menu_name ?></span>
+                </a>
+              </li>
+            <?php else: ?>
+              <li class="nav-item <?= ($controller == $menu->controller) ? 'active' : '' ?> dropdown">
+                <a href="#<?= $menu->url ?>" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
+                  <i class="<?= $menu->icon ?>"></i>
+                  <span class="ml-3 item-text"><?= $menu->menu_name ?></span>
+                </a>
+                <ul class="collapse <?= ($controller == $menu->controller) ? 'show' : '' ?> list-unstyled pl-4 w-100" id="<?= $menu->url ?>">
+                  <?php foreach ($menu->submenus as $submenu): ?>
+                    <li class="nav-item">
+                      <a class="nav-link <?= ($current_uri == $submenu->url) ? 'active' : '' ?> pl-3" href="<?= site_url($submenu->url) ?>"><i class="<?= $submenu->icon ?>"></i><span class="ml-1 item-text"><?= $submenu->menu_name ?></span>
+                      </a>
+                    </li>
+                  <?php endforeach; ?>
+                </ul>
+              </li>
+            <?php endif; ?>
+        <?php endforeach;
+        } ?>
+      </ul>
 
+    <?php
+    }
+    ?>
     <ul class="navbar-nav flex-fill w-100 mb-2">
       <li class="nav-item w-100">
         <a class="nav-link" href="<?= site_url('auth/logout') ?>">

@@ -3,12 +3,13 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class M_task extends CI_Model
 {
+  protected $cb; // Declare the property
 
   public function __construct()
   {
-    parent::__construct();
+    parent::__construct(); // Call the parent constructor
+    $this->cb = $this->load->database('corebank', TRUE);
   }
-
   public function search_user_task($keyword = '', $limit = 10, $offset = 0)
   {
     $this->db->select('nip, nama');
@@ -16,6 +17,13 @@ class M_task extends CI_Model
 
     if (!empty($keyword)) {
       $this->db->like('nama', $keyword);
+    }
+    if ($this->session->userdata('level_jabatan') >= '3') {
+      $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
+      $this->db->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
+    } else {
+      $this->db->where('id_cabang', $this->session->userdata('kode_cabang'));
+      $this->db->where('users.bagian', $this->session->userdata('bagian'));
     }
     $this->db->where('nip !=', $this->session->userdata('nip'));
     $this->db->limit($limit, $offset);

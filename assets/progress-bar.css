@@ -1,0 +1,162 @@
+/* Custom CSS for chevron steps */
+.progress-stepper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    font-family: 'Inter', sans-serif; /* Using Inter font as per instructions */
+}
+
+.step {
+    flex: 1; /* Each step takes equal width */
+    position: relative;
+    text-align: center;
+    color: #fff; /* White text for active steps */
+    background-color: #6c757d; /* Default background for inactive steps (Bootstrap secondary) */
+    padding: 15px 0;
+    margin-right: 20px; /* Space between chevrons */
+    border-radius: 8px; /* Rounded corners for the steps */
+    transition: background-color 0.3s ease; /* Smooth transition for color changes */
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+/* Active step styling */
+.step.active {
+    background-color: #007bff; /* Bootstrap primary blue */
+}
+
+/* Completed step styling */
+.step.completed {
+    background-color: #28a745; /* Green for completed steps (Bootstrap success) */
+}
+
+/* Specific colors for each step as in the image (approximated Bootstrap colors) */
+.step:nth-child(1).active { background-color: #dc3545; } /* Red (Bootstrap danger) */
+.step:nth-child(2).active { background-color: #fd7e14; } /* Orange (custom or similar to warning) */
+.step:nth-child(3).active { background-color: #c5c025; } /* Grey (Bootstrap secondary) */
+.step:nth-child(4).active { background-color: #17a2b8; } /* Teal (Bootstrap info) */
+.step:nth-child(5).active { background-color: #28a745; } /* Green (Bootstrap success) */
+
+
+/* Chevron effect using pseudo-elements */
+.step:after {
+    content: '';
+    position: absolute;
+    /* top: 0; */
+    /* right: -20px; /*Overlap for chevron shape */
+    
+    top: 2px;
+    right: -17px;
+    width: 0;
+    height: 0;
+    border-top: 25px solid transparent; /* Half height of the step for the top triangle */
+    border-bottom: 25px solid transparent; /* Half height of the step for the bottom triangle */
+    border-left: 20px solid #6c757d; /* Width of the overlap and color of the step */
+    z-index: 1;
+    transition: border-left-color 0.3s ease;
+}
+
+.step.active:after {
+    border-left-color: #007bff; /* Active color for chevron */
+}
+
+/* Completed chevron color */
+.step.completed:after {
+    border-left-color: #28a745; /* Green for completed chevron */
+}
+
+.step:nth-child(1).active:after { border-left-color: #dc3545; }
+.step:nth-child(2).active:after { border-left-color: #fd7e14; }
+.step:nth-child(3).active:after { border-left-color: #c5c025; }
+.step:nth-child(4).active:after { border-left-color: #17a2b8; }
+.step:nth-child(5).active:after { border-left-color: #28a745; }
+
+
+.step:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0; /* Align with the start of the step */
+    width: 0;
+    height: 0;
+    border-top: 25px solid transparent;
+    border-bottom: 25px solid transparent;
+    border-left: 20px solid #fff; /* White gap before the chevron */
+    z-index: 0; /* Behind the step */
+}
+
+/* Remove margin and chevron for the last step */
+.step:last-child {
+    margin-right: 0;
+}
+
+.step:last-child:after {
+    display: none; /* Hide chevron for the last step */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .progress-stepper {
+        flex-direction: column; /* Stack steps vertically on smaller screens */
+        align-items: stretch; /* Stretch items to full width */
+    }
+
+    .step {
+        margin-right: 0;
+        margin-bottom: 10px; /* Space between stacked steps */
+        padding: 10px 0;
+    }
+
+    .step:after {
+        display: none; /* Hide chevrons when stacked for cleaner look */
+    }
+
+    .step:before {
+        display: none;
+    }
+}
+
+/* Button styling for progress bar controls */
+.btn-custom {
+    padding: 12px 25px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.btn-custom:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary-custom {
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    border: none;
+    color: white;
+}
+
+.btn-secondary-custom {
+    background: linear-gradient(45deg, #6c757d, #5a6268);
+    border: none;
+    color: white;
+}
+
+/* Additional custom styles for the overall layout from your snippet */
+.page-title {
+    margin-bottom: 0.5rem;
+}
+.squircle {
+    width: 80px;
+    height: 80px;
+    border-radius: 25%; /* Rounded square */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px;
+}
+.fe { /* For custom 'fe' icons, assuming they are similar to font-awesome */
+    font-family: 'Font Awesome 5 Free'; /* Placeholder if 'fe' is not defined */
+    font-weight: 900;
+}

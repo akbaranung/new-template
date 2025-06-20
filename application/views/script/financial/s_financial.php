@@ -659,3 +659,96 @@
     <?php endforeach; ?>
   });
 </script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const isPremium = <?php echo json_encode($this->session->userdata('is_premium')); ?>;
+    const upgradeUrl = '<?= base_url('subscription/upgrade') ?>'; // Adjust this URL as needed
+
+    function showPremiumDeniedSwal() {
+      Swal.fire({
+        title: 'Access Denied!',
+        text: 'You need a premium account to access this feature. Please upgrade your subscription.',
+        icon: 'warning',
+        confirmButtonText: 'Upgrade Now',
+        showCancelButton: true,
+        cancelButtonText: 'No Thanks'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = upgradeUrl;
+        }
+      });
+    }
+
+    // 1. Upload Data Button
+    const uploadDataBtn = document.getElementById('uploadDataBtn');
+    if (uploadDataBtn) {
+      uploadDataBtn.addEventListener('click', function(event) {
+        if (!isPremium) {
+          event.preventDefault(); // Prevent modal from opening
+          showPremiumDeniedSwal();
+        } else {
+          // If premium, manually trigger the modal (since data-target is removed)
+          // Or keep data-target and just rely on the if(!isPremium) block to prevent it.
+          // If you remove data-target, you need jQuery or plain JS to show modal:
+          // $('#upload_modal').modal('show'); // If using jQuery
+          // new bootstrap.Modal(document.getElementById('upload_modal')).show(); // If using Bootstrap 5 without jQuery
+          // For Bootstrap 4 with jQuery (common with data-toggle/data-target):
+          $('#upload_modal').modal('show');
+        }
+      });
+    }
+
+    // 2. Dropdown Items (Multi Kredit, Multi Debit)
+    const premiumCheckLinks = document.querySelectorAll('.dropdown-item.premium-check');
+    premiumCheckLinks.forEach(link => {
+      link.addEventListener('click', function(event) {
+        if (!isPremium) {
+          event.preventDefault(); // Prevent navigation
+          showPremiumDeniedSwal();
+        } else {
+          // If premium, proceed to the URL stored in data-target-url
+          window.location.href = this.dataset.targetUrl;
+        }
+      });
+    });
+
+    // Optional: Disable the dropdown links entirely if not premium (visual cue)
+    if (!isPremium) {
+      premiumCheckLinks.forEach(link => {
+        // link.classList.add('disabled'); // Add a 'disabled' class (requires CSS for styling)
+        // link.style.pointerEvents = 'none'; // Further prevent clicks
+      });
+    }
+  });
+  <?php if ($this->session->flashdata('swal_message')) : ?>
+    const swalConfig = <?php echo json_encode($this->session->flashdata('swal_message')); ?>;
+
+    // Remove the redirectUrl from swalConfig as it's handled separately
+    const redirectUrl = swalConfig.redirectUrl || null;
+    delete swalConfig.redirectUrl; // Clean up the config
+
+    Swal.fire(swalConfig).then((result) => {
+      if (result.isConfirmed && redirectUrl) {
+        window.location.href = redirectUrl;
+      }
+    });
+  <?php endif; ?>
+
+  // If you were *not* redirecting and passing $data['swal_message'] directly:
+  <?php
+  /*
+        if (isset($swal_message)) : ?>
+            const swalConfig = <?php echo json_encode($swal_message); ?>;
+            const redirectUrl = swalConfig.redirectUrl || null;
+            delete swalConfig.redirectUrl;
+
+            Swal.fire(swalConfig).then((result) => {
+                if (result.isConfirmed && redirectUrl) {
+                    window.location.href = redirectUrl;
+                }
+            });
+        <?php endif;
+        */
+  ?>
+</script>

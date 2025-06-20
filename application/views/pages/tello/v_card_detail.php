@@ -99,7 +99,16 @@
                 <h3 class="text-center">Activity</h3>
                 <form id="form-comment">
                   <input type="hidden" name="id_detail" id="id_detail" value="<?= $detail_task['id_detail'] ?>">
-                  <div id="drag-drop-area"></div>
+                  <div id="uppy-container">
+                    <div id="drag-drop-area"></div>
+                  </div>
+                  <div id="premium-uppy-message" style="display: none;">
+                    <div class="alert alert-info text-center mt-4">
+                      <i class="fa fa-cloud-upload"></i> Upload attachments requires a premium account.
+                      <br>
+                      <button type="button" class="btn btn-sm btn-outline-info mt-2" id="upgrade-uppy-btn">Upgrade Now</button>
+                    </div>
+                  </div>
                   <div class="form-group">
                     <textarea name="comment" id="coment" class="form-control mt-4" placeholder="comment"></textarea>
                   </div>

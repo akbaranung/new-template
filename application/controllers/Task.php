@@ -204,8 +204,47 @@ class Task extends CI_Controller
     $end = $this->input->post('end');
     $activity = $this->input->post('activity');
 
-    $files = $_FILES['attach']['name'];
+    $is_premium = $this->session->userdata('is_premium'); // Assuming this is how you get it
+    // Check if the 'attach' key exists in $_FILES array
+    if (isset($_FILES['attach'])) {
+      // If it exists, it means the browser attempted to send file data for 'attach'.
+      // Now, we need to check if there's actually a file name (for 'multiple' inputs)
+      // $_FILES['attach']['name'][0] checks the name of the first file in the array.
+      // If the input was NOT multiple, you would just check !empty($_FILES['attach']['name'])
+      if (!empty($_FILES['attach']['name'][0])) {
+        // If the user is premium, process the file
+        if ($is_premium) {
+          $files = $_FILES['attach']['name'][0]; // Safely access the file name of the first file
+          // Your code to handle the uploaded file(s) goes here.
+          // Remember, for multiple files, $_FILES['attach']['name'] will be an array of names.
+          // You might want to loop through them:
+          // foreach ($_FILES['attach']['name'] as $key => $value) {
+          //     $fileName = $value;
+          //     $tmpName = $_FILES['attach']['tmp_name'][$key];
+          //     // Process $fileName and $tmpName
+          // }
 
+          // Log or confirm file processing
+          log_message('info', 'File uploaded: ' . $files);
+        } else {
+          // Non-premium user attempted to upload a file (bypassed client-side)
+          log_message('warning', 'Non-premium user tried to upload an attachment. Blocked server-side.');
+          // You might want to redirect or show an error here
+          // $this->session->set_flashdata('error', 'You need premium to upload files.');
+          // redirect('your/page');
+          $files = null; // Or handle as required
+        }
+      } else {
+        // 'attach' key exists, but no file was actually selected (e.g., user opened dialog and cancelled)
+        log_message('info', 'Form submitted, "attach" field present but no file selected.');
+        $files = null; // No file to process
+      }
+    } else {
+      // The 'attach' key does NOT exist in $_FILES at all.
+      // This happens if the input was client-side disabled OR if the form was submitted without enctype="multipart/form-data".
+      log_message('info', '"attach" field not present in $_FILES array. Likely disabled or incorrect form enctype.');
+      $files = null; // No file to process
+    }
     $this->form_validation->set_rules('judul', 'Card name', 'required|trim', array('required' => '%s wajib diisi!'));
     $this->form_validation->set_rules('responsible', 'Responsible', 'required', array('required' => '%s wajib dipilih!'));
     $this->form_validation->set_rules('start', 'Start date', 'required', array('required' => '%s wajib diisi!'));
@@ -219,18 +258,23 @@ class Task extends CI_Controller
       ];
     } else {
       // Menghitung file yang diupload
-      $filesCount = count($files);
-      $uploadedFiles = [];
-      $errors = [];
-      $uploadedFileName = [];
+      if ($is_premium) {
+        $filesCount = count($files);
+        $uploadedFiles = [];
+        $errors = [];
+        $uploadedFileName = [];
 
-      $hasFile = false;
-      for ($i = 0; $i < $filesCount; $i++) {
-        if ($files[$i] != '') {
-          $hasFile = true;
-          break;
+        $hasFile = false;
+        for ($i = 0; $i < $filesCount; $i++) {
+          if ($files[$i] != '') {
+            $hasFile = true;
+            break;
+          }
         }
+      } else {
+        $hasFile = false;
       }
+
 
       if ($hasFile) {
         $totalSize = 0;

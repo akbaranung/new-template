@@ -9,12 +9,17 @@ class Auth extends CI_Controller
 
     parent::__construct();
     $this->load->model(['M_login']);
+    $this->cb = $this->load->database('corebank', TRUE);
   }
 
   public function index()
   {
     if ($this->session->userdata('isLogin')) {
-      redirect('home');
+      if (!$this->session->userdata('nama_perusahaan')) {
+        redirect('auth/register_perusahaan');
+      } else {
+        redirect('home');
+      }
     }
     $data['title'] = 'Login';
     $data['utility'] = $this->db->get('utility')->row_array();
@@ -25,11 +30,20 @@ class Auth extends CI_Controller
   public function login()
   {
     if ($this->session->userdata('isLogin')) {
-      $response = [
-        'success' => true,
-        'msg' => 'Anda sudah login sebelumnya!',
-        'reload' => base_url('home')
-      ];
+      if (!$this->session->userdata('nama_perusahaan')) {
+        $response = [
+          'success' => true,
+          'msg' => 'Anda sudah login sebelumnya!',
+          'reload' => base_url('auth/register_perusahaan')
+        ];
+      } else {
+        $response = [
+          'success' => true,
+          'msg' => 'Anda sudah login sebelumnya!',
+          'reload' => base_url('home')
+        ];
+      }
+
       echo json_encode($response);
       return false;
     }
@@ -65,10 +79,10 @@ class Auth extends CI_Controller
           $kod = '';
         }
 
-        $setting = $this->db->where('Id', '1')->get('utility')->row();
 
         $this->session->set_userdata('isLogin', TRUE);
         $this->session->set_userdata('username', $username);
+        $this->session->set_userdata('user_user_id', $data->id);
         $this->session->set_userdata('level', $data->level);
         $this->session->set_userdata('nama', $data->nama);
         $this->session->set_userdata('nip', $data->nip);
@@ -76,21 +90,38 @@ class Auth extends CI_Controller
         $this->session->set_userdata('level_jabatan', $data->level_jabatan);
         $this->session->set_userdata('bagian', $data->bagian);
         $this->session->set_userdata('kode_nama', $kod);
-        $this->session->set_userdata('icon', $setting->logo);
-        $this->session->set_userdata('nama_singkat', $setting->nama_singkat);
-        $this->session->set_userdata('nama_perusahaan', $setting->nama_perusahaan);
-        $this->session->set_userdata('alamat_perusahaan', $setting->alamat_perusahaan);
-        $this->session->set_userdata('nomor_rekening', $setting->nomor_rekening);
-        $this->session->set_userdata('nama_ppn', $setting->nama_ppn);
-        $this->session->set_userdata('ppn', $setting->besaran_ppn);
         $this->session->set_userdata('kode_cabang', $data->id_cabang);
-        $this->session->set_userdata('nama_akronim', $setting->nama_akronim);
+        $is_premium_boolean = (bool)$data->is_premium;
+        $this->session->set_userdata('is_premium', $is_premium_boolean);
 
-        $response = [
-          'success' => TRUE,
-          'msg' => 'Login berhasil!',
-          'reload' => base_url('home')
-        ];
+        // $setting = $this->db->where('Id', '1')->get('utility')->row();
+        $this->db->select('utility.*');
+        $this->db->from('utility');
+        $this->db->join($this->cb->database . '.t_cabang', 't_cabang.id_perusahaan = utility.Id');
+        $setting = $this->db->where('t_cabang.uid', $data->id_cabang)->get()->row();
+        // var_dump($setting);
+        if (empty($setting)) {
+          $response = [
+            'success' => TRUE,
+            'msg' => 'Login berhasil! Register Perusahaan',
+            'reload' => base_url('auth/register_perusahaan')
+          ];
+        } else {
+          $this->session->set_userdata('user_perusahaan_id', $setting->Id);
+          $this->session->set_userdata('icon', $setting->logo);
+          $this->session->set_userdata('nama_singkat', $setting->nama_singkat);
+          $this->session->set_userdata('nama_perusahaan', $setting->nama_perusahaan);
+          $this->session->set_userdata('alamat_perusahaan', $setting->alamat_perusahaan);
+          $this->session->set_userdata('nomor_rekening', $setting->nomor_rekening);
+          $this->session->set_userdata('nama_ppn', $setting->nama_ppn);
+          $this->session->set_userdata('ppn', $setting->besaran_ppn);
+          $this->session->set_userdata('nama_akronim', $setting->nama_akronim);
+          $response = [
+            'success' => TRUE,
+            'msg' => 'Login berhasil!',
+            'reload' => base_url('home')
+          ];
+        }
       } else {
         $response = [
           'success' => FALSE,
@@ -105,5 +136,275 @@ class Auth extends CI_Controller
   {
     $this->session->sess_destroy();
     redirect('auth');
+  }
+
+  public function register()
+  {
+    if ($this->session->userdata('isLogin')) {
+      redirect('home');
+    }
+    $data['title'] = 'Register';
+    $data['utility'] = $this->db->get('utility')->row_array();
+    $data['pages'] = 'pages/auth/v_register';
+    $this->load->view('pages/auth/index', $data);
+  }
+
+  public function proccess_register()
+  {
+    // Set validation rules
+    $this->form_validation->set_rules('nip', 'NIP Wajib', 'required|trim|is_unique[users.nip]|min_length[9]');
+    $this->form_validation->set_rules('nama', 'Nama Lengkap', 'required|trim');
+    $this->form_validation->set_rules('username', 'Username', 'required|trim|is_unique[users.username]|min_length[5]');
+    $this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email|is_unique[users.email]');
+    $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]|matches[password_confirm]');
+    $this->form_validation->set_rules('password_confirm', 'Konfirmasi Password', 'required|matches[password]');
+    $this->form_validation->set_rules('phone', 'Nomor Telepon', 'trim|numeric');
+    // $this->form_validation->set_rules('nip', 'NIP', 'trim|is_unique[users.nip]');
+
+    // Set custom error messages (optional)
+    $this->form_validation->set_message('required', '{field} wajib diisi.');
+    $this->form_validation->set_message('is_unique', '{field} sudah terdaftar, silakan gunakan yang lain.');
+    $this->form_validation->set_message('min_length', '{field} minimal {param} karakter.');
+    $this->form_validation->set_message('matches', '{field} tidak cocok dengan password.');
+    $this->form_validation->set_message('valid_email', 'Format {field} tidak valid.');
+    $this->form_validation->set_message('numeric', '{field} harus berupa angka.');
+
+
+    if ($this->form_validation->run() == FALSE) {
+      // If validation fails, reload the registration form with errors
+
+      $response = [
+        'success' => FALSE,
+        // 'msg'     => 'Gagal Membuat Akun. Mohon periksa kembali input Anda.',
+        'msg'     => 'Gagal Membuat Akun.' . validation_errors(),
+        'errors'  => validation_errors() // Capture all validation errors
+
+      ];
+    } else {
+      // Validation passed, proceed with registration
+
+      $query = $this->db->select('Id')->from('menus')->get();
+      $ids = [];
+      if ($query->num_rows() > 0) {
+        foreach ($query->result_array() as $row) {
+          $ids[] = $row['Id'];
+        }
+      }
+      $id_string = implode(',', $ids);
+
+      $data = array(
+        'nip'       => $this->input->post('nip'),
+        'nama'       => $this->input->post('nama'),
+        'username'   => $this->input->post('username'),
+        'password'   => password_hash($this->input->post('password'), PASSWORD_DEFAULT), // Hash the password
+        'email'      => $this->input->post('email'),
+        'phone'      => $this->input->post('phone'),
+        'status'        => '1',
+        'level'        => '1',
+        'level_jabatan'        => '99',
+        'bagian'        => '99',
+        'nama_jabatan'        => 'Super Admin',
+        'is_premium'        => '0',
+        'id_cabang'        => '0',
+      );
+
+
+      // Insert user data into the database
+      if ($this->M_login->register_user($data)) {
+
+        $data_access = array(
+          'user_id'       => $this->input->post('nip'),
+          'menu_id'       => $id_string,
+
+        );
+        $this->M_login->register_user_access($data_access);
+        // Set success flashdata message
+        $response = [
+          'success' => TRUE,
+          'msg'     => 'Berhasil Membuat Akun! Anda akan diarahkan ke halaman login.',
+          'reload' => base_url('auth')
+        ];
+      } else {
+        // Set error flashdata message
+        $response = [
+          'success' => FALSE,
+          'msg'     => 'Gagal Membuat Akun. Terjadi kesalahan pada server. Silakan coba lagi.'
+        ];
+      }
+    }
+    echo json_encode($response);
+  }
+
+  public function register_perusahaan()
+  {
+    if (!$this->session->userdata('isLogin')) {
+      redirect('auth');
+    }
+    $data['title'] = 'Register Perusahaan';
+    $data['utility'] = $this->db->get('utility')->row_array();
+    $data['pages'] = 'pages/auth/v_register_progress_perusahaan';
+    $this->load->view('pages/auth/index', $data);
+  }
+
+  public function process_registrasi_perusahaan()
+  {
+    $this->form_validation->set_rules('nama_perusahaan', 'Nama Perusahaan', 'required|trim');
+    $this->form_validation->set_rules('nama_singkat', 'Nama Singkat', 'required|trim');
+    $this->form_validation->set_rules('nama_ppn', 'Nama PPN', 'trim'); // Optional field
+    $this->form_validation->set_rules('besaran_ppn', 'Besaran PPN', 'trim|numeric|greater_than_equal_to[1]|less_than_equal_to[100]'); // Optional, numeric, between 1 and 100
+    $this->form_validation->set_rules('nomor_rekening', 'Nomor Rekening', 'trim|numeric'); // Optional, numeric
+    $this->form_validation->set_rules('nama_bank', 'Nama Bank', 'trim'); // Optional
+    $this->form_validation->set_rules('alamat_perusahaan', 'Alamat Perusahaan', 'trim'); // Optional
+    $this->form_validation->set_rules('nama_akronim', 'Nama Akronim', 'trim'); // Optional
+
+    // Set custom error messages for the new fields (optional, but good practice)
+    $this->form_validation->set_message('greater_than_equal_to', '{field} harus lebih besar atau sama dengan {param}.');
+    $this->form_validation->set_message('less_than_equal_to', '{field} harus kurang dari atau sama dengan {param}.');
+
+
+    if ($this->form_validation->run() == FALSE) {
+      // If validation fails, reload the registration form with errors
+
+      $response = [
+        'success' => FALSE,
+        // 'msg'     => 'Gagal Membuat Akun. Mohon periksa kembali input Anda.',
+        'msg'     => 'Gagal Membuat Akun.' . validation_errors(),
+        'errors'  => validation_errors() // Capture all validation errors
+
+      ];
+    } else {
+      // Validation passed, proceed with registration
+      $raw_ppn       = $this->input->post('besaran_ppn');
+      $ppn_decimal = !empty($raw_ppn) ? (float)$raw_ppn / 100 : NULL;
+
+      $company_data = array(
+        'nama_perusahaan'   => $this->input->post('nama_perusahaan'),
+        'nama_singkat'      => $this->input->post('nama_singkat'),
+        'nama_ppn'          => $this->input->post('nama_ppn'),
+        'besaran_ppn'       => $ppn_decimal,
+        'nomor_rekening'    => $this->input->post('nomor_rekening'),
+        'nama_bank'         => $this->input->post('nama_bank'),
+        'alamat_perusahaan' => $this->input->post('alamat_perusahaan'),
+        'nama_akronim'      => $this->input->post('nama_akronim'),
+      );
+
+
+      // var_dump($company_data);
+      // Insert user data into the database
+      // if ($this->M_login->register_perusahaan($company_data)) {
+      $this->session->set_userdata('data_perusahaan', $company_data);
+      if (!empty($this->session->userdata('data_perusahaan'))) {
+        // Set success flashdata message
+        $response = [
+          'success' => TRUE,
+          'msg'     => 'Berhasil Membuat Akun! Anda akan diarahkan ke halaman Register Cabang.',
+          'reload' => base_url('auth/register_cabang')
+        ];
+      } else {
+        // Set error flashdata message
+        $response = [
+          'success' => FALSE,
+          'msg'     => 'Gagal Membuat Akun. Terjadi kesalahan pada server. Silakan coba lagi.'
+        ];
+      }
+    }
+    echo json_encode($response);
+  }
+
+  public function register_cabang()
+  {
+    if (!$this->session->userdata('isLogin')) {
+      redirect('auth');
+    }
+
+    $company_data_from_session = $this->session->userdata('data_perusahaan');
+    if (empty($company_data_from_session)) {
+      $this->session->set_flashdata('error', 'Silakan lengkapi data perusahaan terlebih dahulu.');
+      redirect('auth/register_perusahaan'); // Redirect back to company registration
+    }
+
+    $data['title'] = 'Register Cabang';
+    $data['utility'] = $this->db->get('utility')->row_array();
+    $data['pages'] = 'pages/auth/v_register_progress_cabang';
+    $this->load->view('pages/auth/index', $data);
+  }
+
+  public function process_registrasi_cabang()
+  {
+    $company_data_from_session = $this->session->userdata('data_perusahaan');
+    if (empty($company_data_from_session)) {
+      $this->session->set_flashdata('error', 'Silakan lengkapi data perusahaan terlebih dahulu.');
+      redirect('auth/register_perusahaan'); // Redirect back to company registration
+    }
+
+    // --- Validation Rules for Branch Data ---
+    $this->form_validation->set_rules('nama_cabang', 'Nama Cabang', 'required|trim');
+    $this->form_validation->set_rules('alamat_cabang', 'Alamat Cabang', 'required|trim');
+
+    $this->form_validation->set_message('required', '{field} wajib diisi.');
+
+    if ($this->form_validation->run() == FALSE) {
+      // If validation fails, reload the registration form with errors
+      $response = [
+        'success' => FALSE,
+        'msg'     => 'Gagal Registrasi Cabang. Mohon periksa kembali input Anda. ' . validation_errors(),
+        'errors'  => validation_errors() // Capture all validation errors
+      ];
+    } else {
+
+      $company_inserted_id = $this->M_login->register_perusahaan($company_data_from_session);
+
+      $branch_data = array(
+        'id_perusahaan' => $company_inserted_id, // Get from hidden field
+        'nama_cabang'   => $this->input->post('nama_cabang'),
+        'alamat_cabang' => $this->input->post('alamat_cabang'),
+      );
+
+      $branch_inserted_id = $this->M_login->register_cabang($branch_data);
+
+
+      $user_data = array(
+        'id_cabang' => $branch_inserted_id
+      );
+      // Assuming 'users' table is in the default database
+      $this->db->where('nip', $this->session->userdata('nip')); // Assuming 'id' is the primary key for users table
+      $this->db->update('users', $user_data);
+
+      $user_updated = $this->db->affected_rows() > 0;
+
+      // if ($this->M_login->register_perusahaan($company_data)) {
+
+
+
+      if ($company_inserted_id && $branch_inserted_id && $user_updated) {
+        // Set success flashdata message
+        $this->db->select('utility.*');
+        $this->db->from('utility');
+        $this->db->join($this->cb->database . '.t_cabang', 't_cabang.id_perusahaan = utility.Id');
+        $setting = $this->db->where('t_cabang.uid', $branch_inserted_id)->get()->row();
+        // var_dump($setting);
+        $this->session->set_userdata('icon', $setting->logo);
+        $this->session->set_userdata('nama_singkat', $setting->nama_singkat);
+        $this->session->set_userdata('nama_perusahaan', $setting->nama_perusahaan);
+        $this->session->set_userdata('alamat_perusahaan', $setting->alamat_perusahaan);
+        $this->session->set_userdata('nomor_rekening', $setting->nomor_rekening);
+        $this->session->set_userdata('nama_ppn', $setting->nama_ppn);
+        $this->session->set_userdata('ppn', $setting->besaran_ppn);
+        $this->session->set_userdata('nama_akronim', $setting->nama_akronim);
+
+        $response = [
+          'success' => TRUE,
+          'msg'     => 'Berhasil Membuat Akun! Anda akan diarahkan ke halaman utama.',
+          'reload' => base_url('home')
+        ];
+      } else {
+        // Set error flashdata message
+        $response = [
+          'success' => FALSE,
+          'msg'     => 'Gagal Membuat Akun. Terjadi kesalahan pada server. Silakan coba lagi.'
+        ];
+      }
+    }
+    echo json_encode($response);
   }
 }

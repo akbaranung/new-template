@@ -3,23 +3,34 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Home extends CI_Controller
 {
+  protected $cb; // Declare the property for the 'corebank' connection
 
   public function __construct()
   {
     parent::__construct();
 
+    $this->load->model(['M_coa']);
+    $this->cb = $this->load->database('corebank', TRUE);
+
     if ($this->session->userdata('isLogin') == FALSE) {
       $this->session->set_flashdata('error', 'Your session has expired');
       redirect('auth');
+    } else if (!$this->session->userdata('nama_perusahaan')) {
+      redirect('auth');
+    } else if (!$this->session->userdata('is_premium')) {
+      $this->db->from('users');
+      $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
+      $this->db->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
+      $total_user = $this->db->get()->num_rows(); // Get the number of rows
+      if ($total_user < 5) {
+        redirect('perusahaan/user');
+      }
     }
-
-
-    $this->load->model(['M_coa']);
-    $this->cb = $this->load->database('corebank', TRUE);
   }
 
   public function index()
   {
+
     $nip = $this->session->userdata('nip');
     $data['title'] = 'Home';
     $data['utility'] = $this->db->get('utility')->row_array();
@@ -37,7 +48,6 @@ class Home extends CI_Controller
 
     $this->load->view('index', $data);
   }
-
 
   public function getLabaRugiBulanan($bulan_ke_belakang = 5)
   {

@@ -39,4 +39,37 @@ class M_login extends CI_Model
 
     return $query->row();
   }
+
+  public function register_user($data)
+  {
+    return $this->db->insert('users', $data);
+  }
+  public function register_user_access($data)
+  {
+    return $this->db->insert('user_menu_access', $data);
+  }
+  public function register_perusahaan($data)
+  {
+    $this->db->insert('utility', $data);
+
+    if ($this->db->affected_rows() > 0) {
+      // Return the ID of the newly inserted record
+      return $this->db->insert_id();
+    } else {
+      // If the insert failed, return false or null to indicate failure
+      return FALSE; // Or return null;
+    }
+  }
+  public function register_cabang($data)
+  {
+    $this->cb->insert('t_cabang', $data);
+
+    if ($this->db->affected_rows() > 0) {
+      // Return the ID of the newly inserted record
+      return $this->db->insert_id();
+    } else {
+      // If the insert failed, return false or null to indicate failure
+      return FALSE; // Or return null;
+    }
+  }
 }
