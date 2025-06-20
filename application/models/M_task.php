@@ -21,6 +21,7 @@ class M_task extends CI_Model
     if ($this->session->userdata('level_jabatan') >= '3') {
       $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
       $this->db->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
+      $this->db->where('id_cabang', $this->session->userdata('kode_cabang'));
     } else {
       $this->db->where('id_cabang', $this->session->userdata('kode_cabang'));
       $this->db->where('users.bagian', $this->session->userdata('bagian'));
