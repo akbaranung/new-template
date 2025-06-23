@@ -14,7 +14,7 @@
     <!-- nav bar -->
     <div class="w-100 mb-4 d-flex">
       <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="<?= site_url('/') ?>">
-        <img src="<?= $utility['logo'] ?>" alt="logo" style="width: 70%;">
+        <img src="<?php echo ($this->session->userdata('icon')) ? $this->session->userdata('icon') : $utility['logo']; ?>" alt="logo" style="width: 70%;">
       </a>
     </div>
 

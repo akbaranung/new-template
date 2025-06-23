@@ -80,6 +80,40 @@
         });
     }
 
+    $('.parent-checkbox').on('change', function() {
+        const parentId = $(this).val(); // Get the ID of the parent menu
+        const isChecked = $(this).prop('checked'); // Check if parent is checked or unchecked
+
+        // Select all child checkboxes that have this parentId and set their checked state
+        $(`.child-checkbox[data-parent-id="${parentId}"]`).prop('checked', isChecked);
+    });
+
+    // Optional: When a child checkbox is clicked, check/uncheck its parent
+    // This makes the parent automatically check if any child is selected, or uncheck if no children are selected
+    $('.child-checkbox').on('change', function() {
+        const parentId = $(this).data('parent-id');
+        const $parentCheckbox = $(`#menu_${parentId}`); // Get the parent checkbox element
+
+        // Count how many children of this parent are checked
+        const totalChildren = $(`.child-checkbox[data-parent-id="${parentId}"]`).length;
+        const checkedChildren = $(`.child-checkbox[data-parent-id="${parentId}"]:checked`).length;
+
+        // If at least one child is checked, check the parent. Otherwise, uncheck.
+        if (checkedChildren > 0) {
+            $parentCheckbox.prop('checked', true);
+        } else {
+            // Only uncheck if ALL children are unchecked
+            $parentCheckbox.prop('checked', false);
+        }
+    });
+
+    // Optional: Initial check for parent checkboxes on page load
+    // If any child is checked, ensure its parent is also checked
+    $('.child-checkbox:checked').each(function() {
+        const parentId = $(this).data('parent-id');
+        $(`#menu_${parentId}`).prop('checked', true);
+    });
+
     document.getElementById('addUserBtn').addEventListener('click', function(event) {
         // Prevent the default link behavior immediately
         event.preventDefault();

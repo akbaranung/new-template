@@ -16,6 +16,7 @@ class Perusahaan extends CI_Controller
     }
 
     $this->load->model(['M_perusahaan']);
+    $this->load->model('M_user_access'); // We'll create this model
     $this->cb = $this->load->database('corebank', TRUE);
   }
 
@@ -133,6 +134,20 @@ class Perusahaan extends CI_Controller
     $cabang = $this->cb->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'))->get()->result();
     $data['cabang'] = $cabang;
 
+
+    // --- NEW: Fetch menu access data ---
+    // $data['all_menus'] = $this->M_user_access->get_all_menus(); // Get all available menus
+    $data['all_menus_hierarchical'] = $this->M_user_access->get_all_menus_hierarchical(); // Get all menus in hierarchy
+    // $current_access = $this->M_user_access->get_user_access($user_id); // Get user's current access record
+
+    // $data['user_menu_ids'] = [];
+    // if (!empty($current_access) && !empty($current_access->menu_id)) {
+    //   // Convert comma-separated string to an array of integers
+    //   $data['user_menu_ids'] = array_map('intval', explode(',', $current_access->menu_id));
+    // }
+    // --- END NEW ---
+
+
     $data['title'] = 'Add User';
     $data['utility'] = $this->db->get('utility')->row_array();
     $data['pages_script'] = 'script/perusahaan/s_user';
@@ -185,6 +200,18 @@ class Perusahaan extends CI_Controller
     $cabang = $this->cb->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'))->get()->result();
     $data['cabang'] = $cabang;
 
+    // --- NEW: Fetch menu access data ---
+    // $data['all_menus'] = $this->M_user_access->get_all_menus(); // Get all available menus
+    $data['all_menus_hierarchical'] = $this->M_user_access->get_all_menus_hierarchical(); // Get all menus in hierarchy
+    $current_access = $this->M_user_access->get_user_access($id); // Get user's current access record
+
+    $data['user_menu_ids'] = [];
+    if (!empty($current_access) && !empty($current_access->menu_id)) {
+      // Convert comma-separated string to an array of integers
+      $data['user_menu_ids'] = array_map('intval', explode(',', $current_access->menu_id));
+    }
+    // --- END NEW ---
+
     $data['user'] = $this->M_perusahaan->get_detail_id_user($id);
     $data['title'] = 'Add Lokasi Presensi';
     $data['utility'] = $this->db->get('utility')->row_array();
@@ -222,6 +249,25 @@ class Perusahaan extends CI_Controller
     ];
     $this->db->insert('users', $add);
 
+    $nip = $this->input->post('nip');
+    $selected_menu_ids = $this->input->post('menu_ids'); // This will be an array of selected menu IDs
+
+    if (empty($selected_menu_ids)) {
+      $menu_id_string = ''; // No access
+    } else {
+      // Ensure unique IDs and convert to comma-separated string
+      $menu_id_string = implode(',', array_unique($selected_menu_ids));
+    }
+
+    // Save the access
+    if ($this->M_user_access->save_user_access($nip, $menu_id_string)) {
+      $this->session->set_flashdata('success', 'User menu access updated successfully!');
+      echo 'Berhasil';
+    } else {
+      $this->session->set_flashdata('error', 'Failed to update user menu access. Please try again.');
+      echo 'Tidak';
+    }
+
     $this->session->set_flashdata('swal_message', [
       'icon' => 'success', // or 'success', 'warning', 'info', 'question'
       'title' => 'Berhasil!',
@@ -256,7 +302,27 @@ class Perusahaan extends CI_Controller
     $this->db->where('id', $id);
     $this->db->update('users', $edit_data);
 
-    redirect('perusahaan/users');
+    $user_id = $this->input->post('user_id');
+    $nip = $this->input->post('nip');
+    $selected_menu_ids = $this->input->post('menu_ids'); // This will be an array of selected menu IDs
+
+    if (empty($selected_menu_ids)) {
+      $menu_id_string = ''; // No access
+    } else {
+      // Ensure unique IDs and convert to comma-separated string
+      $menu_id_string = implode(',', array_unique($selected_menu_ids));
+    }
+
+    // Save the access
+    if ($this->M_user_access->save_user_access($nip, $menu_id_string)) {
+      $this->session->set_flashdata('success', 'User menu access updated successfully!');
+      echo 'Berhasil';
+    } else {
+      $this->session->set_flashdata('error', 'Failed to update user menu access. Please try again.');
+      echo 'Tidak';
+    }
+
+    redirect('perusahaan/user');
   }
 
 

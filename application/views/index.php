@@ -6,8 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
-  <link rel="icon" href="favicon.ico">
-  <title>Bariskode - <?= $title ?></title>
+  <!-- <link rel="icon" href="favicon.ico"> -->
+  <link rel="icon" type="image/png" href="<?php echo ($this->session->userdata('icon')) ? $this->session->userdata('icon') : $utility['logo']; ?>">
+  <!-- <title>Bariskode - <?= $title ?></title> -->
+  <title><?php echo ($this->session->userdata('nama_perusahaan')) ? $this->session->userdata('nama_perusahaan') : $utility['nama_perusahaan']; ?> - <?= $title ?></title>
+
   <!-- Simple bar CSS -->
   <link rel="stylesheet" href="<?= base_url('assets') ?>/css/simplebar.css">
   <!-- Fonts CSS -->

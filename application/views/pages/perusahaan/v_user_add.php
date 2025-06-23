@@ -161,6 +161,45 @@
                       </select>
                     </td>
                   </tr>
+                  <tr>
+                    <th>User Menu Access</th>
+                    <td width="800">
+                      <div class="row">
+                        <?php foreach ($all_menus_hierarchical as $parent_menu) : ?>
+                          <?php if ($parent_menu->is_active == 1) : ?>
+                            <div class="col-md-6 mb-3 mt-2">
+                              <div class="form-check">
+                                <input class="form-check-input parent-checkbox" type="checkbox"
+                                  name="menu_ids[]"
+                                  value="<?= html_escape($parent_menu->Id); ?>"
+                                  id="menu_<?= html_escape($parent_menu->Id); ?>">
+                                <label class="form-check-label font-weight-bold" for="menu_<?= html_escape($parent_menu->Id); ?>">
+                                  <i class="<?= html_escape($parent_menu->icon); ?>"></i> <?= html_escape($parent_menu->menu_name); ?>
+                                </label>
+                              </div>
+                              <?php if (!empty($parent_menu->children)) : ?>
+                                <div style="margin-left: 25px;"> <?php foreach ($parent_menu->children as $child_menu) : ?>
+                                    <?php if ($child_menu->is_active == 1) : ?>
+                                      <div class="form-check">
+                                        <input class="form-check-input child-checkbox" type="checkbox"
+                                          name="menu_ids[]"
+                                          value="<?= html_escape($child_menu->Id); ?>"
+                                          id="menu_<?= html_escape($child_menu->Id); ?>"
+                                          data-parent-id="<?= html_escape($parent_menu->Id); ?>">
+                                        <label class="form-check-label" for="menu_<?= html_escape($child_menu->Id); ?>">
+                                          <i class="<?= html_escape($child_menu->icon); ?>"></i> <?= html_escape($child_menu->menu_name); ?>
+                                        </label>
+                                      </div>
+                                    <?php endif; ?>
+                                  <?php endforeach; ?>
+                                </div>
+                              <?php endif; ?>
+                            </div>
+                          <?php endif; ?>
+                        <?php endforeach; ?>
+                      </div>
+                    </td>
+                  </tr>
                   <br>
                   <tr>
                     <th>
@@ -327,6 +366,39 @@
                           <option <?= $selected ?> value="<?= $data->id ?>"><?= $data->nama_lokasi ?></option>
                         <?php } ?>
                       </select>
+                    </div>
+                  </div>
+                  <div class="col-md-12">
+                    <label>User Menu Access</label>
+                    <div class="row">
+                      <?php foreach ($all_menus_hierarchical as $parent_menu) : ?>
+                        <?php if ($parent_menu->is_active == 1) : // Optional: Only show active parent menus 
+                        ?>
+                          <div class="col-md-6 mb-3 mt-2">
+                            <div class="form-check">
+                              <input class="form-check-input parent-checkbox" type="checkbox"
+                                name="menu_ids[]"
+                                value="<?= html_escape($parent_menu->Id); ?>" id="menu_<?= html_escape($parent_menu->Id); ?>" <?= in_array($parent_menu->Id, $user_menu_ids) ? 'checked' : ''; ?>> <label class="form-check-label font-weight-bold" for="menu_<?= html_escape($parent_menu->Id); ?>"> <i class="<?= html_escape($parent_menu->icon); ?>"></i> <?= html_escape($parent_menu->menu_name); ?>
+                              </label>
+                            </div>
+                            <?php if (!empty($parent_menu->children)) : ?>
+                              <div style="margin-left: 25px;">
+                                <?php foreach ($parent_menu->children as $child_menu) : ?>
+                                  <?php if ($child_menu->is_active == 1) : // Optional: Only show active child menus 
+                                  ?>
+                                    <div class="form-check">
+                                      <input class="form-check-input child-checkbox" type="checkbox"
+                                        name="menu_ids[]"
+                                        value="<?= html_escape($child_menu->Id); ?>" id="menu_<?= html_escape($child_menu->Id); ?>" data-parent-id="<?= html_escape($parent_menu->Id); ?>" <?= in_array($child_menu->Id, $user_menu_ids) ? 'checked' : ''; ?>> <label class="form-check-label" for="menu_<?= html_escape($child_menu->Id); ?>"> <i class="<?= html_escape($child_menu->icon); ?>"></i> <?= html_escape($child_menu->menu_name); ?>
+                                      </label>
+                                    </div>
+                                  <?php endif; ?>
+                                <?php endforeach; ?>
+                              </div>
+                            <?php endif; ?>
+                          </div>
+                        <?php endif; ?>
+                      <?php endforeach; ?>
                     </div>
                   </div>
                   <div class="col-12">
