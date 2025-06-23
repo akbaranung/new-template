@@ -202,7 +202,7 @@ class Auth extends CI_Controller
         'status'        => '1',
         'level'        => '1',
         'level_jabatan'        => '99',
-        'bagian'        => '99',
+        'bagian'        => '1',
         'nama_jabatan'        => 'Super Admin',
         'is_premium'        => '0',
         'id_cabang'        => '0',
@@ -274,10 +274,47 @@ class Auth extends CI_Controller
       ];
     } else {
       // Validation passed, proceed with registration
+
+
+      // --- File Upload and Base64 Conversion ---
+      $logo_base64 = null; // Initialize to null
+
+      // Check if a file was uploaded and there are no errors
+      if (!empty($_FILES['logo_perusahaan']['name']) && $_FILES['logo_perusahaan']['error'] == UPLOAD_ERR_OK) {
+        $file_tmp_name = $_FILES['logo_perusahaan']['tmp_name'];
+        $file_type = $_FILES['logo_perusahaan']['type'];
+
+        // Read the file content
+        $file_content = file_get_contents($file_tmp_name);
+
+        if ($file_content !== FALSE) {
+          // Encode to Base64
+          $logo_base64 = 'data:' . $file_type . ';base64,' . base64_encode($file_content);
+        } else {
+          // Handle error if file content could not be read
+          $response = [
+            'success' => FALSE,
+            'msg'     => 'Gagal membaca isi file logo. Silakan coba lagi.'
+          ];
+          echo json_encode($response);
+          return; // Stop execution
+        }
+      } elseif (!empty($_FILES['logo_perusahaan']['name']) && $_FILES['logo_perusahaan']['error'] != UPLOAD_ERR_OK) {
+        // Handle file upload errors (e.g., file too large)
+        $response = [
+          'success' => FALSE,
+          'msg'     => 'Terjadi kesalahan saat mengunggah file logo: ' . $_FILES['logo_perusahaan']['error']
+        ];
+        echo json_encode($response);
+        return; // Stop execution
+      }
+      // --- End File Upload and Base64 Conversion ---
+
       $raw_ppn       = $this->input->post('besaran_ppn');
       $ppn_decimal = !empty($raw_ppn) ? (float)$raw_ppn / 100 : NULL;
 
       $company_data = array(
+        'logo' => $logo_base64, // Add the Base64 logo data here
         'nama_perusahaan'   => $this->input->post('nama_perusahaan'),
         'nama_singkat'      => $this->input->post('nama_singkat'),
         'nama_ppn'          => $this->input->post('nama_ppn'),

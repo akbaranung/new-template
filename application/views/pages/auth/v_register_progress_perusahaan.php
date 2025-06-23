@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="<?= base_url('assets/') ?>progress-bar.css">
 
 <div class="row align-items-center h-100 w-100">
-  <form class="col-lg-12 col-md-4 col-10 mx-auto" action="<?= site_url('auth/process_registrasi_perusahaan') ?>" method="post">
+  <form class="col-lg-12 col-md-4 col-10 mx-auto" action="<?= site_url('auth/process_registrasi_perusahaan') ?>" method="post" enctype="multipart/form-data">
     <div class="row">
       <div class="col-lg-3 col-md-4 col-10 mx-auto">
         <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="<?= base_url('/') ?>">
@@ -48,6 +48,10 @@
       <div class="col-lg-3 col-md-4 col-10 mx-auto">
 
         <!-- New input fields for company data -->
+        <div class="form-group text-left">
+          <label for="nama_perusahaan">Logo Perusahaan</label>
+          <input type="file" id="logo_perusahaan" name="logo_perusahaan" placeholder="Please enter Logo Perusahaan" required>
+        </div>
         <div class="form-group text-left">
           <label for="nama_perusahaan">Nama Perusahaan</label>
           <input type="text" id="nama_perusahaan" name="nama_perusahaan" class="form-control form-control-lg" placeholder="Please enter Nama Perusahaan" required>
