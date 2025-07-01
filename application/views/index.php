@@ -370,18 +370,27 @@
   </script>
   <script>
     function upgrade_premium() {
-      Swal.fire({
-        title: 'Access Denied!',
-        text: 'You need a premium account to access this feature. Please upgrade your subscription.',
-        icon: 'warning',
-        confirmButtonText: 'Upgrade Now',
-        showCancelButton: true,
-        cancelButtonText: 'No Thanks'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          window.location.href = '<?= base_url('subscription/upgrade') ?>';
-        }
-      });
+      // In your HTML/JavaScript view file
+      const is_premium = <?= (int)$this->session->userdata('is_premium'); ?>;
+
+      // This will guarantee 'is_premium' is either the number 1 or 0 in your script.
+      if (is_premium === 1) {
+        console.log('User is premium.');
+      }
+      if (is_premium == 0) {
+        Swal.fire({
+          title: 'Access Denied!',
+          text: 'You need a premium account to access this feature. Please upgrade your subscription.',
+          icon: 'warning',
+          confirmButtonText: 'Upgrade Now',
+          showCancelButton: true,
+          cancelButtonText: 'No Thanks'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = '<?= base_url('subscription/upgrade') ?>';
+          }
+        });
+      }
     }
   </script>
 
