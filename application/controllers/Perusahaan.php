@@ -15,8 +15,7 @@ class Perusahaan extends CI_Controller
       redirect('auth');
     }
 
-    $this->load->model(['M_user_access']);
-    $this->load->model(['m_perusahaan']);
+    $this->load->model(['M_user_access', 'M_perusahaan']);
 
     $this->cb = $this->load->database('corebank', TRUE);
   }
@@ -80,7 +79,7 @@ class Perusahaan extends CI_Controller
 
   public function ajax_user_list()
   {
-    $list = $this->m_perusahaan->get_datatables1();
+    $list = $this->M_perusahaan->get_datatables1();
     $data = array();
     $crs = "";
     $no = $_POST['start'];
@@ -114,8 +113,8 @@ class Perusahaan extends CI_Controller
 
     $output = array(
       "draw" => $_POST['draw'],
-      "recordsTotal" => $this->m_perusahaan->count_all1(),
-      "recordsFiltered" => $this->m_perusahaan->count_filtered1(),
+      "recordsTotal" => $this->M_perusahaan->count_all1(),
+      "recordsFiltered" => $this->M_perusahaan->count_filtered1(),
       "data" => $data,
     );
     echo json_encode($output);
@@ -213,7 +212,7 @@ class Perusahaan extends CI_Controller
     }
     // --- END NEW ---
 
-    $data['user'] = $this->m_perusahaan->get_detail_id_user($id);
+    $data['user'] = $this->M_perusahaan->get_detail_id_user($id);
     $data['title'] = 'Add Lokasi Presensi';
     $data['utility'] = $this->db->get('utility')->row_array();
     $data['pages_script'] = 'script/perusahaan/s_user';
@@ -329,7 +328,7 @@ class Perusahaan extends CI_Controller
 
   public function ajax_cabang_list()
   {
-    $list = $this->m_perusahaan->get_datatables();
+    $list = $this->M_perusahaan->get_datatables();
     $data = array();
     $crs = "";
     $no = $_POST['start'];
@@ -363,8 +362,8 @@ class Perusahaan extends CI_Controller
 
     $output = array(
       "draw" => $_POST['draw'],
-      "recordsTotal" => $this->m_perusahaan->count_all(),
-      "recordsFiltered" => $this->m_perusahaan->count_filtered(),
+      "recordsTotal" => $this->M_perusahaan->count_all(),
+      "recordsFiltered" => $this->M_perusahaan->count_filtered(),
       "data" => $data,
     );
     echo json_encode($output);
@@ -427,7 +426,7 @@ class Perusahaan extends CI_Controller
   public function edit_cabang($id)
   {
 
-    $data['cabang'] = $this->m_perusahaan->get_detail_id_cabang($id);
+    $data['cabang'] = $this->M_perusahaan->get_detail_id_cabang($id);
     $data['title'] = 'Add Lokasi Presensi';
     $data['utility'] = $this->db->get('utility')->row_array();
     $data['pages_script'] = 'script/perusahaan/s_cabang';
