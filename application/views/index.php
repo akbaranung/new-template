@@ -36,7 +36,7 @@
   <!-- <link rel="stylesheet" href="<?= base_url('assets') ?>/vendors/datatables.net-bs/css/dataTables.bootstrap.min.css"> -->
   <!-- <link rel="stylesheet" href="<?= base_url('assets') ?>/vendors/datatables.net-responsive-bs/css/responsive.bootstrap.min.css"> -->
   <!-- <link rel="stylesheet" href="<?= base_url('assets') ?>/vendors/datatables.net-buttons-bs/css/buttons.bootstrap.min.css"> -->
-  <link rel="stylesheet" href="<?= base_url('assets') ?>/dataTables/css/dataTables.min.css">
+  <link rel="stylesheet" href="<?= base_url('assets') ?>/dataTables/css/datatables.min.css">
   <link rel="manifest" href="<?= base_url() ?>assets/_manifest.json" />
 
 </head>
@@ -91,7 +91,7 @@
   <!-- Cleave JS -->
   <script src="<?= base_url('assets') ?>/js/cleave.min.js"></script>
   <!-- DataTables -->
-  <script src="<?= base_url('assets') ?>/dataTables/js/dataTables.min.js"></script>
+  <script src="<?= base_url('assets') ?>/dataTables/js/datatables.min.js"></script>
 
   <script>
     $('.select2').select2({
