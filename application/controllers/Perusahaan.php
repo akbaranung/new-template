@@ -15,7 +15,7 @@ class Perusahaan extends CI_Controller
       redirect('auth');
     }
 
-    $this->load->model(['M_perusahaan']);
+    $this->load->model('M_Perusahaan');
     $this->load->model('M_user_access'); // We'll create this model
     $this->cb = $this->load->database('corebank', TRUE);
   }
