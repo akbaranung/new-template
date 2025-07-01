@@ -3,12 +3,12 @@
 
 class M_perusahaan extends CI_Model
 {
-    // protected $cb;
+    protected $cb;
 
     public function __construct()
     {
         parent::__construct(); // Call the parent constructor
-        // $this->cb = $this->load->database('corebank', TRUE);
+        $this->cb = $this->load->database('corebank', TRUE);
     }
 
     var $table = 't_cabang';
