@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <link rel="stylesheet" href="<?= base_url('assets/') ?>progress-bar.css">
 
-<div class="row align-items-center h-100 w-100">
+<div class="row align-items-center h-100 w-100 m-0">
   <div class="col-lg-12 col-md-4 col-10 mx-auto">
     <div class="row">
       <div class="col-lg-3 col-md-4 col-10 mx-auto">
