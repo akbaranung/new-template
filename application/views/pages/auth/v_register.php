@@ -33,8 +33,8 @@
         <h3 class="text-center mb-3">Proses Registrasi <?= $this->session->userdata('data_perusahaan') ?></h3>
         <div class="progress-stepper">
           <div id="step1" class="step active">Registrasi User</div>
-          <div id="step2" class="step">Registrasi Data Perusahaan</div>
-          <div id="step3" class="step">Registrasi Data Cabang</div>
+          <div id="step2" class="step">Registrasi Perusahaan</div>
+          <div id="step3" class="step">Registrasi Cabang</div>
           <!-- <div id="step4" class="step">Step 4</div> -->
         </div>
         <!-- <div class="d-flex justify-content-center mt-3">
