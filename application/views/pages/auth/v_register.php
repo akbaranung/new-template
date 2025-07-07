@@ -30,9 +30,9 @@
       <div class="container">
         <div class="progress-container mx-auto">
           <div class="progress" id="progress"></div>
-          <div class="circle active" data-label="Registrasi User">1</div>
-          <div class="circle" data-label="Registrasi Perusahaan">2</div>
-          <div class="circle" data-label="Registrasi Cabang">3</div>
+          <div class="circle active" data-label="User">1</div>
+          <div class="circle" data-label="Perusahaan">2</div>
+          <div class="circle" data-label="Cabang">3</div>
         </div>
       </div>
     </div>
