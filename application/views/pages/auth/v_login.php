@@ -21,7 +21,7 @@
         <input type="password" id="password" name="password" class="form-control form-control-lg" placeholder="Password">
       </div>
       <button class="btn btn-lg btn-primary btn-block btn-login" type="submit">Login</button>
-      <p class="mt-5 mb-3 text-muted text-center">Belum punya akun? <a href="<?= base_url('auth/') ?>register">Daftar Akun Perusahaan Anda</a></p>
+      <p class="mt-5 mb-3 text-muted text-center">Belum punya akun? <a href="<?= base_url('auth/') ?>register">Daftarkan Akun Perusahaan Anda</a></p>
       <p class="mt-5 mb-3 text-muted text-center">IT BARIS KODE INDONESIA © <?= date('Y') ?></p>
     </div>
   </form>

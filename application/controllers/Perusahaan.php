@@ -154,7 +154,6 @@ class Perusahaan extends CI_Controller
     $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
     $data['pages'] = 'pages/perusahaan/v_user_add';
 
-
     // CEK PREMIUM
     if ($this->session->userdata('is_premium')) {
 

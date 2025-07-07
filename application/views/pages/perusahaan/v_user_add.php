@@ -88,7 +88,7 @@
                     <th>Bagian</th>
                     <td>
                       <select name="bagian" class="form-control" id="">
-                        <?php $xx = $this->db->get('bagian')->result();
+                        <?php $xx = $this->db->from('bagian')->where('id_prsh', $this->session->userdata('user_perusahaan_id'))->get()->result();
                         foreach ($xx as $k) {
                           if (!empty($user)) {
                         ?>

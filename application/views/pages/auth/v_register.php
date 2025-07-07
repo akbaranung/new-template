@@ -44,17 +44,17 @@
         <div class="col-lg-12 col-md-4 col-10 mx-auto">
           <!-- New input fields for company data -->
           <div class="form-group text-left">
-            <label for="nama">NIP</label>
-            <input type="text" id="nip" name="nip" class="form-control form-control-lg" placeholder="Please enter NIP" autofocus="true" required>
+            <label for="nama">Username</label>
+            <input type="text" id="nip" name="nip" class="form-control form-control-lg" placeholder="Please enter Username" autofocus="true" required>
           </div>
           <div class="form-group text-left">
             <label for="nama">Nama</label>
             <input type="text" id="nama" name="nama" class="form-control form-control-lg" placeholder="Please enter Nama" autofocus="true">
           </div>
-          <div class="form-group text-left">
+          <!-- <div class="form-group text-left">
             <label for="username">Username</label>
             <input type="text" id="username" name="username" class="form-control form-control-lg" placeholder="Please enter Username" autofocus="true">
-          </div>
+          </div> -->
           <div class="form-group text-left">
             <label for="password">Password</label>
             <input type="password" id="password1" name="password" class="form-control form-control-lg" placeholder="Password">
