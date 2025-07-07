@@ -41,13 +41,14 @@
         }).then((result) => {
             if (result.isConfirmed) {
                 $.ajax({
-                    url: "<?= base_url('perusahaan/hapus_user/') ?>", // Use POST for ID, don't append to URL unless it's a RESTful DELETE
+                    url: "<?= base_url('perusahaan/hapus_cabang/') ?>", // Use POST for ID, don't append to URL unless it's a RESTful DELETE
                     type: 'POST', // Keep as POST
                     data: {
                         id: id
                     },
                     dataType: 'json', // Expect JSON response
                     success: function(response) {
+                        console.log(response);
                         let iconType = 'error'; // Default to error
                         if (response.status == 'success') {
                             iconType = 'success';
@@ -63,7 +64,7 @@
                             // Only reload the table if it was a success or a clear 'info' (already deleted) case
                             if (response.status === 'success' || response.status === 'info') {
                                 // Assuming your DataTables ID is 'datatable', not 'table1' based on previous snippets
-                                $('#datatable').DataTable().ajax.reload(null, false);
+                                $('#user-table').DataTable().ajax.reload(null, false);
                             }
                         });
                     },

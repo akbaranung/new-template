@@ -178,4 +178,14 @@ class M_perusahaan extends CI_Model
         // return $query->result_array(); // Return the result as an array
         return $query->row(); // Return the result as an array
     }
+
+    public function get_detail_id_perusahaan($id)
+    {
+        $this->db->from('utility'); // Table name
+        $this->db->where('Id', $id);
+        $query = $this->db->get();
+
+        // return $query->result_array(); // Return the result as an array
+        return $query->row(); // Return the result as an array
+    }
 }

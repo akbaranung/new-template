@@ -371,11 +371,11 @@ class Perusahaan extends CI_Controller
 
   public function add_cabang()
   {
-    $data['title'] = 'Add User';
+    $data['title'] = 'Add Cabang';
     $data['utility'] = $this->db->get('utility')->row_array();
-    $data['pages_script'] = 'script/perusahaan/s_user';
+    $data['pages_script'] = 'script/perusahaan/s_cabang';
     $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
-    $data['pages'] = 'pages/perusahaan/v_user_add';
+    $data['pages'] = 'pages/perusahaan/v_cabang_add';
 
 
     // CEK PREMIUM
@@ -410,17 +410,24 @@ class Perusahaan extends CI_Controller
 
   public function proccess_add_cabang()
   {
-    $raw_slug = $this->input->post('nama_lokasi');
-    $slug = strtolower(preg_replace('/[^a-z0-9]+/i', '-', trim($raw_slug)));
+    // $raw_slug = $this->input->post('nama_lokasi');
+    // $slug = strtolower(preg_replace('/[^a-z0-9]+/i', '-', trim($raw_slug)));
 
-    $radius = $this->input->post('radius_lokasi') / 1000;
+    // $radius = $this->input->post('radius_lokasi') / 1000;
     $add = [
       "id_perusahaan" => $this->session->userdata('user_perusahaan_id'),
       "nama_cabang" => $this->input->post('nama_cabang'),
       "alamat_cabang" => $this->input->post('alamat_cabang'),
     ];
-    $this->db->insert('users', $add);
-    redirect('perusahaan/user');
+    $this->cb->insert('t_cabang', $add);
+    $this->session->set_flashdata('swal_message', [
+      'icon' => 'success', // or 'success', 'warning', 'info', 'question'
+      'title' => 'Berhasil!',
+      'text' => 'Berhasil Menambahkan data!',
+      'timer' => 3000, // SweetAlert2 will close after 3 seconds (3000 milliseconds)
+      'timerProgressBar' => true, // Shows a progress bar for the timer
+    ]);
+    redirect('perusahaan/cabang');
   }
 
   public function edit_cabang($id)
@@ -455,5 +462,30 @@ class Perusahaan extends CI_Controller
     ]);
 
     redirect('perusahaan/cabang');
+  }
+
+  public function hapus_cabang()
+  {
+    $id = $this->input->post('id');
+    $this->cb->where('uid', $id);
+    $this->cb->delete('t_cabang');
+
+    echo json_encode(array("status" => 'success', "message" => "Berhasil Menghapus Data"));
+
+    // redirect('perusahaan/cabang');
+  }
+
+  public function detail()
+  {
+
+    $data['perusahaan'] = $this->M_perusahaans->get_detail_id_perusahaan($this->session->userdata('user_perusahaan_id'));
+    $data['title'] = 'Add Lokasi Presensi';
+    $data['utility'] = $this->db->get('utility')->row_array();
+    // $data['pages_script'] = 'script/perusahaan/s_perusahaan';
+    $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
+    $data['pages'] = 'pages/perusahaan/v_perusahaan_detail';
+
+    $this->load->view('index', $data);
+    // $this->load->view('pages/absensi/lokasi_presensi_form', $data);
   }
 }

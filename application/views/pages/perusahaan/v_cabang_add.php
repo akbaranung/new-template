@@ -3,7 +3,7 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
-      <h1 class="page-title">User Cabang</h1>
+      <h1 class="page-title"><?= ($this->uri->segment(3) == false) ? 'Add' : 'Edit' ?> Cabang</h1>
       <div class="card shadow mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
           <p class="card-title mb-0"><strong>Cabang</strong></p>
@@ -43,7 +43,7 @@
                 <div class="row">
                   <div class="col-md-6">
                     <div class="form-group">
-                      <label>nama_cabang</label>
+                      <label>Nama Cabang</label>
                       <input type="text" name="nama_cabang" class="form-control" value="<?= $cabang->nama_cabang ?>">
                     </div>
                   </div>

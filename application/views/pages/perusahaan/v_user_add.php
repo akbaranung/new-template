@@ -3,10 +3,10 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
-      <h1 class="page-title">User Add</h1>
+      <h1 class="page-title">User <?= ($this->uri->segment(3) == false) ? 'Add' : 'Edit' ?></h1>
       <div class="card shadow mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
-          <p class="card-title mb-0"><strong>Tambah User</strong></p>
+          <p class="card-title mb-0"><strong><?= ($this->uri->segment(3) == false) ? 'Tambah' : 'Ubah' ?> User</strong></p>
           <!-- <a href="<?= base_url('perusahaan/add_user') ?>" class="btn btn-primary">Add User</a> -->
         </div>
         <div class="card-body" id="user">
