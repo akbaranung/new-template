@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="<?= base_url('assets/') ?>progress-bar.css">
 
 <div class="row align-items-center h-100 w-100 m-0">
-  <div class="col-lg-12 col-md-4 col-10 mx-auto">
+  <div class="col-lg-12 col-md-4 col-11 mx-auto">
     <div class="row">
       <div class="col-lg-3 col-md-4 col-10 mx-auto">
         <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="<?= base_url('/') ?>">
@@ -28,13 +28,14 @@
     </div>
     <div class="row mb-5 mt-3">
       <!-- START: Progress Bar Integration -->
-      <div class="col-6 col-7 mx-auto">
+      <!-- <div class="col-6 col-7 mx-auto"> -->
+      <div id="progress-bar-div" class="mx-auto p-6 ">
         <!-- <h3 class="text-center mb-3">Application Progress</h3> -->
         <h3 class="text-center mb-3">Proses Registrasi Cabang</h3>
         <div class="progress-stepper">
           <div id="step1" class="step completed">Registrasi User</div>
-          <div id="step2" class="step active">Registrasi Perusahaan</div>
-          <div id="step3" class="step">Registrasi Cabang</div>
+          <div id="step2" class="step completed">Registrasi Perusahaan</div>
+          <div id="step3" class="step active">Registrasi Cabang</div>
           <!-- <div id="step4" class="step">Step 4</div> -->
         </div>
         <!-- <div class="d-flex justify-content-center mt-3">
@@ -77,8 +78,27 @@
     const steps = document.querySelectorAll('.step');
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
+    const stepperContainer = document.getElementById('progress-bar-div');
+
     let currentStepIndex = 0; // Starts at 0 for "Step 1"
 
+    // Function to handle responsive container width
+    function updateContainerClass() {
+      if (window.innerWidth > 768) {
+        // On larger screens, make the container narrower (col-7 equivalent)
+        stepperContainer.classList.remove('col-12'); // Remove 'col-12'
+        stepperContainer.classList.add('col-6', 'col-7'); // Add 'col-6' and 'col-7' separately
+      } else {
+        // On smaller screens, make it full width (col-12 equivalent)
+        stepperContainer.classList.remove('col-6', 'col-7'); // Remove 'col-6' and 'col-7' separately
+        stepperContainer.classList.add('col-12'); // Add 'col-12'
+      }
+    }
+
+    // Add event listener for window resize to update container class
+    window.addEventListener('resize', updateContainerClass);
+
+    updateContainerClass();
     // Function to update the active step
     function updateActiveStep() {
       steps.forEach((step, index) => {
