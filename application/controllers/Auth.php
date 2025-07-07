@@ -93,6 +93,7 @@ class Auth extends CI_Controller
         $this->session->set_userdata('kode_cabang', $data->id_cabang);
         $is_premium_boolean = (bool)$data->is_premium;
         $this->session->set_userdata('is_premium', $is_premium_boolean);
+        $this->session->set_userdata('is_token', $data->token);
 
         // $setting = $this->db->where('Id', '1')->get('utility')->row();
         $this->db->select('utility.*');
@@ -152,13 +153,13 @@ class Auth extends CI_Controller
   public function proccess_register()
   {
     // Set validation rules
-    $this->form_validation->set_rules('nip', 'NIP Wajib', 'required|trim|is_unique[users.nip]|min_length[9]');
+    $this->form_validation->set_rules('nip', 'Username Wajib', 'required|trim|is_unique[users.nip]|min_length[9]');
     $this->form_validation->set_rules('nama', 'Nama Lengkap', 'required|trim');
-    $this->form_validation->set_rules('username', 'Username', 'required|trim|is_unique[users.username]|min_length[5]');
+    // $this->form_validation->set_rules('username', 'Username', 'required|trim|is_unique[users.username]|min_length[5]');
     $this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email|is_unique[users.email]');
     $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]|matches[password_confirm]');
     $this->form_validation->set_rules('password_confirm', 'Konfirmasi Password', 'required|matches[password]');
-    $this->form_validation->set_rules('phone', 'Nomor Telepon', 'trim|numeric');
+    $this->form_validation->set_rules('phone', 'Nomor Telepon', 'trim|numeric|required');
     // $this->form_validation->set_rules('nip', 'NIP', 'trim|is_unique[users.nip]');
 
     // Set custom error messages (optional)
@@ -191,6 +192,9 @@ class Auth extends CI_Controller
         }
       }
       $id_string = implode(',', $ids);
+      $this->load->helper('numeric_token'); // Load helper
+      $token = generate_numeric_token(5);
+
 
       $data = array(
         'nip'       => $this->input->post('nip'),
@@ -207,6 +211,7 @@ class Auth extends CI_Controller
         'nama_jabatan'        => 'Super Admin',
         'is_premium'        => '0',
         'id_cabang'        => '0',
+        'token'        => $token,
       );
 
 
@@ -219,6 +224,10 @@ class Auth extends CI_Controller
 
         );
         $this->M_login->register_user_access($data_access);
+        //Send notif wa
+        $msg = "Kode verifikasi Akun Anda adalah *$token*, Gunakan Token Saat Login untuk pertama kali. Jangan bagikan kode ini kepada siapa pun.";
+        $this->api_whatsapp->wa_notif($msg, $this->input->post('phone'));
+
         // Set success flashdata message
         $response = [
           'success' => TRUE,
@@ -241,6 +250,10 @@ class Auth extends CI_Controller
     // if (!$this->session->userdata('isLogin')) {
     //   redirect('auth');
     // }
+
+    if ($this->session->userdata('is_token')) {
+      redirect('auth/verifikasi_akun');
+    }
     $data['title'] = 'Register Perusahaan';
     $data['utility'] = $this->db->get('utility')->row_array();
     $data['pages'] = 'pages/auth/v_register_progress_perusahaan';
@@ -444,5 +457,63 @@ class Auth extends CI_Controller
       }
     }
     echo json_encode($response);
+  }
+
+  public function verifikasi_akun()
+  {
+    // if (!$this->session->userdata('isLogin')) {
+    //   redirect('auth');
+    // }
+
+    if (!$this->session->userdata('is_token')) {
+      redirect('auth/register_perusahaan');
+    }
+    $data['title'] = 'Verifikasi Akun';
+    $data['utility'] = $this->db->get('utility')->row_array();
+    $data['pages'] = 'pages/auth/v_verifikasi_akun';
+    $this->load->view('pages/auth/index', $data);
+  }
+  public function cek_token()
+  {
+    $this->db->from('users');
+    $this->db->where('id', $this->session->userdata('user_user_id'));
+    $data_user = $this->db->get()->row();
+
+    if ($data_user->token == $this->input->post('token')) {
+      $edit_data = [
+        "token" => null,
+      ];
+      $this->db->where('id', $this->session->userdata('user_user_id'));
+      // $this->db->update('users', $edit_data);
+
+      // Save the access
+      if ($this->db->update('users', $edit_data)) {
+        $this->session->unset_userdata('is_token');
+        // $response = [
+        //   'success' => TRUE,
+        //   'msg' => 'Login berhasil!',
+        //   'reload' => base_url('home')
+        // ];
+        $this->session->set_flashdata('success', 'Verifikasi successfully!');
+        // echo 'Berhasil';
+        redirect('auth/register_perusahaan');
+      } else {
+        // $response = [
+        //   'success' => FALSE,
+        //   'msg' => 'Failed to update user menu access. Please try again.',
+        // ];
+        $this->session->set_flashdata('error', 'Failed to update user menu access. Please try again.');
+        // echo 'Tidak';
+        redirect('auth/verifikasi_akun');
+      }
+      // redirect('auth');
+    } else {
+      // $response = [
+      //   'success' => FALSE,
+      //   'msg' => 'Token Salah. Please try again.',
+      // ];
+      $this->session->set_flashdata('error', 'Token Salah. Please try again.');
+      redirect('auth/verifikasi_akun');
+    }
   }
 }

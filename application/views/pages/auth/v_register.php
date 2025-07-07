@@ -70,7 +70,7 @@
             <input type="email" id="email" name="email" class="form-control form-control-lg" placeholder="Email">
           </div>
           <div class="form-group text-left">
-            <label for="phone">Phone</label>
+            <label for="phone">Phone (WhatsApp)</label>
             <input type="tel" id="phone" name="phone" class="form-control form-control-lg" placeholder="Phone Number">
           </div>
           <!-- End new input fields -->

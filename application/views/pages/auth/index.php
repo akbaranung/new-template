@@ -150,7 +150,7 @@
                 timer: 1500,
               }).then(function() {
                 Swal.close();
-                location.href = `${res.reload}`
+                // location.href = `${res.reload}`
                 // location.reload();
               });
             } else {
