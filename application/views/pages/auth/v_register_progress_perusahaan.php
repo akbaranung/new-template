@@ -27,21 +27,13 @@
       </div>
     </div>
     <div class="row mb-5 mt-3">
-      <!-- START: Progress Bar Integration -->
-      <!-- <div class="col-6 col-7 mx-auto"> -->
-      <div id="progress-bar-div" class="mx-auto p-6 ">
-        <!-- <h3 class="text-center mb-3">Application Progress</h3> -->
-        <h3 class="text-center mb-3">Proses Registrasi Perusahaan</h3>
-        <div class="progress-stepper">
-          <div id="step1" class="step completed">Registrasi User</div>
-          <div id="step2" class="step active">Registrasi Perusahaan</div>
-          <div id="step3" class="step">Registrasi Cabang</div>
-          <!-- <div id="step4" class="step">Step 4</div> -->
+      <div class="container">
+        <div class="progress-container mx-auto">
+          <div class="progress" id="progress"></div>
+          <div class="circle active" data-label="Registrasi User">1</div>
+          <div class="circle active" data-label="Registrasi Perusahaan">2</div>
+          <div class="circle" data-label="Registrasi Cabang">3</div>
         </div>
-        <!-- <div class="d-flex justify-content-center mt-3">
-            <button id="prevBtn" class="btn btn-secondary-custom btn-custom mr-3" disabled>Previous</button>
-            <button id="nextBtn" class="btn btn-primary-custom btn-custom">Next</button>
-          </div> -->
       </div>
     </div>
   </div>
@@ -101,66 +93,29 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
-  // JavaScript to handle step activation for the progress bar
-  document.addEventListener('DOMContentLoaded', function() {
-    const steps = document.querySelectorAll('.step');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const stepperContainer = document.getElementById('progress-bar-div');
+  const progress = document.getElementById("progress");
+  const prev = document.getElementById("prev");
+  const next = document.getElementById("next");
+  const circles = document.querySelectorAll(".circle");
 
-    let currentStepIndex = 0; // Starts at 0 for "Step 1"
+  let currentActive = 2;
 
-    // Function to handle responsive container width
-    function updateContainerClass() {
-      if (window.innerWidth > 768) {
-        // On larger screens, make the container narrower (col-7 equivalent)
-        stepperContainer.classList.remove('col-12'); // Remove 'col-12'
-        stepperContainer.classList.add('col-6', 'col-7'); // Add 'col-6' and 'col-7' separately
-      } else {
-        // On smaller screens, make it full width (col-12 equivalent)
-        stepperContainer.classList.remove('col-6', 'col-7'); // Remove 'col-6' and 'col-7' separately
-        stepperContainer.classList.add('col-12'); // Add 'col-12'
-      }
-    }
 
-    // Add event listener for window resize to update container class
-    window.addEventListener('resize', updateContainerClass);
-
-    updateContainerClass();
-    // Function to update the active step
-    function updateActiveStep() {
-      steps.forEach((step, index) => {
-        if (index === currentStepIndex) {
-          step.classList.add('active');
-        } else {
-          step.classList.remove('active');
-        }
-      });
-
-      // Enable/disable buttons
-      prevBtn.disabled = currentStepIndex === 0;
-      nextBtn.disabled = currentStepIndex === steps.length - 1;
-    }
-
-    // Event listener for Next button
-    nextBtn.addEventListener('click', function() {
-      if (currentStepIndex < steps.length - 1) {
-        currentStepIndex++;
-        updateActiveStep();
-      }
+  const update = () => {
+    circles.forEach((circle, index) => {
+      if (index < currentActive) circle.classList.add("active");
+      else circle.classList.remove("active");
     });
+    const actives = document.querySelectorAll(".active");
+    progress.style.width =
+      ((actives.length - 1) / (circles.length - 1)) * 100 + "%";
+    if (currentActive === 1) prev.disabled = true;
+    else if (currentActive === circles.length) next.disabled = true;
+    else {
+      prev.disabled = false;
+      next.disabled = false;
+    }
+  };
 
-    // Event listener for Previous button
-    prevBtn.addEventListener('click', function() {
-      if (currentStepIndex > 0) {
-        currentStepIndex--;
-        updateActiveStep();
-      }
-    });
-
-    // Initial call to set the first step as active
-    updateActiveStep();
-
-
-  });
+  update();
 </script>
