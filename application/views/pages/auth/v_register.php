@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="<?= base_url('assets/') ?>progress-bar.css">
 
 <div class="row align-items-center h-100 w-100">
-  <form class="col-lg-12 col-md-4 col-10 mx-auto" action="<?= site_url('auth/proccess_register') ?>" method="post">
+  <div class="col-lg-12 col-md-4 col-10 mx-auto">
     <div class="row">
       <div class="col-lg-3 col-md-4 col-10 mx-auto">
         <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="<?= base_url('/') ?>">
@@ -43,47 +43,50 @@
           </div> -->
       </div>
     </div>
-    <div class="row">
-      <!-- END: Progress Bar Integration -->
-      <div class="col-lg-3 col-md-4 col-10 mx-auto">
+  </div>
+  <form class="col-lg-3 col-md-4 col-10 mx-auto" action="<?= site_url('auth/proccess_register') ?>" method="post">
+    <div class="card shadow p-4">
+      <div class="row">
+        <!-- END: Progress Bar Integration -->
+        <div class="col-lg-12 col-md-4 col-10 mx-auto">
+          <!-- New input fields for company data -->
+          <div class="form-group text-left">
+            <label for="nama">NIP</label>
+            <input type="text" id="nip" name="nip" class="form-control form-control-lg" placeholder="Please enter NIP" autofocus="true" required>
+          </div>
+          <div class="form-group text-left">
+            <label for="nama">Nama</label>
+            <input type="text" id="nama" name="nama" class="form-control form-control-lg" placeholder="Please enter Nama" autofocus="true">
+          </div>
+          <div class="form-group text-left">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" class="form-control form-control-lg" placeholder="Please enter Username" autofocus="true">
+          </div>
+          <div class="form-group text-left">
+            <label for="password">Password</label>
+            <input type="password" id="password1" name="password" class="form-control form-control-lg" placeholder="Password">
+          </div>
 
-        <!-- New input fields for company data -->
-        <div class="form-group text-left">
-          <label for="nama">NIP</label>
-          <input type="text" id="nip" name="nip" class="form-control form-control-lg" placeholder="Please enter NIP" autofocus="true" required>
-        </div>
-        <div class="form-group text-left">
-          <label for="nama">Nama</label>
-          <input type="text" id="nama" name="nama" class="form-control form-control-lg" placeholder="Please enter Nama" autofocus="true">
-        </div>
-        <div class="form-group text-left">
-          <label for="username">Username</label>
-          <input type="text" id="username" name="username" class="form-control form-control-lg" placeholder="Please enter Username" autofocus="true">
-        </div>
-        <div class="form-group text-left">
-          <label for="password">Password</label>
-          <input type="password" id="password1" name="password" class="form-control form-control-lg" placeholder="Password">
-        </div>
+          <div class="form-group text-left">
+            <label for="password">Konfirmasi Password</label>
+            <input type="password" id="password2" name="password_confirm" class="form-control form-control-lg" placeholder="Password">
+          </div>
 
-        <div class="form-group text-left">
-          <label for="password">Konfirmasi Password</label>
-          <input type="password" id="password2" name="password_confirm" class="form-control form-control-lg" placeholder="Password">
-        </div>
+          <div class="form-group text-left">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" class="form-control form-control-lg" placeholder="Email">
+          </div>
+          <div class="form-group text-left">
+            <label for="phone">Phone</label>
+            <input type="tel" id="phone" name="phone" class="form-control form-control-lg" placeholder="Phone Number">
+          </div>
+          <!-- End new input fields -->
 
-        <div class="form-group text-left">
-          <label for="email">Email</label>
-          <input type="email" id="email" name="email" class="form-control form-control-lg" placeholder="Email">
+          <button class="btn btn-lg btn-primary btn-block btn-regis-perusahaan" type="submit">Registrasi</button>
+          <!-- <p class="mt-5 mb-3 text-muted text-center">Belum punya akun? <a href="<?= base_url('auth/') ?>register">Buat Akun Perusahaan Anda</a></p> -->
+          <p class="mt-5 mb-3 text-muted text-center">Sudah punya akun? <a href="<?= base_url('auth/') ?>">Masuk dengan Akun Perusahaan Anda</a></p>
+          <p class="mt-5 mb-3 text-muted text-center">IT BARIS KODE INDONESIA © <?= date('Y') ?></p>
         </div>
-        <div class="form-group text-left">
-          <label for="phone">Phone</label>
-          <input type="tel" id="phone" name="phone" class="form-control form-control-lg" placeholder="Phone Number">
-        </div>
-        <!-- End new input fields -->
-
-        <button class="btn btn-lg btn-primary btn-block btn-regis-perusahaan" type="submit">Registrasi</button>
-        <!-- <p class="mt-5 mb-3 text-muted text-center">Belum punya akun? <a href="<?= base_url('auth/') ?>register">Buat Akun Perusahaan Anda</a></p> -->
-        <p class="mt-5 mb-3 text-muted text-center">Sudah punya akun? <a href="<?= base_url('auth/') ?>">Masuk dengan Akun Perusahaan Anda</a></p>
-        <p class="mt-5 mb-3 text-muted text-center">IT BARIS KODE INDONESIA © <?= date('Y') ?></p>
       </div>
   </form>
 </div>

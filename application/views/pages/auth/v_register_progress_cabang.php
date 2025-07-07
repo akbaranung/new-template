@@ -2,7 +2,7 @@
 <link rel="stylesheet" href="<?= base_url('assets/') ?>progress-bar.css">
 
 <div class="row align-items-center h-100 w-100">
-  <form class="col-lg-12 col-md-4 col-10 mx-auto" action="<?= site_url('auth/process_registrasi_cabang') ?>" method="post">
+  <div class="col-lg-12 col-md-4 col-10 mx-auto">
     <div class="row">
       <div class="col-lg-3 col-md-4 col-10 mx-auto">
         <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="<?= base_url('/') ?>">
@@ -43,24 +43,28 @@
           </div> -->
       </div>
     </div>
-    <div class="row">
-      <!-- END: Progress Bar Integration -->
-      <div class="col-lg-3 col-md-4 col-10 mx-auto">
+  </div>
+  <form class="col-lg-3 col-md-4 col-10 mx-auto" action="<?= site_url('auth/process_registrasi_cabang') ?>" method="post">
+    <div class="card shadow p-4">
+      <div class="row">
+        <!-- END: Progress Bar Integration -->
+        <div class="col-lg-12 col-md-4 col-10 mx-auto">
 
-        <!-- New input fields for company data -->
-        <div class="form-group text-left">
-          <label for="nama_cabang">Nama Cabang</label>
-          <input type="text" id="nama_cabang" name="nama_cabang" class="form-control form-control-lg" placeholder="Please enter Nama Cabang" required>
-        </div>
-        <div class="form-group text-left">
-          <label for="alamat_cabang">Alamat Cabang</label>
-          <textarea id="alamat_cabang" name="alamat_cabang" class="form-control form-control-lg" placeholder="Please enter Alamat Cabang" rows="3" required></textarea>
-        </div>
-        <!-- End new input fields -->
+          <!-- New input fields for company data -->
+          <div class="form-group text-left">
+            <label for="nama_cabang">Nama Cabang</label>
+            <input type="text" id="nama_cabang" name="nama_cabang" class="form-control form-control-lg" placeholder="Please enter Nama Cabang" required>
+          </div>
+          <div class="form-group text-left">
+            <label for="alamat_cabang">Alamat Cabang</label>
+            <textarea id="alamat_cabang" name="alamat_cabang" class="form-control form-control-lg" placeholder="Please enter Alamat Cabang" rows="3" required></textarea>
+          </div>
+          <!-- End new input fields -->
 
-        <button class="btn btn-lg btn-primary btn-block btn-regis-perusahaan" type="submit">Registrasi</button>
-        <!-- <p class="mt-5 mb-3 text-muted text-center">Belum punya akun? <a href="<?= base_url('auth/') ?>register">Buat Akun Perusahaan Anda</a></p> -->
-        <p class="mt-5 mb-3 text-muted text-center">IT BARIS KODE INDONESIA © <?= date('Y') ?></p>
+          <button class="btn btn-lg btn-primary btn-block btn-regis-perusahaan" type="submit">Registrasi</button>
+          <!-- <p class="mt-5 mb-3 text-muted text-center">Belum punya akun? <a href="<?= base_url('auth/') ?>register">Buat Akun Perusahaan Anda</a></p> -->
+          <p class="mt-5 mb-3 text-muted text-center">IT BARIS KODE INDONESIA © <?= date('Y') ?></p>
+        </div>
       </div>
   </form>
 </div>

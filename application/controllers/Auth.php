@@ -237,9 +237,9 @@ class Auth extends CI_Controller
 
   public function register_perusahaan()
   {
-    if (!$this->session->userdata('isLogin')) {
-      redirect('auth');
-    }
+    // if (!$this->session->userdata('isLogin')) {
+    //   redirect('auth');
+    // }
     $data['title'] = 'Register Perusahaan';
     $data['utility'] = $this->db->get('utility')->row_array();
     $data['pages'] = 'pages/auth/v_register_progress_perusahaan';
@@ -350,15 +350,15 @@ class Auth extends CI_Controller
 
   public function register_cabang()
   {
-    if (!$this->session->userdata('isLogin')) {
-      redirect('auth');
-    }
+    // if (!$this->session->userdata('isLogin')) {
+    //   redirect('auth');
+    // }
 
     $company_data_from_session = $this->session->userdata('data_perusahaan');
-    if (empty($company_data_from_session)) {
-      $this->session->set_flashdata('error', 'Silakan lengkapi data perusahaan terlebih dahulu.');
-      redirect('auth/register_perusahaan'); // Redirect back to company registration
-    }
+    // if (empty($company_data_from_session)) {
+    //   $this->session->set_flashdata('error', 'Silakan lengkapi data perusahaan terlebih dahulu.');
+    //   redirect('auth/register_perusahaan'); // Redirect back to company registration
+    // }
 
     $data['title'] = 'Register Cabang';
     $data['utility'] = $this->db->get('utility')->row_array();
