@@ -229,30 +229,34 @@ class Auth extends CI_Controller
         $this->api_whatsapp->wa_notif($msg, $this->input->post('phone'));
 
         // Set success flashdata message
-        $response = [
-          'success' => TRUE,
-          'msg'     => 'Berhasil Membuat Akun! Anda akan diarahkan ke halaman login.',
-          'reload' => base_url('auth')
-        ];
+        // $response = [
+        //   'success' => TRUE,
+        //   'msg'     => 'Berhasil Membuat Akun! Anda akan diarahkan ke halaman login.',
+        //   'reload' => base_url('auth')
+        // ];
+        $this->session->set_flashdata('success', 'Berhasil Membuat Akun, silahkan login.');
+        redirect('auth');
       } else {
         // Set error flashdata message
-        $response = [
-          'success' => FALSE,
-          'msg'     => 'Gagal Membuat Akun. Terjadi kesalahan pada server. Silakan coba lagi.'
-        ];
+        // $response = [
+        //   'success' => FALSE,
+        //   'msg'     => 'Gagal Membuat Akun. Terjadi kesalahan pada server. Silakan coba lagi.'
+        // ];
+        $this->session->set_flashdata('error', 'Silakan lengkapi data perusahaan terlebih dahulu.');
+        redirect('auth/register');
       }
     }
-    echo json_encode($response);
+    // echo json_encode($response);
   }
 
   public function register_perusahaan()
   {
-    // if (!$this->session->userdata('isLogin')) {
-    //   redirect('auth');
-    // }
-
-    if ($this->session->userdata('is_token')) {
+    if (!$this->session->userdata('isLogin')) {
+      redirect('auth');
+    } else if ($this->session->userdata('is_token')) {
       redirect('auth/verifikasi_akun');
+    } else if ($this->session->userdata('nama_perusahaan')) {
+      redirect('home');
     }
     $data['title'] = 'Register Perusahaan';
     $data['utility'] = $this->db->get('utility')->row_array();
@@ -279,13 +283,17 @@ class Auth extends CI_Controller
     if ($this->form_validation->run() == FALSE) {
       // If validation fails, reload the registration form with errors
 
-      $response = [
-        'success' => FALSE,
-        // 'msg'     => 'Gagal Membuat Akun. Mohon periksa kembali input Anda.',
-        'msg'     => 'Gagal Membuat Akun.' . validation_errors(),
-        'errors'  => validation_errors() // Capture all validation errors
+      // $response = [
+      //   'success' => FALSE,
+      //   // 'msg'     => 'Gagal Membuat Akun. Mohon periksa kembali input Anda.',
+      //   'msg'     => 'Gagal Membuat Akun.' . validation_errors(),
+      //   'errors'  => validation_errors() // Capture all validation errors
 
-      ];
+      // ];
+
+
+      $this->session->set_flashdata('error', 'Gagal Membuat Akun. Mohon periksa kembali input Anda.');
+      redirect('auth/register_perusahaan');
     } else {
       // Validation passed, proceed with registration
 
@@ -306,21 +314,27 @@ class Auth extends CI_Controller
           $logo_base64 = 'data:' . $file_type . ';base64,' . base64_encode($file_content);
         } else {
           // Handle error if file content could not be read
-          $response = [
-            'success' => FALSE,
-            'msg'     => 'Gagal membaca isi file logo. Silakan coba lagi.'
-          ];
-          echo json_encode($response);
-          return; // Stop execution
+          // $response = [
+          //   'success' => FALSE,
+          //   'msg'     => 'Gagal membaca isi file logo. Silakan coba lagi.'
+          // ];
+          // echo json_encode($response);
+          // return; // Stop execution
+
+          $this->session->set_flashdata('error', 'Gagal membaca isi file logo. Silakan coba lagi.');
+          redirect('auth/register_perusahaan');
         }
       } elseif (!empty($_FILES['logo_perusahaan']['name']) && $_FILES['logo_perusahaan']['error'] != UPLOAD_ERR_OK) {
         // Handle file upload errors (e.g., file too large)
-        $response = [
-          'success' => FALSE,
-          'msg'     => 'Terjadi kesalahan saat mengunggah file logo: ' . $_FILES['logo_perusahaan']['error']
-        ];
-        echo json_encode($response);
-        return; // Stop execution
+        // $response = [
+        //   'success' => FALSE,
+        //   'msg'     => 'Terjadi kesalahan saat mengunggah file logo: ' . $_FILES['logo_perusahaan']['error']
+        // ];
+        // echo json_encode($response);
+        // return; // Stop execution
+
+        $this->session->set_flashdata('error', 'Terjadi kesalahan saat mengunggah file logo: ' . $_FILES['logo_perusahaan']['error']);
+        redirect('auth/register_perusahaan');
       }
       // --- End File Upload and Base64 Conversion ---
 
@@ -346,27 +360,35 @@ class Auth extends CI_Controller
       $this->session->set_userdata('data_perusahaan', $company_data);
       if (!empty($this->session->userdata('data_perusahaan'))) {
         // Set success flashdata message
-        $response = [
-          'success' => TRUE,
-          'msg'     => 'Berhasil Membuat Akun! Anda akan diarahkan ke halaman Register Cabang.',
-          'reload' => base_url('auth/register_cabang')
-        ];
+        // $response = [
+        //   'success' => TRUE,
+        //   'msg'     => 'Berhasil Membuat Akun! Anda akan diarahkan ke halaman Register Cabang.',
+        //   'reload' => base_url('auth/register_cabang')
+        // ];
+
+        $this->session->set_flashdata('success', 'Berhasil Membuat Akun! Anda akan diarahkan ke halaman Register Cabang.');
+        redirect('auth/register_cabang');
       } else {
         // Set error flashdata message
-        $response = [
-          'success' => FALSE,
-          'msg'     => 'Gagal Membuat Akun. Terjadi kesalahan pada server. Silakan coba lagi.'
-        ];
+        // $response = [
+        //   'success' => FALSE,
+        //   'msg'     => 'Gagal Membuat Akun. Terjadi kesalahan pada server. Silakan coba lagi.'
+        // ];
+
+        $this->session->set_flashdata('error', 'Gagal Membuat Akun. Terjadi kesalahan pada server. Silakan coba lagi.');
+        redirect('auth/register_perusahaan');
       }
     }
-    echo json_encode($response);
+    // echo json_encode($response);
   }
 
   public function register_cabang()
   {
-    // if (!$this->session->userdata('isLogin')) {
-    //   redirect('auth');
-    // }
+    if (!$this->session->userdata('isLogin')) {
+      redirect('auth');
+    } else if ($this->session->userdata('nama_perusahaan')) {
+      redirect('home');
+    }
 
     $company_data_from_session = $this->session->userdata('data_perusahaan');
     // if (empty($company_data_from_session)) {
@@ -396,11 +418,14 @@ class Auth extends CI_Controller
 
     if ($this->form_validation->run() == FALSE) {
       // If validation fails, reload the registration form with errors
-      $response = [
-        'success' => FALSE,
-        'msg'     => 'Gagal Registrasi Cabang. Mohon periksa kembali input Anda. ' . validation_errors(),
-        'errors'  => validation_errors() // Capture all validation errors
-      ];
+      // $response = [
+      //   'success' => FALSE,
+      //   'msg'     => 'Gagal Registrasi Cabang. Mohon periksa kembali input Anda. ' . validation_errors(),
+      //   'errors'  => validation_errors() // Capture all validation errors
+      // ];
+
+      $this->session->set_flashdata('error', 'Gagal Registrasi Cabang. Mohon periksa kembali input Anda. ' . validation_errors());
+      redirect('auth/register_cabang');
     } else {
 
       $company_inserted_id = $this->M_login->register_perusahaan($company_data_from_session);
@@ -443,20 +468,26 @@ class Auth extends CI_Controller
         $this->session->set_userdata('ppn', $setting->besaran_ppn);
         $this->session->set_userdata('nama_akronim', $setting->nama_akronim);
 
-        $response = [
-          'success' => TRUE,
-          'msg'     => 'Berhasil Membuat Akun! Anda akan diarahkan ke halaman utama.',
-          'reload' => base_url('home')
-        ];
+        // $response = [
+        //   'success' => TRUE,
+        //   'msg'     => 'Berhasil Membuat Akun! Anda akan diarahkan ke halaman utama.',
+        //   'reload' => base_url('home')
+        // ];
+
+        $this->session->set_flashdata('success', 'Berhasil Membuat Akun! Anda akan diarahkan ke halaman utama.' . validation_errors());
+        redirect('home');
       } else {
         // Set error flashdata message
-        $response = [
-          'success' => FALSE,
-          'msg'     => 'Gagal Membuat Akun. Terjadi kesalahan pada server. Silakan coba lagi.'
-        ];
+        // $response = [
+        //   'success' => FALSE,
+        //   'msg'     => 'Gagal Membuat Akun. Terjadi kesalahan pada server. Silakan coba lagi.'
+        // ];
+
+        $this->session->set_flashdata('error', 'Gagal Membuat Akun. Terjadi kesalahan pada server. Silakan coba lagi.' . validation_errors());
+        redirect('auth/register_cabang');
       }
     }
-    echo json_encode($response);
+    // echo json_encode($response);
   }
 
   public function verifikasi_akun()
