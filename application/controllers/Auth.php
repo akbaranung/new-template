@@ -437,62 +437,78 @@ class Auth extends CI_Controller
     } else {
 
       $company_inserted_id = $this->M_login->register_perusahaan($company_data_from_session);
+      if (is_array($company_inserted_id) && isset($company_result['code'])) {
+        // Log the detailed error message for yourself (the developer)
+        log_message('error', 'Database Error (register_perusahaan): Code ' . $company_result['code'] . ' - ' . $company_result['message']);
 
-      $branch_data = array(
-        'id_perusahaan' => $company_inserted_id, // Get from hidden field
-        'nama_cabang'   => $this->input->post('nama_cabang'),
-        'alamat_cabang' => $this->input->post('alamat_cabang'),
-      );
-
-      $branch_inserted_id = $this->M_login->register_cabang($branch_data);
-
-
-      $user_data = array(
-        'id_cabang' => $branch_inserted_id
-      );
-      // Assuming 'users' table is in the default database
-      $this->db->where('nip', $this->session->userdata('nip')); // Assuming 'id' is the primary key for users table
-      $this->db->update('users', $user_data);
-
-      $user_updated = $this->db->affected_rows() > 0;
-
-      // if ($this->M_login->register_perusahaan($company_data)) {
-
-
-
-      if ($company_inserted_id && $branch_inserted_id && $user_updated) {
-        // Set success flashdata message
-        $this->db->select('utility.*');
-        $this->db->from('utility');
-        $this->db->join($this->cb->database . '.t_cabang', 't_cabang.id_perusahaan = utility.Id');
-        $setting = $this->db->where('t_cabang.uid', $branch_inserted_id)->get()->row();
-        // var_dump($setting);
-        $this->session->set_userdata('icon', $setting->logo);
-        $this->session->set_userdata('nama_singkat', $setting->nama_singkat);
-        $this->session->set_userdata('nama_perusahaan', $setting->nama_perusahaan);
-        $this->session->set_userdata('alamat_perusahaan', $setting->alamat_perusahaan);
-        $this->session->set_userdata('nomor_rekening', $setting->nomor_rekening);
-        $this->session->set_userdata('nama_ppn', $setting->nama_ppn);
-        $this->session->set_userdata('ppn', $setting->besaran_ppn);
-        $this->session->set_userdata('nama_akronim', $setting->nama_akronim);
-
-        // $response = [
-        //   'success' => TRUE,
-        //   'msg'     => 'Berhasil Membuat Akun! Anda akan diarahkan ke halaman utama.',
-        //   'reload' => base_url('home')
-        // ];
-
-        $this->session->set_flashdata('success', 'Berhasil Membuat Akun! Anda akan diarahkan ke halaman utama.' . validation_errors());
-        redirect('home');
-      } else {
-        // Set error flashdata message
-        // $response = [
-        //   'success' => FALSE,
-        //   'msg'     => 'Gagal Membuat Akun. Terjadi kesalahan pada server. Silakan coba lagi.'
-        // ];
-
-        $this->session->set_flashdata('error', 'Gagal Membuat Akun. Terjadi kesalahan pada server. Silakan coba lagi.' . validation_errors());
+        $this->db->trans_rollback(); // Rollback all operations if this fails
+        $this->session->set_flashdata('error', 'Gagal mendaftarkan data perusahaan. Silakan coba lagi.');
         redirect('auth/register_cabang');
+      } else {
+        $branch_data = array(
+          'id_perusahaan' => $company_inserted_id, // Get from hidden field
+          'nama_cabang'   => $this->input->post('nama_cabang'),
+          'alamat_cabang' => $this->input->post('alamat_cabang'),
+        );
+
+        $branch_inserted_id = $this->M_login->register_cabang($branch_data);
+
+        if (is_array($branch_inserted_id) && isset($branch_inserted_id['code'])) {
+          $this->db->trans_rollback(); // Rollback all operations if this fails
+          log_message('error', 'Database Error (register_cabang): Code ' . $branch_inserted_id['code'] . ' - ' . $branch_inserted_id['message']);
+          $this->session->set_flashdata('error', 'Gagal mendaftarkan data cabang. Silakan coba lagi.');
+          redirect('auth/register_cabang');
+        } else {
+
+          $user_data = array(
+            'id_cabang' => $branch_inserted_id
+          );
+          // Assuming 'users' table is in the default database
+          $this->db->where('nip', $this->session->userdata('nip')); // Assuming 'id' is the primary key for users table
+          $this->db->update('users', $user_data);
+
+          $user_updated = $this->db->affected_rows() > 0;
+
+          // if ($this->M_login->register_perusahaan($company_data)) {
+
+
+
+          if ($company_inserted_id && $branch_inserted_id && $user_updated) {
+            // Set success flashdata message
+            $this->db->select('utility.*');
+            $this->db->from('utility');
+            $this->db->join($this->cb->database . '.t_cabang', 't_cabang.id_perusahaan = utility.Id');
+            $setting = $this->db->where('t_cabang.uid', $branch_inserted_id)->get()->row();
+            // var_dump($setting);
+            $this->session->set_userdata('user_perusahaan_id', $setting->Id);
+            $this->session->set_userdata('icon', $setting->logo);
+            $this->session->set_userdata('nama_singkat', $setting->nama_singkat);
+            $this->session->set_userdata('nama_perusahaan', $setting->nama_perusahaan);
+            $this->session->set_userdata('alamat_perusahaan', $setting->alamat_perusahaan);
+            $this->session->set_userdata('nomor_rekening', $setting->nomor_rekening);
+            $this->session->set_userdata('nama_ppn', $setting->nama_ppn);
+            $this->session->set_userdata('ppn', $setting->besaran_ppn);
+            $this->session->set_userdata('nama_akronim', $setting->nama_akronim);
+
+            // $response = [
+            //   'success' => TRUE,
+            //   'msg'     => 'Berhasil Membuat Akun! Anda akan diarahkan ke halaman utama.',
+            //   'reload' => base_url('home')
+            // ];
+
+            $this->session->set_flashdata('success', 'Berhasil Membuat Akun! Anda akan diarahkan ke halaman utama.' . validation_errors());
+            redirect('home');
+          } else {
+            // Set error flashdata message
+            // $response = [
+            //   'success' => FALSE,
+            //   'msg'     => 'Gagal Membuat Akun. Terjadi kesalahan pada server. Silakan coba lagi.'
+            // ];
+
+            $this->session->set_flashdata('error', 'Gagal Membuat Akun. Terjadi kesalahan pada server. Silakan coba lagi.' . validation_errors());
+            redirect('auth/register_cabang');
+          }
+        }
       }
     }
     // echo json_encode($response);

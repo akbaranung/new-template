@@ -1979,6 +1979,54 @@ fieldset:disabled a.btn {
     .show > .btn-danger.dropdown-toggle:focus {
       box-shadow: 0 0 0 0.2rem rgba(225, 83, 97, 0.5); }
 
+/* Base Pink Button */
+.btn-pink {
+  color: #ffffff; /* Text color remains white for good contrast */
+  background-color: #e81f63; /* Your base pink color */
+  border-color: #e81f63; /* Border matches background */
+}
+
+/* Hover state for Pink Button */
+.btn-pink:hover {
+  color: #ffffff;
+  background-color: #d01c59; /* Slightly darker pink for hover */
+  border-color: #b8194f; /* Even darker pink for hover border */
+}
+
+/* Focus and Active states for Pink Button */
+.btn-pink:focus,
+.btn-pink.focus {
+  color: #ffffff;
+  background-color: #d01c59; /* Matches hover background */
+  border-color: #b8194f; /* Matches hover border */
+  box-shadow: 0 0 0 0.2rem rgba(232, 31, 99, 0.5); /* Pink shadow with 50% opacity */
+}
+
+/* Disabled state for Pink Button */
+.btn-pink.disabled,
+.btn-pink:disabled {
+  color: #ffffff;
+  background-color: #e81f63; /* Base pink for disabled */
+  border-color: #e81f63; /* Base pink for disabled border */
+  opacity: 0.65; /* Often added for disabled buttons to visually indicate it's inactive */
+}
+
+/* Active (clicked) state for Pink Button */
+.btn-pink:not(:disabled):not(.disabled):active,
+.btn-pink:not(:disabled):not(.disabled).active,
+.show > .btn-pink.dropdown-toggle {
+  color: #ffffff;
+  background-color: #c01a53; /* Darker pink for active state */
+  border-color: #a81747; /* Even darker pink for active border */
+}
+
+/* Focus on Active state for Pink Button */
+.btn-pink:not(:disabled):not(.disabled):active:focus,
+.btn-pink:not(:disabled):not(.disabled).active:focus,
+.show > .btn-pink.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.2rem rgba(232, 31, 99, 0.5); /* Same pink shadow as focus */
+}
+
 .btn-light {
   color: #212529;
   background-color: #f8f9fa;

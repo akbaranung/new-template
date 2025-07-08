@@ -57,19 +57,21 @@ class M_login extends CI_Model
       return $this->db->insert_id();
     } else {
       // If the insert failed, return false or null to indicate failure
-      return FALSE; // Or return null;
+      // return FALSE; // Or return null;
+      return $this->db->error();
     }
   }
   public function register_cabang($data)
   {
     $this->cb->insert('t_cabang', $data);
 
-    if ($this->db->affected_rows() > 0) {
+    if ($this->cb->affected_rows() > 0) {
       // Return the ID of the newly inserted record
-      return $this->db->insert_id();
+      return $this->cb->insert_id();
     } else {
       // If the insert failed, return false or null to indicate failure
-      return FALSE; // Or return null;
+      // return FALSE; // Or return null;
+      return $this->cb->error();
     }
   }
 }
