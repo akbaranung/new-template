@@ -65,32 +65,32 @@
           <!-- New input fields for company data -->
           <div class="form-group text-left">
             <label for="nama_perusahaan">Logo Perusahaan</label>
-            <input type="file" id="logo_perusahaan" name="logo_perusahaan" placeholder="Please enter Logo Perusahaan" accept=".jpg, .jpeg, .png, .gif, image/jpeg, image/png"
+            <input type="file" id="logo_perusahaan" name="logo_perusahaan" accept=".jpg, .jpeg, .png, .gif, image/jpeg, image/png"
               required>
             <span id="logo_perusahaan_error_message" class="error-message"></span>
 
           </div>
           <div class="form-group text-left">
             <label for="nama_perusahaan">Nama Perusahaan</label>
-            <input type="text" id="nama_perusahaan" name="nama_perusahaan" class="form-control form-control-lg" placeholder="Please enter Nama Perusahaan" required>
+            <input type="text" id="nama_perusahaan" name="nama_perusahaan" class="form-control form-control-lg" required>
             <span id="nama_perusahaan_error_message" class="error-message"></span>
 
           </div>
           <div class="form-group text-left">
             <label for="nama_singkat">Nama Singkat</label>
-            <input type="text" id="nama_singkat" name="nama_singkat" class="form-control form-control-lg" placeholder="Please enter Nama Singkat" required>
+            <input type="text" id="nama_singkat" name="nama_singkat" class="form-control form-control-lg" required>
             <span id="nama_singkat_error_message" class="error-message"></span>
 
           </div>
           <div class="form-group text-left">
             <label for="nama_ppn">Nama PPN</label>
-            <input type="text" id="nama_ppn" name="nama_ppn" class="form-control form-control-lg" placeholder="Please enter Nama PPN" required>
+            <input type="text" id="nama_ppn" name="nama_ppn" class="form-control form-control-lg" required value="PPN 12%">
             <span id="nama_ppn_error_message" class="error-message"></span>
 
           </div>
           <div class="form-group text-left">
             <label for="besaran_ppn">Besaran PPN (%)</label>
-            <input type="number" id="besaran_ppn" name="besaran_ppn" class="form-control form-control-lg" placeholder="Please enter Besaran PPN (%)" step="1" min="1" max="100" required>
+            <input type="number" id="besaran_ppn" name="besaran_ppn" class="form-control form-control-lg" step="1" min="1" max="100" required value="12">
             <span id="besaran_ppn_error_message" class="error-message"></span>
 
           </div>
@@ -101,7 +101,6 @@
               id="nomor_rekening"
               name="nomor_rekening"
               class="form-control form-control-lg"
-              placeholder="Please enter Nomor Rekening"
               required
               pattern="[0-9]{10,16}" />
             <span id="nomor_rekening_error_message" class="error-message"></span>
@@ -109,26 +108,26 @@
           </div>
           <div class="form-group text-left">
             <label for="nama_bank">Nama Bank</label>
-            <input type="text" id="nama_bank" name="nama_bank" class="form-control form-control-lg" placeholder="Please enter Nama Bank" required>
+            <input type="text" id="nama_bank" name="nama_bank" class="form-control form-control-lg" required>
             <span id="nama_bank_error_message" class="error-message"></span>
 
           </div>
           <div class="form-group text-left">
             <label for="alamat_perusahaan">Alamat Perusahaan</label>
-            <textarea id="alamat_perusahaan" name="alamat_perusahaan" class="form-control form-control-lg" placeholder="Please enter Alamat Perusahaan" rows="3" required></textarea>
+            <textarea id="alamat_perusahaan" name="alamat_perusahaan" class="form-control form-control-lg" rows="3" required></textarea>
             <span id="alamat_perusahaan_error_message" class="error-message"></span>
 
           </div>
           <div class="form-group text-left">
             <label for="nama_akronim">Nama Akronim</label>
-            <input type="text" id="nama_akronim" name="nama_akronim" class="form-control form-control-lg" placeholder="Please enter Nama Akronim" required>
+            <input type="text" id="nama_akronim" name="nama_akronim" class="form-control form-control-lg" required>
             <span id="nama_akronim_error_message" class="error-message"></span>
 
           </div>
           <!-- End new input fields -->
 
           <button class="btn btn-lg btn-primary btn-block btn-regis-perusahaan" type="submit">Registrasi</button>
-          <!-- <p class="mt-5 mb-3 text-muted text-center">Belum punya akun? <a href="<?= base_url('auth/') ?>register">Buat Akun Perusahaan Anda</a></p> -->
+          <p class="mt-5 mb-3 text-muted text-center">Sudah punya akun? <a href="<?= base_url('auth/logout') ?>">Masuk dengan Akun Perusahaan Anda</a></p>
           <p class="mt-5 mb-3 text-muted text-center">IT BARIS KODE INDONESIA © <?= date('Y') ?></p>
         </div>
       </div>

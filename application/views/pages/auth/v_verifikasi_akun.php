@@ -24,6 +24,7 @@
         <input type="text" id="token" name="token" class="form-control form-control-lg" placeholder="Please enter Token" autofocus="true">
       </div>
       <button class="btn btn-lg btn-primary btn-block" type="submit">Verifikasi</button>
+      <p class="mt-5 mb-3 text-muted text-center">Sudah punya akun? <a href="<?= base_url('auth/logout') ?>">Masuk dengan Akun Perusahaan Anda</a></p>
       <p class="mt-5 mb-3 text-muted text-center">IT BARIS KODE INDONESIA © <?= date('Y') ?></p>
     </div>
   </form>

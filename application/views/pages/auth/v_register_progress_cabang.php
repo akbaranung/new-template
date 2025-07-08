@@ -65,18 +65,20 @@
           <!-- New input fields for company data -->
           <div class="form-group text-left">
             <label for="nama_cabang">Nama Cabang</label>
-            <input type="text" id="nama_cabang" name="nama_cabang" class="form-control form-control-lg" placeholder="Please enter Nama Cabang" required>
+            <input type="text" id="nama_cabang" name="nama_cabang" class="form-control form-control-lg" required>
             <span id="nama_cabang_error_message" class="error-message"></span>
           </div>
           <div class="form-group text-left">
             <label for="alamat_cabang">Alamat Cabang</label>
-            <textarea id="alamat_cabang" name="alamat_cabang" class="form-control form-control-lg" placeholder="Please enter Alamat Cabang" rows="3" required></textarea>
+            <textarea id="alamat_cabang" name="alamat_cabang" class="form-control form-control-lg" rows="3" required></textarea>
             <span id="alamat_cabang_error_message" class="error-message"></span>
           </div>
           <!-- End new input fields -->
 
           <button class="btn btn-lg btn-primary btn-block btn-regis-perusahaan" type="submit">Registrasi</button>
           <!-- <p class="mt-5 mb-3 text-muted text-center">Belum punya akun? <a href="<?= base_url('auth/') ?>register">Buat Akun Perusahaan Anda</a></p> -->
+          <p class="mt-5 mb-3 text-muted text-center">Sudah punya akun? <a href="<?= base_url('auth/logout') ?>">Masuk dengan Akun Perusahaan Anda</a></p>
+
           <p class="mt-5 mb-3 text-muted text-center">IT BARIS KODE INDONESIA © <?= date('Y') ?></p>
         </div>
       </div>
