@@ -59,13 +59,13 @@
                     <td> <input type="email" name="email" class="form-control"></td>
                   </tr>
                   <tr>
-                    <th>Phone</th>
+                    <th>Phone (WhatsApp)</th>
                     <td><input type="tel" name="phone" class="form-control"></td>
                   </tr>
-                  <tr>
+                  <!-- <tr>
                     <th>Code Agent</th>
                     <td><input type="text" name="kd_agent" class="form-control"></td>
-                  </tr>
+                  </tr> -->
                   <!-- <tr>
                     <th>Nip</th>
                     <td><input type="number" name="nip" class="form-control"></td>
@@ -78,7 +78,7 @@
                         <option value="1">Staff</option>
                         <option value="2">Supervisor</option>
                         <option value="3">Manajer</option>
-                        <option value="4">General Manajer</option>
+                        <!-- <option value="4">General Manajer</option> -->
                         <option value="5">Direktur</option>
                         <option value="6">Direktur Utama</option>
                       </select>
