@@ -1,3 +1,8 @@
+<style>
+  input {
+    text-align: center;
+  }
+</style>
 <div class="row align-items-center h-100 w-100 m-0">
   <form class="col-lg-3 col-md-4 col-10 mx-auto" action="<?= site_url('auth/cek_token') ?>" method="post">
     <div class="card shadow p-4">
