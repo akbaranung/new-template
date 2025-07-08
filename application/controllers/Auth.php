@@ -159,7 +159,7 @@ class Auth extends CI_Controller
     $this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email|is_unique[users.email]');
     $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]|matches[password_confirm]');
     $this->form_validation->set_rules('password_confirm', 'Konfirmasi Password', 'required|matches[password]');
-    $this->form_validation->set_rules('phone', 'Nomor Telepon', 'trim|numeric|required');
+    $this->form_validation->set_rules('phone', 'Nomor Telepon', 'trim|numeric|required|is_unique[users.phone]');
     // $this->form_validation->set_rules('nip', 'NIP', 'trim|is_unique[users.nip]');
 
     // Set custom error messages (optional)
@@ -174,13 +174,16 @@ class Auth extends CI_Controller
     if ($this->form_validation->run() == FALSE) {
       // If validation fails, reload the registration form with errors
 
-      $response = [
-        'success' => FALSE,
-        // 'msg'     => 'Gagal Membuat Akun. Mohon periksa kembali input Anda.',
-        // 'msg'     => 'Gagal Membuat Akun.' . validation_errors(),
-        'errors'  => validation_errors() // Capture all validation errors
+      // $response = [
+      //   'success' => FALSE,
+      //   // 'msg'     => 'Gagal Membuat Akun. Mohon periksa kembali input Anda.',
+      //   // 'msg'     => 'Gagal Membuat Akun.' . validation_errors(),
+      //   'errors'  => validation_errors() // Capture all validation errors
+      // ];
 
-      ];
+
+      $this->session->set_flashdata('error', 'Silakan lengkapi data perusahaan terlebih dahulu. <br><br>' . validation_errors());
+      redirect('auth/register');
     } else {
       // Validation passed, proceed with registration
 
@@ -191,6 +194,7 @@ class Auth extends CI_Controller
           $ids[] = $row['Id'];
         }
       }
+
       $id_string = implode(',', $ids);
       $this->load->helper('numeric_token'); // Load helper
       $token = generate_numeric_token(5);
