@@ -177,7 +177,7 @@ class Auth extends CI_Controller
       $response = [
         'success' => FALSE,
         // 'msg'     => 'Gagal Membuat Akun. Mohon periksa kembali input Anda.',
-        'msg'     => 'Gagal Membuat Akun.' . validation_errors(),
+        // 'msg'     => 'Gagal Membuat Akun.' . validation_errors(),
         'errors'  => validation_errors() // Capture all validation errors
 
       ];
