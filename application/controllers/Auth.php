@@ -217,7 +217,6 @@ class Auth extends CI_Controller
 
       // Insert user data into the database
       if ($this->M_login->register_user($data)) {
-
         $data_access = array(
           'user_id'       => $this->input->post('nip'),
           'menu_id'       => $id_string,
@@ -226,7 +225,14 @@ class Auth extends CI_Controller
         $this->M_login->register_user_access($data_access);
         //Send notif wa
         $msg = "Kode verifikasi Akun Anda adalah *$token*, Gunakan Token Saat Login untuk pertama kali. Jangan bagikan kode ini kepada siapa pun.";
-        $this->api_whatsapp->wa_notif($msg, $this->input->post('phone'));
+        if ($this->api_whatsapp->wa_notif($msg, $this->input->post('phone'))) {
+          $this->session->set_flashdata('success', 'Berhasil Membuat Akun, silahkan login.');
+          redirect('auth');
+        } else {
+
+          $this->session->set_flashdata('error', 'Gagal Mengirim Token ke Whatsapp');
+          redirect('auth/register');
+        }
 
         // Set success flashdata message
         // $response = [
@@ -234,8 +240,6 @@ class Auth extends CI_Controller
         //   'msg'     => 'Berhasil Membuat Akun! Anda akan diarahkan ke halaman login.',
         //   'reload' => base_url('auth')
         // ];
-        $this->session->set_flashdata('success', 'Berhasil Membuat Akun, silahkan login.');
-        redirect('auth');
       } else {
         // Set error flashdata message
         // $response = [
