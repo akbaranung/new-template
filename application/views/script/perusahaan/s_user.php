@@ -129,12 +129,12 @@
         } else {
             // If not premium, show SweetAlert
             Swal.fire({
-                title: 'Access Denied!',
-                text: 'You need a premium account to add users. Please upgrade your subscription.',
+                title: 'Akses Ditolak!',
+                text: 'Anda membutuhkan akun premium untuk menambah user. Harap tingkatkan langganan Anda.',
                 icon: 'warning',
-                confirmButtonText: 'Upgrade Now',
+                confirmButtonText: 'Tingkatkan Sekarang',
                 showCancelButton: true,
-                cancelButtonText: 'No Thanks'
+                cancelButtonText: 'Tidak, Terimakasih'
             }).then((result) => {
                 if (result.isConfirmed) {
                     // Optional: Redirect to an upgrade page if 'Upgrade Now' is clicked
@@ -174,4 +174,121 @@
         <?php endif;
         */
     ?>
+</script>
+<script>
+    $(document).ready(function() {
+
+        // --- Event Listener for "Add New Option" Button (Toggles visibility of inputs) ---
+        $('#addOptionBtn').on('click', function() {
+            <?php
+            if ($this->session->userdata('is_premium')) {
+            ?>
+                $('#add-bagian-tr').toggle(); // Toggles display: none/table-row
+                // Optionally, scroll to the new input fields if they appear off-screen
+                if ($('#add-bagian-tr').is(':visible')) {
+                    $('html, body').animate({
+                        scrollTop: $('#add-bagian-tr').offset().top - 100 // Adjust offset as needed
+                    }, 500);
+                    $('#input_kode').focus(); // Focus on the first input field
+                }
+            <?php
+            } else {
+            ?>
+                Swal.fire({
+                    title: 'Akses Ditolak!',
+                    text: 'Anda membutuhkan akun premium untuk menambah user. Harap tingkatkan langganan Anda.',
+                    icon: 'warning',
+                    confirmButtonText: 'Tingkatkan Sekarang',
+                    showCancelButton: true,
+                    cancelButtonText: 'Tidak, Terimakasih'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Optional: Redirect to an upgrade page if 'Upgrade Now' is clicked
+                        window.location.href = '<?= base_url('subscription/upgrade') ?>'; // Adjust this URL as needed
+                    }
+                });
+            <?php
+            }
+            ?>
+        });
+
+        // --- Event Listener for "Cancel" Button ---
+        $('#cancelNewBagianBtn').on('click', function() {
+            $('#add-bagian-tr').hide(); // Hide the input fields
+            $('#form-add-bagian')[0].reset(); // Clear the form
+            $('#statusMessageBagian').empty(); // Clear any status messages
+        });
+
+        // --- Event Listener for "Submit" Button (Handles AJAX call) ---
+        $('#submitNewBagianBtn').on('click', function() {
+            const inputKode = $('#input_kode').val().trim();
+            const inputNama = $('#input_nama').val().trim();
+            const inputKodeNama = $('#input_kode_nama').val().trim();
+            const inputIdPrsh = $('#input_id_prsh').val(); // Hidden field, should always have a value
+            const statusMessage = $('#statusMessageBagian');
+            const targetSelect = $('#mySelect');
+
+            // Basic client-side validation
+            if (!inputNama || !inputKodeNama) {
+                statusMessage.html('<div class="alert alert-warning">Please fill Nama, and Kode Nama fields!</div>');
+                return;
+            }
+
+            // Disable button and show loading
+            const $submitBtn = $(this);
+            $submitBtn.prop('disabled', true).text('Submitting...');
+            statusMessage.html('<div class="alert alert-info">Adding new bagian...</div>');
+
+            // --- AJAX call to Backend (CodeIgniter) ---
+            $.ajax({
+                url: '<?php echo base_url("perusahaan/save_new_bagian"); ?>', // *** REPLACE with your actual CI URL ***
+                method: 'POST',
+                data: {
+                    kode: inputKode,
+                    nama: inputNama,
+                    kode_nama: inputKodeNama,
+                    id_prsh: inputIdPrsh
+                },
+                dataType: 'json', // Expecting JSON response from CI backend
+                success: function(response) {
+                    if (response.status === 'success') {
+                        // Create the new <option> element
+                        // response.new_id: The ID of the newly inserted row from database
+                        // response.display_text: The text to show in the dropdown (e.g., "KODE - NAMA")
+                        const newOption = $('<option></option>')
+                            .val(response.new_id)
+                            .text(response.display_text);
+
+                        // Append the new option to the select tag
+                        targetSelect.append(newOption);
+
+                        // Optional: Select the newly added option
+                        targetSelect.val(response.new_id);
+
+                        // --- "Refresh" the Select Tag (if using a JS library) ---
+                        // If you're using Select2:
+                        // targetSelect.trigger('change');
+                        // If you're using Bootstrap-Select:
+                        // targetSelect.selectpicker('refresh');
+
+                        statusMessage.html('<div class="alert alert-success">Bagian added successfully!</div>');
+
+                        // Clear input fields and hide the form
+                        $('#form-add-bagian')[0].reset();
+                        $('#add-bagian-tr').hide(500); // Hide with a slight animation
+                    } else {
+                        statusMessage.html('<div class="alert alert-danger">Error: ' + (response.message || 'Unknown error.') + '</div>');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    statusMessage.html('<div class="alert alert-danger">AJAX Error: ' + status + ' - ' + error + '</div>');
+                    console.error("AJAX Error (Bagian):", xhr.responseText);
+                },
+                complete: function() {
+                    // Re-enable the submit button regardless of success/failure
+                    $submitBtn.prop('disabled', false).text('Submit');
+                }
+            });
+        });
+    });
 </script>

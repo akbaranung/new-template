@@ -96,12 +96,12 @@
         } else {
             // If not premium, show SweetAlert
             Swal.fire({
-                title: 'Access Denied!',
-                text: 'You need a premium account to add users. Please upgrade your subscription.',
+                title: 'Akses Ditolak!',
+                text: 'Anda membutuhkan akun premium untuk menambah user. Harap tingkatkan langganan Anda.',
                 icon: 'warning',
-                confirmButtonText: 'Upgrade Now',
+                confirmButtonText: 'Tingkatkan Sekarang',
                 showCancelButton: true,
-                cancelButtonText: 'No Thanks'
+                cancelButtonText: 'Tidak, Terimakasih'
             }).then((result) => {
                 if (result.isConfirmed) {
                     // Optional: Redirect to an upgrade page if 'Upgrade Now' is clicked

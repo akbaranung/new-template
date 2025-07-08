@@ -379,15 +379,16 @@
       }
       if (is_premium == 0) {
         Swal.fire({
-          title: 'Access Denied!',
-          text: 'You need a premium account to access this feature. Please upgrade your subscription.',
+          title: 'Akses Ditolak!',
+          text: 'Anda membutuhkan akun premium untuk menambah user. Harap tingkatkan langganan Anda.',
           icon: 'warning',
-          confirmButtonText: 'Upgrade Now',
+          confirmButtonText: 'Tingkatkan Sekarang',
           showCancelButton: true,
-          cancelButtonText: 'No Thanks'
+          cancelButtonText: 'Tidak, Terimakasih'
         }).then((result) => {
           if (result.isConfirmed) {
-            window.location.href = '<?= base_url('subscription/upgrade') ?>';
+            // Optional: Redirect to an upgrade page if 'Upgrade Now' is clicked
+            window.location.href = '<?= base_url('subscription/upgrade') ?>'; // Adjust this URL as needed
           }
         });
       }

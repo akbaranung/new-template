@@ -469,9 +469,18 @@ class Auth extends CI_Controller
 
           $user_updated = $this->db->affected_rows() > 0;
 
+
+          // ADD BAGIAN UNTUK USER NON PREMIUM
+          $data_bagian = array(
+            'id_prsh' => $company_inserted_id, // Get from hidden field
+            // 'kode'   => '1',
+            'nama' => 'Finance',
+            'kode_nama' => 'FIN',
+          );
+          $this->db->insert('bagian', $data_bagian);
+
+
           // if ($this->M_login->register_perusahaan($company_data)) {
-
-
 
           if ($company_inserted_id && $branch_inserted_id && $user_updated) {
             // Set success flashdata message

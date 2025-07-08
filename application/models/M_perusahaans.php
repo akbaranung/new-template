@@ -188,4 +188,32 @@ class M_perusahaans extends CI_Model
         // return $query->result_array(); // Return the result as an array
         return $query->row(); // Return the result as an array
     }
+
+    public function get_user_counts_by_role()
+    {
+        $this->db->select('level_jabatan, COUNT(id) as user_count');
+        $this->db->from('users');
+        $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
+        $this->db->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
+        // $this->db->where('id_prsh', $this->session->userdata('user_perusahaan_id'));
+        $this->db->group_by('level_jabatan');
+        $query = $this->db->get();
+
+        $counts = [];
+        foreach ($query->result() as $row) {
+            $counts[$row->level_jabatan] = (int)$row->user_count;
+        }
+        return $counts;
+    }
+
+    public function insert_bagian($data)
+    {
+        $this->db->insert('bagian', $data); // Assuming 'bagian' is your table name
+
+        if ($this->db->affected_rows() > 0) {
+            return $this->db->insert_id(); // Return the ID of the new row
+        } else {
+            return FALSE; // Return FALSE on failure
+        }
+    }
 }

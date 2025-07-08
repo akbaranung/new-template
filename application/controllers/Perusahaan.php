@@ -134,6 +134,7 @@ class Perusahaan extends CI_Controller
     $cabang = $this->cb->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'))->get()->result();
     $data['cabang'] = $cabang;
 
+    $data['user_counts'] = $this->M_perusahaans->get_user_counts_by_role();
 
     // --- NEW: Fetch menu access data ---
     // $data['all_menus'] = $this->M_user_access->get_all_menus(); // Get all available menus
@@ -156,7 +157,6 @@ class Perusahaan extends CI_Controller
 
     // CEK PREMIUM
     if ($this->session->userdata('is_premium')) {
-
       $this->load->view('index', $data);
     } else {
 
@@ -173,11 +173,11 @@ class Perusahaan extends CI_Controller
       } else {
         $this->session->set_flashdata('swal_message', [
           'icon' => 'error', // or 'success', 'warning', 'info', 'question'
-          'title' => 'Access Denied!',
-          'text' => 'You need a premium account to access this feature. Please upgrade your subscription.',
-          'confirmButtonText' => 'Upgrade Now',
+          'title' => 'Akses Ditolak!',
+          'text' => 'Anda membutuhkan akun premium untuk menambah user. Harap tingkatkan langganan Anda.',
+          'confirmButtonText' => 'Tingkatkan Sekarang',
           'showCancelButton' => true,
-          'cancelButtonText' => 'No Thanks',
+          'cancelButtonText' => 'Tidak, Terimakasih',
           'redirectUrl' => base_url('subscription/upgrade') // URL to redirect if confirmed
         ]);
 
@@ -199,6 +199,7 @@ class Perusahaan extends CI_Controller
     $cabang = $this->cb->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'))->get()->result();
     $data['cabang'] = $cabang;
 
+    $data['user_counts'] = $this->M_perusahaans->get_user_counts_by_role();
     // --- NEW: Fetch menu access data ---
     // $data['all_menus'] = $this->M_user_access->get_all_menus(); // Get all available menus
     $data['all_menus_hierarchical'] = $this->M_user_access->get_all_menus_hierarchical(); // Get all menus in hierarchy
@@ -392,13 +393,14 @@ class Perusahaan extends CI_Controller
       if ($total_cabang < 1) {
         $this->load->view('index', $data);
       } else {
+
         $this->session->set_flashdata('swal_message', [
           'icon' => 'error', // or 'success', 'warning', 'info', 'question'
-          'title' => 'Access Denied!',
-          'text' => 'You need a premium account to access this feature. Please upgrade your subscription.',
-          'confirmButtonText' => 'Upgrade Now',
+          'title' => 'Akses Ditolak!',
+          'text' => 'Anda membutuhkan akun premium untuk menambah user. Harap tingkatkan langganan Anda.',
+          'confirmButtonText' => 'Tingkatkan Sekarang',
           'showCancelButton' => true,
-          'cancelButtonText' => 'No Thanks',
+          'cancelButtonText' => 'Tidak, Terimakasih',
           'redirectUrl' => base_url('subscription/upgrade') // URL to redirect if confirmed
         ]);
 
@@ -487,5 +489,49 @@ class Perusahaan extends CI_Controller
 
     $this->load->view('index', $data);
     // $this->load->view('pages/absensi/lokasi_presensi_form', $data);
+  }
+
+  public function save_new_bagian()
+  {
+
+    $this->output->set_content_type('application/json');
+
+    // $this->form_validation->set_rules('kode', 'Kode', 'required|trim');
+    $this->form_validation->set_rules('nama', 'Nama', 'required|trim');
+    $this->form_validation->set_rules('kode_nama', 'Kode Nama', 'required|trim|is_unique[bagian.kode_nama]');
+    $this->form_validation->set_rules('id_prsh', 'ID Perusahaan', 'required|integer');
+
+    if ($this->form_validation->run() == FALSE) {
+      echo json_encode([
+        'status' => 'error',
+        'message' => strip_tags(validation_errors())
+      ]);
+      return;
+    }
+
+    $data = array(
+      // 'kode'      => $this->input->post('kode'),
+      'nama'      => $this->input->post('nama'),
+      'kode_nama' => $this->input->post('kode_nama'),
+      'id_prsh'   => $this->input->post('id_prsh'),
+    );
+
+    $insert_id = $this->M_perusahaans->insert_bagian($data);
+
+    if ($insert_id) {
+      echo json_encode([
+        'status'       => 'success',
+        'new_id'       => $insert_id,
+        'display_text' => $data['kode'] . ' - ' . $data['nama']
+      ]);
+    } else {
+      $db_error = $this->db->error();
+      log_message('error', 'Failed to insert new bagian: ' . ($db_error['message'] ?? 'Unknown DB error'));
+
+      echo json_encode([
+        'status'  => 'error',
+        'message' => 'Failed to save new bagian to database.'
+      ]);
+    }
   }
 }

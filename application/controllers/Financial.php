@@ -990,11 +990,11 @@ class Financial extends CI_Controller
       if ($jenis) {
         $this->session->set_flashdata('swal_message', [
           'icon' => 'error', // or 'success', 'warning', 'info', 'question'
-          'title' => 'Access Denied!',
-          'text' => 'You need a premium account to access this feature. Please upgrade your subscription.',
-          'confirmButtonText' => 'Upgrade Now',
+          'title' => 'Akses Ditolak!',
+          'text' => 'Anda membutuhkan akun premium untuk menambah user. Harap tingkatkan langganan Anda.',
+          'confirmButtonText' => 'Tingkatkan Sekarang',
           'showCancelButton' => true,
-          'cancelButtonText' => 'No Thanks',
+          'cancelButtonText' => 'Tidak, Terimakasih',
           'redirectUrl' => base_url('subscription/upgrade') // URL to redirect if confirmed
         ]);
       }
