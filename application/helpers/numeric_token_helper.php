@@ -20,13 +20,13 @@ if (! function_exists('generate_numeric_token')) {
             return (string) random_int($min, $max);
         } catch (Exception $e) {
             // Log error jika random_int gagal (jarang terjadi)
-            log_message('error', 'Gagal membuat token numerik aman: ' . $e->getMessage());
+            log_message('error', 'Gagal membuat Token numerik aman: ' . $e->getMessage());
 
             // Sebagai fallback (kurang aman, hanya jika random_int benar-benar tidak bisa digunakan)
             // Anda bisa memilih untuk melempar exception atau mengembalikan nilai default/false
             // Untuk token verifikasi, lebih baik gagal daripada menggunakan token yang lemah.
             // return (string) mt_rand($min, $max); // Fallback ke mt_rand
-            throw new Exception('Tidak dapat membuat token verifikasi aman.');
+            throw new Exception('Tidak dapat membuat Token verifikasi aman.');
         }
     }
 }
