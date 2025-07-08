@@ -153,7 +153,7 @@ class Auth extends CI_Controller
   public function proccess_register()
   {
     // Set validation rules
-    $this->form_validation->set_rules('nip', 'Username Wajib', 'required|trim|is_unique[users.nip]|min_length[9]');
+    $this->form_validation->set_rules('nip', 'Username Wajib', 'required|trim|is_unique[users.nip]|min_length[5]');
     $this->form_validation->set_rules('nama', 'Nama Lengkap', 'required|trim');
     // $this->form_validation->set_rules('username', 'Username', 'required|trim|is_unique[users.username]|min_length[5]');
     $this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email|is_unique[users.email]');

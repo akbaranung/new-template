@@ -66,10 +66,10 @@
                     <th>Code Agent</th>
                     <td><input type="text" name="kd_agent" class="form-control"></td>
                   </tr>
-                  <tr>
+                  <!-- <tr>
                     <th>Nip</th>
                     <td><input type="number" name="nip" class="form-control"></td>
-                  </tr>
+                  </tr> -->
                   <tr>
                     <th>Level Jabatan</th>
                     <td>
