@@ -190,6 +190,8 @@ class Perusahaan extends CI_Controller
   }
   public function edit_user($id)
   {
+
+
     $this->cb = $this->load->database('corebank', TRUE);
     $this->db->from('users')->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
     $this->db->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
@@ -227,6 +229,41 @@ class Perusahaan extends CI_Controller
 
   public function proccess_add_user()
   {
+
+
+    // Set validation rules
+    $this->form_validation->set_rules('username', 'Username Wajib', 'required|trim|is_unique[users.nip]|min_length[5]');
+    $this->form_validation->set_rules('nama', 'Nama Lengkap', 'required|trim');
+    // $this->form_validation->set_rules('username', 'Username', 'required|trim|is_unique[users.username]|min_length[5]');
+    $this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email|is_unique[users.email]');
+    $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]|matches[password_confirm]');
+    $this->form_validation->set_rules('password_confirmation', 'Konfirmasi Password', 'required|matches[password]');
+    $this->form_validation->set_rules('phone', 'Nomor Telepon', 'trim|numeric|required|is_unique[users.phone]');
+    // $this->form_validation->set_rules('nip', 'NIP', 'trim|is_unique[users.nip]');
+
+    // Set custom error messages (optional)
+    $this->form_validation->set_message('required', '{field} wajib diisi.');
+    $this->form_validation->set_message('is_unique', '{field} sudah terdaftar, silakan gunakan yang lain.');
+    $this->form_validation->set_message('min_length', '{field} minimal {param} karakter.');
+    $this->form_validation->set_message('matches', '{field} tidak cocok dengan password.');
+    $this->form_validation->set_message('valid_email', 'Format {field} tidak valid.');
+    $this->form_validation->set_message('numeric', '{field} harus berupa angka.');
+
+    if ($this->form_validation->run() == FALSE) {
+      // If validation fails, reload the registration form with errors
+
+      // $response = [
+      //   'success' => FALSE,
+      //   // 'msg'     => 'Gagal Membuat Akun. Mohon periksa kembali input Anda.',
+      //   // 'msg'     => 'Gagal Membuat Akun.' . validation_errors(),
+      //   'errors'  => validation_errors() // Capture all validation errors
+      // ];
+
+
+      $this->session->set_flashdata('error', 'Silakan lengkapi data perusahaan terlebih dahulu. <br><br>' . validation_errors());
+      redirect('perusahaan/add_user');
+    }
+
     $raw_slug = $this->input->post('nama_lokasi');
     $slug = strtolower(preg_replace('/[^a-z0-9]+/i', '-', trim($raw_slug)));
 
