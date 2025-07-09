@@ -33,7 +33,7 @@ class Home extends CI_Controller
     $this->db->from('users');
     $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
     $this->db->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
-    $this->db->where('nama_jabatan !=', 'Super Admin');
+    // $this->db->where('nama_jabatan !=', 'Super Admin');
     $total_user = $this->db->get()->num_rows(); // Get the number of rows
 
     $max_users_for_100_percent = 5; // Define your maximum limit

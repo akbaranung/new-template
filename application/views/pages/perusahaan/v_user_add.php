@@ -383,7 +383,8 @@
                   </div>
                   <div class="col-md-6">
                     <div class="form-group">
-                      <label>Level Jabatan <?= $user->level_jabatan ?></label>
+                      <!-- <label>Level Jabatan <?= $user->level_jabatan ?></label> -->
+                      <label>Role</label>
                       <!-- <input type="text" name="level_jabatan" class="form-control" value="<?= $user->level_jabatan ?>"> -->
                       <select name="level_jabatan" id="" class="form-control">
                         <option selected disabled>Pilih Jabatan</option>
