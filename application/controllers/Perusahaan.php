@@ -233,14 +233,12 @@ class Perusahaan extends CI_Controller
 
   public function proccess_add_user()
   {
-
-
     // Set validation rules
     $this->form_validation->set_rules('username', 'Username Wajib', 'required|trim|is_unique[users.nip]|min_length[5]');
     $this->form_validation->set_rules('nama', 'Nama Lengkap', 'required|trim');
     // $this->form_validation->set_rules('username', 'Username', 'required|trim|is_unique[users.username]|min_length[5]');
     $this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email|is_unique[users.email]');
-    $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]|matches[password_confirm]');
+    $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]|matches[password_confirmation]');
     $this->form_validation->set_rules('password_confirmation', 'Konfirmasi Password', 'required|matches[password]');
     $this->form_validation->set_rules('phone', 'Nomor Telepon', 'trim|numeric|required|is_unique[users.phone]');
     // $this->form_validation->set_rules('nip', 'NIP', 'trim|is_unique[users.nip]');
@@ -252,6 +250,9 @@ class Perusahaan extends CI_Controller
     $this->form_validation->set_message('matches', '{field} tidak cocok dengan password.');
     $this->form_validation->set_message('valid_email', 'Format {field} tidak valid.');
     $this->form_validation->set_message('numeric', '{field} harus berupa angka.');
+
+    $uri1 = $this->input->post('uri1');
+    $uri2 = $this->input->post('uri2');
 
     if ($this->form_validation->run() == FALSE) {
       // If validation fails, reload the registration form with errors
@@ -265,7 +266,7 @@ class Perusahaan extends CI_Controller
 
 
       $this->session->set_flashdata('error', 'Silakan lengkapi data perusahaan terlebih dahulu. <br><br>' . validation_errors());
-      redirect('perusahaan/add_user');
+      redirect('perusahaan/add_user/' . $uri1 . '/' . $uri2);
     }
 
     $raw_slug = $this->input->post('nama_lokasi');

@@ -1,5 +1,5 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
-<link rel="stylesheet" href="<?= base_url('assets/') ?>progress-bar.css">
+<link rel="stylesheet" href="<?= base_url('assets/') ?>progress-bar-dashboard.css">
 
 <style>
   .col-xs-3 {
@@ -35,11 +35,56 @@
     margin-left: 8px;
     /* Adjust this value (e.g., 5px, 10px, 0.5em) as needed */
   }
+
+  .triangle-right-success {
+    margin-left: 4px;
+    width: 0;
+    height: 0;
+    border-top: 8px solid transparent;
+    border-left: 12px solid #3ad29f;
+    /* Green for success */
+    border-bottom: 8px solid transparent;
+  }
+
+  .triangle-right-primary {
+    margin-left: 4px;
+    width: 0;
+    height: 0;
+    border-top: 8px solid transparent;
+    border-left: 12px solid #1b68ff;
+    /* Blue for primary */
+    border-bottom: 8px solid transparent;
+  }
+
+  .triangle-right-secondary {
+    margin-left: 4px;
+    width: 0;
+    height: 0;
+    border-top: 8px solid transparent;
+    border-left: 12px solid #6c757d;
+    /* Grey for secondary */
+    border-bottom: 8px solid transparent;
+  }
 </style>
 
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
+      <?php if ($this->session->flashdata('error')) : ?>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <strong>Error!</strong> <?= $this->session->flashdata('error'); ?><button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <!-- <strong><?= $this->session->flashdata('error'); ?>!</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"> -->
+            <span aria-hidden="true">x</span>
+          </button>
+        </div>
+      <?php endif; ?>
+      <?php if ($this->session->flashdata('success')) : ?>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <strong>Success!</strong> <?= $this->session->flashdata('success'); ?><button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">x</span>
+          </button>
+        </div>
+      <?php endif; ?>
       <!-- <h1 class="page-title">User List</h1> -->
       <?php
       if ($total_user < 4) {
@@ -56,25 +101,43 @@
             </div>
           </div>
         </div> -->
+
+        <?php
+        $user_counts = isset($user_counts) ? $user_counts : [];
+        $roles = [
+
+          5 => 'Direktur',
+          3 => 'Comptroller',
+          2 => 'Manager',
+          1 => 'Staff',
+
+        ];
+        $active_p = 0;
+
+        ?>
+
         <div class="card shadow mb-4">
           <div class="card-header d-flex justify-content-between align-items-center">
-            <p class="card-title mb-0"><strong>Tambahkan 4 User Role (Staff, Manager, Comptroller, Direktur) untuk Memulai Hidup Baru! (<?= $total_user . '/' . $max_users_for_100_percent ?>)</strong></p>
-
+            <!-- <p class="card-title mb-0"><strong>Tambahkan 4 User Role (Staff, Manager, Comptroller, Direktur) untuk Memulai Hidup Baru! (<?= $total_user . '/' . $max_users_for_100_percent ?>)</strong></p> -->
+            <?php
+            foreach ($roles as $value => $label) {
+              if (isset($user_counts[$value]) && $user_counts[$value] >= 1) {
+                continue;
+              }
+              if ($active_p == 0) {
+                $active_p = 1;
+            ?>
+                <p class="card-title mb-0"><strong>Ayo buat Akun <?= $label ?> (<?= $total_user . '/' . $max_users_for_100_percent ?>)</strong></p>
+            <?php
+              }
+            }
+            ?>
           </div>
           <div class="card-body">
             <div class="container">
               <div class="progress-container mx-auto">
                 <div class="progress" id="progress"></div>
                 <?php
-                $user_counts = isset($user_counts) ? $user_counts : [];
-                $roles = [
-
-                  5 => 'Direktur',
-                  3 => 'Comptroller',
-                  2 => 'Manager',
-                  1 => 'Staff',
-
-                ];
                 $i = 1;
                 $active_href = 0;
                 foreach ($roles as $value => $label) {
@@ -82,7 +145,9 @@
                     // $active_fishbone = 'active';
                 ?>
                     <a href="#">
-                      <div class="circle active" data-label="<?= $label ?>"><?= $i ?></div>
+                      <div class="circle active" data-label="<?= $label ?>">
+                        <div class="triangle-right-success"></div>
+                      </div>
                     </a>
                   <?php
                     $i++;
@@ -93,13 +158,17 @@
                     $active_href = 1;
                   ?>
                     <a href="<?= base_url('perusahaan/add_user/' . $value . '/' . $label) ?>">
-                      <div class="circle" data-label="<?= $label ?>"><?= $i ?></div>
+                      <div class="circle" data-label="<?= $label ?>">
+                        <div class="triangle-right-primary"></div>
+                      </div>
                     </a>
                   <?php
                   } else {
                   ?>
                     <a href="#">
-                      <div class="circle" data-label="<?= $label ?>"><?= $i ?></div>
+                      <div class="circle" data-label="<?= $label ?>">
+                        <div class="triangle-right-secondary"></div>
+                      </div>
                     </a>
                 <?php
                   }

@@ -3,6 +3,21 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
+      <?php if ($this->session->flashdata('error')) : ?>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <strong>Error!</strong> <?= $this->session->flashdata('error'); ?><button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <!-- <strong><?= $this->session->flashdata('error'); ?>!</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"> -->
+            <span aria-hidden="true">x</span>
+          </button>
+        </div>
+      <?php endif; ?>
+      <?php if ($this->session->flashdata('success')) : ?>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <strong>Success!</strong> <?= $this->session->flashdata('success'); ?><button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">x</span>
+          </button>
+        </div>
+      <?php endif; ?>
       <!-- <h1 class="page-title">User <?= ($this->uri->segment(2) == 'add_user') ? 'Add' : 'Edit' ?></h1> -->
       <div class="card shadow mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
@@ -15,7 +30,9 @@
               <?= $this->session->flashdata('msg') ?>
               <form action="<?= base_url('perusahaan/proccess_add_user') ?>" method="POST">
                 <input type="hidden" value="add" name="add">
-                <input type="hidden" value="<?= $this->uri->segment('3') ?>" name="id">
+                <!-- <input type="hidden" value="<?= $this->uri->segment('3') ?>" name="id"> -->
+                <input type="hidden" value="<?= $this->uri->segment('3') ?>" name="uri1">
+                <input type="hidden" value="<?= $this->uri->segment('4') ?>" name="uri2">
                 <table>
                   <tr>
                     <th width="300">Username</th>

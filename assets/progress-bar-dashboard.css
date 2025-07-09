@@ -1,6 +1,6 @@
 
 :root {
-    --line-border-fill: #3498db;
+    --line-border-fill: #3ad29f;
     --line-border-empty: #d1c9c9;
   }
 
@@ -26,7 +26,7 @@
     transform: translateY(-50%);
     height: 4px;
     width: 100%;
-    z-index: -1;
+    /* z-index: -1; */
   }
 
   .progress {
