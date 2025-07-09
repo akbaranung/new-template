@@ -29,6 +29,11 @@
     float: none;
     margin: 0 auto;
   }
+
+  .dt-length label {
+    margin-left: 8px;
+    /* Adjust this value (e.g., 5px, 10px, 0.5em) as needed */
+  }
 </style>
 
 <div class="container-fluid">

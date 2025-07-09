@@ -989,12 +989,12 @@ class Financial extends CI_Controller
       $data['pages'] = 'pages/financial/v_financial_entry';
       if ($jenis) {
         $this->session->set_flashdata('swal_message', [
-          'icon' => 'error', // or 'success', 'warning', 'info', 'question'
-          'title' => 'Akses Ditolak!',
-          'text' => 'Anda membutuhkan akun premium untuk menambah user. Harap tingkatkan langganan Anda.',
-          'confirmButtonText' => 'Tingkatkan Sekarang',
+          'icon' => 'question', // or 'success', 'warning', 'info', 'question'
+          'title' => 'Siap Menjadi Raja?',
+          'text' => 'Kekuasaan untuk menambah dan mengelola semua user di tangan Anda! Tingkatkan akun Anda sekarang untuk membuka fitur premium ini dan mengklaim takhta Anda.',
+          'confirmButtonText' => 'Ambil Mahkota Sekarang!',
           'showCancelButton' => true,
-          'cancelButtonText' => 'Tidak, Terimakasih',
+          'cancelButtonText' => 'Nanti Saja, Belum Siap Jadi Raja',
           'redirectUrl' => base_url('subscription/upgrade') // URL to redirect if confirmed
         ]);
       }

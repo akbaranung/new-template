@@ -667,15 +667,20 @@
 
     function showPremiumDeniedSwal() {
       Swal.fire({
-        title: 'Akses Ditolak!',
-        text: 'Anda membutuhkan akun premium untuk menambah user. Harap tingkatkan langganan Anda.',
-        icon: 'warning',
-        confirmButtonText: 'Tingkatkan Sekarang',
+        title: 'Siap Menjadi Raja?', // New title: "Ready to Become King?"
+        html: 'Kekuasaan untuk menambah dan mengelola semua user di tangan Anda! Tingkatkan akun Anda sekarang untuk membuka fitur premium ini dan mengklaim takhta Anda.', // New text with HTML for emphasis
+        icon: 'question', // Changed icon to question, suitable for asking a choice
+        confirmButtonText: 'Ambil Mahkota Sekarang!', // New confirm button text: "Take the Crown Now!"
         showCancelButton: true,
-        cancelButtonText: 'Tidak, Terimakasih'
+        cancelButtonText: 'Nanti Saja, Belum Siap Jadi Raja', // New cancel button text: "Later, Not Ready to Be King Yet"
+        customClass: {
+          confirmButton: 'btn btn-primary', // Optional: Use your custom btn-pink class for the confirm button
+          cancelButton: 'btn btn-pink' // Optional: Style the cancel button differently
+        },
+        buttonsStyling: false // Important if you use customClass for buttons
       }).then((result) => {
         if (result.isConfirmed) {
-          // Optional: Redirect to an upgrade page if 'Upgrade Now' is clicked
+          // Optional: Redirect to an upgrade page if 'Ambil Mahkota Sekarang!' is clicked
           window.location.href = '<?= base_url('subscription/upgrade') ?>'; // Adjust this URL as needed
         }
       });
