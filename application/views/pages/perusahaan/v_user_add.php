@@ -48,7 +48,7 @@
                   <tr>
                     <th>Status</th>
                     <td>
-                      <input name="status" value="1" type="radio" id="active">
+                      <input name="status" value="1" type="radio" id="active" checked>
                       <label for="active">Active</label>
                       <input name="status" value="0" type="radio" id="noactive">
                       <label for="noactive">Not Active</label>
