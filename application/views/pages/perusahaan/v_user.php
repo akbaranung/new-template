@@ -40,7 +40,7 @@
       ?>
         <div class="card shadow mb-4">
           <div class="card-header d-flex justify-content-between align-items-center">
-            <p class="card-title mb-0"><strong>Input 5 User untuk membuka akses menu! (<?= $total_user . '/' . $max_users_for_100_percent ?>)</strong></p>
+            <p class="card-title mb-0"><strong>Input 4 User Role (Staff, Supervisor, Comptroller, Direktur) untuk membuka akses menu! (<?= $total_user . '/' . $max_users_for_100_percent ?>)</strong></p>
           </div>
           <div class="card-body">
             <div class="progress">

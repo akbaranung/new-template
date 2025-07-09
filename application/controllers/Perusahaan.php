@@ -57,10 +57,11 @@ class Perusahaan extends CI_Controller
     $this->db->from('users');
     $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
     $this->db->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
-    // $this->db->where('nama_jabatan !=', 'Super Admin');
+    $this->db->where('nama_jabatan !=', 'Super Admin');
     $total_user = $this->db->get()->num_rows(); // Get the number of rows
 
-    $max_users_for_100_percent = 5; // Define your maximum limit
+    $max_users_for_100_percent = 4; // Define your maximum limit
+    // $max_users_for_100_percent = 5; // Define your maximum limit
     // Calculate the percentage
     $percentage = ($total_user / $max_users_for_100_percent) * 100;
     $nip = $this->session->userdata('nip');
@@ -126,7 +127,7 @@ class Perusahaan extends CI_Controller
     $this->cb = $this->load->database('corebank', TRUE);
     $this->db->from('users')->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
     $this->db->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
-    // $this->db->where('nama_jabatan !=', 'Super Admin');
+    $this->db->where('nama_jabatan !=', 'Super Admin');
     $supervisi = $this->db->where('level_jabatan >=', 3)->get()->result();
     $data['supervisi'] = $supervisi;
 
@@ -163,10 +164,11 @@ class Perusahaan extends CI_Controller
       $this->db->from('users');
       $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
       $this->db->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
-      // $this->db->where('nama_jabatan !=', 'Super Admin');
+      $this->db->where('nama_jabatan !=', 'Super Admin');
       $total_user = $this->db->get()->num_rows(); // Get the number of rows
 
-      $max_users_for_100_percent = 5; // Define your maximum limit
+      $max_users_for_100_percent = 4; // Define your maximum limit
+      // $max_users_for_100_percent = 5; // Define your maximum limit
 
       if ($total_user < $max_users_for_100_percent) {
         $this->load->view('index', $data);
@@ -191,7 +193,7 @@ class Perusahaan extends CI_Controller
     $this->cb = $this->load->database('corebank', TRUE);
     $this->db->from('users')->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
     $this->db->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
-    // $this->db->where('nama_jabatan !=', 'Super Admin');
+    $this->db->where('nama_jabatan !=', 'Super Admin');
     $supervisi = $this->db->where('level_jabatan >=', 3)->get()->result();
     $data['supervisi'] = $supervisi;
 
