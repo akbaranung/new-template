@@ -240,7 +240,7 @@ class Perusahaan extends CI_Controller
     $this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email|is_unique[users.email]');
     $this->form_validation->set_rules('password', 'Password', 'required|min_length[6]|matches[password_confirmation]');
     $this->form_validation->set_rules('password_confirmation', 'Konfirmasi Password', 'required|matches[password]');
-    $this->form_validation->set_rules('phone', 'Nomor Telepon', 'trim|numeric|required|is_unique[users.phone]');
+    $this->form_validation->set_rules('phone', 'Nomor Telepon', 'trim|numeric|required');
     // $this->form_validation->set_rules('nip', 'NIP', 'trim|is_unique[users.nip]');
 
     // Set custom error messages (optional)
