@@ -61,10 +61,13 @@ class Perusahaan extends CI_Controller
     $total_user = $this->db->get()->num_rows(); // Get the number of rows
 
     $max_users_for_100_percent = 4; // Define your maximum limit
+
+
     // $max_users_for_100_percent = 5; // Define your maximum limit
     // Calculate the percentage
     $percentage = ($total_user / $max_users_for_100_percent) * 100;
     $nip = $this->session->userdata('nip');
+    $data['user_counts'] = $this->M_perusahaans->get_user_counts_by_role();
     $data['total_user'] = $total_user;
     $data['percentage'] = $percentage;
     $data['max_users_for_100_percent'] = $max_users_for_100_percent;
@@ -136,6 +139,7 @@ class Perusahaan extends CI_Controller
     $data['cabang'] = $cabang;
 
     $data['user_counts'] = $this->M_perusahaans->get_user_counts_by_role();
+
 
     // --- NEW: Fetch menu access data ---
     // $data['all_menus'] = $this->M_user_access->get_all_menus(); // Get all available menus
@@ -365,6 +369,16 @@ class Perusahaan extends CI_Controller
     redirect('perusahaan/user');
   }
 
+  public function hapus_user()
+  {
+    $id = $this->input->post('id');
+    $this->db->where('id', $id);
+    $this->db->delete('users');
+
+    echo json_encode(array("status" => 'success', "message" => "Berhasil Menghapus Data"));
+
+    // redirect('perusahaan/cabang');
+  }
 
   public function ajax_cabang_list()
   {

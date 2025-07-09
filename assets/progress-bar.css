@@ -68,7 +68,7 @@
     white-space: nowrap; /* Prevent text wrapping */
   }
 
-  .btn {
+  /* .btn {
     background-color: var(--line-border-fill);
     color: #fff;
     border: 0;
@@ -78,7 +78,7 @@
     padding: 8px 30px;
     margin: 5px;
     font-size: 14px;
-  }
+  } */
 
   .btn:active {
     transform: scale(0.98);

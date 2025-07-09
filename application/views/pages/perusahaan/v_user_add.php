@@ -3,15 +3,15 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
-      <!-- <h1 class="page-title">User <?= ($this->uri->segment(3) == false) ? 'Add' : 'Edit' ?></h1> -->
+      <!-- <h1 class="page-title">User <?= ($this->uri->segment(2) == 'add_user') ? 'Add' : 'Edit' ?></h1> -->
       <div class="card shadow mb-4">
         <div class="card-header d-flex justify-content-between align-items-center">
-          <p class="card-title mb-0"><strong><?= ($this->uri->segment(3) == false) ? 'Tambah' : 'Ubah' ?> Pasukan</strong></p>
+          <p class="card-title mb-0"><strong><?= ($this->uri->segment(2) == 'add_user') ? 'Tambah' : 'Ubah' ?> Pasukan</strong></p>
           <!-- <a href="<?= base_url('perusahaan/add_user') ?>" class="btn btn-primary">Add User</a> -->
         </div>
         <div class="card-body" id="user">
           <font style="font-size:14px;">
-            <?php if ($this->uri->segment(3) == false) { ?> <!-- add user -->
+            <?php if ($this->uri->segment(2) == 'add_user') { ?> <!-- add user -->
               <?= $this->session->flashdata('msg') ?>
               <form action="<?= base_url('perusahaan/proccess_add_user') ?>" method="POST">
                 <input type="hidden" value="add" name="add">
@@ -74,39 +74,48 @@
                     <!-- <th>Level Jabatan</th> -->
                     <th>User Role</th>
                     <td>
-                      <select name="level_jabatan" id="" class="form-control">
-                        <option selected disabled>Pilih Jabatan</option>
+                      <select name="level_jabatan" id="" class="form-control" <?= ($this->uri->segment(3)) ? 'readonly' : '' ?>>
                         <?php
-                        if ($this->session->userdata('is_premium')) {
+                        if ($this->uri->segment(3)) {
                         ?>
-                          <option value="1">Staff</option>
-                          <option value="2">Manager</option>
-                          <!-- <option value="2">Supervisor</option> -->
-                          <option value="3">Comptroller</option>
-                          <!-- <option value="3">Manajer</option> -->
-                          <!-- <option value="4">General Manajer</option> -->
-                          <option value="5">Direktur</option>
-                          <!-- <option value="6">Direktur Utama</option> -->
+                          <option selected value="<?= $this->uri->segment(3) ?>"><?= $this->uri->segment(4) ?></option>
                           <?php
                         } else {
-                          $user_counts = isset($user_counts) ? $user_counts : [];
-                          $roles = [
-                            1 => 'Staff',
-                            2 => 'Manager',
-                            // 2 => 'Supervisor',
-                            3 => 'Comptroller',
-                            // 3 => 'Manajer',
-                            // 4 => 'General Manajer', // This one is commented out in your example, so keep it commented
-                            5 => 'Direktur',
-                            // 6 => 'Direktur Utama',
-                          ];
-                          foreach ($roles as $value => $label) {
-                            if (isset($user_counts[$value]) && $user_counts[$value] >= 1) {
-                              continue;
-                            }
+                          if ($this->session->userdata('is_premium')) {
                           ?>
-                            <option value="<?= $value ?>"><?= $label ?></option>
+                            <option selected disabled>Pilih Jabatan</option>
+                            <option value="1">Staff</option>
+                            <option value="2">Manager</option>
+                            <!-- <option value="2">Supervisor</option> -->
+                            <option value="3">Comptroller</option>
+                            <!-- <option value="3">Manajer</option> -->
+                            <!-- <option value="4">General Manajer</option> -->
+                            <option value="5">Direktur</option>
+                            <!-- <option value="6">Direktur Utama</option> -->
+                          <?php
+                          } else {
+                          ?>
+                            <option selected disabled>Pilih Jabatan</option>
+                            <?php
+                            $user_counts = isset($user_counts) ? $user_counts : [];
+                            $roles = [
+                              1 => 'Staff',
+                              2 => 'Manager',
+                              // 2 => 'Supervisor',
+                              3 => 'Comptroller',
+                              // 3 => 'Manajer',
+                              // 4 => 'General Manajer', // This one is commented out in your example, so keep it commented
+                              5 => 'Direktur',
+                              // 6 => 'Direktur Utama',
+                            ];
+                            foreach ($roles as $value => $label) {
+                              if (isset($user_counts[$value]) && $user_counts[$value] >= 1) {
+                                continue;
+                              }
+                            ?>
+                              <option value="<?= $value ?>"><?= $label ?></option>
                         <?php
+                            }
                           }
                         }
                         ?>

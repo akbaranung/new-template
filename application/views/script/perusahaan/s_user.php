@@ -1,4 +1,38 @@
 <script>
+    const progress = document.getElementById("progress");
+    const circles = document.querySelectorAll(".circle");
+
+    let currentActive = <?= ($i) ? $i : 1 ?>;
+
+    next.addEventListener("click", () => {
+        currentActive++;
+        if (currentActive > circles.length) currentActive = circles.length;
+        update();
+    });
+
+    prev.addEventListener("click", () => {
+        currentActive--;
+        if (currentActive < 1) currentActive = 1;
+        update();
+    });
+
+    const update = () => {
+        circles.forEach((circle, index) => {
+            if (index < currentActive) circle.classList.add("active");
+            else circle.classList.remove("active");
+        });
+        const actives = document.querySelectorAll(".active");
+        progress.style.width =
+            ((actives.length - 1) / (circles.length - 1)) * 100 + "%";
+        if (currentActive === 1) prev.disabled = true;
+        else if (currentActive === circles.length) next.disabled = true;
+        else {
+            prev.disabled = false;
+            next.disabled = false;
+        }
+    };
+</script>
+<script>
     $(document).ready(function() {
         $('#user-table').dataTable({
             responsive: true,
@@ -63,7 +97,7 @@
                             // Only reload the table if it was a success or a clear 'info' (already deleted) case
                             if (response.status === 'success' || response.status === 'info') {
                                 // Assuming your DataTables ID is 'datatable', not 'table1' based on previous snippets
-                                $('#datatable').DataTable().ajax.reload(null, false);
+                                $('#user-table').DataTable().ajax.reload(null, false);
                             }
                         });
                     },
