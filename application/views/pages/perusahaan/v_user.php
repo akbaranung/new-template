@@ -41,7 +41,8 @@
     width: 0;
     height: 0;
     border-top: 8px solid transparent;
-    border-left: 12px solid #3ad29f;
+    /* border-left: 12px solid #3ad29f; */
+    border-left: 12px solid #1b68ff;
     /* Green for success */
     border-bottom: 8px solid transparent;
   }
@@ -51,7 +52,9 @@
     width: 0;
     height: 0;
     border-top: 8px solid transparent;
-    border-left: 12px solid #1b68ff;
+    /* border-left: 12px solid #1b68ff; */
+    border-left: 12px solid #e81f63;
+
     /* Blue for primary */
     border-bottom: 8px solid transparent;
   }
@@ -156,8 +159,11 @@
 
                   if ($active_href == 0) {
                     $active_href = 1;
+                    $button_now = base_url('perusahaan/add_user/' . $value . '/' . $label);
+
+                    $label_now = "<a class='btn btn-pink' href='$button_now'>" . $label . "</a>";
                   ?>
-                    <a href="<?= base_url('perusahaan/add_user/' . $value . '/' . $label) ?>">
+                    <a href="<?= $button_now ?>">
                       <div class="circle" data-label="<?= $label ?>">
                         <div class="triangle-right-primary"></div>
                       </div>
