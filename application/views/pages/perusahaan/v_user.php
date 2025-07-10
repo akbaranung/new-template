@@ -164,7 +164,7 @@
                     $label_now = "<a class='btn btn-pink' href='$button_now'>" . $label . "</a>";
                   ?>
                     <a href="<?= $button_now ?>">
-                      <div class="circle" data-label="<?= $label ?>">
+                      <div class="circle-current" data-label="<?= $label ?>">
                         <div class="triangle-right-primary"></div>
                       </div>
                     </a>
