@@ -31,6 +31,10 @@ class M_user_access extends CI_Model
 
     public function get_all_menus_hierarchical()
     {
+
+        if (!$this->session->userdata('is_premium')) {
+            $this->db->where_in('premium', '0');
+        }
         $this->db->order_by('sort_order', 'ASC'); // Order by sort_order
         $query = $this->db->get('menus');
         $menus = $query->result();
@@ -65,6 +69,10 @@ class M_user_access extends CI_Model
     public function get_all_menus()
     {
         // You might want to order them hierarchically or by sort_order
+
+        if (!$this->session->userdata('is_premium')) {
+            $this->db->where_in('premium', '0');
+        }
         return $this->db->order_by('sort_order', 'ASC')
             ->get('menus')
             ->result();
