@@ -4,7 +4,7 @@
 <style>
   .col-xs-3 {
     width: 25%;
-    background-color: #004e81;
+    background-color: #1b68ff;
   }
 
   .row {
@@ -148,7 +148,7 @@
                     // $active_fishbone = 'active';
                 ?>
                     <a href="#">
-                      <div class="circle active" data-label="<?= $label ?>">
+                      <div class="circle-success active" data-label="<?= $label ?>">
                         <div class="triangle-right-success"></div>
                       </div>
                     </a>
