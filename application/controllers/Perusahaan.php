@@ -104,7 +104,9 @@ class Perusahaan extends CI_Controller
       }
 
       if ($cat->nama_jabatan == "Super Admin") {
-        $row[] = '';
+        $row[] = '<a href="' . base_url('perusahaan/edit_user/' . $cat->id) . '" class="btn btn-warning">
+        Update
+      </a>';
       } else {
         $row[] = '<a href="' . base_url('perusahaan/edit_user/' . $cat->id) . '" class="btn btn-warning">
         Update
@@ -131,7 +133,7 @@ class Perusahaan extends CI_Controller
     $this->db->from('users')->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
     $this->db->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
     $this->db->where('nama_jabatan !=', 'Super Admin');
-    $supervisi = $this->db->where('level_jabatan >=', 3)->get()->result();
+    $supervisi = $this->db->where('level_jabatan >=', 2)->get()->result();
     $data['supervisi'] = $supervisi;
 
     $this->cb->from('t_cabang');

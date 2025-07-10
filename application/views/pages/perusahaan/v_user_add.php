@@ -375,7 +375,7 @@
                     </div>
                   </div> -->
 
-                  <!-- <div class="col-md-6">
+                  <div class="col-md-6">
                     <div class="form-group">
                       <label>Status</label>
                       <br>
@@ -387,7 +387,7 @@
                         <label class="form-check-label" for="noactive">Not Active</label>
                       </div>
                     </div>
-                  </div> -->
+                  </div>
                   <div class="col-md-6">
                     <div class="form-group">
                       <label>Email</label>
