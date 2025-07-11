@@ -323,7 +323,7 @@
                                                                         if ($this->uri->segment(4) == "Keuangan") {
                                                                           echo "Checked";
                                                                         }
-                                                                      } else if ($child_menu->menu_name == "Approval Direktur") {
+                                                                      } else if ($child_menu->menu_name == "Approval Direktur" || $child_menu->menu_name == "Approval Direksi") {
                                                                         if ($this->uri->segment(4) == "Direktur") {
                                                                           echo "Checked";
                                                                         }
