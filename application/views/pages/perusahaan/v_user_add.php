@@ -311,16 +311,20 @@
                                           id="menu_<?= html_escape($child_menu->Id); ?>"
                                           data-parent-id="<?= html_escape($parent_menu->Id); ?>"
                                           <?php
-                                                                      if ($child_menu->Id == 9) {
+                                                                      if ($child_menu->menu_name == "Buat Pengajuan" || $child_menu->menu_name == "List Pengajuan") {
                                                                         if ($this->uri->segment(4) == "Staff") {
                                                                           echo "Checked";
                                                                         }
-                                                                      } else if ($child_menu->Id == 10) {
+                                                                      } else if ($child_menu->menu_name == "Approval Supervisi") {
                                                                         if ($this->uri->segment(4) == "Manager") {
                                                                           echo "Checked";
                                                                         }
-                                                                      } else if ($child_menu->Id == 11) {
+                                                                      } else if ($child_menu->menu_name == "Approval Keuangan") {
                                                                         if ($this->uri->segment(4) == "Comptroller") {
+                                                                          echo "Checked";
+                                                                        }
+                                                                      } else if ($child_menu->menu_name == "Approval Direktur") {
+                                                                        if ($this->uri->segment(4) == "Direktur") {
                                                                           echo "Checked";
                                                                         }
                                                                       } else {
