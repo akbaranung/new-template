@@ -94,7 +94,7 @@
       ?>
         <!-- <div class="card shadow mb-4">
           <div class="card-header d-flex justify-content-between align-items-center">
-            <p class="card-title mb-0"><strong>Tambahkan 4 User Role (Staff, Manager, Comptroller, Direktur) untuk Memulai Hidup Baru! (<?= $total_user . '/' . $max_users_for_100_percent ?>)</strong></p>
+            <p class="card-title mb-0"><strong>Tambahkan 4 User Role (Staff, Manager, Keuangan, Direktur) untuk Memulai Hidup Baru! (<?= $total_user . '/' . $max_users_for_100_percent ?>)</strong></p>
 
           </div>
           <div class="card-body">
@@ -110,7 +110,7 @@
         $roles = [
 
           5 => 'Direktur',
-          3 => 'Comptroller',
+          3 => 'Keuangan',
           2 => 'Manager',
           1 => 'Staff',
 
@@ -121,7 +121,7 @@
 
         <div class="card shadow mb-4">
           <div class="card-header d-flex justify-content-between align-items-center">
-            <!-- <p class="card-title mb-0"><strong>Tambahkan 4 User Role (Staff, Manager, Comptroller, Direktur) untuk Memulai Hidup Baru! (<?= $total_user . '/' . $max_users_for_100_percent ?>)</strong></p> -->
+            <!-- <p class="card-title mb-0"><strong>Tambahkan 4 User Role (Staff, Manager, Keuangan, Direktur) untuk Memulai Hidup Baru! (<?= $total_user . '/' . $max_users_for_100_percent ?>)</strong></p> -->
             <?php
             foreach ($roles as $value => $label) {
               if (isset($user_counts[$value]) && $user_counts[$value] >= 1) {
