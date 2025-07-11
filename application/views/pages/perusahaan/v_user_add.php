@@ -298,7 +298,7 @@
                                   name="menu_ids[]"
                                   value="<?= html_escape($parent_menu->Id); ?>"
                                   id="menu_<?= html_escape($parent_menu->Id); ?>"
-                                  <?= ($parent_menu->menu_name == "Menu Admin" || $parent_menu->menu_name == "Perusahaan") ? "" : "Checked" ?>>
+                                  <?= ($parent_menu->menu_name == "Menu Admin" || $parent_menu->menu_name == "Menu Perusahaan") ? "" : "Checked" ?>>
                                 <label class="form-check-label font-weight-bold" for="menu_<?= html_escape($parent_menu->Id); ?>">
                                   <i class="<?= html_escape($parent_menu->icon); ?>"></i> <?= html_escape($parent_menu->menu_name); ?>
                                 </label>
@@ -329,7 +329,7 @@
                                                                         if ($this->uri->segment(4) == "Direktur") {
                                                                           echo "Checked";
                                                                         }
-                                                                      } else if ($parent_menu->menu_name == "Menu Admin" || $parent_menu == "Perusahaan") {
+                                                                      } else if ($parent_menu->menu_name == "Menu Admin" || $parent_menu == "Menu Perusahaan") {
                                                                       } else {
                                                                         echo "Checked";
                                                                       }
