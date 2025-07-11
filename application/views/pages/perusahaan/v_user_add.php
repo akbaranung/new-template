@@ -289,14 +289,16 @@
                     <td width="800">
                       <div class="row">
                         <?php foreach ($all_menus_hierarchical as $parent_menu) : ?>
-                          <?php if ($parent_menu->is_active == 1) : ?>
+                          <?php if ($parent_menu->is_active == 1) :
+                            // if ($parent_menu->menu_name == "Menu Admin" || "Perusahaan")
+                          ?>
                             <div class="col-md-6 mb-3 mt-2">
                               <div class="form-check">
                                 <input class="form-check-input parent-checkbox" type="checkbox"
                                   name="menu_ids[]"
                                   value="<?= html_escape($parent_menu->Id); ?>"
                                   id="menu_<?= html_escape($parent_menu->Id); ?>"
-                                  checked>
+                                  <?= ($parent_menu->menu_name == "Menu Admin" || $parent_menu->menu_name == "Perusahaan") ? "" : "Checked" ?>>
                                 <label class="form-check-label font-weight-bold" for="menu_<?= html_escape($parent_menu->Id); ?>">
                                   <i class="<?= html_escape($parent_menu->icon); ?>"></i> <?= html_escape($parent_menu->menu_name); ?>
                                 </label>
@@ -327,6 +329,7 @@
                                                                         if ($this->uri->segment(4) == "Direktur") {
                                                                           echo "Checked";
                                                                         }
+                                                                      } else if ($parent_menu->menu_name == "Menu Admin" || $parent_menu == "Perusahaan") {
                                                                       } else {
                                                                         echo "Checked";
                                                                       }
