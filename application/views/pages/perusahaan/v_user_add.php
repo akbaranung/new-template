@@ -295,7 +295,8 @@
                                 <input class="form-check-input parent-checkbox" type="checkbox"
                                   name="menu_ids[]"
                                   value="<?= html_escape($parent_menu->Id); ?>"
-                                  id="menu_<?= html_escape($parent_menu->Id); ?>">
+                                  id="menu_<?= html_escape($parent_menu->Id); ?>"
+                                  checked>
                                 <label class="form-check-label font-weight-bold" for="menu_<?= html_escape($parent_menu->Id); ?>">
                                   <i class="<?= html_escape($parent_menu->icon); ?>"></i> <?= html_escape($parent_menu->menu_name); ?>
                                 </label>
@@ -308,7 +309,26 @@
                                           name="menu_ids[]"
                                           value="<?= html_escape($child_menu->Id); ?>"
                                           id="menu_<?= html_escape($child_menu->Id); ?>"
-                                          data-parent-id="<?= html_escape($parent_menu->Id); ?>">
+                                          data-parent-id="<?= html_escape($parent_menu->Id); ?>"
+                                          <?php
+                                                                      if ($child_menu->Id == 9) {
+                                                                        if ($this->uri->segment(4) == "Staff") {
+                                                                          echo "Checked";
+                                                                        }
+                                                                      } else if ($child_menu->Id == 10) {
+                                                                        if ($this->uri->segment(4) == "Manager") {
+                                                                          echo "Checked";
+                                                                        }
+                                                                      } else if ($child_menu->Id == 11) {
+                                                                        if ($this->uri->segment(4) == "Comptroller") {
+                                                                          echo "Checked";
+                                                                        }
+                                                                      } else {
+                                                                        echo "Checked";
+                                                                      }
+
+
+                                          ?>>
                                         <label class="form-check-label" for="menu_<?= html_escape($child_menu->Id); ?>">
                                           <i class="<?= html_escape($child_menu->icon); ?>"></i> <?= html_escape($child_menu->menu_name); ?>
                                         </label>

@@ -306,6 +306,16 @@ class Perusahaan extends CI_Controller
       $menu_id_string = implode(',', array_unique($selected_menu_ids));
     }
 
+    // $query = $this->db->select('Id')->from('menus')->get();
+    // $ids = [];
+    // if ($query->num_rows() > 0) {
+    //   foreach ($query->result_array() as $row) {
+    //     $ids[] = $row['Id'];
+    //   }
+    // }
+
+    // $menu_id_string = implode(',', $ids);
+
     // Save the access
     if ($this->M_user_access->save_user_access($nip, $menu_id_string)) {
       $this->session->set_flashdata('success', 'User menu access updated successfully!');
