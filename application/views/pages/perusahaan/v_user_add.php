@@ -329,7 +329,7 @@
                                                                         if ($this->uri->segment(4) == "Direktur") {
                                                                           echo "Checked";
                                                                         }
-                                                                      } else if ($parent_menu->menu_name == "Menu Admin" || $parent_menu == "Menu Perusahaan") {
+                                                                      } else if ($parent_menu->menu_name == "Menu Admin" || $parent_menu->menu_name == "Menu Perusahaan") {
                                                                       } else {
                                                                         echo "Checked";
                                                                       }
