@@ -96,6 +96,10 @@
               <label for="nama_coa" class="form-label">Nama CoA</label>
               <input type="text" name="nama_coa" id="nama_coa" class="form-control" oninput="this.value = this.value.toUpperCase()">
             </div>
+            <div class="col-12 mt-3">
+              <label for="saldo_awal" class="form-label">Saldo Awal</label>
+              <input type="text" name="saldo_awal" id="saldo_awal" class="form-control uang" value="0">
+            </div>
           </div>
         </div>
         <div class="modal-footer">

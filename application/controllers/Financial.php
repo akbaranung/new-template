@@ -1954,6 +1954,7 @@ class Financial extends CI_Controller
     $no_bb = $this->input->post('no_bb');
     $no_sbb = $this->input->post('no_sbb');
     $nama_coa = $this->input->post('nama_coa');
+    $saldo_awal = $this->input->post('saldo_awal');
 
     $cek_no_sbb = $this->M_coa->isAvailable('no_sbb', $no_sbb);
     $cek_nama_coa = $this->M_coa->isAvailable('nama_perkiraan', $nama_coa);
@@ -1983,6 +1984,7 @@ class Financial extends CI_Controller
           'no_sbb' => $no_sbb,
           'nama_perkiraan' => $nama_coa,
           'posisi' => $posisi,
+          'nominal' => $this->_parse_rupiah($saldo_awal),
           'id_cabang' => $this->session->userdata('kode_cabang'),
         ];
       } else if ($substr_coa == "4" || $substr_coa == "5" || $substr_coa == "6" || $substr_coa == "7" || $substr_coa == "8" || $substr_coa == "9") {
@@ -1992,6 +1994,7 @@ class Financial extends CI_Controller
           'no_lr_sbb' => $no_sbb,
           'nama_perkiraan' => $nama_coa,
           'posisi' => $posisi,
+          'nominal' => $this->_parse_rupiah($saldo_awal),
           'id_cabang' => $this->session->userdata('kode_cabang'),
         ];
       } else {
