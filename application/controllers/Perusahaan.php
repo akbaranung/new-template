@@ -271,8 +271,8 @@ class Perusahaan extends CI_Controller
       redirect('perusahaan/add_user/' . $uri1 . '/' . $uri2);
     }
 
-    $raw_slug = $this->input->post('nama_lokasi');
-    $slug = strtolower(preg_replace('/[^a-z0-9]+/i', '-', trim($raw_slug)));
+    // $raw_slug = $this->input->post('nama_lokasi');
+    // $slug = strtolower(preg_replace('/[^a-z0-9]+/i', '-', trim($raw_slug)));
 
     $radius = $this->input->post('radius_lokasi') / 1000;
     $add = [
@@ -296,8 +296,10 @@ class Perusahaan extends CI_Controller
     ];
     $this->db->insert('users', $add);
 
-    $nip = $this->input->post('nip');
+    $nip = $this->input->post('username');
     $selected_menu_ids = $this->input->post('menu_ids'); // This will be an array of selected menu IDs
+
+    // var_dump($selected_menu_ids);
 
     if (empty($selected_menu_ids)) {
       $menu_id_string = ''; // No access
@@ -306,6 +308,7 @@ class Perusahaan extends CI_Controller
       $menu_id_string = implode(',', array_unique($selected_menu_ids));
     }
 
+    // var_dump($menu_id_string);
     // $query = $this->db->select('Id')->from('menus')->get();
     // $ids = [];
     // if ($query->num_rows() > 0) {
@@ -318,6 +321,7 @@ class Perusahaan extends CI_Controller
 
     // Save the access
     if ($this->M_user_access->save_user_access($nip, $menu_id_string)) {
+      echo $nip;
       $this->session->set_flashdata('success', 'User menu access updated successfully!');
       echo 'Berhasil';
     } else {
@@ -345,7 +349,8 @@ class Perusahaan extends CI_Controller
       "email" => $this->input->post('email'),
       "phone" => $this->input->post('phone'),
       "kd_agent" => $this->input->post('kd_agent'),
-      "nip" => $this->input->post('nip'),
+      // "nip" => $this->input->post('nip'),
+      "nip" => $this->input->post('username'),
       "level_jabatan" => $this->input->post('level_jabatan'),
       "tmt" => $this->input->post('tmt'),
       "bagian" => $this->input->post('bagian'),
@@ -360,7 +365,7 @@ class Perusahaan extends CI_Controller
     $this->db->update('users', $edit_data);
 
     $user_id = $this->input->post('user_id');
-    $nip = $this->input->post('nip');
+    $nip = $this->input->post('username');
     $selected_menu_ids = $this->input->post('menu_ids'); // This will be an array of selected menu IDs
 
     if (empty($selected_menu_ids)) {
