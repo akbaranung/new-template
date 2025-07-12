@@ -50,7 +50,7 @@ class Auth extends CI_Controller
     $username = $this->input->post('username', TRUE);
     $password = $this->input->post('password', TRUE);
 
-    $this->form_validation->set_rules('username', 'username', 'required|trim|alpha_numeric');
+    $this->form_validation->set_rules('username', 'username', 'required|trim');
     $this->form_validation->set_rules('password', 'password', 'required');
 
     if ($this->form_validation->run() == FALSE) {
