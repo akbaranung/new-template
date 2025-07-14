@@ -223,6 +223,15 @@ class Pengajuan extends CI_Controller
     if ($this->uri->segment(4) == 'finance') {
       $data['coa'] = $this->cb->get_where('v_coa_all', ['id_cabang' => $this->session->userdata('kode_cabang')])->result();
       $user = $this->db->select('users.Id, bagian.nama as nama_bagian')->from('users')->join('bagian', 'bagian.Id = users.bagian')->where('users.nip', $this->session->userdata('nip'))->where('users.id_cabang', $this->session->userdata('kode_cabang'))->get()->row();
+
+      $this->cb = $this->load->database('corebank', TRUE);
+
+      $this->db->from('users');
+      $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
+      $this->db->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
+      $this->db->where('level_jabatan >= ', 4);
+      $data['direksi'] = $this->db->get()->result_array();
+
       if ($data['pengajuan']->status < 1 or $data['pengajuan']->cabang != $this->session->userdata('kode_cabang') or $user->nama_bagian != 'Finance') {
         show_error('Forbidden Access: You do not have permission to view this page.', 403, '403 Forbidden');
       }

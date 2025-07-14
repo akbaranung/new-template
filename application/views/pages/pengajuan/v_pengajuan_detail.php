@@ -1,3 +1,39 @@
+<link rel="stylesheet" href="<?= base_url('assets/') ?>progress-bar-pengajuan.css">
+<style>
+  .col-xs-3 {
+    width: 25%;
+    background-color: #1b68ff;
+  }
+
+  .row {
+    margin-left: 0px;
+  }
+
+  .container-fluid {
+    padding-right: 0px;
+    padding-left: 0px
+  }
+
+  .btn_footer_panel .tag_ {
+    padding-top: 37px;
+  }
+
+  tr>th {
+    /* background-color: #e91f62; */
+    background-color: #3e51b4;
+    color: white;
+  }
+
+  .col-centered {
+    float: none;
+    margin: 0 auto;
+  }
+
+  .dt-length label {
+    margin-left: 8px;
+    /* Adjust this value (e.g., 5px, 10px, 0.5em) as needed */
+  }
+</style>
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-12">
@@ -11,6 +47,54 @@
             <div class="col-lg-12 col-md-12 col-sm-12">
               <a href="<?= site_url('pengajuan/list') ?>" class="btn btn-warning">Kembali</a>
             </div>
+            <div class="col-12 mt-4 mb-4">
+              <?php
+              if ($pengajuan->direksi != Null || $pengajuan->direksi) {
+                $Pengajuan = 'active';
+                $Supervisi = 'active';
+                $Keuangan = 'active';
+                $Direksi = 'active';
+                $i = 3;
+              } else if ($pengajuan->keuangan != Null || $pengajuan->keuangan) {
+                $Pengajuan = 'active';
+                $Supervisi = 'active';
+                $Keuangan = 'active';
+                $Direksi = '';
+                $i = 2;
+              } else if ($pengajuan->spv != Null || $pengajuan->spv) {
+                $Pengajuan = 'active';
+                $Supervisi = 'active';
+                $Keuangan = '';
+                $Direksi = '';
+                $i = 1;
+              } else if ($pengajuan->spv == Null || !$pengajuan->spv) {
+                $Pengajuan = 'active';
+                $Supervisi = '';
+                $Keuangan = '';
+                $Direksi = '';
+                $i = 0;
+              }
+              ?>
+              <div class="container">
+                <div class="progress-container mx-auto">
+                  <div class="progress" id="progress"></div>
+                  <!-- <div class="circle active">1</div>
+                  <div class="circle">2</div>
+                  <div class="circle">3</div>
+                  <div class="circle">4</div> -->
+
+                  <!-- <div class="circle" data-label="Pengajuan">1</div>
+                  <div class="circle" data-label="Supervisi">2</div>
+                  <div class="circle" data-label="Keuangan">3</div>
+                  <div class="circle" data-label="Direksi">4</div> -->
+
+                  <div class="circle <?= $Pengajuan ?>" data-label="Pengajuan">1</div>
+                  <div class="circle <?= $Supervisi ?>" data-label="Supervisi">2</div>
+                  <div class="circle <?= $Keuangan ?>" data-label="Keuangan">3</div>
+                  <div class="circle <?= $Direksi ?>" data-label="Direksi">4</div>
+                </div>
+              </div>
+            </div>
           </div>
           <?php if ($this->uri->segment(4) != 'finance' or !$this->uri->segment(4)) { ?>
             <div class="row">
@@ -18,7 +102,7 @@
                 <table class="table table-bordered">
                   <thead>
                     <tr>
-                      <th width="25px">No.</th>
+                      <th width="25px">No. <?= $i ?></th>
                       <th width="400px">Uraian</th>
                       <th width="25px">Qty</th>
                       <th>Price</th>
@@ -260,7 +344,7 @@
                           <select name="nama_direksi" id="nama_direksi" class="form-control" disabled>
                             <option value=""> -- Pilih Direksi -- </option>
                             <?php
-                            $direksi = $this->db->get_where('users', ['level_jabatan > ' => 4])->result_array();
+                            // $direksi = $this->db->get_where('users', ['level_jabatan > ' => 4])->result_array();
                             foreach ($direksi as $d) {
                             ?>
                               <option value="<?= $d['nip'] ?>"><?= $d['nama'] ?></option>
@@ -288,3 +372,33 @@
     </div> <!-- .col-12 -->
   </div> <!-- .row -->
 </div> <!-- .container-fluid -->
+
+<script>
+  const progress = document.getElementById("progress");
+  const prev = document.getElementById("prev");
+  const next = document.getElementById("next");
+  const circles = document.querySelectorAll(".circle");
+
+  let currentActive = <?= $i ?>;
+
+  const update = () => {
+    // circles.forEach((circle, index) => {
+    //   if (index < currentActive) circle.classList.add("active");
+    //   else circle.classList.remove("active");
+    // });
+    const actives = document.querySelectorAll(".circle.active");
+    console.log(circles.length);
+    console.log(currentActive);
+    console.log(actives.length);
+    progress.style.width =
+      ((actives.length - 1) / (circles.length - 1)) * 100 + "%";
+    if (currentActive === 1) prev.disabled = true;
+    else if (currentActive === circles.length) next.disabled = true;
+    else {
+      prev.disabled = false;
+      next.disabled = false;
+    }
+  };
+
+  update();
+</script>
