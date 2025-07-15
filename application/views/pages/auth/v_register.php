@@ -207,16 +207,16 @@
     <p class="text-gray-700 mb-6">
       Dengan menggunakan Baris Kode Indonesia (selanjutnya disebut "Cloud Base"), Anda mengakui dan setuju terhadap ketentuan berikut:
       <br>
-      <li>Ketersediaan Layanan: Meskipun kami berupaya keras untuk memastikan ketersediaan Layanan yang berkelanjutan, kami tidak menjamin bahwa Layanan akan selalu tersedia tanpa gangguan, tepat waktu, aman, atau bebas kesalahan. Gangguan layanan dapat terjadi karena pemeliharaan, masalah teknis, atau faktor di luar kendali kami.</li>
+      <li><b>Ketersediaan Layanan:</b> Meskipun kami berupaya keras untuk memastikan ketersediaan Layanan yang berkelanjutan, kami tidak menjamin bahwa Layanan akan selalu tersedia tanpa gangguan, tepat waktu, aman, atau bebas kesalahan. Gangguan layanan dapat terjadi karena pemeliharaan, masalah teknis, atau faktor di luar kendali kami.</li>
 
       <br>
-      <li>Akurasi Data: Kami berupaya untuk memastikan akurasi data yang ditampilkan atau diproses oleh Layanan. Namun, kami tidak menjamin kelengkapan, keakuratan, keandalan, kesesuaian, atau ketersediaan data tersebut. Anda bertanggung jawab penuh atas keakuratan data yang Anda masukkan ke dalam Layanan.</li>
+      <li><b>Akurasi Data:</b> Kami berupaya untuk memastikan akurasi data yang ditampilkan atau diproses oleh Layanan. Namun, kami tidak menjamin kelengkapan, keakuratan, keandalan, kesesuaian, atau ketersediaan data tersebut. Anda bertanggung jawab penuh atas keakuratan data yang Anda masukkan ke dalam Layanan.</li>
 
       <br>
-      <li>Kehilangan Data: Meskipun kami mengambil langkah-langkah wajar untuk melindungi data Anda, kami tidak bertanggung jawab atas kehilangan data yang tidak disengaja, kerusakan data, atau akses tidak sah yang mungkin terjadi. Anda disarankan untuk secara teratur membuat cadangan data penting Anda.</li>
+      <li><b>Kehilangan Data:</b> Meskipun kami mengambil langkah-langkah wajar untuk melindungi data Anda, kami tidak bertanggung jawab atas kehilangan data yang tidak disengaja, kerusakan data, atau akses tidak sah yang mungkin terjadi. Anda disarankan untuk secara teratur membuat cadangan data penting Anda.</li>
 
       <br>
-      <li>Batasan Tanggung Jawab: Sejauh diizinkan oleh hukum yang berlaku, layanan Cloud Base Baris Kode Indonesia dan afiliasinya tidak akan bertanggung jawab atas kerugian langsung, tidak langsung, insidental, khusus, konsekuensial, atau exemplary, termasuk namun tidak terbatas pada kerugian keuntungan, itikad baik, penggunaan, data, atau kerugian tidak berwujud lainnya, yang diakibatkan dari:</li>
+      <li><b>Batasan Tanggung Jawab:</b> Sejauh diizinkan oleh hukum yang berlaku, layanan Cloud Base Baris Kode Indonesia dan afiliasinya tidak akan bertanggung jawab atas kerugian langsung, tidak langsung, insidental, khusus, konsekuensial, atau exemplary, termasuk namun tidak terbatas pada kerugian keuntungan, itikad baik, penggunaan, data, atau kerugian tidak berwujud lainnya, yang diakibatkan dari:</li>
       <br>
     <ol type="I">
       <li>penggunaan atau ketidakmampuan untuk menggunakan Layanan;</li>
