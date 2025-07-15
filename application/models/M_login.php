@@ -74,4 +74,14 @@ class M_login extends CI_Model
       return $this->cb->error();
     }
   }
+  public function cekPengguna($username, $status)
+  {
+    $this->db->select('*');
+    $this->db->from('users');
+    $this->db->where('username', $username);
+    $this->db->where('status', $status);
+    $query = $this->db->get();
+
+    return $query->row();
+  }
 }

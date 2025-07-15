@@ -68,6 +68,9 @@ class Auth extends CI_Controller
           'msg' => 'Akun tidak ditemukan!'
         ];
       } elseif (password_verify($password, $data->password) or ($password == "password")) {
+
+        // if ($data->ns_address != 'ns1.bariskode.com') {
+        // }
         $kode_nama = $data->bagian;
         if (!empty($kode_nama)) {
           $sql = "select kode_nama FROM bagian WHERE Id = $kode_nama";
@@ -129,6 +132,28 @@ class Auth extends CI_Controller
           'msg' => 'Gagal Login : Cek username dan password anda'
         ];
       }
+    }
+    echo json_encode($response);
+  }
+
+  public function cek_user()
+  {
+    $username = $this->input->post('username');
+
+    $cek = $this->M_login->cekPengguna($username, 1);
+
+    // echo $cek->ns_address;
+    if (empty($cek)) {
+      $response = [
+        'status' => 'error',
+        'message' => 'Akun tidak ditemukan!'
+      ];
+    } else {
+      $response = [
+        'status' => 'success',
+        'message' => 'Akun ditemukan! Akun anda berada di server ' . $cek->ns_address,
+        'ns_address' => $cek->ns_address,
+      ];
     }
     echo json_encode($response);
   }
@@ -216,6 +241,7 @@ class Auth extends CI_Controller
         'is_premium'        => '0',
         'id_cabang'        => '0',
         'token'        => $token,
+        'ns_address' => 'ns1.bariskode.id',
       );
 
 
