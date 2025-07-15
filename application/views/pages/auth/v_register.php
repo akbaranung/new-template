@@ -52,8 +52,12 @@
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
     /* shadow-2xl */
     max-width: 90%;
-    width: 600px;
+    width: 800px;
     /* Increased width for a larger modal */
+    max-height: 80vh;
+    /* Set a max height for scrollability */
+    overflow-y: auto;
+    /* Enable vertical scrolling */
     transform: translateY(-20px);
     opacity: 0;
     transition: transform 0.3s ease, opacity 0.3s ease;
@@ -200,14 +204,27 @@
       </div>
       <h2 class="text-2xl font-semibold text-gray-900">Penting: Kebijakan Dukungan Pengguna Gratis</h2>
     </div>
-    <!-- <h2 class="text-2xl font-semibold text-gray-900 mb-4">Penting: Kebijakan Dukungan Pengguna Gratis</h2> -->
     <p class="text-gray-700 mb-6">
-      Sebagai pengguna non-premium, harap diketahui bahwa Anda tidak akan mendapatkan dukungan teknis atau bantuan langsung dari tim kami. Dukungan hanya tersedia untuk pengguna premium.
+      Dengan menggunakan Baris Kode Indonesia (selanjutnya disebut "Cloud Base"), Anda mengakui dan setuju terhadap ketentuan berikut:
+      <br>
+      <li>Ketersediaan Layanan: Meskipun kami berupaya keras untuk memastikan ketersediaan Layanan yang berkelanjutan, kami tidak menjamin bahwa Layanan akan selalu tersedia tanpa gangguan, tepat waktu, aman, atau bebas kesalahan. Gangguan layanan dapat terjadi karena pemeliharaan, masalah teknis, atau faktor di luar kendali kami.</li>
+
+      <br>
+      <li>Akurasi Data: Kami berupaya untuk memastikan akurasi data yang ditampilkan atau diproses oleh Layanan. Namun, kami tidak menjamin kelengkapan, keakuratan, keandalan, kesesuaian, atau ketersediaan data tersebut. Anda bertanggung jawab penuh atas keakuratan data yang Anda masukkan ke dalam Layanan.</li>
+
+      <br>
+      <li>Kehilangan Data: Meskipun kami mengambil langkah-langkah wajar untuk melindungi data Anda, kami tidak bertanggung jawab atas kehilangan data yang tidak disengaja, kerusakan data, atau akses tidak sah yang mungkin terjadi. Anda disarankan untuk secara teratur membuat cadangan data penting Anda.</li>
+
+      <br>
+      <li>Batasan Tanggung Jawab: Sejauh diizinkan oleh hukum yang berlaku, layanan Cloud Base Baris Kode Indonesia dan afiliasinya tidak akan bertanggung jawab atas kerugian langsung, tidak langsung, insidental, khusus, konsekuensial, atau exemplary, termasuk namun tidak terbatas pada kerugian keuntungan, itikad baik, penggunaan, data, atau kerugian tidak berwujud lainnya, yang diakibatkan dari:</li>
+      <br>
+    <ol type="I">
+      <li>penggunaan atau ketidakmampuan untuk menggunakan Layanan;</li>
+      <li>akses tidak sah ke atau perubahan transmisi atau data Anda;</li>
+      <li>pernyataan atau perilaku pihak ketiga di Layanan; atau</li>
+      <li>hal lain yang berkaitan dengan Layanan.</li>
+    </ol>
     </p>
-    <!-- <div class="flex items-center mb-6">
-      <input type="checkbox" id="doNotShowAgain" class="form-checkbox h-5 w-5 text-blue-600 rounded-md focus:ring-blue-500">
-      <label for="doNotShowAgain" class="ml-2 text-gray-700 select-none">Jangan tampilkan lagi pesan ini</label>
-    </div> -->
     <div class="flex justify-end">
       <button id="closeModalBtn" class="btn btn-primary px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150 shadow-md">
         Saya Mengerti
