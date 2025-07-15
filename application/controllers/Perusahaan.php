@@ -166,7 +166,6 @@ class Perusahaan extends CI_Controller
     if ($this->session->userdata('is_premium')) {
       $this->load->view('index', $data);
     } else {
-
       $this->db->from('users');
       $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
       $this->db->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
@@ -332,12 +331,29 @@ class Perusahaan extends CI_Controller
     $this->session->set_flashdata('swal_message', [
       'icon' => 'success', // or 'success', 'warning', 'info', 'question'
       'title' => 'Berhasil!',
-      'text' => 'Berhasil Mengubah data!',
+      'text' => 'Berhasil Menambah data!',
       'timer' => 3000, // SweetAlert2 will close after 3 seconds (3000 milliseconds)
       'timerProgressBar' => true, // Shows a progress bar for the timer
     ]);
 
-    redirect('perusahaan/user');
+    if ($this->session->userdata('is_premium')) {
+      redirect('perusahaan/user');
+    } else {
+      $this->db->from('users');
+      $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
+      $this->db->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
+      $this->db->where('nama_jabatan !=', 'Super Admin');
+      $total_user = $this->db->get()->num_rows(); // Get the number of rows
+
+      $max_users_for_100_percent = 4; // Define your maximum limit
+      // $max_users_for_100_percent = 5; // Define your maximum limit
+
+      if ($total_user == $max_users_for_100_percent) {
+        redirect('financial/list_coa');
+      } else {
+        redirect('perusahaan/user');
+      }
+    }
   }
 
   public function proccess_edit_user($id)

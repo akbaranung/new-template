@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" rel="stylesheet" />
 <link rel="stylesheet" href="<?= base_url('assets/') ?>progress-bar.css">
 <style>
   /* Use a custom class controlled by JavaScript */
@@ -18,6 +19,50 @@
     font-size: 0.875em;
     margin-top: 5px;
     display: block;
+  }
+
+  /* Overlay for the modal */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    /* Semi-transparent black */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+
+  .modal-overlay.show {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* Modal content box */
+  .modal-content {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 0.75rem;
+    /* rounded-xl */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    /* shadow-2xl */
+    max-width: 90%;
+    width: 600px;
+    /* Increased width for a larger modal */
+    transform: translateY(-20px);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+
+  .modal-overlay.show .modal-content {
+    transform: translateY(0);
+    opacity: 1;
   }
 </style>
 <div class="row align-items-center h-100 w-100 m-0">
@@ -144,9 +189,104 @@
       </div>
   </form>
 </div>
+<!-- Custom Modal Structure -->
+<div id="customModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="flex items-center mb-4">
+      <!-- Warning Icon (SVG) -->
+      <div class="mb-3" style="text-align: center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-yellow-500 mr-3" viewBox="0 0 20 20" fill="#ff9966" width="64" height="64">
+          <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+        </svg>
+      </div>
+      <h2 class="text-2xl font-semibold text-gray-900">Penting: Kebijakan Dukungan Pengguna Gratis</h2>
+    </div>
+    <!-- <h2 class="text-2xl font-semibold text-gray-900 mb-4">Penting: Kebijakan Dukungan Pengguna Gratis</h2> -->
+    <p class="text-gray-700 mb-6">
+      Sebagai pengguna non-premium, harap diketahui bahwa Anda tidak akan mendapatkan dukungan teknis atau bantuan langsung dari tim kami. Dukungan hanya tersedia untuk pengguna premium.
+    </p>
+    <!-- <div class="flex items-center mb-6">
+      <input type="checkbox" id="doNotShowAgain" class="form-checkbox h-5 w-5 text-blue-600 rounded-md focus:ring-blue-500">
+      <label for="doNotShowAgain" class="ml-2 text-gray-700 select-none">Jangan tampilkan lagi pesan ini</label>
+    </div> -->
+    <div class="flex justify-end">
+      <button id="closeModalBtn" class="btn btn-primary px-6 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150 shadow-md">
+        Saya Mengerti
+      </button>
+    </div>
+  </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+  // Get references to the modal elements
+  const customModal = document.getElementById('customModal');
+  const closeModalBtn = document.getElementById('closeModalBtn');
+  const doNotShowAgainCheckbox = document.getElementById('doNotShowAgain');
+
+  /**
+   * Shows the custom modal by adding the 'show' class.
+   */
+  function showModal() {
+    customModal.classList.add('show');
+  }
+
+  /**
+   * Hides the custom modal by removing the 'show' class.
+   * Also logs the state of the checkbox.
+   */
+  function hideModal() {
+    customModal.classList.remove('show');
+    // You can access the checkbox state here
+    console.log('Do not show again checkbox state:', doNotShowAgainCheckbox.checked);
+    // In a real application, you might save this state to localStorage
+    // if (doNotShowAgainCheckbox.checked) {
+    //     localStorage.setItem('hideModal', 'true');
+    // }
+  }
+
+  // Event listener to show the modal when the DOM is fully loaded
+  document.addEventListener('DOMContentLoaded', () => {
+    // Check if the modal should be hidden based on a previous user choice (example)
+    // if (localStorage.getItem('hideModal') !== 'true') {
+    showModal();
+    // }
+  });
+
+  // Event listener for the close button
+  closeModalBtn.addEventListener('click', hideModal);
+
+  // Optional: Close modal if clicking outside the content (on the overlay)
+  customModal.addEventListener('click', (event) => {
+    if (event.target === customModal) {
+      hideModal();
+    }
+  });
+</script>
+<script>
+  Swal.fire({
+    title: 'Do you have a bike?',
+    input: 'checkbox',
+    inputPlaceholder: 'I have a bike'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      if (result.value) {
+        Swal.fire({
+          icon: 'success',
+          text: 'You have a bike!'
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          text: "You don't have a bike :("
+        });
+      }
+    } else {
+      console.log(`modal was dismissed by ${result.dismiss}`)
+    }
+  })
+</script>
 <script>
   const progress = document.getElementById("progress");
   const prev = document.getElementById("prev");

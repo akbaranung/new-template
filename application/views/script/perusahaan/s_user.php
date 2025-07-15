@@ -97,7 +97,8 @@
                             // Only reload the table if it was a success or a clear 'info' (already deleted) case
                             if (response.status === 'success' || response.status === 'info') {
                                 // Assuming your DataTables ID is 'datatable', not 'table1' based on previous snippets
-                                $('#user-table').DataTable().ajax.reload(null, false);
+                                // $('#user-table').DataTable().ajax.reload(null, false);
+                                location.reload();
                             }
                         });
                     },
