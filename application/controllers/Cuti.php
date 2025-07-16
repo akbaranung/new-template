@@ -30,7 +30,7 @@ class Cuti extends CI_Controller
         $this->load->helper('url', 'form', 'download');
 
         if (!$this->session->userdata('nip')) {
-            redirect('login');
+            redirect('auth');
         }
     }
 
