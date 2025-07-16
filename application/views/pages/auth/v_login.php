@@ -74,7 +74,7 @@
         <!-- <h6 id="nsAddressDisplay" class="text-black text-xl mb-3"></h6> -->
         <div class="form-group">
           <label for="inputPassword" class="sr-only">Password</label>
-          <input type="password" id="password" name="password" class="form-control form-control-lg" placeholder="Password">
+          <input type="password" id="password" name="password" class="form-control form-control-lg" placeholder="Password" autofocus>
         </div>
       </div>
 
@@ -98,11 +98,29 @@
     $('#loginbtn').removeAttr('disabled');
 
   }
+  const usernameInput = document.getElementById('username');
+  // Event listener for the username input field
+  usernameInput.addEventListener('keypress', function(event) {
+    // Check if the pressed key is Enter (key code 13 or 'Enter')
+    if (event.key === 'Enter') {
+      event.preventDefault(); // Prevent default form submission if any
+      onCheck(); // Trigger the onCheck function
+    }
+  });
+
+  passwordInput.addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+      event.preventDefault(); // Prevent default form submission if any
+      onLogin(); // Trigger the onLogin function
+    }
+  });
 
   function onCheck() {
     const username = $('#username').val();
     const loginUsernameElement = document.getElementById('login_username');
     const loginForm = loginUsernameElement.closest('form');
+    const passwordSection = document.getElementById('passwordSection');
+    const passwordInput = document.getElementById('password');
     const url = "<?= base_url() ?>"
 
     $.ajax({
@@ -129,6 +147,7 @@
             $('#loginbtn').removeClass('d-none');
             $('#checkUsernameBtn').addClass('d-none');
             $('#loginbtn').removeAttr('disabled');
+            passwordInput.focus();
             // loginForm.setAttribute('action', response.ns_address + '/login');
             // loginForm.setAttribute('action', 'https://admin.kodesis.id/login/login_form');
             loginForm.setAttribute('action', 'https://' + response.ns_address + '/auth/login');
