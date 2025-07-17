@@ -42,10 +42,12 @@ class Auth extends CI_Controller
           'msg' => 'Anda sudah login sebelumnya!',
           'reload' => base_url('home')
         ];
+
+        redirect('home');
       }
 
       echo json_encode($response);
-      return false;
+      return;
     }
     $username = $this->input->post('username', TRUE);
     $password = $this->input->post('password', TRUE);
