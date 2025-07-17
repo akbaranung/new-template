@@ -144,6 +144,9 @@
         </h4>
       </div>
       <div class="modal-body">
+        <div class="float-right">
+          <a href="<?= base_url('financial/ambil_semua_coa') ?>" class="btn btn-primary">Ambil Semua</a>
+        </div>
         <div class="table-responsive">
           <table id="table-template" class="table table-striped" style="width:100%">
             <thead class="thead-dark">
