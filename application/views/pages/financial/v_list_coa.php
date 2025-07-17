@@ -21,8 +21,8 @@
                   <span class="input-group-btn">
                     <button class="btn btn-secondary" type="submit">Go!</button>
                     <a href="<?= base_url('financial/reset_coa') ?>" class="btn btn-warning" style="color:white;">Reset</a>
-                    <button class="btn btn-primary text-white" data-toggle="modal" data-target="#tambahCoa" type="button" style="color: white;">Tambah CoA</button>
-                    <button class="btn btn-primary text-white" data-toggle="modal" data-target="#TemplateCoa" type="button" style="color: white;">Template CoA</button>
+                    <button class="btn btn-primary text-white" data-toggle="modal" data-target="#tambahCoa" type="button" style="color: white;">Buat CoA</button>
+                    <button class="btn btn-primary text-white" data-toggle="modal" data-target="#TemplateCoa" type="button" style="color: white;">Ambil CoA</button>
                   </span>
                 </div>
               </form>
@@ -85,7 +85,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title" id="myModalLabel">
-          Tambah CoA Baru
+          Buat CoA Baru
         </h4>
       </div>
       <form class="form-horizontal form-label-left" method="POST" action="<?= base_url('financial/tambahCoa') ?>">
@@ -140,7 +140,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title" id="myModalLabel">
-          Tambah CoA Baru dengan Template
+          Ambil CoA Baru dari Template
         </h4>
       </div>
       <div class="modal-body">
