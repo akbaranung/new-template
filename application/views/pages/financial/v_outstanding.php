@@ -14,10 +14,14 @@
                   <th>No.</th>
                   <th>Agen</th>
                   <th>Current</th>
-                  <th>Out 1</th>
+                  <!-- <th>Out 1</th>
                   <th>Out 2</th>
                   <th>Out 3</th>
-                  <th>Out 4</th>
+                  <th>Out 4</th> -->
+                  <th>OS 1</th>
+                  <th>OS 2</th>
+                  <th>OS 3</th>
+                  <th>OS 4</th>
                   <th>Total</th>
                 </tr>
               </thead>
