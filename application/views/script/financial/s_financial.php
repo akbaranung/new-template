@@ -831,7 +831,7 @@
               timer: 1500,
             }).then(function() {
               Swal.close();
-              // location.href = `${response.reload}`
+              location.href = `${response.reload}`
             });
           } else {
             $button.removeClass('btn-primary').addClass('btn-danger').text('Failed');
