@@ -381,12 +381,48 @@ class Absensi extends CI_Controller
             'user'
         );
 
-        $data['data_users'] = $this->user->data_user();
+        // $data['data_users'] = $this->user->data_user();
 
         // Access properties using '->' because $cek_user is an object
-        $data_user = $this->user->data_user();
-        $jam_masuk_plus_two = (new DateTime($data_user->jam_masuk))->modify('+2 hours')->format('H:i:s');
-        $jam_keluar_plus_two = (new DateTime($data_user->jam_keluar))->modify('+2 hours')->format('H:i:s');
+        // $data_user = $this->user->data_user();
+        // if ($data_user->jam_masuk == null || $data_user->jam_keluar == null) {
+        //     $this->session->set_flashdata('swal_message', [
+        //         'icon' => 'info', // or 'success', 'warning', 'info', 'question'
+        //         'title' => 'Jam Masuk dan Jam Pulang Kosong!',
+        //         'text' => 'Jam Masuk dan Jam Pulang anda Kosong, mohon untuk di isi terlebih dahulu',
+        //         'confirmButtonText' => 'Ambil Mahkota Sekarang!',
+        //         'showCancelButton' => true,
+        //         'cancelButtonText' => 'Nanti Saja, Belum Siap Jadi Raja',
+        //         'redirectUrl' => base_url('subscription/upgrade') // URL to redirect if confirmed
+        //     ]);
+        // }
+        // $jam_masuk_plus_two = (new DateTime($data_user->jam_masuk))->modify('+2 hours')->format('H:i:s');
+        // $jam_keluar_plus_two = (new DateTime($data_user->jam_keluar))->modify('+2 hours')->format('H:i:s');
+
+        $this->db->select('*');
+        $this->db->from('users');
+        $this->db->where('username', $this->session->userdata('username')); // Filter by username
+        $query = $this->db->get(); // Execute the query
+        $lokasi_presensi_user = $query->row(); // Fetch results
+
+        $this->db->select('*');
+        $this->db->from('lokasi_presensi');
+        $this->db->where('id', $lokasi_presensi_user->id_lokasi_presensi); // Filter by username
+        $query = $this->db->get(); // Execute the query
+        $lokasi_presensi_by_id = $query->row(); // Fetch results
+        // var_dump($lokasi_presensi_by_id);
+        if (empty($lokasi_presensi_by_id)) {
+            $this->session->set_flashdata('swal_message', [
+                'icon' => 'info', // or 'success', 'warning', 'info', 'question'
+                'title' => 'Lokasi Absensi Kosong',
+                'text' => 'Lokasi Absensi Kosong, mohon hubungi admin untuk mengisi lokasi absensi user.',
+                'confirmButtonText' => 'Mengerti',
+            ]);
+            redirect('home');
+        }
+
+        $jam_masuk_plus_two = (new DateTime($lokasi_presensi_by_id->jam_masuk))->modify('+2 hours')->format('H:i:s');
+        $jam_keluar_plus_two = (new DateTime($lokasi_presensi_by_id->jam_pulang))->modify('+2 hours')->format('H:i:s');
 
         $this->db->select('*');
         $this->db->from('tblattendance');
@@ -413,16 +449,11 @@ class Absensi extends CI_Controller
         $query = $this->db->get(); // Execute the query
         $result3 = $query->result_array(); // Fetch results
 
-        $this->db->select('*');
-        $this->db->from('users');
-        $this->db->where('username', $this->session->userdata('username')); // Filter by username
-        $query = $this->db->get(); // Execute the query
-        $lokasi_presensi_user = $query->row(); // Fetch results
 
         $data['result1'] = $result1;
         $data['result2'] = $result2;
         $data['result3'] = $result3;
-        $data['lokasi_presensi_user'] = $lokasi_presensi_user;
+        $data['lokasi_presensi_by_id'] = $lokasi_presensi_by_id;
 
         $data['cek_user'] = $this->user->cek_user();
         $data['lokasi_absensi'] = $this->user->get_location();
@@ -448,8 +479,18 @@ class Absensi extends CI_Controller
 
         // Access properties using '->' because $cek_user is an object
         $data_user = $this->user->data_user();
-        $jam_masuk_plus_two = (new DateTime($data_user->jam_masuk))->modify('+2 hours')->format('H:i:s');
-        $jam_keluar_plus_two = (new DateTime($data_user->jam_keluar))->modify('+0 hours')->format('H:i:s');
+
+        // $jam_masuk_plus_two = (new DateTime($data_user->jam_masuk))->modify('+2 hours')->format('H:i:s');
+        // $jam_keluar_plus_two = (new DateTime($data_user->jam_keluar))->modify('+0 hours')->format('H:i:s');
+
+        $this->db->select('*');
+        $this->db->from('lokasi_presensi');
+        $this->db->where('id', $data_user->id_lokasi_presensi); // Filter by username
+        $query = $this->db->get(); // Execute the query
+        $lokasi_presensi_by_id = $query->row(); // Fetch results
+        $jam_masuk_plus_two = (new DateTime($lokasi_presensi_by_id->jam_masuk))->modify('+2 hours')->format('H:i:s');
+        $jam_keluar_plus_two = (new DateTime($lokasi_presensi_by_id->jam_pulang))->modify('+2 hours')->format('H:i:s');
+
 
         if ($users) {
             // If using result_array(), users will be an array, even if there's only one user
@@ -711,7 +752,8 @@ class Absensi extends CI_Controller
                 'attendanceStatus' => $attendanceData['attendanceStatus'],
                 'lokasiAttendance' => $attendanceData['lokasiAttendance'], // Now correctly accessed
                 'tanggalAttendance' => $attendanceData['tanggalAttendance'],
-                'image' => $filename
+                'image' => $filename,
+                'id_perusahaan' => $this->session->userdata('user_perusahaan_id')
             ];
 
             $response = $this->user->insertAttendance($attendance);
@@ -884,6 +926,7 @@ class Absensi extends CI_Controller
             'zona_waktu'            => $this->input->post('zona_waktu'),
             'jam_masuk'                => $this->input->post('jam_masuk'),
             'jam_pulang'                => $this->input->post('jam_pulang'),
+            'id_perusahaan'                => $this->session->userdata('user_perusahaan_id'),
         );
         $this->db->insert('lokasi_presensi', $data_insert);
         redirect('absensi/lokasi_presensi');
@@ -906,6 +949,7 @@ class Absensi extends CI_Controller
             'zona_waktu'            => $this->input->post('zona_waktu'),
             'jam_masuk'                => $this->input->post('jam_masuk'),
             'jam_pulang'                => $this->input->post('jam_pulang'),
+            // 'id_perusahaan'                => $this->session->userdata('user_perusahaan_id'),
         );
         $this->db->where('id', $this->input->post('id_lokasi')); // Ensure to specify the record to update
         $this->db->update('lokasi_presensi', $data_insert);

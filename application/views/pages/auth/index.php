@@ -53,67 +53,67 @@
   </script>
 
   <script>
-    // $(document).ready(function() {
-    //   $(".btn-login").click(function(e) {
-    //     e.preventDefault();
-    //     var parent = $(this).parents("form");
-    //     var url = parent.attr("action");
-    //     console.log(parent);
-    //     var formData = new FormData(parent[0]);
+    $(document).ready(function() {
+      $(".btn-login").click(function(e) {
+        e.preventDefault();
+        var parent = $(this).parents("form");
+        var url = parent.attr("action");
+        console.log(parent);
+        var formData = new FormData(parent[0]);
 
 
-    //     $.ajax({
-    //       url: url,
-    //       method: "POST",
-    //       data: formData,
-    //       processData: false,
-    //       contentType: false,
-    //       dataType: "JSON",
-    //       beforeSend: () => {
-    //         Swal.fire({
-    //           title: "Loading....",
-    //           timerProgressBar: true,
-    //           allowOutsideClick: false,
-    //           didOpen: () => {
-    //             Swal.showLoading();
-    //           },
-    //         });
-    //       },
-    //       success: function(res) {
-    //         if (res.success) {
-    //           Swal.fire({
-    //             icon: "success",
-    //             title: `${res.msg}`,
-    //             showConfirmButton: false,
-    //             timer: 1500,
-    //           }).then(function() {
-    //             Swal.close();
-    //             location.href = `${res.reload}`
-    //             // location.reload();
-    //           });
-    //         } else {
-    //           Swal.fire({
-    //             icon: "error",
-    //             title: `${res.msg}`,
-    //             showConfirmButton: false,
-    //             timer: 1500,
-    //           }).then(function() {
-    //             Swal.close();
-    //           });
-    //         }
-    //       },
-    //       error: function(xhr, status, error) {
-    //         console.log(xhr);
-    //         Swal.fire({
-    //           icon: "error",
-    //           title: `${error}`,
-    //           showConfirmButton: false,
-    //           timer: 1500,
-    //         });
-    //       },
-    //     });
-    //   });
-    // })
+        $.ajax({
+          url: url,
+          method: "POST",
+          data: formData,
+          processData: false,
+          contentType: false,
+          dataType: "JSON",
+          beforeSend: () => {
+            Swal.fire({
+              title: "Loading....",
+              timerProgressBar: true,
+              allowOutsideClick: false,
+              didOpen: () => {
+                Swal.showLoading();
+              },
+            });
+          },
+          success: function(res) {
+            if (res.success) {
+              Swal.fire({
+                icon: "success",
+                title: `${res.msg}`,
+                showConfirmButton: false,
+                timer: 1500,
+              }).then(function() {
+                Swal.close();
+                location.href = `${res.reload}`
+                // location.reload();
+              });
+            } else {
+              Swal.fire({
+                icon: "error",
+                title: `${res.msg}`,
+                showConfirmButton: false,
+                timer: 1500,
+              }).then(function() {
+                Swal.close();
+              });
+            }
+          },
+          error: function(xhr, status, error) {
+            console.log(xhr);
+            Swal.fire({
+              icon: "error",
+              title: `${error}`,
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          },
+        });
+      });
+    })
 
     // $(document).ready(function() {
     //   $(".btn-register").click(function(e) {

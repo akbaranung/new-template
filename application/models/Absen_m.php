@@ -14,6 +14,7 @@ class Absen_m extends CI_Model
         $this->db->select('tblattendance.*');
         $this->db->from('tblattendance');
         $this->db->where('username', $this->session->userdata('username'));
+        $this->db->where('id_perusahaan', $this->session->userdata('user_perusahaan_id'));
         $i = 0;
 
         foreach ($this->column_search as $item) // loop column 
@@ -84,7 +85,9 @@ class Absen_m extends CI_Model
         $this->db->select('tblattendance.*,users.bagian');
         $this->db->from('tblattendance');
         $this->db->where('bagian', $this->session->userdata('bagian'));
+        $this->db->where('id_perusahaan', $this->session->userdata('user_perusahaan_id'));
         $this->db->join('users', 'users.username = tblattendance.username');
+
         $i = 0;
 
         foreach ($this->column_search as $item) // loop column 
@@ -156,6 +159,7 @@ class Absen_m extends CI_Model
         $this->db->from('tblattendance');
         $this->db->where('attendanceStatus', 'Pending');
         $this->db->where('supervisi', $this->session->userdata('nip'));
+        $this->db->where('id_perusahaan', $this->session->userdata('user_perusahaan_id'));
         $this->db->join('users', 'users.username = tblattendance.username');
         $i = 0;
 
@@ -229,6 +233,7 @@ class Absen_m extends CI_Model
     public function check_registration_exists($username)
     {
         $this->db->where('username', $username);
+        $this->db->where('id_perusahaan', $this->session->userdata('user_perusahaan_id'));
         return $this->db->count_all_results('users') > 0;
     }
     // public function insertAttendance($attendanceData)
@@ -316,9 +321,14 @@ class Absen_m extends CI_Model
         if (!empty($data) && is_array($data)) {
             try {
                 // Fetch the user's jam_masuk and jam_keluar values from the 'users' table
-                $this->db->select('jam_masuk, jam_keluar');
                 $this->db->from('users');
                 $this->db->where('username', $data['username']);
+                $users = $this->db->get()->row();
+
+
+                $this->db->select('jam_masuk, jam_pulang');
+                $this->db->from('lokasi_presensi');
+                $this->db->where('id', $users->id_lokasi_presensi);
                 $jam = $this->db->get()->row();
 
                 if ($jam) {
@@ -327,7 +337,7 @@ class Absen_m extends CI_Model
 
                     // Parse jam_masuk and jam_keluar as DateTime objects
                     $jamMasukTime = new DateTime($jam->jam_masuk);
-                    $jamKeluarTime = new DateTime($jam->jam_keluar);
+                    $jamKeluarTime = new DateTime($jam->jam_pulang);
 
                     // Modify jamMasukTime if needed (as per your original code, +2 hours)
                     // Note: This +2 hours might be causing logic issues if it makes jamMasukTime > jamKeluarTime for the same day.
@@ -420,6 +430,7 @@ class Absen_m extends CI_Model
     {
         $this->db->select('*'); // Fetch all columns
         $this->db->from('lokasi_presensi'); // Table name
+        $this->db->where('id_perusahaan', $this->session->userdata('user_perusahaan_id'));
         $query = $this->db->get();
 
         return $query->result_array(); // Return the result as an array

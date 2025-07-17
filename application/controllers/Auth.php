@@ -94,8 +94,6 @@ class Auth extends CI_Controller
         $this->session->set_userdata('bagian', $data->bagian);
         $this->session->set_userdata('kode_nama', $kod);
         $this->session->set_userdata('kode_cabang', $data->id_cabang);
-        $is_premium_boolean = (bool)$data->is_premium;
-        $this->session->set_userdata('is_premium', $is_premium_boolean);
         $this->session->set_userdata('is_token', $data->token);
 
         // $setting = $this->db->where('Id', '1')->get('utility')->row();
@@ -120,6 +118,8 @@ class Auth extends CI_Controller
           $this->session->set_userdata('nama_ppn', $setting->nama_ppn);
           $this->session->set_userdata('ppn', $setting->besaran_ppn);
           $this->session->set_userdata('nama_akronim', $setting->nama_akronim);
+          $is_premium_boolean = (bool)$setting->is_premium;
+          $this->session->set_userdata('is_premium', $is_premium_boolean);
           $response = [
             'success' => TRUE,
             'msg' => 'Login berhasil!',

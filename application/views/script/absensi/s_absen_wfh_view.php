@@ -4,35 +4,16 @@
     let locationName = "";
     const locations = [
         <?php
-        if ($lokasi_absensi) {
-            foreach ($lokasi_absensi as $l) {
-                if ($l['id'] == $lokasi_presensi_user->id_lokasi_presensi) { ?> {
-                        name: "<?= addslashes($l['nama_lokasi']) ?>", // Ensure the name is properly escaped and quoted
-                        latitude: <?= $l['latitude'] ?>,
-                        longitude: <?= $l['longitude'] ?>,
-                        radius: <?= $l['radius'] ?> // Radius in kilometers
-                    },
-            <?php }
-            }
-        } else { ?> {
-                name: "Graha Dirgantara",
-                latitude: -6.2559536,
-                longitude: 106.8826187,
-                radius: 0.5 // Radius in kilometers
-            },
-            {
-                name: "Parkir Bandes",
-                latitude: -6.2586284,
-                longitude: 106.8820789,
-                radius: 0.5 // Radius in kilometers
-            },
-            {
-                name: "Mlejit",
-                latitude: -6.2638584,
-                longitude: 106.8856266,
-                radius: 0.5 // Radius in kilometers
-            }
-        <?php } ?>
+        foreach ($lokasi_absensi as $l) {
+            if ($l['id'] == $lokasi_presensi_by_id->id) { ?> {
+                    name: "<?= addslashes($l['nama_lokasi']) ?>", // Ensure the name is properly escaped and quoted
+                    latitude: <?= $l['latitude'] ?>,
+                    longitude: <?= $l['longitude'] ?>,
+                    radius: <?= $l['radius'] ?> // Radius in kilometers
+                },
+        <?php }
+        }
+        ?>
     ];
 
 
@@ -248,8 +229,8 @@
 
             date_default_timezone_set('Asia/Jakarta');
             $current_time = new DateTime();
-            $jam_masuk_plus_two = (new DateTime($data_users->jam_masuk))->modify('+2 hours');
-            $jam_keluar_plus_two = (new DateTime($data_users->jam_keluar))->modify('+2 hours');
+            $jam_masuk_plus_two = (new DateTime($lokasi_presensi_by_id->jam_masuk))->modify('+2 hours');
+            $jam_keluar_plus_two = (new DateTime($lokasi_presensi_by_id->jam_pulang))->modify('+2 hours');
             ?>
             if (detectedFaces.includes(username)) {
                 if (isWithinRange) {
@@ -544,15 +525,15 @@
         stopWebcam();
     });
     <?php
-    if (empty($data_users)) {
+    if (empty($lokasi_presensi_by_id)) {
     ?>
         getLocation();
     <?php
     } else {
         date_default_timezone_set('Asia/Jakarta');
         $current_time = new DateTime();
-        $jam_masuk_plus_two = (new DateTime($data_users->jam_masuk))->modify('+2 hours');
-        $jam_keluar_plus_two = (new DateTime($data_users->jam_keluar))->modify('+2 hours');
+        $jam_masuk_plus_two = (new DateTime($lokasi_presensi_by_id->jam_masuk))->modify('+2 hours');
+        $jam_keluar_plus_two = (new DateTime($lokasi_presensi_by_id->jam_pulang))->modify('+2 hours');
     ?>
         <?php if ($current_time <= $jam_masuk_plus_two) { ?>
             <?php if (empty($result1)) { ?>

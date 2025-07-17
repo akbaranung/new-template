@@ -24,9 +24,9 @@ class M_menu extends CI_Model
     $this->db->where('user_menu_access.user_id', $user_id);
     $this->db->where('menus.is_active', 1);
     $this->db->where_in('menus.id', $where_in);
-    if (!$this->session->userdata('is_premium')) {
-      $this->db->where_in('menus.premium', '0');
-    }
+    // if (!$this->session->userdata('is_premium')) {
+    //   $this->db->where_in('menus.premium', '0');
+    // }
     $this->db->order_by('menus.sort_order', 'ASC');
     $query = $this->db->get();
     $menus = $query->result();

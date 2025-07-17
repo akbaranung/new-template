@@ -13,6 +13,7 @@ class Lokasi_Presensi_m extends CI_Model
 
         $this->db->select('lokasi_presensi.*');
         $this->db->from('lokasi_presensi');
+        $this->db->where('id_perusahaan', $this->session->userdata('user_perusahaan_id'));
         $i = 0;
 
         foreach ($this->column_search as $item) // loop column 
