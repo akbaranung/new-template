@@ -2518,8 +2518,8 @@ class Financial extends CI_Controller
       $cek_nama_coa = $this->M_coa->isAvailable('nama_perkiraan', $nama_coa);
       if ($cek_no_sbb) {
         continue;
-      } else if ($cek_nama_coa) {
-        continue;
+        // } else if ($cek_nama_coa) {
+        //   continue;
       } else {
 
         $substr_coa = substr($no_sbb, 0, 1);

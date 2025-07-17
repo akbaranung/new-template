@@ -94,7 +94,7 @@ class Financial_first extends CI_Controller
       'title' => "List CoA",
     ];
 
-    $data['pages'] = "pages/financial/v_list_coa";
+    $data['pages'] = "pages/financial/v_list_coa_force";
     $data['utility'] = $this->db->get('utility')->row_array();
     $data['pages_script'] = 'script/financial/s_financial_first';
     $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
@@ -308,5 +308,81 @@ class Financial_first extends CI_Controller
       }
     }
     echo json_encode($response);
+  }
+  public function ambil_semua_coa()
+  {
+
+    $this->cb->select('no_bb, no_sbb, MIN(nama_perkiraan) as nama_perkiraan');
+    $this->cb->from('v_coa_all_no_cabang');
+    $this->cb->group_by('no_bb, no_sbb'); // Group by the columns that define uniqueness
+
+    $all_coa = $this->cb->get()->result();
+
+    foreach ($all_coa as $coas) {
+
+      $no_bb = $coas->no_bb;
+      $no_sbb = $coas->no_sbb;
+      // $nama_bb = $coas->nama_bb;
+      $nama_coa = $coas->nama_perkiraan;
+      $saldo_awal = 0;
+      $cek_no_sbb = $this->M_coa->isAvailable('no_sbb', $no_sbb);
+      $cek_nama_coa = $this->M_coa->isAvailable('nama_perkiraan', $nama_coa);
+      if ($cek_no_sbb) {
+        continue;
+        // } else if ($cek_nama_coa) {
+        //   continue;
+      } else {
+
+        $substr_coa = substr($no_sbb, 0, 1);
+
+        if ($substr_coa == "1" || $substr_coa == "5" || $substr_coa == "6" || $substr_coa == "7" || $substr_coa == "5" || $substr_coa == "6") {
+          $posisi = 'AKTIVA';
+        } else {
+          $posisi = 'PASIVA';
+        }
+
+        // cek tabel
+        if ($substr_coa == "1" || $substr_coa == "2" || $substr_coa == "3") {
+          $tabel = "t_coa_sbb";
+
+          $data = [
+            'no_bb' => $no_bb,
+            'no_sbb' => $no_sbb,
+            'nama_perkiraan' => $nama_coa,
+            'posisi' => $posisi,
+            'nominal' => $this->_parse_rupiah($saldo_awal),
+            'id_cabang' => $this->session->userdata('kode_cabang'),
+          ];
+        } else if ($substr_coa == "4" || $substr_coa == "5" || $substr_coa == "6" || $substr_coa == "7" || $substr_coa == "8" || $substr_coa == "9") {
+          $tabel = "t_coalr_sbb";
+          $data = [
+            'no_lr_bb' => $no_bb,
+            'no_lr_sbb' => $no_sbb,
+            'nama_perkiraan' => $nama_coa,
+            'posisi' => $posisi,
+            'nominal' => $this->_parse_rupiah($saldo_awal),
+            'id_cabang' => $this->session->userdata('kode_cabang'),
+          ];
+        } else {
+          $this->session->set_flashdata('message_error', 'Format nomor CoA ' . $no_sbb . ' tidak sesuai.');
+          redirect($_SERVER['HTTP_REFERER']);
+        }
+
+
+        $this->cb->trans_begin();
+
+        $query = $this->cb->insert($tabel, $data);
+
+        if ($query) {
+          $this->cb->trans_commit();
+          // $this->session->set_flashdata('message_name', 'CoA ' . $no_sbb . ' berhasil ditambahkan.');
+          // redirect($_SERVER['HTTP_REFERER']);
+        } else {
+          $this->cb->trans_rollback();
+          // $this->session->set_flashdata('message_error', 'CoA ' . $no_sbb . ' gagal disimpan. Ket:' . $this->cb->error());
+        }
+      }
+    }
+    redirect($_SERVER['HTTP_REFERER']);
   }
 }
