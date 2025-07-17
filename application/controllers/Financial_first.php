@@ -311,9 +311,10 @@ class Financial_first extends CI_Controller
   }
   public function ambil_semua_coa()
   {
+    $this->load->view('loading');
 
-    $this->cb->select('no_bb, no_sbb, MIN(nama_perkiraan) as nama_perkiraan');
-    $this->cb->from('v_coa_all_no_cabang');
+    $this->cb->select('no_bb, no_sbb, nama_perkiraan');
+    $this->cb->from('t_coa_sbb_gabungan');
     $this->cb->group_by('no_bb, no_sbb'); // Group by the columns that define uniqueness
 
     $all_coa = $this->cb->get()->result();

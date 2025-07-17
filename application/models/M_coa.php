@@ -354,12 +354,12 @@ class M_coa extends CI_Model
         $laporan = $this->cb->order_by(
             'no_sbb',
             'ASC'
-        )->limit($limit, $from)->get('v_coa_all_no_cabang')->result_array();
+        )->limit($limit, $from)->get('t_coa_sbb_gabungan')->result_array();
 
         return $laporan;
     }
 
-    var $table1 = 'v_coa_all_no_cabang';
+    var $table1 = 't_coa_sbb_gabungan';
     var $column_order1 = array('no_bb', 'no_sbb', 'nama_perkiraan'); //set column field database for datatable orderable
     var $column_search1 = array('no_bb', 'no_sbb', 'nama_perkiraan'); //set column field database for datatable searchable 
     var $order1 = array('no_bb' => 'asc'); // default order 
@@ -367,8 +367,8 @@ class M_coa extends CI_Model
     function _get_datatables_query1()
     {
 
-        $this->cb->select('v_coa_all_no_cabang.*'); // Select all from v_coa_all_no_cabang, and specific columns from t_cabang
-        $this->cb->from('v_coa_all_no_cabang');
+        $this->cb->select('t_coa_sbb_gabungan.*'); // Select all from t_coa_sbb_gabungan, and specific columns from t_cabang
+        $this->cb->from('t_coa_sbb_gabungan');
         $i = 0;
 
         foreach ($this->column_search1 as $item) // loop column 
