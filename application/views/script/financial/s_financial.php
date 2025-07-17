@@ -760,7 +760,7 @@
   ?>
 
   $(document).ready(function() {
-    var table = $('#table-template').DataTable({ // Store the DataTable instance in a variable
+    var table = $('#table-template').DataTable({
       responsive: true,
       rowReorder: {
         selector: 'td:nth-child(2)'
@@ -774,10 +774,35 @@
       order: [],
       iDisplayLength: 10,
       columnDefs: [{
-        targets: [-1, -2],
-        orderable: false
-      }],
-      dom: '<"dataTables_top_wrapper clear-fix"<"dataTables_length_custom"l><"dataTables_filter_custom"f>>t<"dataTables_bottom_wrapper clear-fix"<"dataTables_info_custom"i><"dataTables_paginate_custom"p>>',
+          targets: [-1], // Target the last column (which will be our new action column)
+          orderable: false, // Make this column not sortable
+        },
+        {
+          targets: [-2], // Target the second to last column
+          orderable: false
+        }
+        // Add more column definitions as needed for other columns
+      ],
+      layout: {
+        topStart: 'pageLength', // Place the length dropdown in the top-left
+        topEnd: [
+          'search', // Place the search input
+          {
+            buttons: [{
+              text: 'Ambil Semua',
+              className: 'btn btn-primary',
+              action: function(e, dt, button, config) {
+                window.location = '<?= base_url('financial/ambil_semua_coa') ?>';
+              },
+              init: function(api, node, config) {
+                $(node).removeClass('dt-button')
+              }
+            }]
+          }
+        ],
+        bottomStart: 'info', // Place table information (showing X of Y entries) in the bottom-left
+        bottomEnd: 'paging' // Place pagination controls in the bottom-right
+      },
 
     });
 
