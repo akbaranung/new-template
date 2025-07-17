@@ -753,7 +753,6 @@ class Absensi extends CI_Controller
                 'lokasiAttendance' => $attendanceData['lokasiAttendance'], // Now correctly accessed
                 'tanggalAttendance' => $attendanceData['tanggalAttendance'],
                 'image' => $filename,
-                'id_perusahaan' => $this->session->userdata('user_perusahaan_id')
             ];
 
             $response = $this->user->insertAttendance($attendance);

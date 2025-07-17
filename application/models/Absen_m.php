@@ -383,7 +383,8 @@ class Absen_m extends CI_Model
                             'lokasiAttendance' => $data['lokasiAttendance'],
                             'date' => date("Y-m-d"), // Use current date for the record
                             'tipe' => $tipe,
-                            'image' => $data['image']
+                            'image' => $data['image'],
+                            'id_perusahaan' => $this->session->userdata('user_perusahaan_id')
                             // The 'image' field would come from the controller
                             // If you need to store the image filename here, ensure it's passed in $data
                             // Example: 'image' => $data['image'] ?? null
