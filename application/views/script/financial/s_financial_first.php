@@ -45,10 +45,22 @@
               text: 'Ambil Semua',
               className: 'btn btn-primary',
               action: function(e, dt, button, config) {
-                window.location = '<?= base_url('financial_first/ambil_semua_coa') ?>';
+                Swal.fire({
+                  title: 'Some title',
+                  text: "Some text",
+                }).then((result) => {
+                  if (result.value) {
+                    // form.submit();
+                    window.location = '<?= base_url('financial_first/ambil_semua_coa') ?>';
+                  }
+                });
               },
               init: function(api, node, config) {
                 $(node).removeClass('dt-button')
+              },
+              attr: {
+                // title: 'Copy',
+                id: 'btn-ambil-semua'
               }
             }]
           }

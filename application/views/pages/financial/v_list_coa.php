@@ -36,7 +36,8 @@
                   <th>BB</th>
                   <th>Sub BB</th>
                   <th>Nama Perkiraan</th>
-                  <th class="text-center">Nominal</th>
+                  <!-- <th class="text-center">Nominal</th> -->
+                  <th class="text-center">Saldo Awal</th>
                   <!-- <th class="text-center">Aksi</th> -->
                 </tr>
               </thead>
@@ -155,7 +156,8 @@
                 <th>BB</th>
                 <th>Sub BB</th>
                 <th>Nama Perkiraan</th>
-                <th class="text-center">Nominal</th>
+                <!-- <th class="text-center">Nominal</th> -->
+                <th class="text-center">Saldo Awal</th>
                 <th class="text-center">Aksi</th>
               </tr>
             </thead>
