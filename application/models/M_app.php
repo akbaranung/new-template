@@ -12,7 +12,7 @@ class M_app extends CI_Model
   }
   public function search_user_memo($keyword = '', $limit = 10, $offset = 0)
   {
-    $this->db->select('nip, nama');
+    $this->db->select('username, nama');
     $this->db->from('users');
 
     $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
@@ -20,7 +20,7 @@ class M_app extends CI_Model
       $this->db->like('nama', $keyword);
     }
     $this->db->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
-    $this->db->where('nip !=', $this->session->userdata('nip'));
+    $this->db->where('username !=', $this->session->userdata('username'));
     $this->db->limit($limit, $offset);
     $query = $this->db->get();
 
@@ -42,7 +42,7 @@ class M_app extends CI_Model
 
   public function memo_get($limit, $start, $nip, $keyword)
   {
-    $this->db->select('a.Id, a.nomor_memo, a.nip_kpd, a.judul, a.tanggal, a.read, a.nip_dari, b.nama')->from('memo a')->join('users b', 'a.nip_dari = b.nip', 'left')
+    $this->db->select('a.Id, a.nomor_memo, a.nip_kpd, a.judul, a.tanggal, a.read, a.nip_dari, b.nama')->from('memo a')->join('users b', 'a.nip_dari = b.username', 'left')
       ->group_start()
       ->like('nip_kpd', $nip, 'both')
       ->or_like('nip_cc', $nip, 'both')
@@ -56,7 +56,7 @@ class M_app extends CI_Model
 
   public function memo_get_detail($id)
   {
-    $nip = $this->session->userdata('nip');
+    $nip = $this->session->userdata('username');
     $result = $this->db->select('read')->from('memo')->where('Id', $id)->get()->row();
     $kalimat = $result->read;
 
@@ -69,9 +69,9 @@ class M_app extends CI_Model
       $this->db->update('memo', $data_update1);
     }
 
-    $nip = $this->session->userdata('nip');
+    $nip = $this->session->userdata('username');
 
-    $query = $this->db->select('a.*,b.nama_jabatan,b.nama,b.supervisi,c.kode_nama,b.level_jabatan')->from('memo a')->join('users b', 'b.nip = a.nip_dari', 'LEFT')->join('bagian c', 'b.bagian = c.kode', 'left')->where('a.Id', $id)->group_start()->like('a.nip_dari', $nip, 'both')->or_like('a.nip_kpd', $nip, 'both')->or_like('a.nip_cc', $nip, 'both')->group_end()->get();
+    $query = $this->db->select('a.*,b.nama_jabatan,b.nama,b.supervisi,c.kode_nama,b.level_jabatan')->from('memo a')->join('users b', 'b.username = a.nip_dari', 'LEFT')->join('bagian c', 'b.bagian = c.kode', 'left')->where('a.Id', $id)->group_start()->like('a.nip_dari', $nip, 'both')->or_like('a.nip_kpd', $nip, 'both')->or_like('a.nip_cc', $nip, 'both')->group_end()->get();
     return $query->row();
   }
 
@@ -89,7 +89,7 @@ class M_app extends CI_Model
 
   public function memo_get_outbox($limit, $start, $nip, $keyword)
   {
-    $this->db->select('a.Id, a.nomor_memo, a.nip_kpd, a.judul, a.tanggal, a.read, a.nip_dari, b.nama')->from('memo a')->join('users b', 'a.nip_dari = b.nip', 'left')
+    $this->db->select('a.Id, a.nomor_memo, a.nip_kpd, a.judul, a.tanggal, a.read, a.nip_dari, b.nama')->from('memo a')->join('users b', 'a.nip_dari = b.username', 'left')
       ->group_start()
       ->like('nip_dari', $nip, 'both')
       ->group_end();

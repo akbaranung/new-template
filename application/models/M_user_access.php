@@ -33,7 +33,7 @@ class M_user_access extends CI_Model
     {
 
         if (!$this->session->userdata('is_premium')) {
-            $this->db->where_in('premium', '0');
+            // $this->db->where_in('premium', '0');
             // $this->db->or_where('premium IS NULL', NULL, FALSE); // Checks for premium IS NULL
         }
         $this->db->order_by('sort_order', 'ASC'); // Order by sort_order
@@ -72,7 +72,7 @@ class M_user_access extends CI_Model
         // You might want to order them hierarchically or by sort_order
 
         if (!$this->session->userdata('is_premium')) {
-            $this->db->where_in('premium', '0');
+            // $this->db->where_in('premium', '0');
             // $this->db->or_where('premium IS NULL', NULL, FALSE); // Checks for premium IS NULL
         }
         return $this->db->order_by('sort_order', 'ASC')

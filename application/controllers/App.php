@@ -113,7 +113,7 @@ class App extends CI_Controller
 
       foreach ($this->input->post('tujuan[]') as $value) {
         $nip_kpd .= $value . ';';
-        $get_user[] = $this->db->get_where('users', ['nip' => $value])->row_array();
+        $get_user[] = $this->db->get_where('users', ['username' => $value])->row_array();
         $phone[] = $get_user[$j]['phone'];
         $j++;
       }
@@ -122,7 +122,7 @@ class App extends CI_Controller
         $ii = 0;
         foreach ($this->input->post('cc[]') as $value1) {
           $nip_cc .= $value1 . ';';
-          $get_user_cc[] = $this->db->get_where('users', ['nip' => $value1])->row_array();
+          $get_user_cc[] = $this->db->get_where('users', ['username' => $value1])->row_array();
           $phone_cc[] = $get_user_cc[$ii]['phone'];
           $ii++;
         }
@@ -170,7 +170,12 @@ class App extends CI_Controller
           $config['upload_path']   = './uploads/att_memo';
           $config['allowed_types'] = '*';
           $config['max_size']      = 2048;
-          $config['encrypt_name']  = TRUE;
+          // $config['encrypt_name']  = TRUE;
+
+          $file_extension = pathinfo($_FILES['attach']['name'][$i], PATHINFO_EXTENSION);
+          $custom_file_name = 'Kode_Cabang_' . $this->session->userdata('kode_cabang') . '_memo_attachment_' . time() . '_' . $i . '.' . $file_extension;
+          $config['file_name'] = $custom_file_name;
+          $config['encrypt_name']  = FALSE; // Set to FALSE to use your custom file_name
 
           $this->upload->initialize($config);
 
@@ -212,13 +217,14 @@ class App extends CI_Controller
             'nip_cc'    => $nip_cc,
             'judul'      => $judul,
             'isi_memo'    => $isi,
-            'nip_dari'    => $this->session->userdata('nip'),
+            'nip_dari'    => $this->session->userdata('username'),
             'tanggal'    => date('Y-m-d H:i:s'),
             'read'      => 0,
             'persetujuan'  => 0,
             'bagian'    => $this->session->userdata('kode_nama'),
             'attach'    => $attach,
-            'attach_name'  => $attach_name
+            'attach_name'  => $attach_name,
+            'id_perusahaan'  => $this->session->userdata('user_perusahaan_id')
           ];
 
           $this->db->insert('memo', $insert);
@@ -256,13 +262,15 @@ class App extends CI_Controller
           'nip_cc'    => $nip_cc,
           'judul'      => $judul,
           'isi_memo'    => $isi,
-          'nip_dari'    => $this->session->userdata('nip'),
+          'nip_dari'    => $this->session->userdata('username'),
           'tanggal'    => date('Y-m-d H:i:s'),
           'read'      => 0,
           'persetujuan'  => 0,
           'bagian'    => $this->session->userdata('kode_nama'),
           'attach'    => $attach,
-          'attach_name'  => $attach_name
+          'attach_name'  => $attach_name,
+          'id_perusahaan'  => $this->session->userdata('user_perusahaan_id')
+
         ];
 
         $this->db->insert('memo', $insert);
@@ -308,7 +316,7 @@ class App extends CI_Controller
 
     foreach ($users as $user) {
       $results[] = [
-        'id' => $user->nip,
+        'id' => $user->username,
         'text' => $user->nama
       ];
     }
@@ -330,7 +338,7 @@ class App extends CI_Controller
     $keyword = htmlspecialchars($this->input->get('search') ?? '', ENT_QUOTES, 'UTF-8');
     //pagination settings
     $config['base_url'] = site_url('app/inbox');
-    $config['total_rows'] = $this->M_app->memo_count($this->session->userdata('nip'), $keyword);
+    $config['total_rows'] = $this->M_app->memo_count($this->session->userdata('username'), $keyword);
     $config['per_page'] = "20";
     $config["uri_segment"] = 3;
     $config["num_links"] = 10;
@@ -364,7 +372,7 @@ class App extends CI_Controller
     // initialize pagination
     $this->pagination->initialize($config);
     $data['page'] = ($this->input->get('page')) ? (($this->input->get('page') - 1) * $config['per_page']) : 0;
-    $data['data_memo'] = $this->M_app->memo_get($config["per_page"], $data['page'], $this->session->userdata('nip'), $keyword);
+    $data['data_memo'] = $this->M_app->memo_get($config["per_page"], $data['page'], $this->session->userdata('username'), $keyword);
     $data['pagination'] = $this->pagination->create_links();
 
     $data['title'] = 'Inbox';
@@ -405,10 +413,10 @@ class App extends CI_Controller
       show_error('Forbidden Access: You do not have permission to view this page.', 403, '403 Forbidden');
     }
 
-    $user_dari = $this->db->select('nip, nama')->from('users')->where('nip', $data['memo']->nip_dari)->get()->row_array();
+    $user_dari = $this->db->select('username, nama')->from('users')->where('username', $data['memo']->nip_dari)->get()->row_array();
     $data['selected_item'] = [
       [
-        'id' => $user_dari['nip'],
+        'id' => $user_dari['username'],
         'text' => $user_dari['nama']
       ]
     ];
@@ -429,11 +437,11 @@ class App extends CI_Controller
       show_error('Forbidden Access: You do not have permission to view this page.', 403, '403 Forbidden');
     }
 
-    $user_dari = $this->db->select('nip, nama')->from('users')->where('nip', $data['memo']->nip_dari)->get()->row_array();
+    $user_dari = $this->db->select('username, nama')->from('users')->where('username', $data['memo']->nip_dari)->get()->row_array();
 
     $data['selected_item'] = [
       [
-        'id' => $user_dari['nip'],
+        'id' => $user_dari['username'],
         'text' => $user_dari['nama']
       ]
     ];
@@ -445,9 +453,9 @@ class App extends CI_Controller
 
       $data['selected_item_cc'] = [];
       foreach ($nip_cc as $uc) {
-        $user_cc[] = $this->db->select('nip,nama')->from('users')->where('nip', $uc)->get()->row_array();
+        $user_cc[] = $this->db->select('username,nama')->from('users')->where('username', $uc)->get()->row_array();
         $array_user[] = [
-          'id' => $user_cc[$i]['nip'],
+          'id' => $user_cc[$i]['username'],
           'text' => $user_cc[$i]['nama']
         ];
 
@@ -483,7 +491,7 @@ class App extends CI_Controller
     $keyword = htmlspecialchars($this->input->get('search') ?? '', ENT_QUOTES, 'UTF-8');
     //pagination settings
     $config['base_url'] = site_url('app/outbox');
-    $config['total_rows'] = $this->M_app->memo_count_outbox($this->session->userdata('nip'), $keyword);
+    $config['total_rows'] = $this->M_app->memo_count_outbox($this->session->userdata('username'), $keyword);
     $config['per_page'] = "20";
     $config["uri_segment"] = 3;
     $config["num_links"] = 10;
@@ -517,7 +525,7 @@ class App extends CI_Controller
     // initialize pagination
     $this->pagination->initialize($config);
     $data['page'] = ($this->input->get('page')) ? (($this->input->get('page') - 1) * $config['per_page']) : 0;
-    $data['data_memo'] = $this->M_app->memo_get_outbox($config["per_page"], $data['page'], $this->session->userdata('nip'), $keyword);
+    $data['data_memo'] = $this->M_app->memo_get_outbox($config["per_page"], $data['page'], $this->session->userdata('username'), $keyword);
     $data['pagination'] = $this->pagination->create_links();
 
     $data['title'] = 'Outbox';

@@ -300,7 +300,12 @@ class Task extends CI_Controller
           $config['upload_path']   = './uploads/task_comment';
           $config['allowed_types'] = '*';
           $config['max_size']      = 2048;
-          $config['encrypt_name']  = TRUE;
+          // $config['encrypt_name']  = TRUE;
+
+          $file_extension = pathinfo($_FILES['attach']['name'][$i], PATHINFO_EXTENSION);
+          $custom_file_name = 'Kode_Cabang_' . $this->session->userdata('kode_cabang') . '_Task_attachment_' . time() . '_' . $i . '.' . $file_extension;
+          $config['file_name'] = $custom_file_name;
+          $config['encrypt_name']  = FALSE; // Set to FALSE to use your custom file_name
 
           $this->upload->initialize($config);
 
@@ -484,7 +489,12 @@ class Task extends CI_Controller
           $config['upload_path']   = './uploads/task_comment';
           $config['allowed_types'] = '*';
           $config['max_size']      = 2048;
-          $config['encrypt_name']  = TRUE;
+          // $config['encrypt_name']  = TRUE;
+
+          $file_extension = pathinfo($_FILES['attach']['name'][$i], PATHINFO_EXTENSION);
+          $custom_file_name = 'Kode_Cabang_' . $this->session->userdata('kode_cabang') . '_memo_attachment_' . time() . '_' . $i . '.' . $file_extension;
+          $config['file_name'] = $custom_file_name;
+          $config['encrypt_name']  = FALSE; // Set to FALSE to use your custom file_name
 
           $this->upload->initialize($config);
 

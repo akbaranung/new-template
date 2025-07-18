@@ -66,7 +66,11 @@ class Pengajuan extends CI_Controller
       // Upload file
       $config['upload_path'] = './uploads/pengajuan';
       $config['allowed_types'] = 'jpg|jpeg|png|pdf';
-      $config['encrypt_name'] = TRUE;
+      // $config['encrypt_name'] = TRUE;
+      $file_extension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
+      $custom_file_name = 'Kode_Cabang_' . $this->session->userdata('kode_cabang') . '_Pengajuan_attachment_' . time() . '.' . $file_extension;
+      $config['file_name'] = $custom_file_name;
+      $config['encrypt_name']  = FALSE; // Set to FALSE to use your custom file_name
 
       $this->upload->initialize($config);
 
@@ -294,8 +298,11 @@ class Pengajuan extends CI_Controller
         // Upload File
         $config['upload_path'] = './uploads/pengajuan';
         $config['allowed_types'] = 'jpg|jpeg|png|pdf';
-        $config['encrypt_name'] = TRUE;
-
+        // $config['encrypt_name'] = TRUE;
+        $file_extension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
+        $custom_file_name = 'Kode_Cabang_' . $this->session->userdata('kode_cabang') . '_memo_attachment_' . time()  . '.' . $file_extension;
+        $config['file_name'] = $custom_file_name;
+        $config['encrypt_name']  = FALSE; // Set to FALSE to use your custom file_name
         $this->upload->initialize($config);
 
         // Jika upload error atau gagal
@@ -666,7 +673,12 @@ class Pengajuan extends CI_Controller
     } else {
       $config['upload_path']          = './uploads/pengajuan';
       $config['allowed_types']        = 'jpg|jpeg|png|pdf';
-      $config['encrypt_name']         = TRUE;
+      // $config['encrypt_name']         = TRUE;
+
+      $file_extension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
+      $custom_file_name = 'Kode_Cabang_' . $this->session->userdata('kode_cabang') . '_memo_attachment_' . time()  . '.' . $file_extension;
+      $config['file_name'] = $custom_file_name;
+      $config['encrypt_name']  = FALSE; // Set to FALSE to use your custom file_name
 
       $this->upload->initialize($config);
       if (!$this->upload->do_upload('file')) {
