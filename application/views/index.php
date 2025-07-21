@@ -78,7 +78,7 @@
 
       $i = $total_user;
 
-      if ($total_user < 4 || $cek_coa_cabang != 0) {
+      if ($total_user < 4 || $cek_coa_cabang == 0) {
         $this->load->view('layouts/tutorial.php');
       }
       ?>

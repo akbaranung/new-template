@@ -583,7 +583,7 @@
                             $selected = "";
                           }
                         ?>
-                          <option <?= $selected ?> value="<?= $data->nip ?>"><?= $data->nama_jabatan ?></option>
+                          <option <?= $selected ?> value="<?= $data->nip ?>"><?= $data->nama_jabatan ?> - <?= $data->nama ?></option>
                         <?php } ?>
                       </select>
                     </div>
