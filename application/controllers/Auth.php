@@ -391,6 +391,10 @@ class Auth extends CI_Controller
         'nama_bank'         => $this->input->post('nama_bank'),
         'alamat_perusahaan' => $this->input->post('alamat_perusahaan'),
         'nama_akronim'      => $this->input->post('nama_akronim'),
+        'nama_coa_ppn_keluaran'       => 'PPN KELUARAN',
+        'nomor_coa_ppn_keluaran'       => '23011',
+        'nama_coa_utang_pph23'       => 'UTANG PPH 23',
+        'nomor_coa_utang_pph23'       => '23014',
       );
 
 
@@ -494,10 +498,6 @@ class Auth extends CI_Controller
 
           $user_data = array(
             'id_cabang' => $branch_inserted_id,
-            'nama_coa_ppn_keluaran'       => 'PPN KELUARAN',
-            'nomor_coa_ppn_keluaran'       => '23011',
-            'nama_coa_utang_pph23'       => 'UTANG PPH 23',
-            'nomor_coa_utang_pph23'       => '23014',
           );
           // Assuming 'users' table is in the default database
           $this->db->where('nip', $this->session->userdata('nip')); // Assuming 'id' is the primary key for users table
