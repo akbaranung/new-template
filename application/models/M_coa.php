@@ -162,26 +162,41 @@ class M_coa extends CI_Model
         return $this->cb->select('max(no_urut) as max')->where('jenis', $jenis)->get('t_log_neraca')->row_array();
     }
 
-    public function count($keyword, $tabel)
+    public function count($keyword, $cabang, $tabel)
     {
-        $this->apply_cabang_filter();
+        // $this->apply_cabang_filter();
         if ($keyword) {
             $this->cb->like('no_sbb', $keyword);
             $this->cb->or_like('no_bb', $keyword);
             $this->cb->or_like('nama_perkiraan', $keyword);
         }
-        return $this->cb->from($tabel)->count_all_results();
+        // return $this->cb->from($tabel)->count_all_results();
+        return $this->cb->from($tabel)->where('id_cabang', $cabang)->count_all_results();
     }
 
-    public function list_coa_paginate($limit, $from, $keyword)
+    public function list_coa_paginate($limit, $from, $keyword, $cabang)
     {
-        $this->apply_cabang_filter();
+        // $this->cb;
+        // $this->apply_cabang_filter();
+
+        // $this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
         if ($keyword) {
             $this->cb->like('no_sbb', $keyword);
             $this->cb->or_like('no_bb', $keyword);
             $this->cb->or_like('nama_perkiraan', $keyword);
         }
-        $laporan = $this->cb->order_by(
+        // return $this->cb->order_by(
+        //     'no_sbb',
+        //     'ASC'
+        // )->limit($limit, $from)->get('v_coa_all')->result_array();
+
+        // $laporan = $this->apply_cabang_filter()->order_by(
+        //     'no_sbb',
+        //     'ASC'
+        // )->limit($limit, $from)->get('v_coa_all')->result_array();
+
+
+        $laporan = $this->cb->where('id_cabang', $cabang)->order_by(
             'no_sbb',
             'ASC'
         )->limit($limit, $from)->get('v_coa_all')->result_array();
@@ -345,7 +360,7 @@ class M_coa extends CI_Model
 
     public function list_coa_paginate_financial_first($limit, $from, $keyword)
     {
-        // $this->apply_cabang_filter();
+        $this->apply_cabang_filter();
         if ($keyword) {
             $this->cb->like('no_sbb', $keyword);
             $this->cb->or_like('no_bb', $keyword);

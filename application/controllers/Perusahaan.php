@@ -64,12 +64,27 @@ class Perusahaan extends CI_Controller
 
 
     // $max_users_for_100_percent = 5; // Define your maximum limit
-    // Calculate the percentage
+
+    // $this->cb->from('v_coa_all');
+    // $this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
+    // $cek_coa_cabang = $this->cb->get()->num_rows();
+
+    $this->cb->from('v_coa_all');
+    $this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
+    // Add the OR conditions
+    $this->cb->group_start(); // Start a WHERE group for the OR conditions
+    // $this->cb->where('no_sbb', '23014');
+    // $this->cb->or_where('no_sbb', '23011');
+    $this->cb->where_not_in('no_sbb', ['23014', '23011']);
+    $this->cb->group_end(); // End the WHERE group
+    $cek_coa_cabang = $this->cb->get()->num_rows();
+
     $percentage = ($total_user / $max_users_for_100_percent) * 100;
     $nip = $this->session->userdata('nip');
     $data['user_counts'] = $this->M_perusahaans->get_user_counts_by_role();
     $data['total_user'] = $total_user;
     $data['percentage'] = $percentage;
+    $data['cek_coa_cabang'] = $cek_coa_cabang;
     $data['max_users_for_100_percent'] = $max_users_for_100_percent;
     $data['title'] = 'User';
     $data['utility'] = $this->db->get('utility')->row_array();

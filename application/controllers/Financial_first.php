@@ -18,12 +18,22 @@ class Financial_first extends CI_Controller
       redirect('home');
     }
 
+    // $this->cb->from('v_coa_all');
+    // $this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
+    // $cek_coa_cabang = $this->cb->get()->num_rows();
+
     $this->cb->from('v_coa_all');
     $this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
+    // Add the OR conditions
+    $this->cb->group_start(); // Start a WHERE group for the OR conditions
+    // $this->cb->where('no_sbb', '23014');
+    // $this->cb->or_where('no_sbb', '23011');
+    $this->cb->where_not_in('no_sbb', ['23014', '23011']);
+    $this->cb->group_end(); // End the WHERE group
     $cek_coa_cabang = $this->cb->get()->num_rows();
 
     if ($cek_coa_cabang != 0) {
-      redirect('home');
+      redirect('financial/list_coa');
     }
 
     date_default_timezone_set('Asia/Jakarta');

@@ -17,6 +17,16 @@
             <div class="col-md-12 col-xs-12 form-group pull-right top_search">
               <form class="form-horizontal form-label-left" method="post" action="<?= base_url('financial/list_coa') ?>">
                 <div class="input-group">
+                  <select class="form-control" name="cabang_select" id="cabang_select">
+                    <!-- <option value="1">Tes</option> -->
+                    <?php
+                    foreach ($cabang as $c) {
+                    ?>
+                      <option <?= $cabang_now == $c->uid ? 'selected' : '' ?> value="<?= $c->uid ?>">Cabang : <?= $c->nama_cabang ?></option>
+                    <?php
+                    }
+                    ?>
+                  </select>
                   <input type="text" class="form-control" name="keyword" placeholder="Search for..." value="<?= $keyword ?>">
                   <span class="input-group-btn">
                     <button class="btn btn-secondary" type="submit">Go!</button>

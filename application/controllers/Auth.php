@@ -252,9 +252,13 @@ class Auth extends CI_Controller
         $data_access = array(
           'user_id'       => $this->input->post('nip'),
           'menu_id'       => $id_string,
-
         );
         $this->M_login->register_user_access($data_access);
+
+        // $data_coa = array();
+        // $this->M_login->register_coa($data_coa);
+
+
         //Send notif wa
         $msg = "Kode verifikasi Akun Bariskode Anda adalah *$token*, Gunakan Token Saat Login untuk pertama kali. Jangan bagikan kode ini kepada siapa pun.";
         if ($this->api_whatsapp->wa_notif($msg, $this->input->post('phone'))) {
@@ -489,7 +493,11 @@ class Auth extends CI_Controller
         } else {
 
           $user_data = array(
-            'id_cabang' => $branch_inserted_id
+            'id_cabang' => $branch_inserted_id,
+            'nama_coa_ppn_keluaran'       => 'PPN KELUARAN',
+            'nomor_coa_ppn_keluaran'       => '23011',
+            'nama_coa_utang_pph23'       => 'UTANG PPH 23',
+            'nomor_coa_utang_pph23'       => '23014',
           );
           // Assuming 'users' table is in the default database
           $this->db->where('nip', $this->session->userdata('nip')); // Assuming 'id' is the primary key for users table
@@ -507,6 +515,41 @@ class Auth extends CI_Controller
           );
           $this->db->insert('bagian', $data_bagian);
 
+          // if ($substr_coa == "1" || $substr_coa == "5" || $substr_coa == "6" || $substr_coa == "7" || $substr_coa == "5" || $substr_coa == "6") {
+          //   $posisi = 'AKTIVA';
+          // } else {
+          //   $posisi = 'PASIVA';
+          // }
+
+          // // cek tabel
+          // if ($substr_coa == "1" || $substr_coa == "2" || $substr_coa == "3") {
+          //   $tabel = "t_coa_sbb";
+          // } else if ($substr_coa == "4" || $substr_coa == "5" || $substr_coa == "6" || $substr_coa == "7" || $substr_coa == "8" || $substr_coa == "9") {
+          //   $tabel = "t_coalr_sbb";
+          // }
+
+          $data_bagian1 = array(
+            'no_bb' => '23011',
+            'no_sbb' => '23011',
+            'nama_perkiraan' => 'PPN KELUARAN',
+            'posisi' => 'PASIVA',
+            'nominal' => '0',
+            'id_cabang' => $branch_inserted_id,
+          );
+
+          $this->cb->insert('t_coa_sbb', $data_bagian1);
+
+
+          $data_bagian2 = array(
+            'no_bb' => '23014',
+            'no_sbb' => '23014',
+            'nama_perkiraan' => 'UTANG PPH 23',
+            'posisi' => 'PASIVA',
+            'nominal' => '0',
+            'id_cabang' => $branch_inserted_id,
+          );
+
+          $this->cb->insert('t_coa_sbb', $data_bagian2);
 
           // if ($this->M_login->register_perusahaan($company_data)) {
 

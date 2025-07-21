@@ -46,8 +46,8 @@
               className: 'btn btn-primary',
               action: function(e, dt, button, config) {
                 Swal.fire({
-                  title: 'Some title',
-                  text: "Some text",
+                  title: 'Mohon Tunggu',
+                  text: "Proses...",
                 }).then((result) => {
                   if (result.value) {
                     // form.submit();

@@ -90,7 +90,7 @@
       <?php endif; ?>
       <!-- <h1 class="page-title">User List</h1> -->
       <?php
-      if ($total_user < 4) {
+      if ($total_user < 4 || $cek_coa_cabang == 0) {
       ?>
         <?php
         $user_counts = isset($user_counts) ? $user_counts : [];
@@ -118,10 +118,15 @@
                 $active_p = 1;
             ?>
                 <p class="card-title mb-0"><strong>Ayo buat Akun <?= $label ?> (<?= $total_user . '/' . $max_users_for_100_percent ?>)</strong></p>
-            <?php
+              <?php
               }
             }
-            ?>
+
+            if ($max_users_for_100_percent == $total_user && $cek_coa_cabang == 0) { ?>
+              <p class="card-title mb-0"><strong>Ayo buat COA Sekarang</strong></p>
+
+            <?php
+            } ?>
           </div>
           <div class="card-body">
             <div class="container">
@@ -163,11 +168,47 @@
                         <div class="triangle-right-secondary"></div>
                       </div>
                     </a>
-                <?php
+                  <?php
                   }
                   $i++;
                 }
+
+                if ($max_users_for_100_percent < $total_user) {
+                  ?>
+                  <a href="#">
+                    <div class="circle" data-label="COA">
+                      <div class="triangle-right-secondary"></div>
+                    </div>
+                  </a>
+                  <?php
+                } else if ($max_users_for_100_percent == $total_user) {
+                  $button_now = base_url('financial_first/force_make_coa_sbb');
+                  // $label = "COA"
+                  if ($cek_coa_cabang == 0) {
+                  ?>
+                    <a href="<?= $button_now ?>">
+                      <div class="circle-current" data-label="Setting COA Dan SAWAL">
+                        <div class="triangle-right-primary"></div>
+                      </div>
+                    </a>
+                  <?php
+                  } else {
+                  ?>
+                    <a href="<?= $button_now ?>">
+                      <div class="circle-success active" data-label="Setting COA Dan SAWAL">
+                        <div class="triangle-right-success"></div>
+                      </div>
+                    </a>
+                <?php
+                  }
+                }
+
                 ?>
+                <!-- <a href="#">
+                  <div class="circle" data-label="Setting SAWAL">
+                    <div class="triangle-right-secondary"></div>
+                  </div>
+                </a> -->
                 <!-- <div class="circle active" data-label="User">1</div>
               <div class="circle" data-label="Perusahaan">2</div>
               <div class="circle" data-label="Cabang">3</div> -->

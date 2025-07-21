@@ -18,8 +18,18 @@ class Financial extends CI_Controller
       redirect('home');
     }
 
+    // $this->cb->from('v_coa_all');
+    // $this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
+    // $cek_coa_cabang = $this->cb->get()->num_rows();
+
     $this->cb->from('v_coa_all');
     $this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
+    // Add the OR conditions
+    $this->cb->group_start(); // Start a WHERE group for the OR conditions
+    // $this->cb->where('no_sbb', '23014');
+    // $this->cb->or_where('no_sbb', '23011');
+    $this->cb->where_not_in('no_sbb', ['23014', '23011']);
+    $this->cb->group_end(); // End the WHERE group
     $cek_coa_cabang = $this->cb->get()->num_rows();
 
     if ($cek_coa_cabang == 0) {
@@ -1886,9 +1896,13 @@ class Financial extends CI_Controller
     if ($keyword === null) $keyword = $this->session->userdata('search');
     else $this->session->set_userdata('search', $keyword);
 
+    $cabang = $this->input->post('cabang_select') ? $this->input->post('cabang_select') : '';
+    if ($cabang === null || $cabang === '') $cabang = $this->session->userdata('kode_cabang');
+    // else $this->session->set_userdata('kode_cabang', $cabang);
+
     $config = [
       'base_url' => site_url('financial/list_coa'),
-      'total_rows' => $this->M_coa->count($keyword, 'v_coa_all'),
+      'total_rows' => $this->M_coa->count($keyword, $cabang, 'v_coa_all'),
       'per_page' => 25,
       'uri_segment' => 3,
       'num_links' => 10,
@@ -1924,7 +1938,7 @@ class Financial extends CI_Controller
     // $page = $this->uri->segment(3) ? ($this->uri->segment(3) - 1) * $config['per_page'] : 0;
     $page = ($this->input->get('page')) ? (($this->input->get('page') - 1) * $config['per_page']) : 0;
     // $invoices = $this->m_invoice->list_invoice($config["per_page"], $page, $keyword);
-    $coa = $this->M_coa->list_coa_paginate($config["per_page"], $page, $keyword);
+    $coa = $this->M_coa->list_coa_paginate($config["per_page"], $page, $keyword, $cabang);
 
     $nip = $this->session->userdata('nip');
     $sql = "SELECT COUNT(Id) FROM memo WHERE (nip_kpd LIKE '%$nip%' OR nip_cc LIKE '%$nip%') AND (`read` NOT LIKE '%$nip%');";
@@ -1935,9 +1949,15 @@ class Financial extends CI_Controller
     $query2 = $this->db->query($sql2);
     $result2 = $query2->row_array()['COUNT(id)'];
 
+    $this->cb->from('t_cabang');
+    $this->cb->where('id_perusahaan', $this->session->userdata('user_perusahaan_id'));
+    $cabangs = $this->cb->get()->result();
+
     $data = [
       'page' => $page,
       'coa' => $coa,
+      'cabang_now' => $cabang,
+      'cabang' => $cabangs,
       'count_inbox' => $result,
       'count_inbox2' => $result2,
       'keyword' => $keyword,

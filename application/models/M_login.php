@@ -84,4 +84,9 @@ class M_login extends CI_Model
 
     return $query->row();
   }
+
+  public function register_coa($data)
+  {
+    return $this->db->insert('t_coa_sbb', $data);
+  }
 }
