@@ -667,7 +667,8 @@ class Financial extends CI_Controller
       $data['sum_pasiva'] = $sum_pasiva;
       $data['neraca'] = $sum_pasiva - $total_activa;
     } else {
-      $this->session->set_flashdata('message_error', 'Closing bulan ' . format_indo($periode) . ' tidak ditemukan');
+      // $this->session->set_flashdata('message_error', 'Closing bulan ' . format_indo($periode) . ' tidak ditemukan');
+      $this->session->set_flashdata('message_error', 'Saldo Awal bulan ' . format_indo($periode) . ' belum terbentuk');
     }
     $data['title'] = 'Neraca per tanggal ' . format_indo($tanggal);
     $data['pages'] = 'pages/financial/v_neraca_bb_by_date';
@@ -2574,5 +2575,40 @@ class Financial extends CI_Controller
       }
     }
     redirect($_SERVER['HTTP_REFERER']);
+  }
+
+  public function ajax_edit_coa($no_sbb, $id_cabang)
+  {
+    $this->cb->select('*');
+    $this->cb->from('v_coa_all');
+    $this->cb->where('no_sbb', $no_sbb);
+    $this->cb->where('id_cabang', $id_cabang);
+    $get_coa = $this->cb->get()->row();
+
+    $this->cb->select('*');
+    $this->cb->from($get_coa->table_source);
+    $this->cb->where('no_sbb', $no_sbb);
+    $this->cb->where('id_cabang', $id_cabang);
+    $data = $this->cb->get()->row();
+    $response = [
+      'coa_data' => $get_coa, // This will contain the COA object/array
+      'data' => $data // This will contain the COA object/array
+    ];
+    echo json_encode($response);
+  }
+
+  public function update_coa_entry()
+  {
+
+    $tabel = $this->input->post('table_coa');
+
+    $data_update = [
+      'nama_perkiraan'           => $this->input->post('nama_perkiraan'),
+      'nominal'           => $this->input->post('nominal'),
+    ];
+
+    $this->cb->update($tabel, $data_update, array('id' => $this->input->post('id_coa')));
+
+    redirect('financial/list_coa');
   }
 }

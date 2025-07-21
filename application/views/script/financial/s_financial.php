@@ -917,4 +917,40 @@
     });
 
   });
+
+  function onEdit(no_sbb, id_cabang) {
+    $('#updateCoaForm')[0].reset(); // reset form on modals
+    // $('.form-group').removeClass('has-error'); // clear error class
+    // $('.help-block').empty(); // clear error string
+    // $('.modal-title').text('Edit Poster');
+
+    $.ajax({
+      url: "<?php echo site_url('financial/ajax_edit_coa') ?>/" + no_sbb + "/" + id_cabang,
+      type: "POST",
+      dataType: "JSON",
+      success: function(response) {
+        var coaEntry = response.coa_data;
+        var data = response.data;
+
+        console.log(response);
+
+        JSON.stringify(data.id);
+        // alert(JSON.stringify(data));
+
+        $('#update_table_coa').val(coaEntry.table_source)
+        $('#update_id_coa').val(data.id);
+        $('#update_no_bb').val(data.no_bb);
+        $('#update_no_sbb').val(data.no_sbb);
+        $('#update_nama_perkiraan').val(data.nama_perkiraan);
+        $('#update_nominal').val(data.nominal);
+
+
+        $('#updateCoaModal').modal('show'); // show bootstrap modal when complete loaded
+
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert('Error get data from ajax');
+      }
+    });
+  }
 </script>
