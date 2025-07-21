@@ -151,34 +151,32 @@
             $i++;
           }
 
-          if ($cek_coa_cabang == 0) {
+          if ($max_users_for_100_percent >= $total_user && $cek_coa_cabang == 0) {
+            $button_now = base_url('financial_first/force_make_coa_sbb');
+            // $label = "COA"
             ?>
+            <a href="<?= $button_now ?>">
+              <div class="circle-current" data-label="Setting COA Dan SAWAL">
+                <div class="triangle-right-primary"></div>
+              </div>
+            </a>
+          <?php
+          } else if ($cek_coa_cabang == 0) {
+          ?>
             <a href="#">
               <div class="circle" data-label="Setting COA dan SAWAL">
                 <div class="triangle-right-secondary"></div>
               </div>
             </a>
-            <?php
-          } else if ($max_users_for_100_percent == $total_user && $cek_coa_cabang == 0) {
-            $button_now = base_url('financial_first/force_make_coa_sbb');
-            // $label = "COA"
-            if ($cek_coa_cabang == 0) {
-            ?>
-              <a href="<?= $button_now ?>">
-                <div class="circle-current" data-label="Setting COA Dan SAWAL">
-                  <div class="triangle-right-primary"></div>
-                </div>
-              </a>
-            <?php
-            } else {
-            ?>
-              <a href="#">
-                <div class="circle-success active" data-label="Setting COA Dan SAWAL">
-                  <div class="triangle-right-success"></div>
-                </div>
-              </a>
           <?php
-            }
+          } else {
+          ?>
+            <a href="#">
+              <div class="circle-success active" data-label="Setting COA Dan SAWAL">
+                <div class="triangle-right-success"></div>
+              </div>
+            </a>
+          <?php
           }
 
           ?>
