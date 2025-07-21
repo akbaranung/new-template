@@ -49,6 +49,39 @@
     <?php $this->load->view('layouts/sidebar.php') ?>
     <!-- Main Content -->
     <main role="main" class="main-content">
+      <?php
+
+      $this->db->from('users');
+      $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
+      $this->db->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
+      $this->db->where('nama_jabatan !=', 'Super Admin');
+      $total_user = $this->db->get()->num_rows(); // Get the number of rows
+
+      $max_users_for_100_percent = 4; // Define your maximum limit
+
+
+      // $max_users_for_100_percent = 5; // Define your maximum limit
+
+      // $this->cb->from('v_coa_all');
+      // $this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
+      // $cek_coa_cabang = $this->cb->get()->num_rows();
+
+      $this->cb->from('v_coa_all');
+      $this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
+      // Add the OR conditions
+      $this->cb->group_start(); // Start a WHERE group for the OR conditions
+      // $this->cb->where('no_sbb', '23014');
+      // $this->cb->or_where('no_sbb', '23011');
+      $this->cb->where_not_in('no_sbb', ['23014', '23011']);
+      $this->cb->group_end(); // End the WHERE group
+      $cek_coa_cabang = $this->cb->get()->num_rows();
+
+      $i = $total_user;
+
+      if ($total_user < 4 || $cek_coa_cabang != 0) {
+        $this->load->view('layouts/tutorial.php');
+      }
+      ?>
       <?php if (isset($pages)) $this->load->view($pages); ?>
     </main> <!-- main -->
   </div> <!-- .wrapper -->
@@ -92,7 +125,40 @@
   <script src="<?= base_url('assets') ?>/js/cleave.min.js"></script>
   <!-- DataTables -->
   <script src="<?= base_url('assets') ?>/dataTables/js/datatables.min.js"></script>
+  <script>
+    const progress = document.getElementById("progress");
+    const circles = document.querySelectorAll(".circle");
 
+    let currentActive = <?= ($i) ? $i : 1 ?>;
+
+    next.addEventListener("click", () => {
+      currentActive++;
+      if (currentActive > circles.length) currentActive = circles.length;
+      update();
+    });
+
+    prev.addEventListener("click", () => {
+      currentActive--;
+      if (currentActive < 1) currentActive = 1;
+      update();
+    });
+
+    const update = () => {
+      circles.forEach((circle, index) => {
+        if (index < currentActive) circle.classList.add("active");
+        else circle.classList.remove("active");
+      });
+      const actives = document.querySelectorAll(".active");
+      progress.style.width =
+        ((actives.length - 1) / (circles.length - 1)) * 100 + "%";
+      if (currentActive === 1) prev.disabled = true;
+      else if (currentActive === circles.length) next.disabled = true;
+      else {
+        prev.disabled = false;
+        next.disabled = false;
+      }
+    };
+  </script>
   <script>
     $('.select2').select2({
       theme: 'bootstrap4',

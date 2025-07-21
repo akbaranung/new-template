@@ -1,4 +1,4 @@
-<script>
+<!-- <script>
     const progress = document.getElementById("progress");
     const circles = document.querySelectorAll(".circle");
 
@@ -31,7 +31,7 @@
             next.disabled = false;
         }
     };
-</script>
+</script> -->
 <script>
     $(document).ready(function() {
         $('#user-table').dataTable({

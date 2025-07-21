@@ -4,6 +4,7 @@
     /* Adjust this value (e.g., 5px, 10px, 0.5em) as needed */
   }
 </style>
+
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
