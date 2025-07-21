@@ -30,6 +30,7 @@ class M_app extends CI_Model
   public function memo_count($nip, $keyword)
   {
     $this->db->select('Id')->from('memo')
+      ->where('id_perusahaan', $this->session->userdata('user_perusahaan_id'))
       ->group_start()
       ->like('nip_kpd', $nip, 'both')
       ->or_like('nip_cc', $nip, 'both')
@@ -43,6 +44,7 @@ class M_app extends CI_Model
   public function memo_get($limit, $start, $nip, $keyword)
   {
     $this->db->select('a.Id, a.nomor_memo, a.nip_kpd, a.judul, a.tanggal, a.read, a.nip_dari, b.nama')->from('memo a')->join('users b', 'a.nip_dari = b.username', 'left')
+      ->where('id_perusahaan', $this->session->userdata('user_perusahaan_id'))
       ->group_start()
       ->like('nip_kpd', $nip, 'both')
       ->or_like('nip_cc', $nip, 'both')
@@ -78,6 +80,7 @@ class M_app extends CI_Model
   public function memo_count_outbox($nip, $keyword)
   {
     $this->db->select('Id')->from('memo')
+      ->where('id_perusahaan', $this->session->userdata('user_perusahaan_id'))
       ->group_start()
       ->like('nip_dari', $nip, 'both')
       ->group_end();
@@ -89,13 +92,17 @@ class M_app extends CI_Model
 
   public function memo_get_outbox($limit, $start, $nip, $keyword)
   {
-    $this->db->select('a.Id, a.nomor_memo, a.nip_kpd, a.judul, a.tanggal, a.read, a.nip_dari, b.nama')->from('memo a')->join('users b', 'a.nip_dari = b.username', 'left')
+    $this->db->select('a.Id, a.nomor_memo, a.nip_kpd, a.judul, a.tanggal, a.read, a.nip_dari, b.nama, a.id_perusahaan')->from('memo a')->join('users b', 'a.nip_dari = b.username', 'left')
+      // ->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang')
+      ->where('id_perusahaan', $this->session->userdata('user_perusahaan_id'))
       ->group_start()
       ->like('nip_dari', $nip, 'both')
       ->group_end();
     if ($keyword) {
       $this->db->like('judul', $keyword, 'both');
     }
+    // ->like('id_perusahaan', $this->session->userdata('user_perusahaan_id'), 'both')
+
     $this->db->order_by('a.tanggal', 'DESC');
     return $this->db->limit($limit, $start)->get()->result();
   }
