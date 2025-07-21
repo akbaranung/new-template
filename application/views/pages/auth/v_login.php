@@ -205,9 +205,9 @@
             passwordInput.focus();
             // loginForm.setAttribute('action', response.ns_address + '/login');
             // loginForm.setAttribute('action', 'https://admin.kodesis.id/login/login_form');
-            // loginForm.setAttribute('action', 'https://' + response.ns_address + '/auth/login');
+            loginForm.setAttribute('action', 'https://' + response.ns_address + '/auth/login');
             // loginForm.setAttribute('action', url + '/auth/login');
-            loginForm.setAttribute('action', 'http://localhost/new-template/auth/login');
+            // loginForm.setAttribute('action', 'http://localhost/new-template/auth/login');
 
           }
           // });
