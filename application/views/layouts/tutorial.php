@@ -151,15 +151,15 @@
             $i++;
           }
 
-          if ($max_users_for_100_percent < $total_user) {
+          if ($cek_coa_cabang == 0) {
             ?>
             <a href="#">
-              <div class="circle" data-label="COA">
+              <div class="circle" data-label="Setting COA dan SAWAL">
                 <div class="triangle-right-secondary"></div>
               </div>
             </a>
             <?php
-          } else if ($max_users_for_100_percent == $total_user) {
+          } else if ($max_users_for_100_percent == $total_user && $cek_coa_cabang == 0) {
             $button_now = base_url('financial_first/force_make_coa_sbb');
             // $label = "COA"
             if ($cek_coa_cabang == 0) {
