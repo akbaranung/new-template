@@ -524,6 +524,31 @@ class Perusahaan extends CI_Controller
       "alamat_cabang" => $this->input->post('alamat_cabang'),
     ];
     $this->cb->insert('t_cabang', $add);
+    $inserted_id = $this->cb->insert_id();
+
+    $data_bagian1 = array(
+      'no_bb' => '23011',
+      'no_sbb' => '23011',
+      'nama_perkiraan' => 'PPN KELUARAN',
+      'posisi' => 'PASIVA',
+      'nominal' => '0',
+      'id_cabang' => $inserted_id,
+    );
+
+    $this->cb->insert('t_coa_sbb', $data_bagian1);
+
+
+    $data_bagian2 = array(
+      'no_bb' => '23014',
+      'no_sbb' => '23014',
+      'nama_perkiraan' => 'UTANG PPH 23',
+      'posisi' => 'PASIVA',
+      'nominal' => '0',
+      'id_cabang' => $inserted_id,
+    );
+
+    $this->cb->insert('t_coa_sbb', $data_bagian2);
+
     $this->session->set_flashdata('swal_message', [
       'icon' => 'success', // or 'success', 'warning', 'info', 'question'
       'title' => 'Berhasil!',

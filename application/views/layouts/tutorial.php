@@ -151,7 +151,7 @@
             $i++;
           }
 
-          if ($max_users_for_100_percent >= $total_user && $cek_coa_cabang == 0) {
+          if ($total_user >= $max_users_for_100_percent && $cek_coa_cabang == 0) {
             $button_now = base_url('financial_first/force_make_coa_sbb');
             // $label = "COA"
             ?>

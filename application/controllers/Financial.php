@@ -2039,7 +2039,91 @@ class Financial extends CI_Controller
       if ($query) {
         $this->cb->trans_commit();
         $this->session->set_flashdata('message_name', 'CoA ' . $no_sbb . ' berhasil ditambahkan.');
-        redirect($_SERVER['HTTP_REFERER']);
+        // redirect($_SERVER['HTTP_REFERER']);
+        // $periode = $this->input->post('periode');
+
+        // $periode = 
+        if ($saldo_awal != 0) {
+          // $periode = date('F', strtotime('last month'));
+          // $periode = date('Y-m', strtotime('last month'));
+          $periode = date('Y-m');
+
+          $cek = $this->M_coa->cek_saldo_awal($periode);
+
+          $date = new DateTime($periode);
+
+          $bulan = $date->format('m');
+          $tahun = $date->format('Y');
+
+          $last_periode = new DateTime($periode);
+          // $last_periode = $last_periode->modify('-1 month');
+          $last_periode = $last_periode->format('Y-m');
+
+          // echo "last Periode : " . $last_periode;
+
+          $getLastPeriod = $this->M_coa->cek_saldo_awal($last_periode);
+          // $getLastPeriod = $this->M_coa->cek_saldo_awal($periode);
+
+          // var_dump($getLastPeriod);
+
+          if (empty($getLastPeriod)) {
+            $saldo_awal_map[$no_sbb] = (object) [
+              'no_sbb' => $no_sbb,
+              'saldo_awal' => (float) $saldo_awal,
+              'posisi' => $posisi,
+              'table_source' => $tabel,
+            ];
+
+            $updated_saldo_awal = array_values($saldo_awal_map);
+
+            // echo "IF";
+            // var_dump($updated_saldo_awal);
+          } else {
+            $coaLastPeriod = json_decode($getLastPeriod['coa']);
+            // $saldo_bulan_ini = $this->M_coa->calculate_saldo_awal($bulan, $tahun);
+
+            $saldo_awal_map = [];
+            foreach ($coaLastPeriod as $saldo_awals) {
+              $saldo_awal_map[$saldo_awals->no_sbb] = $saldo_awals;
+            }
+
+            $saldo_awal_map[$no_sbb] = (object) [
+              'no_sbb' => $no_sbb,
+              'saldo_awal' => (float) $saldo_awal,
+              'posisi' => $posisi,
+              'table_source' => $tabel,
+            ];
+
+            $updated_saldo_awal = array_values($saldo_awal_map);
+
+            // echo "ELSE";
+            // var_dump($updated_saldo_awal);
+          }
+          // echo "Saldo Awal";
+          // var_dump($updated_saldo_awal);
+
+          $nextMonth = ($date->modify('+1 month'));
+          $nextMonth = $date->format('Y-m');
+
+          $data = [
+            'periode' => $periode,
+            'created_by' => $this->session->userdata('nip'),
+            'created_at' => date('Y-m-d H:i:s'),
+            'slug' => 'saldo-awal-' . $nextMonth,
+            'coa' => json_encode($updated_saldo_awal),
+            'keterangan' => 'Saldo awal ' . format_indo($nextMonth),
+            'id_cabang' => $this->session->userdata('kode_cabang')
+          ];
+
+          if (!$cek) {
+            $this->M_coa->insert_saldo_awal($data);
+            $this->session->set_flashdata('message_name', 'Closing bulan ' . format_indo($periode) . 'Saldo awal periode ' . format_indo($nextMonth) . ' berhasil ditetapkan');
+          } else {
+            $this->M_coa->update_saldo_awal($periode, $data);
+            $this->session->set_flashdata('message_name', 'Closing bulan ' . format_indo($periode) . ' sudah diperbarui');
+          }
+          redirect($_SERVER['HTTP_REFERER']);
+        }
       } else {
         $this->cb->trans_rollback();
         $this->session->set_flashdata('message_error', 'CoA ' . $no_sbb . ' gagal disimpan. Ket:' . $this->cb->error());

@@ -260,7 +260,7 @@ class Auth extends CI_Controller
 
 
         //Send notif wa
-        $msg = "Kode verifikasi Akun Bariskode Anda adalah *$token*, Gunakan Token Saat Login untuk pertama kali. Jangan bagikan kode ini kepada siapa pun.";
+        $msg = "Kode verifikasi Akun *Bariskode* Anda adalah *$token*, Gunakan Token Saat Login untuk pertama kali. Jangan bagikan kode ini kepada siapa pun.";
         if ($this->api_whatsapp->wa_notif($msg, $this->input->post('phone'))) {
           $this->session->set_flashdata('success', 'Berhasil Membuat Akun, silahkan login.');
           redirect('auth');
@@ -504,7 +504,6 @@ class Auth extends CI_Controller
           $this->db->update('users', $user_data);
 
           $user_updated = $this->db->affected_rows() > 0;
-
 
           // ADD BAGIAN UNTUK USER NON PREMIUM
           $data_bagian = array(

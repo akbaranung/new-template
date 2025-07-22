@@ -119,8 +119,8 @@
 
           </div>
           <div class="form-group text-left">
-            <label for="nama_akronim">Nama Akronim</label>
-            <input type="text" id="nama_akronim" name="nama_akronim" class="form-control form-control-lg" required>
+            <label for="nama_akronim">Akronim Invoice (3-4 Character)</label>
+            <input type="text" id="nama_akronim" name="nama_akronim" class="form-control form-control-lg" maxlength="4" required>
             <span id="nama_akronim_error_message" class="error-message"></span>
 
           </div>
