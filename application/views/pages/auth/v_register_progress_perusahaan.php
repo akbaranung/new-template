@@ -82,13 +82,13 @@
             <span id="nama_singkat_error_message" class="error-message"></span>
 
           </div>
-          <div class="form-group text-left">
+          <div class="form-group text-left d-none">
             <label for="nama_ppn">Nama PPN</label>
             <input type="text" id="nama_ppn" name="nama_ppn" class="form-control form-control-lg" required value="PPN 12%">
             <span id="nama_ppn_error_message" class="error-message"></span>
 
           </div>
-          <div class="form-group text-left">
+          <div class="form-group text-left d-none">
             <label for="besaran_ppn">Besaran PPN (%)</label>
             <input type="number" id="besaran_ppn" name="besaran_ppn" class="form-control form-control-lg" step="1" min="1" max="100" required value="12">
             <span id="besaran_ppn_error_message" class="error-message"></span>
