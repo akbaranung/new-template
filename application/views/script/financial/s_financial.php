@@ -953,4 +953,90 @@
       }
     });
   }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('saldoawalForm');
+    const totalAktivaStrong = document.getElementById('total_aktiva');
+    const totalPasivaStrong = document.getElementById('total_pasiva'); // New: Target for total_pasiva
+    const balanceResultDiv = document.getElementById('balanceResult');
+
+    /**
+     * Parses a number string, removing common formatting like commas.
+     * @param {string} numStr The number string to parse.
+     * @returns {number} The parsed float, or 0 if parsing fails.
+     */
+    function parseFormattedNumber(numStr) {
+      if (!numStr) return 0;
+      // Remove commas and ensure it's a valid number string
+      const cleanStr = numStr.replace(/,/g, '');
+      const parsed = parseFloat(cleanStr);
+      return isNaN(parsed) ? 0 : parsed;
+    }
+
+    function updateBalanceDisplay() {
+      // Get sum_aktiva from the strong tag's text content
+      const sumAktiva = parseFormattedNumber(totalAktivaStrong ? totalAktivaStrong.textContent : '0');
+      // Get sum_pasiva from its strong tag's text content
+      const sumPasiva = parseFormattedNumber(totalPasivaStrong ? totalPasivaStrong.textContent : '0');
+      const difference = sumAktiva - sumPasiva;
+
+      if (balanceResultDiv) {
+        balanceResultDiv.classList.remove('hidden', 'balanced', 'unbalanced');
+        if (difference === 0) {
+          balanceResultDiv.textContent = 'Saldo Seimbang: 0';
+          balanceResultDiv.classList.add('balanced');
+        } else {
+          balanceResultDiv.textContent = `Saldo Tidak Seimbang: ${difference.toFixed(2)}`; // Display difference with 2 decimal places
+          balanceResultDiv.classList.add('unbalanced');
+        }
+      }
+    }
+
+    // Since both Aktiva and Pasiva are now static display elements,
+    // the balance updates only on initial load. If these values
+    // change dynamically on your page, you would need to call
+    // updateBalanceDisplay() whenever they are updated.
+
+    // Initial display update when the page loads
+    updateBalanceDisplay();
+
+
+    form.addEventListener('submit', function(event) {
+      // IMPORTANT: This line prevents the default browser form submission,
+      // allowing JavaScript to handle the validation first.
+      event.preventDefault();
+
+      // Get values from the strong tags and convert to numbers.
+      const sumAktiva = parseFormattedNumber(totalAktivaStrong ? totalAktivaStrong.textContent : '0');
+      const sumPasiva = parseFormattedNumber(totalPasivaStrong ? totalPasivaStrong.textContent : '0');
+
+      const difference = sumAktiva - sumPasiva;
+
+      if (difference !== 0) {
+        // Saldo is not balanced: Show an error alert
+        Swal.fire({
+          icon: 'error',
+          title: 'Saldo Tidak Seimbang',
+          text: 'Jumlah Aktiva dan Pasiva harus seimbang (selisih 0) sebelum melanjutkan.',
+          confirmButtonColor: '#4f46e5'
+        });
+      } else {
+        // Saldo is balanced: Show a success alert and then redirect
+        Swal.fire({
+          icon: 'success',
+          title: 'Saldo Seimbang!',
+          text: 'Sedang membuat Saldo Awal...',
+          showConfirmButton: false,
+          timer: 2000, // Close after 2 seconds
+          timerProgressBar: true
+        }).then(() => {
+          // After the alert, perform the relocation.
+          // This effectively "submits" the form by navigating to its action URL.
+          window.location.href = form.action;
+          // If you needed to send the form data via a POST request,
+          // you would use: form.submit();
+        });
+      }
+    });
+  });
 </script>

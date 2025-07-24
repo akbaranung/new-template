@@ -165,12 +165,21 @@ class M_coa extends CI_Model
     public function count($keyword, $cabang, $tabel)
     {
         // $this->apply_cabang_filter();
+        // if ($keyword) {
+        //     $this->cb->like('no_sbb', $keyword);
+        //     $this->cb->or_like('no_bb', $keyword);
+        //     $this->cb->or_like('nama_perkiraan', $keyword);
+        // }
+        // return $this->cb->from($tabel)->count_all_results();
         if ($keyword) {
+            // Start a new group for the OR conditions
+            $this->cb->group_start();
             $this->cb->like('no_sbb', $keyword);
             $this->cb->or_like('no_bb', $keyword);
             $this->cb->or_like('nama_perkiraan', $keyword);
+            // End the group
+            $this->cb->group_end();
         }
-        // return $this->cb->from($tabel)->count_all_results();
         return $this->cb->from($tabel)->where('id_cabang', $cabang)->count_all_results();
     }
 
@@ -180,11 +189,12 @@ class M_coa extends CI_Model
         // $this->apply_cabang_filter();
 
         // $this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
-        if ($keyword) {
-            $this->cb->like('no_sbb', $keyword);
-            $this->cb->or_like('no_bb', $keyword);
-            $this->cb->or_like('nama_perkiraan', $keyword);
-        }
+        // if ($keyword) {
+        //     $this->cb->like('no_sbb', $keyword);
+        //     $this->cb->or_like('no_bb', $keyword);
+        //     $this->cb->or_like('nama_perkiraan', $keyword);
+        // }
+
         // return $this->cb->order_by(
         //     'no_sbb',
         //     'ASC'
@@ -193,8 +203,23 @@ class M_coa extends CI_Model
         // $laporan = $this->apply_cabang_filter()->order_by(
         //     'no_sbb',
         //     'ASC'
+        // )->limit($limit, $from)->get('v_coa_alls')->result_array();
+        // return $laporan;
+
+        // return $this->cb->where('id_cabangs', $cabang)->order_by(
+        //     'no_sbb',
+        //     'ASC'
         // )->limit($limit, $from)->get('v_coa_all')->result_array();
 
+        if ($keyword) {
+            // Start a new group for the OR conditions
+            $this->cb->group_start();
+            $this->cb->like('no_sbb', $keyword);
+            $this->cb->or_like('no_bb', $keyword);
+            $this->cb->or_like('nama_perkiraan', $keyword);
+            // End the group
+            $this->cb->group_end();
+        }
 
         $laporan = $this->cb->where('id_cabang', $cabang)->order_by(
             'no_sbb',
@@ -440,5 +465,60 @@ class M_coa extends CI_Model
         $query = $this->cb->get();
 
         return $this->cb->count_all_results();
+    }
+
+    function get_coa_activa_by_cabang()
+    {
+        $this->cb->from('v_coa_all');
+        $this->cb->where('posisi', 'AKTIVA');
+        $this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
+        return $this->cb->get()->result();
+    }
+
+    function get_coa_pasiva_by_cabang()
+    {
+        $this->cb->from('v_coa_all');
+        $this->cb->where('posisi', 'PASIVA');
+        $this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
+        return $this->cb->get()->result();
+    }
+
+    function get_sum_coa_activa_by_cabang()
+    {
+        $this->cb->select('SUM(nominal) as nominal');
+        $this->cb->from('v_coa_all');
+        $this->cb->where('posisi', 'AKTIVA');
+        $this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
+        return $this->cb->get()->row();
+    }
+
+    function get_sum_coa_pasiva_by_cabang()
+    {
+        $this->cb->select('SUM(nominal) as nominal');
+        $this->cb->from('v_coa_all');
+        $this->cb->where('posisi', 'PASIVA');
+        $this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
+        return $this->cb->get()->row();
+    }
+
+
+    function get_sum_coa_pasiva_coalr_by_cabang()
+    {
+        $this->cb->select('SUM(nominal) as nominal');
+        $this->cb->from('v_coa_all');
+        $this->cb->where('posisi', 'AKTIVA');
+        $this->cb->where('table_source', 't_coalr_sbb');
+        $this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
+        return $this->cb->get()->row();
+    }
+
+    function get_sum_coa_activa_coalr_by_cabang()
+    {
+        $this->cb->select('SUM(nominal) as nominal');
+        $this->cb->from('v_coa_all');
+        $this->cb->where('posisi', 'PASIVA');
+        $this->cb->where('table_source', 't_coalr_sbb');
+        $this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
+        return $this->cb->get()->row();
     }
 }

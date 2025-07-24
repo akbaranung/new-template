@@ -3,6 +3,24 @@
     margin-left: 8px;
     /* Adjust this value (e.g., 5px, 10px, 0.5em) as needed */
   }
+
+  .balance-info {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .balance-info.balanced {
+    background-color: #dcfce7;
+    color: #16a34a;
+  }
+
+  .balance-info.unbalanced {
+    background-color: #fee2e2;
+    color: #dc2626;
+  }
 </style>
 
 <div class="container-fluid">
@@ -14,7 +32,21 @@
           <p class="card-title"><strong>List Coa</strong></p>
         </div>
         <div class="card-body">
-          <div class="row">
+          <?php if ($this->session->flashdata('error')) : ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <strong>Error!</strong> <?= $this->session->flashdata('error'); ?><button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <!-- <strong><?= $this->session->flashdata('error'); ?>!</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"> -->
+                <span aria-hidden="true">x</span>
+              </button>
+            </div>
+          <?php endif; ?>
+          <?php if ($this->session->flashdata('success')) : ?>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+              <strong>Success!</strong> <?= $this->session->flashdata('success'); ?><button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">x</span>
+              </button>
+            </div>
+          <?php endif; ?> <div class="row">
             <div class="col-md-12 col-xs-12 form-group pull-right top_search">
               <form class="form-horizontal form-label-left" method="post" action="<?= base_url('financial/list_coa') ?>">
                 <div class="input-group">
@@ -34,6 +66,13 @@
                     <a href="<?= base_url('financial/reset_coa') ?>" class="btn btn-warning" style="color:white;">Reset</a>
                     <button class="btn btn-primary text-white" data-toggle="modal" data-target="#tambahCoa" type="button" style="color: white;">Buat CoA</button>
                     <button class="btn btn-primary text-white" data-toggle="modal" data-target="#TemplateCoa" type="button" style="color: white;">Ambil CoA</button>
+                    <?php
+                    if ($is_sawal == 0) {
+                    ?>
+                      <button class="btn btn-primary text-white" data-toggle="modal" data-target="#saldoAwal" type="button" style="color: white;">Buat Saldo Awal</button>
+                    <?php
+                    }
+                    ?>
                   </span>
                 </div>
               </form>
@@ -49,7 +88,13 @@
                   <th>Nama Perkiraan</th>
                   <!-- <th class="text-center">Nominal</th> -->
                   <th class="text-center">Saldo Awal</th>
-                  <th class="text-center">Aksi</th>
+                  <?php
+                  if ($is_sawal == 0) {
+                  ?>
+                    <th class="text-center">Aksi</th>
+                  <?php
+                  }
+                  ?>
                 </tr>
               </thead>
               <tbody>
@@ -64,7 +109,13 @@
                       <td><?= $i['no_sbb'] ?></td>
                       <td><?= ($i['nama_perkiraan']) ?></td>
                       <td class="text-right"><?= $i['nominal'] != null ? number_format($i['nominal']) : 0 ?></td>
-                      <td class="text-center"><button class="btn btn-warning text-white" onclick="onEdit(<?= $i['no_sbb'] ?>, <?= $i['id_cabang'] ?>)" type="button">Update</button></td>
+                      <?php
+                      if ($is_sawal == 0) {
+                      ?>
+                        <td class="text-center"><button class="btn btn-warning text-white" onclick="onEdit(<?= $i['no_sbb'] ?>, <?= $i['id_cabang'] ?>)" type="button">Update</button></td>
+                      <?php
+                      }
+                      ?>
                     </tr>
 
                   <?php
@@ -185,7 +236,6 @@
     </div>
   </div>
 </div>
-
 <!-- Update COA Modal -->
 <div class="modal fade" id="updateCoaModal" tabindex="-1" aria-labelledby="updateCoaModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
@@ -194,7 +244,7 @@
         <h5 class="modal-title" id="updateCoaModalLabel">Update COA Entry</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form id="updateCoaForm" action="<?php echo site_url('financial/update_coa_entry'); ?>" method="POST">
+      <form id="updateCoaForm" action="<?php echo site_url('financial/update_coa'); ?>" method="POST">
         <div class="modal-body">
           <!-- Hidden input for the COA ID (assuming 'id_coa' is your primary key) -->
           <input type="hidden" id="update_table_coa" name="table_coa">
@@ -212,10 +262,120 @@
             <label for="update_nama_perkiraan" class="form-label">Nama Perkiraan</label>
             <input type="text" class="form-control" id="update_nama_perkiraan" name="nama_perkiraan" required>
           </div>
-          <!-- <div class="mb-3">
+          <div class="mb-3">
             <label for="update_nominal" class="form-label">Saldo Awal</label>
             <input type="text" class="form-control" id="update_nominal" name="nominal" required>
-          </div> -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<!-- Update COA Modal -->
+<div class="modal fade" id="saldoAwal" tabindex="-1" aria-labelledby="updateCoaModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateCoaModalLabel">Buat Saldo Awal COA</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
+      </div>
+      <form id="saldoawalForm" action="<?php echo site_url('financial/buat_saldo_awal'); ?>" method="POST">
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-lg-6 col-md-6 col-xs-12">
+              <h2 class="text-center">Activa</h2>
+              <!-- <input type="hidden" id="total_aktiva" value="<?= (isset($sum_activa)) ? number_format($sum_activa, 2) : 0 ?>"> -->
+              <p class="text-right">Total: <strong id="total_aktiva"><?= (isset($sum_activa)) ? number_format($sum_activa, 2) : 0 ?></strong></p>
+              <div class="table-responsive">
+                <table class="table" style="width:100%">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th>No. Coa</th>
+                      <th>Nama Coa</th>
+                      <th>Nominal</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php
+                    if (isset($activa)) :
+                      foreach ($activa as $a) :
+                        // $coa = $this->M_coa->getCoa($a->no_sbb);
+
+                        // if ($coa['table_source'] == "t_coa_sbb" && $coa['posisi'] == 'AKTIVA' && $a->saldo_awal != '0') :
+                    ?>
+                        <tr>
+                          <!-- <td><button class="btn btn-primary arus_kas btn-sm" data-id="<?= $a->no_sbb ?>"><?= $a->no_sbb ?></button></td> -->
+                          <td><button class="btn btn-primary arus_kas btn-sm" type="button" data-id="<?= $a->no_sbb ?>"><?= $a->no_sbb ?></button></td>
+                          <td><?= $a->nama_perkiraan ?></td>
+                          <td class="text-right"><?= number_format($a->nominal, 2) ?></td>
+                        </tr>
+                      <?php
+                      // endif;
+                      endforeach;
+                    else : ?>
+                      <tr>
+                        <td colspan="3">Tidak ada activa yang ditampilkan</td>
+                      </tr>
+                    <?php
+                    endif; ?>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="col-md-6 col-xs-12">
+              <h2 class="text-center">Pasiva</h2>
+              <!-- <input type="hidden" id="total_pasiva" value="<?= (isset($sum_pasiva)) ? number_format($sum_pasiva, 2) : 0 ?>"> -->
+              <p class="text-right">Total: <strong id="total_pasiva"><?= (isset($sum_pasiva)) ? number_format($sum_pasiva, 2) : 0 ?></strong></p>
+              <div class="table-responsive">
+                <table id="" class="table" style="width:100%">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th>No. Coa</th>
+                      <th>Nama Coa</th>
+                      <th>Nominal</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php
+                    if (isset($pasiva)) :
+                      foreach ($pasiva as $a) :
+                        // $coa = $this->M_coa->getCoa($a->no_sbb);
+
+                        // if ($coa['table_source'] == "t_coa_sbb" && $coa['posisi'] == 'PASIVA' && $a->saldo_awal != '0') :
+                    ?>
+                        <tr>
+                          <!-- <td><button class="btn btn-primary arus_kas btn-sm" data-id="<?= $a->no_sbb ?>"><?= $a->no_sbb ?></td> -->
+                          <td><button class="btn btn-primary arus_kas btn-sm" type="button" data-id="<?= $a->no_sbb ?>"><?= $a->no_sbb ?></td>
+                          <td><?= $a->nama_perkiraan ?></td>
+                          <td class="text-right"><?= number_format($a->nominal, 2) ?></td>
+                        </tr>
+                      <?php
+                      // endif;
+                      endforeach; ?>
+                      <tr>
+                        <td>31030</td>
+                        <td>LABA TAHUN BERJALAN</td>
+                        <td class="text-right"><?= number_format($laba, 2) ?></td>
+                      </tr>
+                    <?php
+                    else : ?>
+                      <tr>
+                        <td colspan="3">Tidak ada pasiva yang ditampilkan</td>
+                      </tr>
+                    <?php
+                    endif; ?>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div id="balanceResult" class="col-12 balance-info hidden"> </div>
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
