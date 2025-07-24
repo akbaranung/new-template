@@ -522,6 +522,8 @@ class Perusahaan extends CI_Controller
       "id_perusahaan" => $this->session->userdata('user_perusahaan_id'),
       "nama_cabang" => $this->input->post('nama_cabang'),
       "alamat_cabang" => $this->input->post('alamat_cabang'),
+      "nomor_rekening" => $this->input->post('nomor_rekening'),
+      "nama_bank" => $this->input->post('nama_bank'),
     ];
     $this->cb->insert('t_cabang', $add);
     $inserted_id = $this->cb->insert_id();
@@ -563,7 +565,7 @@ class Perusahaan extends CI_Controller
   {
 
     $data['cabang'] = $this->M_perusahaans->get_detail_id_cabang($id);
-    $data['title'] = 'Add Lokasi Presensi';
+    $data['title'] = 'Edit Cabang';
     $data['utility'] = $this->db->get('utility')->row_array();
     $data['pages_script'] = 'script/perusahaan/s_cabang';
     $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
@@ -578,6 +580,8 @@ class Perusahaan extends CI_Controller
     $edit_data = [
       "nama_cabang" => $this->input->post('nama_cabang'),
       "alamat_cabang" => $this->input->post('alamat_cabang'),
+      "nomor_rekening" => $this->input->post('nomor_rekening'),
+      "nama_bank" => $this->input->post('nama_bank'),
     ];
     $this->cb->where('uid', $id);
     $this->cb->update('t_cabang', $edit_data);

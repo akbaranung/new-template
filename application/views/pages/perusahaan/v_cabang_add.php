@@ -25,6 +25,23 @@
                     <th width="300">Alamat Cabang</th>
                     <td width="300"> <textarea class="form-control" name="alamat_cabang" id="alamat_cabang"><?php echo set_value('alamat_cabang'); ?></textarea></td>
                   </tr>
+                  <div class="form-group text-left">
+                    <label for="nomor_rekening">Nomor Rekening</label>
+                    <input
+                      type="text"
+                      id="nomor_rekening"
+                      name="nomor_rekening"
+                      class="form-control form-control-lg"
+                      required
+                      pattern="[0-9]{10,16}"
+                      value="<?php echo set_value('nomor_rekening'); ?>" />
+                    <span id="nomor_rekening_error_message" class="error-message"></span>
+                  </div>
+                  <div class="form-group text-left">
+                    <label for="nama_bank">Nama Bank</label>
+                    <input type="text" id="nama_bank" name="nama_bank" class="form-control form-control-lg" value="<?php echo set_value('nama_bank'); ?>" required>
+                    <span id="nama_bank_error_message" class="error-message"></span>
+                  </div>
                   <br>
                   <tr>
                     <th>
@@ -52,6 +69,23 @@
                       <label>Alamat Cabang</label>
                       <textarea class="form-control" name="alamat_cabang" id="alamat_cabang"><?= $cabang->alamat_cabang ?></textarea>
                     </div>
+                  </div>
+                  <div class="form-group text-left">
+                    <label for="nomor_rekening">Nomor Rekening</label>
+                    <input
+                      type="text"
+                      id="nomor_rekening"
+                      name="nomor_rekening"
+                      class="form-control form-control-lg"
+                      required
+                      pattern="[0-9]{10,16}"
+                      value="<?= $cabang->nomor_rekening ?>" />
+                    <span id="nomor_rekening_error_message" class="error-message"></span>
+                  </div>
+                  <div class="form-group text-left">
+                    <label for="nama_bank">Nama Bank</label>
+                    <input type="text" id="nama_bank" name="nama_bank" class="form-control form-control-lg" value="<?= $cabang->nama_bank ?>" required>
+                    <span id="nama_bank_error_message" class="error-message"></span>
                   </div>
                   <div class="col-12">
                     <div class="form-group">
