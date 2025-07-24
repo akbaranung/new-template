@@ -19,6 +19,13 @@
     margin-top: 5px;
     display: block;
   }
+
+  .preview-pict {
+    max-width: 220px;
+    height: auto;
+    border: 1px solid #ddd;
+    padding: 5px;
+  }
 </style>
 <div class="row align-items-center h-100 w-100 m-0">
   <div class="col-lg-12 col-md-4 col-11 mx-auto">
@@ -64,11 +71,13 @@
 
           <!-- New input fields for company data -->
           <div class="form-group text-left">
+            <div class="justify-content-center align-items-center mt-2 mb-2" id="logo_preview_container" style="display: none;">
+              <img id="logo_preview" src="#" alt="Logo Preview" class="preview-pict">
+            </div>
             <label for="nama_perusahaan">Logo Perusahaan</label>
-            <input type="file" id="logo_perusahaan" name="logo_perusahaan" accept=".jpg, .jpeg, .png, .gif, image/jpeg, image/png"
+            <input type="file" class="form-control-file" id="logo_perusahaan" name="logo_perusahaan" accept=".jpg, .jpeg, .png, .gif, image/jpeg, image/png"
               required>
             <span id="logo_perusahaan_error_message" class="error-message"></span>
-
           </div>
           <div class="form-group text-left">
             <label for="nama_perusahaan">Nama Perusahaan</label>
@@ -315,6 +324,48 @@
         }
       } else {
         form.classList.remove('attempted-submit'); // Clear class if valid
+      }
+    });
+  });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const logoInput = document.getElementById('logo_perusahaan');
+    const logoPreview = document.getElementById('logo_preview');
+    const logoPreviewContainer = document.getElementById('logo_preview_container');
+    const logoErrorMessage = document.getElementById('logo_perusahaan_error_message');
+
+    logoInput.addEventListener('change', function(event) {
+      const file = event.target.files[0]; // Get the first selected file
+
+      // Clear previous error messages
+      logoErrorMessage.textContent = '';
+
+      if (file) {
+        const fileType = file.type;
+        const validImageTypes = ['image/jpeg', 'image/png', 'image/gif']; // Add any other types you accept
+
+        if (validImageTypes.includes(fileType)) {
+          const reader = new FileReader();
+
+          reader.onload = function(e) {
+            // Set the source of the image tag to the base64 encoded URL
+            logoPreview.src = e.target.result;
+            logoPreviewContainer.style.display = 'flex'; // Show the preview container
+          };
+
+          // Read the file as a Data URL (base64 encoded string)
+          reader.readAsDataURL(file);
+        } else {
+          // Invalid file type
+          logoPreview.src = '#'; // Clear any existing preview
+          logoPreviewContainer.style.display = 'none'; // Hide the preview container
+          logoErrorMessage.textContent = 'Please select a valid image file (JPG, JPEG, PNG, GIF).';
+          logoInput.value = ''; // Clear the file input
+        }
+      } else {
+        // No file selected or file input cleared
+        logoPreview.src = '#'; // Clear any existing preview
+        logoPreviewContainer.style.display = 'none'; // Hide the preview container
       }
     });
   });
