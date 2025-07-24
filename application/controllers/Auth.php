@@ -395,6 +395,7 @@ class Auth extends CI_Controller
         'nomor_coa_ppn_keluaran'       => '23011',
         'nama_coa_utang_pph23'       => 'UTANG PPH 23',
         'nomor_coa_utang_pph23'       => '23014',
+        'generate_sawal'       => '0',
       );
 
 
