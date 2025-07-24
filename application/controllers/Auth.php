@@ -387,8 +387,8 @@ class Auth extends CI_Controller
         'nama_singkat'      => $this->input->post('nama_singkat'),
         'nama_ppn'          => $this->input->post('nama_ppn'),
         'besaran_ppn'       => $ppn_decimal,
-        'nomor_rekening'    => $this->input->post('nomor_rekening'),
-        'nama_bank'         => $this->input->post('nama_bank'),
+        // 'nomor_rekening'    => $this->input->post('nomor_rekening'),
+        // 'nama_bank'         => $this->input->post('nama_bank'),
         'alamat_perusahaan' => $this->input->post('alamat_perusahaan'),
         'nama_akronim'      => $this->input->post('nama_akronim'),
         'nama_coa_ppn_keluaran'       => 'PPN KELUARAN',
@@ -486,6 +486,8 @@ class Auth extends CI_Controller
           'id_perusahaan' => $company_inserted_id, // Get from hidden field
           'nama_cabang'   => $this->input->post('nama_cabang'),
           'alamat_cabang' => $this->input->post('alamat_cabang'),
+          'nomor_rekening'    => $this->input->post('nomor_rekening'),
+          'nama_bank'         => $this->input->post('nama_bank'),
         );
 
         $branch_inserted_id = $this->M_login->register_cabang($branch_data);

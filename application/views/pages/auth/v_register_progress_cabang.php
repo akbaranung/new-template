@@ -73,6 +73,22 @@
             <textarea id="alamat_cabang" name="alamat_cabang" class="form-control form-control-lg" rows="3" required></textarea>
             <span id="alamat_cabang_error_message" class="error-message"></span>
           </div>
+          <div class="form-group text-left">
+            <label for="nomor_rekening">Nomor Rekening</label>
+            <input
+              type="text"
+              id="nomor_rekening"
+              name="nomor_rekening"
+              class="form-control form-control-lg"
+              required
+              pattern="[0-9]{10,16}" />
+            <span id="nomor_rekening_error_message" class="error-message"></span>
+          </div>
+          <div class="form-group text-left">
+            <label for="nama_bank">Nama Bank</label>
+            <input type="text" id="nama_bank" name="nama_bank" class="form-control form-control-lg" required>
+            <span id="nama_bank_error_message" class="error-message"></span>
+          </div>
           <!-- End new input fields -->
 
           <button class="btn btn-lg btn-primary btn-block btn-regis-perusahaan" type="submit">Registrasi</button>

@@ -101,9 +101,8 @@
             <label for="besaran_ppn">Besaran PPN (%)</label>
             <input type="number" id="besaran_ppn" name="besaran_ppn" class="form-control form-control-lg" step="1" min="1" max="100" required value="12">
             <span id="besaran_ppn_error_message" class="error-message"></span>
-
           </div>
-          <div class="form-group text-left">
+          <!-- <div class="form-group text-left">
             <label for="nomor_rekening">Nomor Rekening</label>
             <input
               type="text"
@@ -113,14 +112,12 @@
               required
               pattern="[0-9]{10,16}" />
             <span id="nomor_rekening_error_message" class="error-message"></span>
-
           </div>
           <div class="form-group text-left">
             <label for="nama_bank">Nama Bank</label>
             <input type="text" id="nama_bank" name="nama_bank" class="form-control form-control-lg" required>
             <span id="nama_bank_error_message" class="error-message"></span>
-
-          </div>
+          </div> -->
           <div class="form-group text-left">
             <label for="alamat_perusahaan">Alamat Perusahaan</label>
             <textarea id="alamat_perusahaan" name="alamat_perusahaan" class="form-control form-control-lg" rows="3" required></textarea>
