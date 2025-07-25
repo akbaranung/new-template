@@ -521,4 +521,9 @@ class M_coa extends CI_Model
         $this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
         return $this->cb->get()->row();
     }
+
+    public function list_coa_with_nominal()
+    {
+        return $this->apply_cabang_filter()->where('nominal !=', 0)->order_by('no_sbb', 'ASC')->get('v_coa_all')->result();
+    }
 }
