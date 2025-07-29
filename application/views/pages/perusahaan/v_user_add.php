@@ -51,7 +51,7 @@
                     <td> <input type="text" name="nama" class="form-control">
                     </td>
                   </tr>
-                  <tr>
+                  <!-- <tr>
                     <th width="200">Date of birth</th>
                     <td>
                       <div class='input-group date' id='myDatepicker2'>
@@ -61,7 +61,7 @@
                         </span>
                       </div>
                     </td>
-                  </tr>
+                  </tr> -->
                   <tr>
                     <th>Status</th>
                     <td>

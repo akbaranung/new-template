@@ -46,13 +46,32 @@
               className: 'btn btn-primary',
               action: function(e, dt, button, config) {
                 Swal.fire({
-                  title: 'Mohon Tunggu',
-                  text: "Proses...",
+                  title: 'Apakah Anda yakin?',
+                  text: "Anda akan meng-ambil semua coa yang tersedia.",
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Ya, Tambahkan!',
+                  cancelButtonText: 'Batal'
                 }).then((result) => {
-                  if (result.value) {
-                    // form.submit();
+                  // Check if the user clicked the "Confirm" button (Ya, Tambahkan!)
+                  if (result.isConfirmed) {
+                    Swal.fire({
+                      title: 'Mohon Tunggu',
+                      text: "Proses...",
+                      allowOutsideClick: false, // Prevent closing by clicking outside
+                      allowEscapeKey: false, // Prevent closing by pressing Escape
+                      didOpen: () => {
+                        Swal.showLoading(); // Show a loading spinner
+                      }
+                    });
+
+                    // Proceed with your action, like redirecting
                     window.location = '<?= base_url('financial_first/ambil_semua_coa') ?>';
                   }
+                  // If result.isDismissed is true (user clicked cancel, outside, or pressed escape),
+                  // then no further action is taken.
                 });
               },
               init: function(api, node, config) {
