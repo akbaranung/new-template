@@ -323,6 +323,7 @@
                                           value="<?= html_escape($child_menu->Id); ?>"
                                           id="menu_<?= html_escape($child_menu->Id); ?>"
                                           data-parent-id="<?= html_escape($parent_menu->Id); ?>"
+
                                           <?php
                                           if ($child_menu->menu_name == "Buat Pengajuan" || $child_menu->menu_name == "List Pengajuan") {
                                             if ($this->uri->segment(4) == "Staff") {
