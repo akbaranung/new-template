@@ -3,6 +3,17 @@
     background: #f8f9fa;
     color: #1b68ff;
   }
+
+
+  /* Optional: Add some styling to visually indicate disabled links */
+  .disabled-link {
+    pointer-events: none;
+    /* Prevents click events */
+    opacity: 0.6;
+    /* Makes it look slightly faded */
+    cursor: not-allowed;
+    /* Changes cursor on hover */
+  }
 </style>
 
 
@@ -32,79 +43,90 @@
       </li>
     </ul>
     <?php
+    // Assuming $this->cb and $this->db are already loaded and configured
     $this->cb = $this->load->database('corebank', TRUE);
 
     $this->db->from('users');
     $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
     $this->db->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
-    $total_user = $this->db->get()->num_rows(); // Get the number of rows
+    $total_user = $this->db->get()->num_rows();
+
+    // Define the crown SVG once
+    $crown_svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="16" height="16"><path fill="#FFD43B" d="M309 106c11.4-7 19-19.7 19-34c0-22.1-17.9-40-40-40s-40 17.9-40 40c0 14.4 7.6 27 19 34L209.7 220.6c-9.1 18.2-32.7 23.4-48.6 10.7L72 160c5-6.7 8-15 8-24c0-22.1-17.9-40-40-40S0 113.9 0 136s17.9 40 40 40c.2 0 .5 0 .7 0L86.4 427.4c5.5 30.4 32 52.6 63 52.6l277.2 0c30.9 0 57.4-22.1 63-52.6L535.3 176c.2 0 .5 0 .7 0c22.1 0 40-17.9 40-40s-17.9-40-40-40s-40 17.9-40 40c0 9 3 17.3 8 24l-89.1 71.3c-15.9 12.7-39.5 7.5-48.6-10.7L309 106z"/></svg>';
+
+    // Check if user is premium once
+    $is_premium_user = $this->session->userdata('is_premium');
+
     if ($total_user >= 5) {
     ?>
       <ul class="navbar-nav flex-fill w-100 mb-2">
-        <?php
-        if ($menus) {
-          foreach ($menus as $menu): ?>
-            <?php if (empty($menu->submenus)):
-              $url = $menu->url;
-              $mahkota = '';
-              if ($menu->premium == 1 && $this->session->userdata('is_premium')) {
-                $url = $menu->url;
-                $mahkota = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="16" height="16"><path fill="#FFD43B" d="M309 106c11.4-7 19-19.7 19-34c0-22.1-17.9-40-40-40s-40 17.9-40 40c0 14.4 7.6 27 19 34L209.7 220.6c-9.1 18.2-32.7 23.4-48.6 10.7L72 160c5-6.7 8-15 8-24c0-22.1-17.9-40-40-40S0 113.9 0 136s17.9 40 40 40c.2 0 .5 0 .7 0L86.4 427.4c5.5 30.4 32 52.6 63 52.6l277.2 0c30.9 0 57.4-22.1 63-52.6L535.3 176c.2 0 .5 0 .7 0c22.1 0 40-17.9 40-40s-17.9-40-40-40s-40 17.9-40 40c0 9 3 17.3 8 24l-89.1 71.3c-15.9 12.7-39.5 7.5-48.6-10.7L309 106z"/></svg>';
-              } else if ($menu->premium == 1 && !$this->session->userdata('is_premium')) {
-                $url = '';
-                $mahkota = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="16" height="16"><path fill="#FFD43B" d="M309 106c11.4-7 19-19.7 19-34c0-22.1-17.9-40-40-40s-40 17.9-40 40c0 14.4 7.6 27 19 34L209.7 220.6c-9.1 18.2-32.7 23.4-48.6 10.7L72 160c5-6.7 8-15 8-24c0-22.1-17.9-40-40-40S0 113.9 0 136s17.9 40 40 40c.2 0 .5 0 .7 0L86.4 427.4c5.5 30.4 32 52.6 63 52.6l277.2 0c30.9 0 57.4-22.1 63-52.6L535.3 176c.2 0 .5 0 .7 0c22.1 0 40-17.9 40-40s-17.9-40-40-40s-40 17.9-40 40c0 9 3 17.3 8 24l-89.1 71.3c-15.9 12.7-39.5 7.5-48.6-10.7L309 106z"/></svg>';
+        <?php if ($menus): ?>
+          <?php foreach ($menus as $menu): ?>
+            <?php
+            $menu_url = $menu->url;
+            $menu_mahkota = '';
+            $menu_disabled_class = '';
+            $menu_onclick_attr = ''; // To show a SweetAlert for premium features
+
+            // Determine URL and crown for main menu
+            if ($menu->premium == 1) { // If it's a premium menu
+              $menu_mahkota = $crown_svg;
+              if (!$is_premium_user) { // If user is NOT premium
+                $menu_url = '#'; // Change URL to a placeholder
+                $menu_disabled_class = 'disabled-link'; // Add a class for styling/JS
+                $menu_onclick_attr = "onclick=\"Swal.fire('Fitur Premium', 'Fitur ini hanya tersedia untuk pengguna premium.', 'info'); return false;\"";
               }
+            }
             ?>
+
+            <?php if (empty($menu->submenus)): ?>
               <li class="nav-item w-100">
-                <!-- <a class="nav-link <?= ($controller == $menu->controller) ? 'active' : '' ?>" href="<?= site_url($menu->url) ?>"> -->
-                <a class="nav-link <?= ($controller == $menu->controller) ? 'active' : '' ?>" href="<?= site_url($url) ?>">
+                <a class="nav-link <?= ($controller == $menu->controller) ? 'active' : '' ?> <?= $menu_disabled_class ?>"
+                  href="<?= site_url($menu_url) ?>" <?= $menu_onclick_attr ?>>
                   <i class="<?= $menu->icon ?>"></i>
-                  <span class="ml-3 item-text"><?= $menu->menu_name ?> <?= $mahkota ?></span>
+                  <span class="ml-3 item-text"><?= $menu->menu_name ?> <?= $menu_mahkota ?></span>
                 </a>
               </li>
-            <?php else:
-              $url = $menu->url;
-              $mahkota = '';
-
-              if ($menu->premium == 1 && $this->session->userdata('is_premium')) {
-                $url = $menu->url;
-                $mahkota = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="16" height="16"><path fill="#FFD43B" d="M309 106c11.4-7 19-19.7 19-34c0-22.1-17.9-40-40-40s-40 17.9-40 40c0 14.4 7.6 27 19 34L209.7 220.6c-9.1 18.2-32.7 23.4-48.6 10.7L72 160c5-6.7 8-15 8-24c0-22.1-17.9-40-40-40S0 113.9 0 136s17.9 40 40 40c.2 0 .5 0 .7 0L86.4 427.4c5.5 30.4 32 52.6 63 52.6l277.2 0c30.9 0 57.4-22.1 63-52.6L535.3 176c.2 0 .5 0 .7 0c22.1 0 40-17.9 40-40s-17.9-40-40-40s-40 17.9-40 40c0 9 3 17.3 8 24l-89.1 71.3c-15.9 12.7-39.5 7.5-48.6-10.7L309 106z"/></svg>';
-              } else if ($menu->premium == 1 && !$this->session->userdata('is_premium')) {
-                $url = '';
-                $mahkota = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="16" height="16"><path fill="#FFD43B" d="M309 106c11.4-7 19-19.7 19-34c0-22.1-17.9-40-40-40s-40 17.9-40 40c0 14.4 7.6 27 19 34L209.7 220.6c-9.1 18.2-32.7 23.4-48.6 10.7L72 160c5-6.7 8-15 8-24c0-22.1-17.9-40-40-40S0 113.9 0 136s17.9 40 40 40c.2 0 .5 0 .7 0L86.4 427.4c5.5 30.4 32 52.6 63 52.6l277.2 0c30.9 0 57.4-22.1 63-52.6L535.3 176c.2 0 .5 0 .7 0c22.1 0 40-17.9 40-40s-17.9-40-40-40s-40 17.9-40 40c0 9 3 17.3 8 24l-89.1 71.3c-15.9 12.7-39.5 7.5-48.6-10.7L309 106z"/></svg>';
-              } else
+            <?php else: // Has submenus 
             ?>
               <li class="nav-item <?= ($controller == $menu->controller) ? 'active' : '' ?> dropdown">
-                <!-- <a href="#<?= $menu->url ?>" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link"> -->
-                <a href="#<?= $url ?>" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
+                <a href="#<?= $menu->url ?>" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link <?= $menu_disabled_class ?>"
+                  <?= $menu_onclick_attr ?>>
                   <i class="<?= $menu->icon ?>"></i>
-                  <span class="ml-3 item-text"><?= $menu->menu_name ?> <?= $mahkota ?></span>
+                  <span class="ml-3 item-text"><?= $menu->menu_name ?> <?= $menu_mahkota ?></span>
                 </a>
                 <ul class="collapse <?= ($controller == $menu->controller) ? 'show' : '' ?> list-unstyled pl-4 w-100" id="<?= $menu->url ?>">
-                  <?php foreach ($menu->submenus as $submenu):
-                    $url = $submenu->url;
-                    $mahkota = '';
-                    if ($submenu->premium == 1 && $this->session->userdata('is_premium')) {
-                      $url = $submenu->url;
-                      $mahkota = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="16" height="16"><path fill="#FFD43B" d="M309 106c11.4-7 19-19.7 19-34c0-22.1-17.9-40-40-40s-40 17.9-40 40c0 14.4 7.6 27 19 34L209.7 220.6c-9.1 18.2-32.7 23.4-48.6 10.7L72 160c5-6.7 8-15 8-24c0-22.1-17.9-40-40-40S0 113.9 0 136s17.9 40 40 40c.2 0 .5 0 .7 0L86.4 427.4c5.5 30.4 32 52.6 63 52.6l277.2 0c30.9 0 57.4-22.1 63-52.6L535.3 176c.2 0 .5 0 .7 0c22.1 0 40-17.9 40-40s-17.9-40-40-40s-40 17.9-40 40c0 9 3 17.3 8 24l-89.1 71.3c-15.9 12.7-39.5 7.5-48.6-10.7L309 106z"/></svg>';
-                    } else if ($submenu->premium == 1 && !$this->session->userdata('is_premium')) {
-                      $url = '';
-                      $mahkota = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="16" height="16"><path fill="#FFD43B" d="M309 106c11.4-7 19-19.7 19-34c0-22.1-17.9-40-40-40s-40 17.9-40 40c0 14.4 7.6 27 19 34L209.7 220.6c-9.1 18.2-32.7 23.4-48.6 10.7L72 160c5-6.7 8-15 8-24c0-22.1-17.9-40-40-40S0 113.9 0 136s17.9 40 40 40c.2 0 .5 0 .7 0L86.4 427.4c5.5 30.4 32 52.6 63 52.6l277.2 0c30.9 0 57.4-22.1 63-52.6L535.3 176c.2 0 .5 0 .7 0c22.1 0 40-17.9 40-40s-17.9-40-40-40s-40 17.9-40 40c0 9 3 17.3 8 24l-89.1 71.3c-15.9 12.7-39.5 7.5-48.6-10.7L309 106z"/></svg>';
-                    } else
-                  ?>
+                  <?php foreach ($menu->submenus as $submenu): ?>
+                    <?php
+                    $submenu_url = $submenu->url;
+                    $submenu_mahkota = '';
+                    $submenu_disabled_class = '';
+                    $submenu_onclick_attr = '';
+
+                    // Determine URL and crown for submenu
+                    if ($submenu->premium == 1) { // If it's a premium submenu
+                      $submenu_mahkota = $crown_svg;
+                      if (!$is_premium_user) { // If user is NOT premium
+                        $submenu_url = '#'; // Change URL to a placeholder
+                        $submenu_disabled_class = 'disabled-link';
+                        $submenu_onclick_attr = "onclick=\"Swal.fire('Fitur Premium', 'Fitur ini hanya tersedia untuk pengguna premium.', 'info'); return false;\"";
+                      }
+                    }
+                    ?>
                     <li class="nav-item">
-                      <!-- <a class="nav-link <?= ($current_uri == $submenu->url) ? 'active' : '' ?> pl-3" href="<?= site_url($submenu->url) ?>"><i class="<?= $submenu->icon ?>"></i><span class="ml-1 item-text"><?= $submenu->menu_name ?></span> -->
-                      <a class="nav-link <?= ($current_uri == $submenu->url) ? 'active' : '' ?> pl-3" href="<?= site_url($url) ?>"><i class="<?= $submenu->icon ?>"></i><span class="ml-1 item-text"><?= $submenu->menu_name ?> <?= $mahkota ?></span>
+                      <a class="nav-link <?= ($current_uri == $submenu->url) ? 'active' : '' ?> pl-3 <?= $submenu_disabled_class ?>"
+                        href="<?= site_url($submenu_url) ?>" <?= $submenu_onclick_attr ?>>
+                        <i class="<?= $submenu->icon ?>"></i>
+                        <span class="ml-1 item-text"><?= $submenu->menu_name ?> <?= $submenu_mahkota ?></span>
                       </a>
                     </li>
                   <?php endforeach; ?>
                 </ul>
               </li>
             <?php endif; ?>
-        <?php endforeach;
-        } ?>
+          <?php endforeach; ?>
+        <?php endif; ?>
       </ul>
-
     <?php
     }
     ?>
