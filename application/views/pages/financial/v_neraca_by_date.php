@@ -79,9 +79,9 @@
               <h2 class="text-center">Pasiva</h2>
               <p class="text-right">Total: <strong><?= (isset($sum_pasiva)) ? number_format($sum_pasiva, 2) : 0 ?></strong></p>
               <div class="table-responsive">
-                <table id="" class="table" style="width:100%">
+                <table id="" class="table table-sm" style="width:100%">
                   <thead class="thead-dark">
-                    <tr>
+                    <tr style="height: 50px;">
                       <th>No. Coa</th>
                       <th>Nama Coa</th>
                       <th>Nominal</th>
@@ -94,7 +94,7 @@
                         $coa = $this->M_coa->getCoa($a->no_sbb);
 
                         if ($coa['table_source'] == "t_coa_sbb" && $coa['posisi'] == 'PASIVA' && $a->saldo_awal != '0') : ?>
-                          <tr>
+                          <tr style="height: 35px;">
                             <td><button class="btn btn-primary arus_kas btn-sm" data-id="<?= $a->no_sbb ?>"><?= $a->no_sbb ?></td>
                             <td><?= $coa['nama_perkiraan'] ?></td>
                             <td class="text-right"><?= number_format($a->saldo_awal, 2) ?></td>

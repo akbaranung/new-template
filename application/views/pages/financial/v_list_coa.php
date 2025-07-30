@@ -79,9 +79,9 @@
             </div>
           </div>
           <div class="table-responsive">
-            <table id="" class="table table-striped" style="width:100%">
+            <table id="" class="table table-sm" style="width:100%">
               <thead class="thead-dark">
-                <tr>
+                <tr style="height: 50px;">
                   <th>No.</th>
                   <th>BB</th>
                   <th>Sub BB</th>
@@ -103,7 +103,7 @@
                   $no = ($this->uri->segment(3)) ? ((($this->uri->segment(3) - 1) * 10) + 1) : '1';
 
                   foreach ($coa as $i) : ?>
-                    <tr>
+                    <tr style="height: 35px;">
                       <td><?= $no++ ?>.</td>
                       <td><?= $i['no_bb'] ?></td>
                       <td><?= $i['no_sbb'] ?></td>
@@ -293,9 +293,9 @@
               <!-- <input type="hidden" id="total_aktiva" value="<?= (isset($sum_activa)) ? number_format($sum_activa, 2) : 0 ?>"> -->
               <p class="text-right">Total: <strong id="total_aktiva"><?= (isset($sum_activa)) ? number_format($sum_activa, 2) : 0 ?></strong></p>
               <div class="table-responsive">
-                <table class="table" style="width:100%">
+                <table class="table table-sm" style="width:100%">
                   <thead class="thead-dark">
-                    <tr>
+                    <tr style="height: 50px;">
                       <th>No. Coa</th>
                       <th>Nama Coa</th>
                       <th>Nominal</th>
@@ -309,7 +309,7 @@
 
                         // if ($coa['table_source'] == "t_coa_sbb" && $coa['posisi'] == 'AKTIVA' && $a->saldo_awal != '0') :
                     ?>
-                        <tr>
+                        <tr style="height: 35px;">
                           <!-- <td><button class="btn btn-primary arus_kas btn-sm" data-id="<?= $a->no_sbb ?>"><?= $a->no_sbb ?></button></td> -->
                           <td><button class="btn btn-primary arus_kas btn-sm" type="button" data-id="<?= $a->no_sbb ?>"><?= $a->no_sbb ?></button></td>
                           <td><?= $a->nama_perkiraan ?></td>
@@ -333,9 +333,9 @@
               <!-- <input type="hidden" id="total_pasiva" value="<?= (isset($sum_pasiva)) ? number_format($sum_pasiva, 2) : 0 ?>"> -->
               <p class="text-right">Total: <strong id="total_pasiva"><?= (isset($sum_pasiva)) ? number_format($sum_pasiva, 2) : 0 ?></strong></p>
               <div class="table-responsive">
-                <table id="" class="table" style="width:100%">
+                <table id="" class="table table-sm" style="width:100%">
                   <thead class="thead-dark">
-                    <tr>
+                    <tr style="height: 50px;">
                       <th>No. Coa</th>
                       <th>Nama Coa</th>
                       <th>Nominal</th>
@@ -349,7 +349,7 @@
 
                         // if ($coa['table_source'] == "t_coa_sbb" && $coa['posisi'] == 'PASIVA' && $a->saldo_awal != '0') :
                     ?>
-                        <tr>
+                        <tr style="height: 35px;">
                           <!-- <td><button class="btn btn-primary arus_kas btn-sm" data-id="<?= $a->no_sbb ?>"><?= $a->no_sbb ?></td> -->
                           <td><button class="btn btn-primary arus_kas btn-sm" type="button" data-id="<?= $a->no_sbb ?>"><?= $a->no_sbb ?></td>
                           <td><?= $a->nama_perkiraan ?></td>
@@ -358,7 +358,7 @@
                       <?php
                       // endif;
                       endforeach; ?>
-                      <tr>
+                      <tr style="height: 35px;">
                         <td>31030</td>
                         <td>LABA TAHUN BERJALAN</td>
                         <td class="text-right"><?= number_format($laba, 2) ?></td>
