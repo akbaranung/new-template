@@ -27,6 +27,21 @@ class Auth extends CI_Controller
     $this->load->view('pages/auth/index', $data);
   }
 
+  public function login_continue()
+  {
+    if ($this->session->userdata('isLogin')) {
+      if (!$this->session->userdata('nama_perusahaan')) {
+        redirect('auth/register_perusahaan');
+      } else {
+        redirect('home');
+      }
+    }
+    $data['title'] = 'Login';
+    $data['utility'] = $this->db->get('utility')->row_array();
+    $data['pages'] = 'pages/auth/v_login_2';
+    $this->load->view('pages/auth/index', $data);
+  }
+
   public function login()
   {
     if ($this->session->userdata('isLogin')) {

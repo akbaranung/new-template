@@ -307,6 +307,7 @@ class Perusahaan extends CI_Controller
       "tmt" => $this->input->post('tmt'),
       "cuti" => $this->input->post('cuti'),
       "id_cabang" => $this->input->post('cabang'),
+      "ns_address" => 'ns1.bariskode.id',
     ];
     $this->db->insert('users', $add);
 

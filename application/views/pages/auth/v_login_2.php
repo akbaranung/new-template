@@ -49,8 +49,8 @@
 </style>
 
 <div class="row align-items-center h-100 w-100 m-0">
-  <!-- <form class="col-lg-3 col-md-4 col-10 mx-auto" action="<?= site_url('auth/login') ?>" method="post"> -->
-  <form class="col-lg-3 col-md-4 col-10 mx-auto" id="login_username" method="POSTx">
+  <form class="col-lg-3 col-md-4 col-10 mx-auto" action="<?= site_url('auth/login') ?>" method="post">
+    <!-- <form class="col-lg-3 col-md-4 col-10 mx-auto" id="login_username" method="POSTx"> -->
 
     <div class="card shadow p-4">
       <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="<?= base_url('/') ?>">
@@ -64,28 +64,24 @@
           </button>
         </div>
       <?php endif; ?>
-      <div id="usernameSection">
-        <div class=" form-group">
-          <label for="inputEmail" class="sr-only">Username</label>
-          <input type="text" id="username" name="username" class="form-control form-control-lg" placeholder="Please enter username" autofocus="true">
-        </div>
+      <div class=" form-group">
+        <label for="inputEmail" class="sr-only">Username</label>
+        <input type="text" id="username" name="username" class="form-control form-control-lg" placeholder="Please enter username" autofocus="true" value="<?= $this->uri->segment(3) ?>">
       </div>
-      <div id="passwordSection" class="d-none">
-        <!-- <h6 id="nsAddressDisplay" class="text-black text-xl mb-3"></h6> -->
-        <div class="form-group">
-          <label for="inputPassword" class="sr-only">Password</label>
-          <input type="password" id="password" name="password" class="form-control form-control-lg" placeholder="Password" autofocus>
-        </div>
+      <!-- <h6 id="nsAddressDisplay" class="text-black text-xl mb-3"></h6> -->
+      <div class="form-group">
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="password" name="password" class="form-control form-control-lg" placeholder="Password" autofocus>
       </div>
 
       <!-- <div class="form-group">
         <label for="inputPassword" class="sr-only">Password</label>
         <input type="password" id="password" name="password" class="form-control form-control-lg" placeholder="Password">
       </div> -->
-      <button id="checkUsernameBtn" class="btn btn-lg btn-primary btn-block" type="button" onclick="onCheck()">
+      <!-- <button id="checkUsernameBtn" class="btn btn-lg btn-primary btn-block" type="button" onclick="onCheck()">
         Next
-      </button>
-      <button id="loginbtn" class="btn btn-lg btn-primary btn-block btn-login d-none" type="button" disabled>Login</button>
+      </button> -->
+      <button id="loginbtn" class="btn btn-lg btn-primary btn-block btn-login" type="button">Login</button>
       <p class="mt-5 mb-3 text-muted text-center">Belum punya akun? <a href="<?= base_url('auth/') ?>register">Daftarkan Akun Perusahaan Anda</a></p>
       <p class="mt-5 mb-3 text-muted text-center">IT BARIS KODE INDONESIA © <?= date('Y') ?></p>
     </div>
@@ -208,8 +204,9 @@
             // loginForm.setAttribute('action', 'https://' + response.ns_address + '/auth/login');
             // loginForm.setAttribute('action', url + '/auth/login');
             // loginForm.setAttribute('action', 'http://localhost/new-template/auth/login');
-            window.location.href = 'https://' + response.ns_address + '/auth/login_continue/' + username;
-            // window.location.href = '<?= base_url('/auth/login_continue/') ?>' + username; // Adjust this URL as needed
+            window.location.href = 'https://' + response.ns_address + '/auth';
+            // window.location.href = '<?= base_url('subscription/upgrade') ?>'; // Adjust this URL as needed
+            redirect
             // loginForm.setAttribute('action', );
 
 
