@@ -63,82 +63,87 @@ class Pengajuan extends CI_Controller
         'msg' => array_values($this->form_validation->error_array())[0]
       ];
     } else {
-      // Upload file
-      $config['upload_path'] = './uploads/pengajuan';
-      $config['allowed_types'] = 'jpg|jpeg|png|pdf';
-      // $config['encrypt_name'] = TRUE;
-      $file_extension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
-      $custom_file_name = 'Kode_Cabang_' . $this->session->userdata('kode_cabang') . '_Pengajuan_attachment_' . time() . '.' . $file_extension;
-      $config['file_name'] = $custom_file_name;
-      $config['encrypt_name']  = FALSE; // Set to FALSE to use your custom file_name
+      if ($this->session->userdata('is_premium')) {
+        // Upload file
+        $config['upload_path'] = './uploads/pengajuan';
+        $config['allowed_types'] = 'jpg|jpeg|png|pdf';
+        // $config['encrypt_name'] = TRUE;
+        $file_extension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
+        $custom_file_name = 'Kode_Cabang_' . $this->session->userdata('kode_cabang') . '_Pengajuan_attachment_' . time() . '.' . $file_extension;
+        $config['file_name'] = $custom_file_name;
+        $config['encrypt_name']  = FALSE; // Set to FALSE to use your custom file_name
 
-      $this->upload->initialize($config);
+        $this->upload->initialize($config);
 
-      // Jika upload error atau gagal
-      if (!$this->upload->do_upload('file')) {
-        $response = [
-          'success' => false,
-          'msg' => $this->upload->display_errors()
-        ];
+        // Jika upload error atau gagal
+        if (!$this->upload->do_upload('file')) {
+          $response = [
+            'success' => false,
+            'msg' => $this->upload->display_errors()
+          ];
+        }
       } else {
-        $this->db->trans_begin();
-        $this->cb->trans_begin();
+        $upload['file_name'] = NULL;
+      }
+      // else {
+      $this->db->trans_begin();
+      $this->cb->trans_begin();
 
-        $upload = $this->upload->data();
-        $cabang = $this->session->userdata('kode_cabang');
-        $user = $this->db->select('supervisi')->from('users')->where('nip', $this->session->userdata('nip'))->get()->row();
-        $max = $this->cb->select('max(no_pengajuan) as maximal')->from('t_pengajuan')->where('cabang', $cabang)->get()->row();
-        $count = $max->maximal + 1;
-        $kode = $cabang . '-' . sprintf("%06d", $count);
+      $upload = $this->upload->data();
+      $cabang = $this->session->userdata('kode_cabang');
+      $user = $this->db->select('supervisi')->from('users')->where('nip', $this->session->userdata('nip'))->get()->row();
+      $max = $this->cb->select('max(no_pengajuan) as maximal')->from('t_pengajuan')->where('cabang', $cabang)->get()->row();
+      $count = $max->maximal + 1;
+      $kode = $cabang . '-' . sprintf("%06d", $count);
 
-        $insert = [
-          'tanggal' => $tanggal,
-          'kode' => $kode,
-          'user' => $this->session->userdata('nip'),
-          'no_pengajuan' => $count,
-          'no_rekening' => $rekening,
-          'metode_pembayaran' => $metode,
-          'spv' => $user->supervisi,
-          'posisi' => 'Diajukan kepada supervisi',
-          'bukti_pengajuan' => $upload['file_name'],
-          'catatan' => $catatan,
-          'total' => $this->_parse_rupiah($total),
+      $insert = [
+        'tanggal' => $tanggal,
+        'kode' => $kode,
+        'user' => $this->session->userdata('nip'),
+        'no_pengajuan' => $count,
+        'no_rekening' => $rekening,
+        'metode_pembayaran' => $metode,
+        'spv' => $user->supervisi,
+        'posisi' => 'Diajukan kepada supervisi',
+        'bukti_pengajuan' => $upload['file_name'],
+        'catatan' => $catatan,
+        'total' => $this->_parse_rupiah($total),
+        'cabang' => $cabang
+      ];
+
+      // Simpan pengajuan
+      $pengajuan_id = $this->M_pengajuan->simpan_pengajuan($insert);
+
+      // Simpan detail
+      $details = [];
+      for ($i = 0; $i < count($uraian); $i++) {
+        // Menghilangkan karakter
+        $details[] = [
+          'no_pengajuan' => $pengajuan_id,
+          'item' => $uraian[$i],
+          'qty' => (int)($qty[$i]),
+          'price' => $this->_parse_rupiah($price[$i]),
+          'total' => $this->_parse_rupiah($sub_total[$i]),
           'cabang' => $cabang
         ];
-
-        // Simpan pengajuan
-        $pengajuan_id = $this->M_pengajuan->simpan_pengajuan($insert);
-
-        // Simpan detail
-        $details = [];
-        for ($i = 0; $i < count($uraian); $i++) {
-          // Menghilangkan karakter
-          $details[] = [
-            'no_pengajuan' => $pengajuan_id,
-            'item' => $uraian[$i],
-            'qty' => (int)($qty[$i]),
-            'price' => $this->_parse_rupiah($price[$i]),
-            'total' => $this->_parse_rupiah($sub_total[$i]),
-            'cabang' => $cabang
-          ];
-        }
-
-        $this->M_pengajuan->simpan_detail_batch($details);
-
-        if ($this->db->trans_status() === FALSE or $this->cb->trans_status() === false) {
-          $this->db->trans_rollback();
-          $this->cb->trans_rollback();
-        } else {
-          $this->db->trans_commit();
-          $this->cb->trans_commit();
-
-          $response = [
-            'success' => true,
-            'msg' => 'Pengajuan berhasil ditambahkan!',
-            'reload' => site_url('pengajuan/list')
-          ];
-        }
       }
+
+      $this->M_pengajuan->simpan_detail_batch($details);
+
+      if ($this->db->trans_status() === FALSE or $this->cb->trans_status() === false) {
+        $this->db->trans_rollback();
+        $this->cb->trans_rollback();
+      } else {
+        $this->db->trans_commit();
+        $this->cb->trans_commit();
+
+        $response = [
+          'success' => true,
+          'msg' => 'Pengajuan berhasil ditambahkan!',
+          'reload' => site_url('pengajuan/list')
+        ];
+      }
+      // }
     }
 
     echo json_encode($response);
