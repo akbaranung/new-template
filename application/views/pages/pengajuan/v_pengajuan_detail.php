@@ -217,6 +217,61 @@
               </div>
             <?php } ?>
 
+            <?php if ($this->uri->segment(4) == 'direksi' and $pengajuan->posisi == 'Diajukan kepada direksi') { ?>
+              <hr>
+              <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                  <form action="<?= site_url('pengajuan/update_direksi/') . $this->uri->segment(3) ?>" method="post">
+                    <div class="row">
+                      <div class="col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                          <label for="tanggal" class="form-label">Tanggal</label>
+                          <input type="date" class="form-control" name="tanggal" id="tanggal" value="<?= date('Y-m-d') ?>">
+                        </div>
+                      </div>
+                      <div class="col-lg-4 col-md-4 col-sm-4 col-12">
+                        <div class="form-group">
+                          <label for="status" class="form-label">Status</label>
+                          <select name="status" id="status" class="form-control">
+                            <option value="1">Disetujui</option>
+                            <option value="0">Ditolak</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                    <div>
+                      <button type="submit" class="btn btn-primary btn-submit">Simpan</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            <?php } ?>
+
+            <?php if ($this->uri->segment(4) == 'direksi' and ($pengajuan->posisi == 'Ditolak oleh direksi' or $pengajuan->status == 1)) { ?>
+              <hr>
+              <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                  <div class="row">
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <label for="tanggal" class="form-label">Tanggal</label>
+                        <input type="date" class="form-control" name="tanggal" id="tanggal" value="<?= date('Y-m-d', strtotime($pengajuan->date_direksi)) ?>" disabled>
+                      </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-12">
+                      <div class="form-group">
+                        <label for="status" class="form-label">Status</label>
+                        <select name="status" id="status" class="form-control" disabled>
+                          <option value="1" <?= $pengajuan->status == 1 ? 'selected' : '' ?>>Disetujui</option>
+                          <option value="0" <?= $pengajuan->status == 0 ? 'selected' : '' ?>>Ditolak</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <?php } ?>
+
           <?php } else { ?>
             <form action="<?= site_url('pengajuan/update_keuangan/') . $this->uri->segment(3) ?>">
               <div class="row">

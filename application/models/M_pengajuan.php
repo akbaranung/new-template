@@ -61,6 +61,33 @@ class M_pengajuan extends CI_Model
     return $this->cb->limit($limit, $start)->get()->result();
   }
 
+  public function pengajuan_count_direksi($nip, $keyword)
+  {
+    $this->cb->select('Id')->from('t_pengajuan')
+      ->group_start()
+      ->where('direksi', $nip, 'both')
+      ->where('cabang', $this->session->userdata('kode_cabang'))
+      ->group_end();
+    if ($keyword) {
+      $this->cb->like('kode', $keyword, 'both');
+    }
+    return $this->cb->get()->num_rows();
+  }
+
+  public function pengajuan_get_direksi($limit, $start, $nip, $keyword)
+  {
+    $this->cb->select('a.*, b.nama')->from('t_pengajuan a')->join($this->db->database . '.users b', 'b.nip = a.user', 'left')
+      ->group_start()
+      ->where('a.direksi', $nip)
+      ->where('a.cabang', $this->session->userdata('kode_cabang'))
+      ->group_end();
+    if ($keyword) {
+      $this->cb->like('a.kode', $keyword, 'both');
+    }
+    $this->cb->order_by('a.tanggal', 'DESC');
+    return $this->cb->limit($limit, $start)->get()->result();
+  }
+
   public function pengajuan_count_keuangan($keyword)
   {
     $this->cb->select('Id')->from('t_pengajuan')

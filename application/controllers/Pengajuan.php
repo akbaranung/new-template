@@ -229,6 +229,12 @@ class Pengajuan extends CI_Controller
       }
     }
 
+    if ($this->uri->segment(4) == 'direksi') {
+      if ($data['pengajuan']->direksi != $this->session->userdata('nip') or $data['pengajuan']->cabang != $this->session->userdata('kode_cabang')) {
+        show_error('Forbidden Access: You do not have permission to view this page.', 403, '403 Forbidden');
+      }
+    }
+
     if ($this->uri->segment(4) == 'finance') {
       $data['coa'] = $this->cb->get_where('v_coa_all', ['id_cabang' => $this->session->userdata('kode_cabang')])->result();
       $user = $this->db->select('users.Id, bagian.nama as nama_bagian')->from('users')->join('bagian', 'bagian.Id = users.bagian')->where('users.nip', $this->session->userdata('nip'))->where('users.id_cabang', $this->session->userdata('kode_cabang'))->get()->row();
@@ -490,6 +496,55 @@ class Pengajuan extends CI_Controller
     echo json_encode($response);
   }
 
+  public function update_direksi($kode)
+  {
+    $tanggal = $this->input->post('tanggal');
+    $status = $this->input->post('status');
+
+    $this->form_validation->set_rules('tanggal', 'Tanggal', 'required', array('required' => '%s harus diisi!'));
+    $this->form_validation->set_rules('status', 'Status', 'required|in_list[0,1]', array('required' => '%s harus diisi!'));
+
+    if ($this->form_validation->run() == false) {
+      $response = [
+        'success' => false,
+        'msg' => array_values($this->form_validation->error_array())[0]
+      ];
+    } else {
+      $this->cb->trans_begin();
+
+      if ($status == 1) {
+        $posisi = 'Diarahkan ke pembayaran';
+        $status_pengajuan = 3;
+      } else {
+        $posisi = 'Ditolak oleh direksi';
+        $status_pengajuan = 0;
+      }
+
+      $update = [
+        'status' => $status_pengajuan,
+        'date_direksi' => $tanggal,
+        'posisi' => $posisi
+      ];
+
+      $this->cb->where('kode', $kode);
+      $this->cb->update('t_pengajuan', $update);
+
+      if ($this->cb->trans_status() === FALSE) {
+        $this->cb->trans_rollback();
+      } else {
+        $this->cb->trans_commit();
+
+        $response = [
+          'success' => true,
+          'msg' => 'Status pengajuan ' . $kode . ' berhasil diubah!',
+          'reload' => site_url('pengajuan/approval_direksi')
+        ];
+      }
+    }
+
+    echo json_encode($response);
+  }
+
   public function approval_keuangan()
   {
     $has_access = $this->M_menu->has_access();
@@ -636,6 +691,65 @@ class Pengajuan extends CI_Controller
     }
 
     echo json_encode($response);
+  }
+
+  public function approval_direksi()
+  {
+    $has_access = $this->M_menu->has_access();
+
+    if (!$has_access) {
+      show_error('Forbidden Access: You do not have permission to view this page.', 403, '403 Forbidden');
+    }
+
+    $keyword = htmlspecialchars($this->input->get('search') ?? '', ENT_QUOTES, 'UTF-8');
+    //pagination settings
+    $config['base_url'] = site_url('pengajuan/approval_direksi');
+    $config['total_rows'] = $this->M_pengajuan->pengajuan_count_direksi($this->session->userdata('nip'), $keyword);
+    $config['per_page'] = "10";
+    $config["uri_segment"] = 3;
+    $config["num_links"] = 10;
+    $config['enable_query_strings'] = TRUE;
+    $config['page_query_string'] = TRUE;
+    $config['use_page_numbers'] = TRUE;
+    $config['reuse_query_string'] = TRUE;
+    $config['query_string_segment'] = 'page';
+
+    // integrate bootstrap pagination
+    $config['full_tag_open'] = '<ul class="pagination justify-content-end">';
+    $config['full_tag_close'] = '</ul>';
+    $config['first_link'] = true;
+    $config['last_link'] = true;
+    $config['first_tag_open'] = '<li class="page-item">';
+    $config['first_tag_close'] = '</li>';
+    $config['prev_link'] = 'Previous';
+    $config['prev_tag_open'] = '<li class="page-item">';
+    $config['prev_tag_close'] = '</li>';
+    $config['next_link'] = 'Next';
+    $config['next_tag_open'] = '<li class="page-item">';
+    $config['next_tag_close'] = '</li>';
+    $config['last_tag_open'] = '<li class="page-item">';
+    $config['last_tag_close'] = '</li>';
+    $config['cur_tag_open'] = '<li class="page-item active"><a class="page-link" href="#">';
+    $config['cur_tag_close'] = '</a></li>';
+    $config['num_tag_open'] = '<li class="page-item">';
+    $config['num_tag_close'] = '</li>';
+    $config['attributes'] = array('class' => 'page-link');
+
+    // initialize pagination
+    $this->pagination->initialize($config);
+    $data['page'] = ($this->input->get('page')) ? (($this->input->get('page') - 1) * $config['per_page']) : 0;
+    $data['data_pengajuan'] = $this->M_pengajuan->pengajuan_get_direksi($config["per_page"], $data['page'], $this->session->userdata('nip'), $keyword);
+    $data['pagination'] = $this->pagination->create_links();
+
+    $data['title'] = 'List Approval Direksi';
+    $data['utility'] = $this->db->get('utility')->row_array();
+    $data['pages_script'] = 'script/pengajuan/s_pengajuan';
+    $data['pages'] = 'pages/pengajuan/v_pengajuan_direksi';
+    $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
+
+    $data['belum_proses_direksi'] = $this->cb->select('Id')->from('t_pengajuan')->where('posisi', 'Diajukan kepada direksi')->where('direksi', $this->session->userdata('nip'))->where('cabang', $this->session->userdata('kode_cabang'))->get()->num_rows();
+
+    $this->load->view('index', $data);
   }
 
   public function bayar($kode)
