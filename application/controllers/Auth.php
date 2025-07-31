@@ -410,7 +410,7 @@ class Auth extends CI_Controller
         'nomor_coa_ppn_keluaran'       => '23011',
         'nama_coa_utang_pph23'       => 'UTANG PPH 23',
         'nomor_coa_utang_pph23'       => '23014',
-        'generate_sawal'       => '0',
+        // 'generate_sawal'       => '0',
       );
 
 
@@ -503,6 +503,8 @@ class Auth extends CI_Controller
           'alamat_cabang' => $this->input->post('alamat_cabang'),
           'nomor_rekening'    => $this->input->post('nomor_rekening'),
           'nama_bank'         => $this->input->post('nama_bank'),
+          'generate_sawal'       => '0',
+
         );
 
         $branch_inserted_id = $this->M_login->register_cabang($branch_data);

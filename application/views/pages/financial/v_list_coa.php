@@ -67,7 +67,7 @@
                     <button class="btn btn-primary text-white" data-toggle="modal" data-target="#tambahCoa" type="button" style="color: white;">Buat CoA</button>
                     <button class="btn btn-primary text-white" data-toggle="modal" data-target="#TemplateCoa" type="button" style="color: white;">Ambil CoA</button>
                     <?php
-                    if ($is_sawal == 0) {
+                    if ($is_sawal == 0 && $cabang_now == $this->session->userdata('kode_cabang')) {
                     ?>
                       <button class="btn btn-primary text-white" data-toggle="modal" data-target="#saldoAwal" type="button" style="color: white;">Buat Saldo Awal</button>
                     <?php
@@ -89,7 +89,7 @@
                   <!-- <th class="text-center">Nominal</th> -->
                   <th class="text-center">Saldo Awal</th>
                   <?php
-                  if ($is_sawal == 0) {
+                  if ($is_sawal == 0 && $cabang_now == $this->session->userdata('kode_cabang')) {
                   ?>
                     <th class="text-center">Aksi</th>
                   <?php
@@ -110,7 +110,7 @@
                       <td><?= ($i['nama_perkiraan']) ?></td>
                       <td class="text-right"><?= $i['nominal'] != null ? number_format($i['nominal']) : 0 ?></td>
                       <?php
-                      if ($is_sawal == 0) {
+                      if ($is_sawal == 0 && $cabang_now == $this->session->userdata('kode_cabang')) {
                       ?>
                         <td class="text-center"><button class="btn btn-warning text-white" onclick="onEdit(<?= $i['no_sbb'] ?>, <?= $i['id_cabang'] ?>)" type="button">Update</button></td>
                       <?php

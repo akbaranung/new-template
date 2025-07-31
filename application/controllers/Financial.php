@@ -1896,13 +1896,13 @@ class Financial extends CI_Controller
     if ($keyword === null) $keyword = $this->session->userdata('search');
     else $this->session->set_userdata('search', $keyword);
 
-    $cabang = $this->input->post('cabang_select') ? $this->input->post('cabang_select') : '';
-    if ($cabang === null || $cabang === '') $cabang = $this->session->userdata('kode_cabang');
+    $cabang_now = $this->input->post('cabang_select') ? $this->input->post('cabang_select') : '';
+    if ($cabang_now === null || $cabang_now === '') $cabang = $this->session->userdata('kode_cabang');
     // else $this->session->set_userdata('kode_cabang', $cabang);
 
     $config = [
       'base_url' => site_url('financial/list_coa'),
-      'total_rows' => $this->M_coa->count($keyword, $cabang, 'v_coa_all'),
+      'total_rows' => $this->M_coa->count($keyword, $cabang_now, 'v_coa_all'),
       'per_page' => 25,
       'uri_segment' => 3,
       'num_links' => 10,
@@ -1938,7 +1938,7 @@ class Financial extends CI_Controller
     // $page = $this->uri->segment(3) ? ($this->uri->segment(3) - 1) * $config['per_page'] : 0;
     $page = ($this->input->get('page')) ? (($this->input->get('page') - 1) * $config['per_page']) : 0;
     // $invoices = $this->m_invoice->list_invoice($config["per_page"], $page, $keyword);
-    $coa = $this->M_coa->list_coa_paginate($config["per_page"], $page, $keyword, $cabang);
+    $coa = $this->M_coa->list_coa_paginate($config["per_page"], $page, $keyword, $cabang_now);
 
     $nip = $this->session->userdata('nip');
     $sql = "SELECT COUNT(Id) FROM memo WHERE (nip_kpd LIKE '%$nip%' OR nip_cc LIKE '%$nip%') AND (`read` NOT LIKE '%$nip%');";
@@ -1953,9 +1953,9 @@ class Financial extends CI_Controller
     $this->cb->where('id_perusahaan', $this->session->userdata('user_perusahaan_id'));
     $cabangs = $this->cb->get()->result();
 
-    $this->db->from('utility');
-    $this->db->where('id', $this->session->userdata('user_perusahaan_id'));
-    $perusahaans = $this->db->get()->row();
+    $this->cb->from('t_cabang');
+    $this->cb->where('uid', $this->session->userdata('kode_cabang'));
+    $cabang = $this->cb->get()->row();
 
     $activa = $this->M_coa->get_coa_activa_by_cabang();
     $pasiva = $this->M_coa->get_coa_pasiva_by_cabang();
@@ -1975,10 +1975,10 @@ class Financial extends CI_Controller
       'sum_activa' => $sum_activa,
       'sum_pasiva' => $sum_pasiva,
       'laba' => $laba,
-      'is_sawal' => $perusahaans->generate_sawal,
+      'is_sawal' => $cabang->generate_sawal,
       'page' => $page,
       'coa' => $coa,
-      'cabang_now' => $cabang,
+      'cabang_now' => $cabang_now,
       'cabang' => $cabangs,
       'count_inbox' => $result,
       'count_inbox2' => $result2,
