@@ -66,7 +66,7 @@
       <?php endif; ?>
       <div class=" form-group">
         <label for="inputEmail" class="sr-only">Username</label>
-        <input type="text" id="username" name="username" class="form-control form-control-lg" placeholder="Please enter username" autofocus="true" value="<?= $this->uri->segment(3) ?>">
+        <input type="text" id="username" name="username" class="form-control form-control-lg" placeholder="Please enter username" readonly value="<?= $this->uri->segment(3) ?>">
       </div>
       <!-- <h6 id="nsAddressDisplay" class="text-black text-xl mb-3"></h6> -->
       <div class="form-group">
@@ -89,6 +89,10 @@
 </div>
 
 <script>
+  document.addEventListener('DOMContentLoaded', (event) => {
+    document.getElementById('password').focus();
+  });
+
   function check() {
     $('#passwordSection').removeClass('d-none');
     $('#loginbtn').removeAttr('disabled');

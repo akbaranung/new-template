@@ -197,12 +197,12 @@
           // Only reload the table if it was a success or a clear 'info' (already deleted) case
           if (response.status === 'success' || response.status === 'info') {
             // Assuming your DataTables ID is 'datatable', not 'table1' based on previous snippets
-            $('#passwordSection').removeClass('d-none');
-            // $('#nsAddressDisplay').html('NS Address : ' + response.ns_address);
-            $('#loginbtn').removeClass('d-none');
-            $('#checkUsernameBtn').addClass('d-none');
-            $('#loginbtn').removeAttr('disabled');
-            passwordInput.focus();
+            // $('#passwordSection').removeClass('d-none');
+            // // $('#nsAddressDisplay').html('NS Address : ' + response.ns_address);
+            // $('#loginbtn').removeClass('d-none');
+            // $('#checkUsernameBtn').addClass('d-none');
+            // $('#loginbtn').removeAttr('disabled');
+            // passwordInput.focus();
             // loginForm.setAttribute('action', response.ns_address + '/login');
             // loginForm.setAttribute('action', 'https://admin.kodesis.id/login/login_form');
             // loginForm.setAttribute('action', 'https://' + response.ns_address + '/auth/login');
