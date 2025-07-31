@@ -112,7 +112,7 @@
                       <?php
                       if ($is_sawal == 0 && $cabang_now == $this->session->userdata('kode_cabang')) {
                       ?>
-                        <td class="text-center"><button class="btn btn-warning text-white" onclick="onEdit(<?= $i['no_sbb'] ?>, <?= $i['id_cabang'] ?>)" type="button">Update</button></td>
+                        <td class="text-center"><button class="btn btn-sm btn-warning text-white" onclick="onEdit(<?= $i['no_sbb'] ?>, <?= $i['id_cabang'] ?>)" type="button">Update</button></td>
                       <?php
                       }
                       ?>
