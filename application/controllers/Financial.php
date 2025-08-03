@@ -2746,12 +2746,19 @@ class Financial extends CI_Controller
 
         $this->M_coa->insert_saldo_awal($data);
 
-        $utility_data = array(
+        // $utility_data = array(
+        //   'generate_sawal' => 1,
+        // );
+        // Assuming 'users' table is in the default database
+        // $this->db->where('id', $this->session->userdata('user_perusahaan_id')); // Assuming 'id' is the primary key for users table
+        // $this->db->update('utility', $utility_data);
+
+        $cabang_data = array(
           'generate_sawal' => 1,
         );
         // Assuming 'users' table is in the default database
-        $this->db->where('id', $this->session->userdata('user_perusahaan_id')); // Assuming 'id' is the primary key for users table
-        $this->db->update('utility', $utility_data);
+        $this->cb->where('uid', $this->session->userdata('kode_cabang')); // Assuming 'id' is the primary key for users table
+        $this->cb->update('t_cabang', $cabang_data);
 
         // $this->session->set_flashdata('success', 'Saldo awal periode ' . format_indo($nextMonth) . ' berhasil ditetapkan');
         $this->session->set_flashdata('swal_message', [
