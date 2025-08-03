@@ -78,7 +78,15 @@
 
       $i = $total_user;
 
-      if ($total_user < 4 || $cek_coa_cabang == 0) {
+      $this->cb->from('t_cabang');
+      $this->cb->where('uid', $this->session->userdata('kode_cabang'));
+      $cabang_now = $this->cb->get()->row();
+      $cek_saldo_awal = $cabang_now->generate_sawal;
+
+      // $this->cb->from('t_cabang');
+
+      // if ($total_user < 4 || $cek_coa_cabang == 0) {
+      if ($total_user < 4 || $cek_saldo_awal == 0) {
         $this->load->view('layouts/tutorial.php');
       }
       ?>

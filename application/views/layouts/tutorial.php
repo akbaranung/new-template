@@ -48,6 +48,12 @@
   ];
   $active_p = 0;
 
+
+  $this->cb->from('t_cabang');
+  $this->cb->where('uid', $this->session->userdata('kode_cabang'));
+  $cabang_now = $this->cb->get()->row();
+  $cek_saldo_awal = $cabang_now->generate_sawal;
+
   ?>
   <link rel="stylesheet" href="<?= base_url('assets/') ?>progress-bar-dashboard.css">
   <style>
@@ -151,7 +157,7 @@
             $i++;
           }
 
-          if ($total_user >= $max_users_for_100_percent && $cek_coa_cabang == 0) {
+          if ($total_user >= $max_users_for_100_percent && $cek_saldo_awal == 0) {
             $button_now = base_url('financial_first/force_make_coa_sbb');
             // $label = "COA"
             ?>
@@ -161,7 +167,8 @@
               </div>
             </a>
           <?php
-          } else if ($cek_coa_cabang == 0) {
+            // } else if ($cek_coa_cabang == 0) {
+          } else if ($cek_saldo_awal == 0) {
           ?>
             <a href="#">
               <div class="circle" data-label="Setting COA dan SAWAL">
