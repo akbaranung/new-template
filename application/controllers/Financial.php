@@ -2679,11 +2679,17 @@ class Financial extends CI_Controller
 
     $getLastPeriod = $this->M_coa->cek_saldo_awal($last_periode);
 
-    $this->db->from('utility');
-    $this->db->where('id', $this->session->userdata('user_perusahaan_id'));
-    $perusahaans = $this->db->get()->row();
+    // $this->db->from('utility');
+    // $this->db->where('id', $this->session->userdata('user_perusahaan_id'));
+    // $perusahaans = $this->db->get()->row();
 
-    if ($perusahaans->generate_sawal == 0) {
+    // if ($perusahaans->generate_sawal == 0) {
+
+    $this->cb->from('t_cabang');
+    $this->cb->where('uid', $this->session->userdata('kode_cabang'));
+    $cabangsss = $this->cb->get()->row();
+    if ($cabangsss->generate_sawal == 0) {
+
       $Sumactiva = $this->M_coa->get_sum_coa_activa_by_cabang();
       $sum_activa = $Sumactiva->nominal;
       $Sumpasiva = $this->M_coa->get_sum_coa_pasiva_by_cabang();
