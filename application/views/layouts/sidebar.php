@@ -57,7 +57,12 @@
     // Check if user is premium once
     $is_premium_user = $this->session->userdata('is_premium');
 
-    if ($total_user >= 5) {
+    $this->cb->from('t_cabang');
+    $this->cb->where('uid', $this->session->userdata('kode_cabang'));
+    $cabang_now = $this->cb->get()->row();
+    $cek_saldo_awal = $cabang_now->generate_sawal;
+
+    if ($total_user >= 5 && $cek_saldo_awal == 1) {
     ?>
       <ul class="navbar-nav flex-fill w-100 mb-2">
         <?php if ($menus): ?>
