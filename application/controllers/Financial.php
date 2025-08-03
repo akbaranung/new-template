@@ -1897,7 +1897,7 @@ class Financial extends CI_Controller
     else $this->session->set_userdata('search', $keyword);
 
     $cabang_now = $this->input->post('cabang_select') ? $this->input->post('cabang_select') : '';
-    if ($cabang_now === null || $cabang_now === '') $cabang = $this->session->userdata('kode_cabang');
+    if ($cabang_now === null || $cabang_now === '') $cabang_now = $this->session->userdata('kode_cabang');
     // else $this->session->set_userdata('kode_cabang', $cabang);
 
     $config = [
@@ -2626,10 +2626,18 @@ class Financial extends CI_Controller
     $this->cb->where('id_cabang', $id_cabang);
     $get_coa = $this->cb->get()->row();
 
-    $this->cb->select('*');
-    $this->cb->from($get_coa->table_source);
-    $this->cb->where('no_sbb', $no_sbb);
-    $this->cb->where('id_cabang', $id_cabang);
+    if ($get_coa->table_source == "t_coa_sbb") {
+      $this->cb->select('*');
+      $this->cb->from($get_coa->table_source);
+      $this->cb->where('no_sbb', $no_sbb);
+      $this->cb->where('id_cabang', $id_cabang);
+    } else {
+
+      $this->cb->select('*');
+      $this->cb->from($get_coa->table_source);
+      $this->cb->where('no_lr_sbb', $no_sbb);
+      $this->cb->where('id_cabang', $id_cabang);
+    }
     $data = $this->cb->get()->row();
     $response = [
       'coa_data' => $get_coa, // This will contain the COA object/array

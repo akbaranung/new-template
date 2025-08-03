@@ -957,8 +957,14 @@
 
         $('#update_table_coa').val(coaEntry.table_source)
         $('#update_id_coa').val(data.id);
-        $('#update_no_bb').val(data.no_bb);
-        $('#update_no_sbb').val(data.no_sbb);
+        if (coaEntry.table_source == "t_coa_sbb") {
+          $('#update_no_bb').val(data.no_bb);
+          $('#update_no_sbb').val(data.no_sbb);
+        } else {
+
+          $('#update_no_bb').val(data.no_lr_bb);
+          $('#update_no_sbb').val(data.no_lr_sbb);
+        }
         $('#update_nama_perkiraan').val(data.nama_perkiraan);
         $('#update_nominal').val(data.nominal);
 
