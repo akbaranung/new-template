@@ -16,6 +16,30 @@ class M_Customer extends CI_Model
         return $this->cb->where('id_cabang', $kode_cabang);
     }
 
+    public function list_customer_paginate($limit, $from, $keyword, $cabang)
+    {
+        if ($keyword) {
+            $this->cb->group_start();
+            $this->cb->like('nama_customer', $keyword, 'both');
+            $this->cb->group_end();
+        }
+
+        $customer = $this->cb->where('id_cabang', $cabang)->order_by('nama_customer', 'ASC')->limit($limit, $from)->get('customer')->result_array();
+
+        return $customer;
+    }
+
+    public function count($keyword, $cabang, $tabel)
+    {
+        if ($keyword) {
+            $this->cb->group_start();
+            $this->cb->like('nama_customer', $keyword, 'both');
+            $this->cb->group_end();
+        }
+
+        return $this->cb->from($tabel)->where('id_cabang', $cabang)->count_all_results();
+    }
+
     public function customer()
     {
         return $this->apply_cabang_filter()->order_by('nama_customer', 'ASC')->get('customer')->result();
