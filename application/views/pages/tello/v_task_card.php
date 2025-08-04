@@ -13,10 +13,10 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-12">
-      <h1 class="page-title">TELLO</h1>
+      <h1 class="page-title">TELLO CARD LIST</h1>
       <div class="card shadow mb-4">
         <div class="card-header text-center">
-          <p class="card-title"><strong>Card List</strong></p>
+          <!-- <p class="card-title"><strong>Card List</strong></p> -->
           <p class="btn btn-success" style="width: fit-content;"><?= $task->name ?></p>
           <p><?= $task->comment ?></p>
           <p>

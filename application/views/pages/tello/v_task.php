@@ -13,7 +13,7 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-12">
-      <h1 class="page-title">TELLO</h1>
+      <h1 class="page-title">TELLO CARD LIST</h1>
       <div class="card shadow mb-4">
         <div class="card-header">
           <!-- <strong class="card-title">Task List</strong> -->
