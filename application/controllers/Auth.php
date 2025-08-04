@@ -509,6 +509,16 @@ class Auth extends CI_Controller
 
         $branch_inserted_id = $this->M_login->register_cabang($branch_data);
 
+        // ADD BAGIAN UNTUK USER NON PREMIUM
+        $data_bagian = array(
+          'id_prsh' => $company_inserted_id, // Get from hidden field
+          // 'kode'   => '1',
+          'nama' => 'Finance',
+          'kode_nama' => 'FIN',
+        );
+        $this->db->insert('bagian', $data_bagian);
+        $bagian_now = $this->db->insert_id();
+
         if (is_array($branch_inserted_id) && isset($branch_inserted_id['code'])) {
           $this->db->trans_rollback(); // Rollback all operations if this fails
           log_message('error', 'Database Error (register_cabang): Code ' . $branch_inserted_id['code'] . ' - ' . $branch_inserted_id['message']);
@@ -518,6 +528,7 @@ class Auth extends CI_Controller
 
           $user_data = array(
             'id_cabang' => $branch_inserted_id,
+            'bagian' => $bagian_now,
           );
           // Assuming 'users' table is in the default database
           $this->db->where('nip', $this->session->userdata('nip')); // Assuming 'id' is the primary key for users table
@@ -525,14 +536,6 @@ class Auth extends CI_Controller
 
           $user_updated = $this->db->affected_rows() > 0;
 
-          // ADD BAGIAN UNTUK USER NON PREMIUM
-          $data_bagian = array(
-            'id_prsh' => $company_inserted_id, // Get from hidden field
-            // 'kode'   => '1',
-            'nama' => 'Finance',
-            'kode_nama' => 'FIN',
-          );
-          $this->db->insert('bagian', $data_bagian);
 
           // if ($substr_coa == "1" || $substr_coa == "5" || $substr_coa == "6" || $substr_coa == "7" || $substr_coa == "5" || $substr_coa == "6") {
           //   $posisi = 'AKTIVA';
