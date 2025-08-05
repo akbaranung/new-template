@@ -38,12 +38,26 @@
                   <div class="form-group">
                     <label>Logo</label>
                     <br>
-                    <div class="mt-3 mb-3">
+                    <!-- <div class="mt-3 mb-3">
                       <img class="border border-primary" src="<?= ($perusahaan->logo) ? $perusahaan->logo : $utility['logo']; ?>" alt="logo" style="width: 200px">
+                    </div> -->
+                    <!-- Container for side-by-side logo comparison -->
+                    <div class="d-flex justify-content-around align-items-center mt-3 mb-3">
+                      <div class="text-center">
+                        <p>Current Logo</p>
+                        <!-- Image tag for the current logo -->
+                        <img id="current_logo" class="border border-primary" src="<?= ($perusahaan->logo) ? $perusahaan->logo : $utility['logo']; ?>" alt="Current Logo" style="width: 200px">
+                      </div>
+                      <div class="text-center">
+                        <p>New Preview</p>
+                        <!-- Image tag for the new logo preview, initially hidden -->
+                        <img id="logo_preview" class="border border-primary" src="#" alt="New Logo Preview" style="width: 200px; display: none;">
+                      </div>
                     </div>
                     <br>
                     <div class="d-flex justify-content-center">
-                      <input type="file" name="logo_perusahaan" id="logo_input" class="form-control input-edit is-readonly" readonly>
+                      <!-- The logo input is now disabled by default and has the is-readonly class for styling -->
+                      <input type="file" name="logo_perusahaan" id="logo_input" class="form-control input-edit is-readonly" onchange="previewImage(event)" disabled>
                       <button type="button" class="btn btn-secondary btns-edit" data-target="logo_input"><i class="fe fe-edit-2"></i></button>
                     </div>
                   </div>
