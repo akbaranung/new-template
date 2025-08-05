@@ -68,6 +68,15 @@
     /* Grey for secondary */
     border-bottom: 8px solid transparent;
   }
+
+  table.dataTable>thead>tr>th {
+    padding: 0 5px 0 5px;
+    height: 30px;
+  }
+
+  table.dataTable>tbody>tr>td {
+    padding: 1px 5px 1px 5px;
+  }
 </style>
 
 <div class="container-fluid">

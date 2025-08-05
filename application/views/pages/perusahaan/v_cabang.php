@@ -34,6 +34,15 @@
     margin-left: 8px;
     /* Adjust this value (e.g., 5px, 10px, 0.5em) as needed */
   }
+
+  table.dataTable>thead>tr>th {
+    padding: 0 5px 0 5px;
+    height: 30px;
+  }
+
+  table.dataTable>tbody>tr>td {
+    padding: 1px 5px 1px 5px;
+  }
 </style>
 
 <div class="container-fluid">
