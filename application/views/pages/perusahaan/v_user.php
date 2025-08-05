@@ -77,6 +77,10 @@
   table.dataTable>tbody>tr>td {
     padding: 1px 5px 1px 5px;
   }
+
+  .btn {
+    padding: 0.125rem 0.25rem;
+  }
 </style>
 
 <div class="container-fluid">
