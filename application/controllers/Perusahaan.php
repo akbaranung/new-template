@@ -27,6 +27,7 @@ class Perusahaan extends CI_Controller
     $data['utility'] = $this->db->get('utility')->row_array();
     $data['user'] = $this->db->get_where('users', ['nip' => $nip])->row_array();
     $data['pages'] = 'pages/perusahaan/v_perusahaan';
+    // $data['pages_script'] = 'script/perusahaan/s_perusahaan';
     $data['menus'] = $this->M_menu->get_accessible_menus($nip);
 
     $this->load->view('index', $data);
@@ -619,6 +620,8 @@ class Perusahaan extends CI_Controller
     // $data['pages_script'] = 'script/perusahaan/s_perusahaan';
     $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
     $data['pages'] = 'pages/perusahaan/v_perusahaan_detail';
+    $data['pages_script'] = 'script/perusahaan/s_perusahaan';
+
 
     $this->load->view('index', $data);
     // $this->load->view('pages/absensi/lokasi_presensi_form', $data);
@@ -666,5 +669,66 @@ class Perusahaan extends CI_Controller
         'message' => 'Failed to save new bagian to database.'
       ]);
     }
+  }
+  public function prosses_edit_perusahaan()
+  {
+
+
+    $besaran_ppn = $this->input->post('besaran_ppn') / 100;
+
+    $edit_data = [
+      "nama_perusahaan" => $this->input->post('nama_perusahaan'),
+      "nama_singkat" => $this->input->post('nama_singkat'),
+      "nama_ppn" => $this->input->post('nama_ppn'),
+      "besaran_ppn" => $besaran_ppn,
+      "nomor_rekening" => $this->input->post('nomor_rekening'),
+      "nama_bank" => $this->input->post('nama_bank'),
+      "alamat_perusahaan" => $this->input->post('alamat_perusahaan'),
+      "nama_akronim" => $this->input->post('nama_akronim'),
+    ];
+
+    if (!empty($_FILES['logo_perusahaan']['name']) && $_FILES['logo_perusahaan']['error'] == UPLOAD_ERR_OK) {
+      $file_tmp_name = $_FILES['logo_perusahaan']['tmp_name'];
+      $file_type = $_FILES['logo_perusahaan']['type'];
+
+      // Read the file content
+      $file_content = file_get_contents($file_tmp_name);
+
+      if ($file_content !== FALSE) {
+        // Encode to Base64
+        $logo_base64 = 'data:' . $file_type . ';base64,' . base64_encode($file_content);
+        $edit_data['logo'] = $logo_base64;
+      } else {
+        // Handle error if file content could not be read
+        // $response = [
+        //   'success' => FALSE,
+        //   'msg'     => 'Gagal membaca isi file logo. Silakan coba lagi.'
+        // ];
+        // echo json_encode($response);
+        // return; // Stop execution
+        $this->session->set_flashdata('swal_message', [
+          'icon' => 'error', // or 'success', 'warning', 'info', 'question'
+          'title' => 'Error!',
+          'text' => 'Gagal membaca isi file logo. Silakan coba lagi',
+          'timer' => 3000, // SweetAlert2 will close after 3 seconds (3000 milliseconds)
+          'timerProgressBar' => true, // Shows a progress bar for the timer
+        ]);
+        $this->session->set_flashdata('error', 'Gagal membaca isi file logo. Silakan coba lagi.');
+        redirect('auth/register_perusahaan');
+      }
+    }
+
+    $this->db->where('Id', $this->input->post('id'));
+    $this->db->update('utility', $edit_data);
+
+    $this->session->set_flashdata('swal_message', [
+      'icon' => 'success', // or 'success', 'warning', 'info', 'question'
+      'title' => 'Berhasil!',
+      'text' => 'Berhasil Mengubah data!',
+      'timer' => 3000, // SweetAlert2 will close after 3 seconds (3000 milliseconds)
+      'timerProgressBar' => true, // Shows a progress bar for the timer
+    ]);
+
+    redirect('perusahaan/detail');
   }
 }

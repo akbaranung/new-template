@@ -5,10 +5,10 @@
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
       <h1 class="page-title"><?= ($this->uri->segment(3) == false) ? 'Add' : 'Edit' ?> Cabang</h1>
       <div class="card shadow mb-4">
-        <div class="card-header d-flex justify-content-between align-items-center">
+        <!-- <div class="card-header d-flex justify-content-between align-items-center">
           <p class="card-title mb-0"><strong>Cabang</strong></p>
-          <!-- <a href="<?= base_url('perusahaan/add_user') ?>" class="btn btn-primary">Add User</a> -->
-        </div>
+          <a href="<?= base_url('perusahaan/add_user') ?>" class="btn btn-primary">Add User</a>
+        </div> -->
         <div class="card-body" id="user">
           <font style="font-size:14px;">
             <?php if ($this->uri->segment(3) == false) { ?> <!-- add user -->

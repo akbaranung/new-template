@@ -13,10 +13,10 @@
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
       <h1 class="page-title">Detail Perusahaan</h1>
       <div class="card shadow mb-4">
-        <div class="card-header d-flex justify-content-between align-items-center">
+        <!-- <div class="card-header d-flex justify-content-between align-items-center">
           <p class="card-title mb-0"><strong>Perusahaan</strong></p>
-          <!-- <a href="<?= base_url('perusahaan/add_user') ?>" class="btn btn-primary">Add User</a> -->
-        </div>
+          <a href="<?= base_url('perusahaan/add_user') ?>" class="btn btn-primary">Add User</a>
+        </div> -->
         <div class="card-body" id="user">
           <font style="font-size:14px;">
             </br>
@@ -24,6 +24,15 @@
             <form action="<?= base_url('perusahaan/prosses_edit_perusahaan/') ?>" method="POST" enctype="multipart/form-data">
               <input type="hidden" value="edit" name="edit">
               <input type="hidden" value="<?= $this->session->userdata('user_perusahaan_id') ?>" name="id">
+              <style>
+                /* Custom styling for readonly inputs to make them appear disabled */
+                .is-readonly {
+                  background-color: #e9ecef;
+                  cursor: not-allowed;
+                  opacity: 1;
+                  /* Override some default browser disabled styles */
+                }
+              </style>
               <div class="row">
                 <div class="col-md-12">
                   <div class="form-group">
@@ -34,8 +43,8 @@
                     </div>
                     <br>
                     <div class="d-flex justify-content-center">
-                      <input type="file" name="logo" class="form-control input-edit" value="<?= $perusahaan->logo ?>" disabled>
-                      <button type="button" class="btn btn-secondary btns-edit"><i class="fe fe-edit-2"></i></button>
+                      <input type="file" name="logo_perusahaan" id="logo_input" class="form-control input-edit is-readonly" readonly>
+                      <button type="button" class="btn btn-secondary btns-edit" data-target="logo_input"><i class="fe fe-edit-2"></i></button>
                     </div>
                   </div>
                 </div>
@@ -43,8 +52,8 @@
                   <div class="form-group">
                     <label>Nama Perusahaan</label>
                     <div class="d-flex justify-content-center">
-                      <input type="text" name="nama_perusahaan" id="nama_perusahaan" class="form-control input-edit" value="<?= $perusahaan->nama_perusahaan ?>" disabled>
-                      <button type="button" class="btn btn-secondary btns-edit"><i class="fe fe-edit-2"></i></button>
+                      <input type="text" name="nama_perusahaan" id="nama_perusahaan" class="form-control input-edit is-readonly" value="<?= $perusahaan->nama_perusahaan ?>" readonly>
+                      <button type="button" class="btn btn-secondary btns-edit" data-target="nama_perusahaan"><i class="fe fe-edit-2"></i></button>
                     </div>
                   </div>
                 </div>
@@ -52,8 +61,8 @@
                   <div class="form-group">
                     <label>Nama Singkat Perusahaan</label>
                     <div class="d-flex justify-content-center">
-                      <input type="text" name="nama_singkat" id="nama_singkat" class="form-control input-edit" value="<?= $perusahaan->nama_singkat ?>" disabled>
-                      <button type="button" class="btn btn-secondary btns-edit"><i class="fe fe-edit-2"></i></button>
+                      <input type="text" name="nama_singkat" id="nama_singkat" class="form-control input-edit is-readonly" value="<?= $perusahaan->nama_singkat ?>" readonly>
+                      <button type="button" class="btn btn-secondary btns-edit" data-target="nama_singkat"><i class="fe fe-edit-2"></i></button>
                     </div>
                   </div>
                 </div>
@@ -61,17 +70,17 @@
                   <div class="form-group">
                     <label>Nama PPN</label>
                     <div class="d-flex justify-content-center">
-                      <input type="text" name="nama_ppn" id="nama_ppn" class="form-control input-edit" value="<?= $perusahaan->nama_ppn ?>" disabled>
-                      <button type="button" class="btn btn-secondary btns-edit"><i class="fe fe-edit-2"></i></button>
+                      <input type="text" name="nama_ppn" id="nama_ppn" class="form-control input-edit is-readonly" value="<?= $perusahaan->nama_ppn ?>" readonly>
+                      <button type="button" class="btn btn-secondary btns-edit" data-target="nama_ppn"><i class="fe fe-edit-2"></i></button>
                     </div>
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label>Besaran PPN</label>
+                    <label>Besaran PPN (%)</label>
                     <div class="d-flex justify-content-center">
-                      <input type="text" name="besaran_ppn" id="besaran_ppn" class="form-control input-edit" value="<?= $perusahaan->besaran_ppn ?>" disabled>
-                      <button type="button" class="btn btn-secondary btns-edit"><i class="fe fe-edit-2"></i></button>
+                      <input type="text" name="besaran_ppn" id="besaran_ppn" class="form-control input-edit is-readonly" value="<?= $perusahaan->besaran_ppn * 100 ?>" readonly>
+                      <button type="button" class="btn btn-secondary btns-edit" data-target="besaran_ppn"><i class="fe fe-edit-2"></i></button>
                     </div>
                   </div>
                 </div>
@@ -79,8 +88,8 @@
                   <div class="form-group">
                     <label>Nomor Rekening</label>
                     <div class="d-flex justify-content-center">
-                      <textarea class="form-control" name="nomor_rekening" id="nomor_rekening" rows="5" disabled><?= $perusahaan->nomor_rekening ?></textarea>
-                      <button type="button" class="btn btn-secondary btns-edit"><i class="fe fe-edit-2"></i></button>
+                      <textarea class="form-control is-readonly" name="nomor_rekening" id="nomor_rekening" rows="5" readonly><?= $perusahaan->nomor_rekening ?></textarea>
+                      <button type="button" class="btn btn-secondary btns-edit" data-target="nomor_rekening"><i class="fe fe-edit-2"></i></button>
                     </div>
                   </div>
                 </div>
@@ -88,8 +97,8 @@
                   <div class="form-group">
                     <label>Nama Bank</label>
                     <div class="d-flex justify-content-center">
-                      <input type="text" name="nama_bank" id="nama_bank" class="form-control input-edit" value="<?= $perusahaan->nama_bank ?>" disabled>
-                      <button type="button" class="btn btn-secondary btns-edit"><i class="fe fe-edit-2"></i></button>
+                      <input type="text" name="nama_bank" id="nama_bank" class="form-control input-edit is-readonly" value="<?= $perusahaan->nama_bank ?>" readonly>
+                      <button type="button" class="btn btn-secondary btns-edit" data-target="nama_bank"><i class="fe fe-edit-2"></i></button>
                     </div>
                   </div>
                 </div>
@@ -97,8 +106,8 @@
                   <div class="form-group">
                     <label>Alamat Perusahaan</label>
                     <div class="d-flex justify-content-center">
-                      <textarea class="form-control" name="alamat_perusahaan" id="alamat_perusahaan" rows="5" disabled><?= $perusahaan->alamat_perusahaan ?></textarea>
-                      <button type="button" class="btn btn-secondary btns-edit"><i class="fe fe-edit-2"></i></button>
+                      <textarea class="form-control is-readonly" name="alamat_perusahaan" id="alamat_perusahaan" rows="5" readonly><?= $perusahaan->alamat_perusahaan ?></textarea>
+                      <button type="button" class="btn btn-secondary btns-edit" data-target="alamat_perusahaan"><i class="fe fe-edit-2"></i></button>
                     </div>
                   </div>
                 </div>
@@ -106,9 +115,8 @@
                   <div class="form-group ">
                     <label>Nama Akronim</label>
                     <div class="d-flex justify-content-center">
-                      <input type="text" name="nama_akronim" id="nama_akronim" class="form-control input-edit" value="<?= $perusahaan->nama_akronim ?>" disabled>
-                      <button type="button" class="btn btn-secondary btns-edit"><i class="fe fe-edit-2"></i></button>
-                      <!-- <a class="btn btn-warning" href="<?= base_url('perusahaan/cabang') ?>"><i class="fe fe-edit-2" aria-hidden="true"></i> Back</a> -->
+                      <input type="text" name="nama_akronim" id="nama_akronim" class="form-control input-edit is-readonly" value="<?= $perusahaan->nama_akronim ?>" readonly>
+                      <button type="button" class="btn btn-secondary btns-edit" data-target="nama_akronim"><i class="fe fe-edit-2"></i></button>
                     </div>
                   </div>
                 </div>
