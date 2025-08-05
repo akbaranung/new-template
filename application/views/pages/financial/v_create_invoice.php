@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
-      <h1 class="page-title">Financial Entry</h1>
+      <h1 class="page-title">Create Invoice</h1>
       <div class="card shadow mb-4">
         <!-- <div class="card-header">
           <p class="card-title">
@@ -141,11 +141,11 @@
             <table class="table mt-5 table-responsive">
               <thead>
                 <tr>
-                  <th>Keterangan</th>
-                  <th>Jumlah</th>
-                  <th>Nominal</th>
-                  <th>Amount</th>
-                  <th>Del.</th>
+                  <th style="color: #6c757d;">Keterangan</th>
+                  <th style="color: #6c757d;">Jumlah</th>
+                  <th style="color: #6c757d;">Nominal</th>
+                  <th style="color: #6c757d;">Amount</th>
+                  <th style="color: #6c757d;">Del.</th>
                 </tr>
               </thead>
               <tbody>

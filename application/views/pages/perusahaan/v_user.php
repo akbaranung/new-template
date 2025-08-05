@@ -114,7 +114,7 @@
             ?>
           </div>
           <div class="table-responsive">
-            <table id="user-table" class="table table-striped table-bordered" style="width:100%">
+            <table id="user-table" class="table table-sm table-striped table-bordered" style="width:100%">
               <thead>
                 <tr>
                   <th class="text-center">No.</th>
