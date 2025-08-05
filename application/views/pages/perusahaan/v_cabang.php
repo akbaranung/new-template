@@ -44,7 +44,7 @@
     padding: 1px 5px 1px 5px;
   }
 
-  .btn {
+  .btn-di-td {
     padding: 0.125rem 0.25rem;
   }
 </style>

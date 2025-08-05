@@ -120,13 +120,13 @@ class Perusahaan extends CI_Controller
       }
 
       if ($cat->nama_jabatan == "Super Admin") {
-        $row[] = '<a href="' . base_url('perusahaan/edit_user/' . $cat->id) . '" class="btn btn-warning">
+        $row[] = '<a href="' . base_url('perusahaan/edit_user/' . $cat->id) . '" class="btn btn-warning btn-di-td">
         Update
       </a>';
       } else {
-        $row[] = '<a href="' . base_url('perusahaan/edit_user/' . $cat->id) . '" class="btn btn-warning">
+        $row[] = '<a href="' . base_url('perusahaan/edit_user/' . $cat->id) . '" class="btn btn-warning btn-di-td">
         Update
-      </a> <button onclick="onDelete(' . $cat->id . ')" class="btn btn-danger">
+      </a> <button onclick="onDelete(' . $cat->id . ')" class="btn btn-danger btn-di-td">
         Delete
       </button>';
       }
@@ -452,13 +452,13 @@ class Perusahaan extends CI_Controller
       $total_user = $this->db->get()->num_rows(); // Get the number of rows
 
       if (!$total_user) {
-        $button_delete = '<button onclick="onDelete(' . $cat->uid . ')" class="btn btn-danger">
+        $button_delete = '<button onclick="onDelete(' . $cat->uid . ')" class="btn btn-danger btn-di-td">
         Delete
       </button>';
       } else {
         $button_delete = '';
       }
-      $row[] = '<a href="' . base_url('perusahaan/edit_cabang/' . $cat->uid) . '" class="btn btn-warning">
+      $row[] = '<a href="' . base_url('perusahaan/edit_cabang/' . $cat->uid) . '" class="btn btn-warning btn-di-td">
         Update
       </a> ' . $button_delete;
 
