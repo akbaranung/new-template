@@ -93,7 +93,7 @@ class Customer extends CI_Controller
       'nama_customer' => strtoupper($nama_customer),
       'alamat_customer' => $this->input->post('alamat_customer'),
       'telepon_customer' => $this->input->post('telepon_customer'),
-      'status_customer' => $this->input->post('status_customer'),
+      // 'status_customer' => $this->input->post('status_customer'),
       'slug' => $slug,
       'id_cabang' => $this->session->userdata('kode_cabang'),
     ];

@@ -32,9 +32,9 @@
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
       <h1 class="page-title">Customer </h1>
       <div class="card shadow mb-4">
-        <div class="card-header">
+        <!-- <div class="card-header">
           <p class="card-title"><strong>List Customer</strong></p>
-        </div>
+        </div> -->
         <div class="card-body">
           <div class="row mb-4">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -166,14 +166,14 @@
       <form class="form-horizontal form-label-left" method="POST" action="<?= base_url('customer/store') ?>">
         <div class="modal-body">
           <div class="form-group row">
-            <div class="col-12">
+            <!-- <div class="col-12">
               <label for="status_customer" class="form-label">Jenis Jurnal</label>
               <select name="status_customer" id="status_customer" class="form-control">
                 <option value=""> :: Pilih jenis customer</option>
                 <option value="reguler">Reguler</option>
                 <option value="khusus">Khusus</option>
               </select>
-            </div>
+            </div> -->
             <div class="col-12 mt-3">
               <label for="nama_customer" class="form-label">Nama</label>
               <input type="text" name="nama_customer" id="nama_customer" class="form-control uppercase" placeholder="Masukkan nama customer...">
