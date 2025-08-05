@@ -45,12 +45,12 @@
           </div>
           <div class="row">
             <div class="col-md-12 col-xs-12 form-group pull-right top_search">
-              <form class="form-horizontal form-label-left" method="post" action="<?= base_url('customer') ?>">
+              <form class="form-horizontal form-label-left" method="post" action="<?= base_url('financial/list_customer') ?>">
                 <div class="input-group">
                   <input type="text" class="form-control" name="keyword" placeholder="Search for...">
                   <span class="input-group-btn">
                     <button class="btn btn-secondary" type="submit">Go!</button>
-                    <a href="<?= base_url('customer/reset') ?>" class="btn btn-warning" style="color:white;">Reset</a>
+                    <a href="<?= base_url('financial/reset_customer') ?>" class="btn btn-warning" style="color:white;">Reset</a>
                   </span>
                 </div>
               </form>
@@ -90,7 +90,7 @@
                               Ubah Customer
                             </h4>
                           </div>
-                          <form class="form-horizontal form-label-left" method="POST" action="<?= base_url('customer/store/') . $cust['slug'] ?>">
+                          <form class="form-horizontal form-label-left" method="POST" action="<?= base_url('financial/store_customer/') . $cust['slug'] ?>">
                             <div class="modal-body">
                               <div class="form-group row">
                                 <div class="col-12" style="display: none;">
@@ -163,7 +163,7 @@
           Tambah Customer Baru
         </h4>
       </div>
-      <form class="form-horizontal form-label-left" method="POST" action="<?= base_url('customer/store') ?>">
+      <form class="form-horizontal form-label-left" method="POST" action="<?= base_url('financial/store_customer') ?>">
         <div class="modal-body">
           <div class="form-group row">
             <!-- <div class="col-12">
