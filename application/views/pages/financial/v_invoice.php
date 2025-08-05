@@ -1,11 +1,11 @@
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
-      <h1 class="page-title">Financial</h1>
+      <h1 class="page-title">Daftar Invoice</h1>
       <div class="card shadow mb-4">
         <div class="card-header">
           <p class="card-title">
-            <strong>Daftar Invoice</strong>
+            <!-- <strong>Daftar Invoice</strong> -->
           </p>
         </div>
         <div class="card-body">
