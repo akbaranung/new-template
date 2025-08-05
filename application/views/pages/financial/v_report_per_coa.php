@@ -3,9 +3,9 @@
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
       <h1 class="page-title">Arus Kas</h1>
       <div class="card shadow mb-4">
-        <div class="card-header">
-          <!-- <p class="card-title"><strong>Arus Kas</strong></p> -->
-        </div>
+        <!-- <div class="card-header">
+          <p class="card-title"><strong>Arus Kas</strong></p>
+        </div> -->
         <div class="card-body">
           <?php
           if ($this->input->post('no_coa')) { ?>

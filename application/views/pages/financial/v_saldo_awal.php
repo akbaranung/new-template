@@ -3,9 +3,9 @@
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
       <h1 class="page-title">Closing / Saldo Awal</h1>
       <div class="card shadow mb-4">
-        <div class="card-header">
-          <!-- <p class="card-title"><strong>Closing / Saldo Awal</strong></p> -->
-        </div>
+        <!-- <div class="card-header">
+          <p class="card-title"><strong>Closing / Saldo Awal</strong></p>
+        </div> -->
         <div class="card-body">
           <form class="form-horizontal form-label-left" method="POST" action="<?= base_url('financial/save_saldo_awal') ?>">
             <div class="row mb-4">

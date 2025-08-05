@@ -3,11 +3,11 @@
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
       <h1 class="page-title">Financial Entry</h1>
       <div class="card shadow mb-4">
-        <div class="card-header">
+        <!-- <div class="card-header">
           <p class="card-title">
-            <!-- <strong>Financial Entry</strong> -->
+            <strong>Financial Entry</strong>
           </p>
-        </div>
+        </div> -->
         <div class="card-body">
           <div class="row mb-4">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">

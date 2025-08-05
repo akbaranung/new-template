@@ -9,9 +9,9 @@
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
       <h1 class="page-title">List Coa</h1>
       <div class="card shadow mb-4">
-        <div class="card-header">
-          <!-- <p class="card-title"><strong>List Coa</strong></p> -->
-        </div>
+        <!-- <div class="card-header">
+          <p class="card-title"><strong>List Coa</strong></p>
+        </div> -->
         <div class="card-body">
           <div class="row">
             <div class="col-md-12 col-xs-12 form-group pull-right top_search">

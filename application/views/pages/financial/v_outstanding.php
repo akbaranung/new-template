@@ -3,9 +3,9 @@
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
       <h1 class="page-title">Outstanding</h1>
       <div class="card shadow mb-4">
-        <div class="card-header">
-          <!-- <p class="card-title"><strong>Outstanding</strong></p> -->
-        </div>
+        <!-- <div class="card-header">
+          <p class="card-title"><strong>Outstanding</strong></p>
+        </div> -->
         <div class="card-body">
           <div class="table-responsive">
             <table id="datatable" class="table table-striped table-bordered" style="width:100%">
