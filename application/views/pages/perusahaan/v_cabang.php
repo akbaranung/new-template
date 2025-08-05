@@ -45,7 +45,8 @@
           <p class="card-title"><strong>List Cabang</strong></p>
         </div> -->
         <div class="card-body" id="user">
-          <div class="d-flex justify-content-end align-items-center">
+          <!-- <div class="d-flex justify-content-end align-items-center"> -->
+          <div class="d-flex align-items-center">
             <?php
             if ($total_cabang < 1) {
             ?>

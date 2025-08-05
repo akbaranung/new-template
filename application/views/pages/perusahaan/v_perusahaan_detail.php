@@ -36,22 +36,24 @@
               <div class="row">
                 <div class="col-md-12">
                   <div class="form-group">
-                    <label>Logo</label>
+                    <!-- <label>Logo</label> -->
                     <br>
                     <!-- <div class="mt-3 mb-3">
                       <img class="border border-primary" src="<?= ($perusahaan->logo) ? $perusahaan->logo : $utility['logo']; ?>" alt="logo" style="width: 200px">
                     </div> -->
                     <!-- Container for side-by-side logo comparison -->
                     <div class="d-flex justify-content-around align-items-center mt-3 mb-3">
-                      <div class="text-center">
+                      <!-- Added card-like styling with padding, shadow, and border-radius -->
+                      <div class="card text-center p-4 rounded-lg shadow-md bg-white">
                         <p>Current Logo</p>
                         <!-- Image tag for the current logo -->
-                        <img id="current_logo" class="border border-primary" src="<?= ($perusahaan->logo) ? $perusahaan->logo : $utility['logo']; ?>" alt="Current Logo" style="width: 200px">
+                        <img id="current_logo" class="" src="<?= ($perusahaan->logo) ? $perusahaan->logo : $utility['logo']; ?>" alt="Current Logo" style="width: 200px">
                       </div>
-                      <div class="text-center">
+                      <!-- Added card-like styling with padding, shadow, and border-radius -->
+                      <div class="card text-center p-4 rounded-lg shadow-md bg-white">
                         <p>New Preview</p>
                         <!-- Image tag for the new logo preview, initially hidden -->
-                        <img id="logo_preview" class="border border-primary" src="#" alt="New Logo Preview" style="width: 200px; display: none;">
+                        <img id="logo_preview" class="" src="#" alt="New Logo Preview" style="width: 200px; display: none;">
                       </div>
                     </div>
                     <br>

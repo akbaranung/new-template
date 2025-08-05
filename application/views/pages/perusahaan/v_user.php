@@ -94,7 +94,8 @@
           <p class="card-title mb-0"><strong>List User</strong></p>
         </div> -->
         <div class="card-body" id="user">
-          <div class="d-flex justify-content-end align-items-center">
+          <!-- <div class="d-flex justify-content-end align-items-center"> -->
+          <div class="d-flex align-items-center">
             <?php
             // if ($total_user <= 4) {
             ?>

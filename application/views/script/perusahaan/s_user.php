@@ -57,8 +57,14 @@
                 targets: -1, // Adjust target index if 'Action' column is not always the 9th column (index 8)
                 orderable: false
             }],
-            // Custom DOM structure for layout (from previous answer)
-            dom: '<"dataTables_top_wrapper clear-fix"<"dataTables_length_custom"l><"dataTables_filter_custom"f>>t<"dataTables_bottom_wrapper clear-fix"<"dataTables_info_custom"i><"dataTables_paginate_custom"p>>'
+            // The 'dom' property has been replaced with the 'layout' option
+            // to place the search bar at the top, and the info and pagination controls at the bottom.
+            layout: {
+                topStart: 'search',
+                topEnd: '',
+                bottomStart: 'info',
+                bottomEnd: 'paging'
+            }
         });
     });
 
