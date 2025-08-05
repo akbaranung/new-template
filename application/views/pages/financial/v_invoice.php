@@ -43,7 +43,7 @@
           </form>
           <div class="col-md-1"></div>
           <div class="table-responsive">
-            <table id="datatable" class="table table-striped table-bordered" style="width:100%">
+            <table id="datatable" class="table table-sm table-striped table-bordered" style="width:100%">
               <thead class="thead-dark">
                 <tr>
                   <th>No.</th>
