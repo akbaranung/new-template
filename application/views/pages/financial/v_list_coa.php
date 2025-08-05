@@ -81,7 +81,7 @@
           <div class="table-responsive">
             <table id="" class="table table-sm" style="width:100%">
               <thead class="thead-dark">
-                <tr style="height: 50px;">
+                <tr>
                   <th>No.</th>
                   <th>BB</th>
                   <th>Sub BB</th>

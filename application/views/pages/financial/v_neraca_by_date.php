@@ -3,15 +3,15 @@
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
       <h1 class="page-title">Neraca L/R</h1>
       <div class="card shadow mb-4">
-        <div class="card-header">
+        <!-- <div class="card-header">
           <p class="card-title"><strong>Neraca per tanggal <?= format_indo($per_tanggal) ?></strong></p>
-        </div>
+        </div> -->
         <div class="card-body">
           <form method="POST" action="<?= base_url('financial/reportByDate') ?>">
             <div class="row">
               <div class="col-md-4 col-xs-12">
                 <h5>
-                  Neraca: <strong>Rp <?= (isset($neraca)) ? number_format($neraca, 2) : 0 ?></strong>
+                  Selisih : <strong>Rp <?= (isset($neraca)) ? number_format($neraca, 2) : 0 ?></strong>
                 </h5>
               </div>
               <div class="col-md-2 col-xs-12">
