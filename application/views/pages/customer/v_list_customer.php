@@ -59,7 +59,7 @@
           <div class="table-responsive">
             <table id="" class="table table-bordered table-sm" style="width:100%">
               <thead class="thead-dark">
-                <tr style="height: 50px;">
+                <tr>
                   <th>No.</th>
                   <th>Nama</th>
                   <th>No. Hp</th>
@@ -71,7 +71,7 @@
                 <?php
                 if ($customers) {
                   foreach ($customers as $cust) : ?>
-                    <tr style="height: 35px;">
+                    <tr>
                       <td><?= ++$page ?>.</td>
                       <td>
                         <button class="btn btn-xs" type="button" data-toggle="modal" data-target="#editCustomer<?= $cust['slug'] ?>">
