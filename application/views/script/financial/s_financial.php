@@ -983,6 +983,7 @@
     const totalAktivaStrong = document.getElementById('total_aktiva');
     const totalPasivaStrong = document.getElementById('total_pasiva'); // New: Target for total_pasiva
     const balanceResultDiv = document.getElementById('balanceResult');
+    const balanceResultDiv2 = document.getElementById('balanceResult2');
 
     /**
      * Parses a number string, removing common formatting like commas.
@@ -1004,14 +1005,23 @@
       const sumPasiva = parseFormattedNumber(totalPasivaStrong ? totalPasivaStrong.textContent : '0');
       const difference = sumAktiva - sumPasiva;
 
-      if (balanceResultDiv) {
+      if (balanceResultDiv && balanceResultDiv2) {
         balanceResultDiv.classList.remove('hidden', 'balanced', 'unbalanced');
+        balanceResultDiv2.classList.remove('hidden', 'balanced', 'unbalanced');
+
         if (difference === 0) {
           balanceResultDiv.textContent = 'Saldo Seimbang: 0';
           balanceResultDiv.classList.add('balanced');
+          balanceResultDiv2.textContent = 'Saldo Seimbang: 0';
+          balanceResultDiv2.classList.add('balanced');
+
         } else {
           balanceResultDiv.textContent = `Saldo Tidak Seimbang: ${difference.toFixed(2)}`; // Display difference with 2 decimal places
           balanceResultDiv.classList.add('unbalanced');
+
+          balanceResultDiv2.textContent = `Saldo Tidak Seimbang: ${difference.toFixed(2)}`; // Display difference with 2 decimal places
+          balanceResultDiv2.classList.add('unbalanced');
+
         }
       }
     }

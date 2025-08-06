@@ -2706,6 +2706,9 @@ class Financial extends CI_Controller
         // $activa = $this->M_coa->get_coa_activa_by_cabang();
         // $pasiva = $this->M_coa->get_coa_pasiva_by_cabang();
         $list_coa = $this->M_coa->list_coa_with_nominal();
+
+        $updated_saldo_awal = [];
+
         if (!empty($list_coa)) {
           // $coaLastPeriod = json_decode($getLastPeriod['coa']);
           // $saldo_bulan_ini = $this->M_coa->calculate_saldo_awal($bulan, $tahun);
