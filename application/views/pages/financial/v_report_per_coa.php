@@ -38,7 +38,7 @@
             </form>
             <div class="row" style="margin-top: 10px;">
               <div class="col-md-12 col-xs-12 table-responsive">
-                <table id="datatable" class="table table-bordered" style="width:100%">
+                <table id="datatable" class="table table-sm table-bordered" style="width:100%">
                   <thead class="thead-dark">
                     <tr>
                       <th class="text-right" colspan="2">Total:</th>

@@ -727,6 +727,31 @@
         // link.style.pointerEvents = 'none'; // Further prevent clicks
       });
     }
+
+
+    // Add this new block for the download button
+    const downloadFormatBtn = document.getElementById('downloadFormatBtn');
+
+    if (downloadFormatBtn) {
+      downloadFormatBtn.addEventListener('click', function(event) {
+        // Assume 'isPremium' is a global JavaScript variable set in your view
+        const isPremium = <?= $this->session->userdata('is_premium') ? 'true' : 'false' ?>;
+
+        if (!isPremium) {
+          event.preventDefault(); // Stop the link from navigating
+          showPremiumDeniedSwal(); // Show the premium message
+        } else {
+          // If the user is premium, trigger the download programmatically
+          // Create a temporary link element to trigger the download
+          const link = document.createElement('a');
+          link.href = '<?= base_url('src/format/format_data.xlsx') ?>';
+          link.download = 'format_data.xlsx';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        }
+      });
+    }
   });
   <?php if ($this->session->flashdata('swal_message')) : ?>
     const swalConfig = <?php echo json_encode($this->session->flashdata('swal_message')); ?>;
