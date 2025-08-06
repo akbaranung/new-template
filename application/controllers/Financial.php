@@ -1371,7 +1371,8 @@ class Financial extends CI_Controller
       'count_inbox' => $result,
       'count_inbox2' => $result2,
       'coa' => $this->M_coa->list_coa(),
-      'coa_kas' => $this->M_coa->getCoaByCode('1201'),
+      // 'coa_kas' => $this->M_coa->getCoaByCode('1201'),
+      'coa_kas' => $this->M_coa->getCoaByCode('1'),
       'coa_pendapatan' => $this->M_coa->getCoaByCode('410'),
       'keyword' => $keyword,
       'title' => "Invoice",
@@ -2958,7 +2959,8 @@ class Financial extends CI_Controller
       }
     }
 
-    redirect("financial/list_customer");
+    // redirect("financial/list_customer");
+    redirect("customer");
   }
 
   public function reset_customer()
