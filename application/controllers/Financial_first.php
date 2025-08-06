@@ -8,7 +8,7 @@ class Financial_first extends CI_Controller
   {
 
     parent::__construct();
-    $this->load->model(['M_coa', 'M_Customer', 'M_invoice']);
+    $this->load->model(['M_coa', 'M_customer', 'M_invoice']);
     $this->load->helper(['number']);
     $this->load->library(['pdfgenerator']);
 

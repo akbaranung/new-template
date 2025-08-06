@@ -177,6 +177,7 @@ class Perusahaan extends CI_Controller
     $data['pages_script'] = 'script/perusahaan/s_user';
     $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
     $data['pages'] = 'pages/perusahaan/v_user_add';
+    $data['form_data'] = $this->session->flashdata('form_data');
 
     // CEK PREMIUM
     if ($this->session->userdata('is_premium')) {
@@ -281,6 +282,7 @@ class Perusahaan extends CI_Controller
       //   'errors'  => validation_errors() // Capture all validation errors
       // ];
 
+      $this->session->set_flashdata('form_data', $this->input->post());
 
       $this->session->set_flashdata('error', 'Silakan lengkapi data perusahaan terlebih dahulu. <br><br>' . validation_errors());
       redirect('perusahaan/add_user/' . $uri1 . '/' . $uri2);
