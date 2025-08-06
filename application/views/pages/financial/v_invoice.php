@@ -92,7 +92,7 @@
                                     <?= $i['no_invoice'] ?>
                                   </h4>
                                 </div>
-                                <form action="<?= base_url('financial/paid/' . $i['no_invoice']) ?>" method="post">
+                                <form action="<?= base_url('financial/paid/' . $i['Id']) ?>" method="post">
                                   <div class="modal-body">
                                     <div class="row">
                                       <div class="col-sm-6 col-xs-12">
