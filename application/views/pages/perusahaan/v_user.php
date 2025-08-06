@@ -117,14 +117,53 @@
             <?php
             // } else {
             ?>
-            <a href="#" id="addUserBtn" class="btn btn-primary">
-              Add User
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="16" height="16">
-                <path fill="#FFD43B" d="M309 106c11.4-7 19-19.7 19-34c0-22.1-17.9-40-40-40s-40 17.9-40 40c0 14.4 7.6 27 19 34L209.7 220.6c-9.1 18.2-32.7 23.4-48.6 10.7L72 160c5-6.7 8-15 8-24c0-22.1-17.9-40-40-40S0 113.9 0 136s17.9 40 40 40c.2 0 .5 0 .7 0L86.4 427.4c5.5 30.4 32 52.6 63 52.6l277.2 0c30.9 0 57.4-22.1 63-52.6L535.3 176c.2 0 .5 0 .7 0c22.1 0 40-17.9 40-40s-17.9-40-40-40s-40 17.9-40 40c0 9 3 17.3 8 24l-89.1 71.3c-15.9 12.7-39.5 7.5-48.6-10.7L309 106z" />
-              </svg>
-            </a>
             <?php
-            // }
+
+            $this->db->from('users');
+            $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
+            $this->db->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
+            $this->db->where('nama_jabatan !=', 'Super Admin');
+            $total_user = $this->db->get()->num_rows(); // Get the number of rows
+
+            $max_users_for_100_percent = 4; // Define your maximum limit
+
+
+            // $max_users_for_100_percent = 5; // Define your maximum limit
+
+            // $this->cb->from('v_coa_all');
+            // $this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
+            // $cek_coa_cabang = $this->cb->get()->num_rows();
+
+            $this->cb->from('v_coa_all');
+            $this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
+            // Add the OR conditions
+            $this->cb->group_start(); // Start a WHERE group for the OR conditions
+            // $this->cb->where('no_sbb', '23014');
+            // $this->cb->or_where('no_sbb', '23011');
+            $this->cb->where_not_in('no_sbb', ['23014', '23011']);
+            $this->cb->group_end(); // End the WHERE group
+            $cek_coa_cabang = $this->cb->get()->num_rows();
+
+            $i = $total_user;
+
+            $this->cb->from('t_cabang');
+            $this->cb->where('uid', $this->session->userdata('kode_cabang'));
+            $cabang_now = $this->cb->get()->row();
+            $cek_saldo_awal = $cabang_now->generate_sawal;
+
+            // $this->cb->from('t_cabang');
+
+            // if ($total_user < 4 || $cek_coa_cabang == 0) {
+            if ($total_user > 4 || $cek_saldo_awal == 1) {
+            ?>
+              <a href="#" id="addUserBtn" class="btn btn-primary">
+                Add User
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="16" height="16">
+                  <path fill="#FFD43B" d="M309 106c11.4-7 19-19.7 19-34c0-22.1-17.9-40-40-40s-40 17.9-40 40c0 14.4 7.6 27 19 34L209.7 220.6c-9.1 18.2-32.7 23.4-48.6 10.7L72 160c5-6.7 8-15 8-24c0-22.1-17.9-40-40-40S0 113.9 0 136s17.9 40 40 40c.2 0 .5 0 .7 0L86.4 427.4c5.5 30.4 32 52.6 63 52.6l277.2 0c30.9 0 57.4-22.1 63-52.6L535.3 176c.2 0 .5 0 .7 0c22.1 0 40-17.9 40-40s-17.9-40-40-40s-40 17.9-40 40c0 9 3 17.3 8 24l-89.1 71.3c-15.9 12.7-39.5 7.5-48.6-10.7L309 106z" />
+                </svg>
+              </a>
+            <?php
+            }
             ?>
           </div>
           <div class="table-responsive">

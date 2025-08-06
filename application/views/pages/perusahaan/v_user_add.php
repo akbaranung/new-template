@@ -441,12 +441,12 @@
                       <input type="tel" name="phone" class="form-control" value="<?= $user->phone ?>">
                     </div>
                   </div>
-                  <div class="col-md-6">
+                  <!-- <div class="col-md-6">
                     <div class="form-group">
                       <label>Code Agent</label>
                       <input type="text" name="kd_agent" class="form-control" value="<?= $user->kd_agent ?>">
                     </div>
-                  </div>
+                  </div> -->
                   <div class="col-md-6">
                     <div class="form-group">
                       <label>Nip</label>
@@ -579,7 +579,11 @@
                       <select name="supervisi" class="form-control js-example-basic-multiple">
                         <option value=""> -- Pilih Supervisi --</option>
                         <?php
-                        $supervisi = $this->db->get_where('users', ['level_jabatan >=' => 3])->result();
+                        $kode_cabang = $this->session->userdata('kode_cabang');
+                        $this->db->where('id_cabang', $kode_cabang);
+                        $this->db->where('level_jabatan >=', 3);
+                        $supervisi = $this->db->get('users')->result();
+
                         foreach ($supervisi as $data) {
                           if ($user->supervisi != null || $user->supervisi != "") {
                             $super_visi = $this->db->get_where('users', ['nip' => $user->supervisi])->row();
