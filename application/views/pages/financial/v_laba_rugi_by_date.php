@@ -3,9 +3,9 @@
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
       <h1 class="page-title">Neraca L/R</h1>
       <div class="card shadow mb-4">
-        <div class="card-header">
+        <!-- <div class="card-header">
           <p class="card-title"><strong>Neraca per tanggal <?= format_indo($per_tanggal) ?></strong></p>
-        </div>
+        </div> -->
         <div class="card-body">
           <form method="POST" action="<?= base_url('financial/reportByDate') ?>">
             <div class="row">
@@ -85,7 +85,12 @@
                     foreach ($pendapatan as $a) :
                       $coa = $this->M_coa->getCoa($a->no_sbb);
 
-                      if ($coa['table_source'] == "t_coalr_sbb" && $coa['posisi'] == 'PASIVA') { ?>
+                      if ($coa['table_source'] == "t_coalr_sbb" && $coa['posisi'] == 'PASIVA') {
+
+                        if ($a->saldo_awal == 0) {
+                          continue;
+                        }
+                    ?>
                         <tr>
                           <td><button class="btn btn-primary arus_kas" data-id="<?= $a->no_sbb ?>"><?= $a->no_sbb ?></td>
                           <td><?= $coa['nama_perkiraan'] ?></td>

@@ -101,12 +101,24 @@
                           </tr>
                       <?php
                         endif;
-                      endforeach; ?>
-                      <tr>
+                      endforeach;
+                      ?>
+                      <?php
+                      if ($laba != 0) {
+                      ?>
+                        <tr>
+                          <td>31030</td>
+                          <td>LABA TAHUN BERJALAN</td>
+                          <td class="text-right"><?= number_format($laba, 2) ?></td>
+                        </tr>
+                      <?php
+                      }
+                      ?>
+                      <!-- <tr>
                         <td>31030</td>
                         <td>LABA TAHUN BERJALAN</td>
                         <td class="text-right"><?= number_format($laba, 2) ?></td>
-                      </tr>
+                      </tr> -->
                     <?php
                     else : ?>
                       <tr>
