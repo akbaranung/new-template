@@ -580,8 +580,12 @@
                         <option value=""> -- Pilih Supervisi --</option>
                         <?php
                         $kode_cabang = $this->session->userdata('kode_cabang');
+                        $id_to_exclude = $this->uri->segment(3);
+
                         $this->db->where('id_cabang', $kode_cabang);
                         $this->db->where('level_jabatan >=', 3);
+                        $this->db->where('id !=', $id_to_exclude);
+
                         $supervisi = $this->db->get('users')->result();
 
                         foreach ($supervisi as $data) {
