@@ -81,7 +81,7 @@
               name="nomor_rekening"
               class="form-control form-control-lg"
               required
-              pattern="[0-9]{10,16}" />
+              pattern="[0-9]{5,16}" />
             <span id="nomor_rekening_error_message" class="error-message"></span>
           </div>
           <div class="form-group text-left">

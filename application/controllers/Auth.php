@@ -582,6 +582,8 @@ class Auth extends CI_Controller
             $this->db->join($this->cb->database . '.t_cabang', 't_cabang.id_perusahaan = utility.Id');
             $setting = $this->db->where('t_cabang.uid', $branch_inserted_id)->get()->row();
             // var_dump($setting);
+
+            $this->session->set_userdata('kode_cabang', $branch_inserted_id);
             $this->session->set_userdata('user_perusahaan_id', $setting->Id);
             $this->session->set_userdata('icon', $setting->logo);
             $this->session->set_userdata('nama_singkat', $setting->nama_singkat);
@@ -591,6 +593,10 @@ class Auth extends CI_Controller
             $this->session->set_userdata('nama_ppn', $setting->nama_ppn);
             $this->session->set_userdata('ppn', $setting->besaran_ppn);
             $this->session->set_userdata('nama_akronim', $setting->nama_akronim);
+            $is_premium_boolean = (bool)$setting->is_premium;
+            $this->session->set_userdata('is_premium', $is_premium_boolean);
+
+
 
             // $response = [
             //   'success' => TRUE,
