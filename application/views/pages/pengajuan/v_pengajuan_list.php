@@ -32,7 +32,7 @@
           </div>
           <div class="table-responsive">
             <div style="min-width: 951px;">
-              <table class="table table-hover" style="width: 100% !important;">
+              <table class="table table-sm table-hover" style="width: 100% !important;">
                 <thead style="background-color:#3498db;">
                   <tr>
                     <th style="color: white;">No</th>
