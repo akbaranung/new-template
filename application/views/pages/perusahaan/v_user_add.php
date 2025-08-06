@@ -30,158 +30,111 @@
               <?= $this->session->flashdata('msg') ?>
               <form action="<?= base_url('perusahaan/proccess_add_user') ?>" method="POST">
                 <input type="hidden" value="add" name="add">
-                <!-- <input type="hidden" value="<?= $this->uri->segment('3') ?>" name="id"> -->
                 <input type="hidden" value="<?= $this->uri->segment('3') ?>" name="uri1">
                 <input type="hidden" value="<?= $this->uri->segment('4') ?>" name="uri2">
                 <table>
                   <tr>
                     <th width="300">Username</th>
-                    <td width="300"> <input type="text" value="<?php echo set_value('username'); ?>" name="username" class="form-control"></td>
+                    <td width="300">
+                      <input type="text" value="<?= set_value('username', isset($user->username) ? $user->username : ''); ?>" name="username" class="form-control">
+                    </td>
                   </tr>
                   <tr>
                     <th width="300">Password</th>
-                    <td width="300"> <input type="password" name="password" class="form-control"></td>
+                    <td width="300">
+                      <input type="password" name="password" class="form-control">
+                    </td>
                   </tr>
                   <tr>
                     <th width="300">Password Confirmation</th>
-                    <td width="300"> <input type="password" name="password_confirmation" class="form-control"></td>
+                    <td width="300">
+                      <input type="password" name="password_confirmation" class="form-control">
+                    </td>
                   </tr>
                   <tr>
                     <th width="200">Name</th>
-                    <td> <input type="text" name="nama" class="form-control">
+                    <td>
+                      <input type="text" name="nama" class="form-control" value="<?= set_value('nama', isset($user->nama) ? $user->nama : ''); ?>">
                     </td>
                   </tr>
-                  <!-- <tr>
-                    <th width="200">Date of birth</th>
-                    <td>
-                      <div class='input-group date' id='myDatepicker2'>
-                        <input type='date' id='date_pic' name='tgl_lahir' class="form-control" placeholder="yyyy-mm-dd" data-validate-words="1" required="required" />
-                        <span class="input-group-addon">
-                          <span class="glyphicon glyphicon-calendar"></span>
-                        </span>
-                      </div>
-                    </td>
-                  </tr> -->
                   <tr>
                     <th>Status</th>
                     <td>
-                      <input name="status" value="1" type="radio" id="active" checked>
+                      <input name="status" value="1" type="radio" id="active" <?= set_radio('status', '1', (isset($user->status) && $user->status == '1') || !isset($user)); ?>>
                       <label for="active">Active</label>
-                      <input name="status" value="0" type="radio" id="noactive">
+                      <input name="status" value="0" type="radio" id="noactive" <?= set_radio('status', '0', isset($user->status) && $user->status == '0'); ?>>
                       <label for="noactive">Not Active</label>
                     </td>
                   </tr>
                   <tr>
                     <th width="200">Email</th>
-                    <td> <input type="email" name="email" class="form-control"></td>
+                    <td>
+                      <input type="email" name="email" class="form-control" value="<?= set_value('email', isset($user->email) ? $user->email : ''); ?>">
+                    </td>
                   </tr>
                   <tr>
                     <th>Phone (WhatsApp)</th>
-                    <td><input type="tel" name="phone" class="form-control"></td>
+                    <td>
+                      <input type="tel" name="phone" class="form-control" value="<?= set_value('phone', isset($user->phone) ? $user->phone : ''); ?>">
+                    </td>
                   </tr>
-                  <!-- <tr>
-                    <th>Code Agent</th>
-                    <td><input type="text" name="kd_agent" class="form-control"></td>
-                  </tr> -->
-                  <!-- <tr>
-                    <th>Nip</th>
-                    <td><input type="number" name="nip" class="form-control"></td>
-                  </tr> -->
                   <tr>
-                    <!-- <th>Level Jabatan</th> -->
                     <th>User Role</th>
                     <td>
                       <select name="level_jabatan" id="" class="form-control" <?= ($this->uri->segment(3)) ? 'readonly' : '' ?>>
-                        <?php
-                        if ($this->uri->segment(3)) {
-                        ?>
+                        <?php if ($this->uri->segment(3)) { ?>
                           <option selected value="<?= $this->uri->segment(3) ?>"><?= $this->uri->segment(4) ?></option>
-                          <?php
-                        } else {
-                          if ($this->session->userdata('is_premium')) {
-                          ?>
+                          <?php } else {
+                          if ($this->session->userdata('is_premium')) { ?>
                             <option selected disabled>Pilih Jabatan</option>
-                            <option value="1">Staff</option>
-                            <option value="2">Manager</option>
-                            <!-- <option value="2">Supervisor</option> -->
-                            <option value="3">Keuangan</option>
-                            <!-- <option value="3">Manajer</option> -->
-                            <!-- <option value="4">General Manajer</option> -->
-                            <option value="5">Direktur</option>
-                            <!-- <option value="6">Direktur Utama</option> -->
-                          <?php
-                          } else {
-                          ?>
+                            <option value="1" <?= set_select('level_jabatan', '1', (isset($user->level_jabatan) && $user->level_jabatan == '1')); ?>>Staff</option>
+                            <option value="2" <?= set_select('level_jabatan', '2', (isset($user->level_jabatan) && $user->level_jabatan == '2')); ?>>Manager</option>
+                            <option value="3" <?= set_select('level_jabatan', '3', (isset($user->level_jabatan) && $user->level_jabatan == '3')); ?>>Keuangan</option>
+                            <option value="5" <?= set_select('level_jabatan', '5', (isset($user->level_jabatan) && $user->level_jabatan == '5')); ?>>Direktur</option>
+                          <?php } else { ?>
                             <option selected disabled>Pilih Jabatan</option>
                             <?php
                             $user_counts = isset($user_counts) ? $user_counts : [];
                             $roles = [
                               1 => 'Staff',
                               2 => 'Manager',
-                              // 2 => 'Supervisor',
                               3 => 'Keuangan',
-                              // 3 => 'Manajer',
-                              // 4 => 'General Manajer', // This one is commented out in your example, so keep it commented
                               5 => 'Direktur',
-                              // 6 => 'Direktur Utama',
                             ];
                             foreach ($roles as $value => $label) {
                               if (isset($user_counts[$value]) && $user_counts[$value] >= 1) {
                                 continue;
                               }
                             ?>
-                              <option value="<?= $value ?>"><?= $label ?></option>
-                        <?php
-                            }
+                              <option value="<?= $value ?>" <?= set_select('level_jabatan', $value, (isset($user->level_jabatan) && $user->level_jabatan == $value)); ?>><?= $label ?></option>
+                        <?php }
                           }
-                        }
-                        ?>
+                        } ?>
                       </select>
                     </td>
                   </tr>
                   <tr>
                     <th>Bagian</th>
                     <td>
-
                       <div class="row">
                         <div class="col-10">
-
-                          <?php
-                          if ($this->session->userdata('is_premium')) {
-                          ?>
+                          <?php if ($this->session->userdata('is_premium')) { ?>
                             <select name="bagian" class="form-control" id="mySelect">
                               <?php $xx = $this->db->from('bagian')->where('id_prsh', $this->session->userdata('user_perusahaan_id'))->get()->result();
-                              foreach ($xx as $k) {
-                                if (!empty($user)) {
-                              ?>
-                                  <option <?= $k->Id == $user->bagian ? 'selected' : '' ?> value="<?= $k->Id ?>"><?= $k->kode_nama . ' - ' . $k->nama ?></option>
-                                <?php } else { ?>
-                                  <option value="<?= $k->Id ?>"><?= $k->kode_nama . ' - ' . $k->nama ?></option>
-                              <?php }
-                              } ?>
+                              foreach ($xx as $k) { ?>
+                                <option value="<?= $k->Id ?>" <?= set_select('bagian', $k->Id, (isset($user->bagian) && $user->bagian == $k->Id)); ?>><?= $k->kode_nama . ' - ' . $k->nama ?></option>
+                              <?php } ?>
                             </select>
-                          <?php
-                          } else {
-                          ?>
+                          <?php } else { ?>
                             <select name="bagian" class="form-control" id="mySelect" readonly>
                               <?php $xx = $this->db->from('bagian')->where('id_prsh', $this->session->userdata('user_perusahaan_id'))->get()->result();
-                              foreach ($xx as $k) {
-                                if (!empty($user)) {
-                              ?>
-                                  <option <?= $k->Id == $user->bagian ? 'selected' : '' ?> value="<?= $k->Id ?>"><?= $k->kode_nama . ' - ' . $k->nama ?></option>
-                                <?php } else { ?>
-                                  <option value="<?= $k->Id ?>"><?= $k->kode_nama . ' - ' . $k->nama ?></option>
-                              <?php }
-                              } ?>
+                              foreach ($xx as $k) { ?>
+                                <option value="<?= $k->Id ?>" <?= set_select('bagian', $k->Id, (isset($user->bagian) && $user->bagian == $k->Id)); ?>><?= $k->kode_nama . ' - ' . $k->nama ?></option>
+                              <?php } ?>
                             </select>
-                          <?php
-                          }
-                          ?>
+                          <?php } ?>
                         </div>
                         <div class="col-2 ">
-                          <!-- <button type="button" id="addOptionBtn" class="btn btn-primary btn-block">Tambahkan Bagian <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="16" height="16">
-                              <path fill="#FFD43B" d="M309 106c11.4-7 19-19.7 19-34c0-22.1-17.9-40-40-40s-40 17.9-40 40c0 14.4 7.6 27 19 34L209.7 220.6c-9.1 18.2-32.7 23.4-48.6 10.7L72 160c5-6.7 8-15 8-24c0-22.1-17.9-40-40-40S0 113.9 0 136s17.9 40 40 40c.2 0 .5 0 .7 0L86.4 427.4c5.5 30.4 32 52.6 63 52.6l277.2 0c30.9 0 57.4-22.1 63-52.6L535.3 176c.2 0 .5 0 .7 0c22.1 0 40-17.9 40-40s-17.9-40-40-40s-40 17.9-40 40c0 9 3 17.3 8 24l-89.1 71.3c-15.9 12.7-39.5 7.5-48.6-10.7L309 106z" />
-                            </svg></button> -->
                           <button type="button" id="addOptionBtn" class="btn btn-primary btn-block"><i class="fe fe-plus"></i> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="16" height="16">
                               <path fill="#FFD43B" d="M309 106c11.4-7 19-19.7 19-34c0-22.1-17.9-40-40-40s-40 17.9-40 40c0 14.4 7.6 27 19 34L209.7 220.6c-9.1 18.2-32.7 23.4-48.6 10.7L72 160c5-6.7 8-15 8-24c0-22.1-17.9-40-40-40S0 113.9 0 136s17.9 40 40 40c.2 0 .5 0 .7 0L86.4 427.4c5.5 30.4 32 52.6 63 52.6l277.2 0c30.9 0 57.4-22.1 63-52.6L535.3 176c.2 0 .5 0 .7 0c22.1 0 40-17.9 40-40s-17.9-40-40-40s-40 17.9-40 40c0 9 3 17.3 8 24l-89.1 71.3c-15.9 12.7-39.5 7.5-48.6-10.7L309 106z" />
                             </svg></button>
@@ -195,20 +148,13 @@
                       <form id="form-add-bagian">
                         <div class="row">
                           <input type="hidden" class="form-control" id="input_id_prsh" name="input_id_prsh" value="<?= $this->session->userdata('user_perusahaan_id') ?>">
-                          <!-- <div class="col-3">
-                            <div class="form-group">
-                              <input type="text" class="form-control" id="input_kode" name="input_kode" placeholder="Enter Kode">
-                            </div>
-                          </div> -->
                           <div class="col-4">
                             <div class="form-group">
-                              <!-- <label for="input_nama">Nama</label> -->
                               <input type="text" class="form-control" id="input_nama" name="input_nama" placeholder="Enter Nama">
                             </div>
                           </div>
                           <div class="col-5">
                             <div class="form-group">
-                              <!-- <label for="input_kode_nama">Kode Nama</label> -->
                               <input type="text" class="form-control" id="input_kode_nama" name="input_kode_nama" placeholder="Enter Kode Nama">
                             </div>
                           </div>
@@ -225,17 +171,15 @@
                   </tr>
                   <tr>
                     <th>Nama Jabatan</th>
-                    <td><input type="text" name="nama_jabatan" class="form-control"></td>
+                    <td><input type="text" name="nama_jabatan" class="form-control" value="<?= set_value('nama_jabatan', isset($user->nama_jabatan) ? $user->nama_jabatan : ''); ?>"></td>
                   </tr>
                   <tr>
                     <th>Supervisi</th>
                     <td>
                       <select name="supervisi" id="" class="form-control js-example-basic-multiple">
                         <option value="0">None</option>
-                        <?php
-
-                        foreach ($supervisi as $data) { ?>
-                          <option value="<?= $data->nip ?>"><?= $data->nama_jabatan ?></option>
+                        <?php foreach ($supervisi as $data) { ?>
+                          <option value="<?= $data->nip ?>" <?= set_select('supervisi', $data->nip, (isset($user->supervisi) && $user->supervisi == $data->nip)); ?>><?= $data->nama_jabatan ?></option>
                         <?php } ?>
                       </select>
                     </td>
@@ -244,7 +188,7 @@
                     <th>TMT</th>
                     <td>
                       <div class='input-group date' id='myDatepicker2'>
-                        <input type='date' name='tmt' class="form-control" placeholder="yyyy-mm-dd" data-validate-words="1" required="required" />
+                        <input type='date' name='tmt' class="form-control" placeholder="yyyy-mm-dd" data-validate-words="1" required="required" value="<?= set_value('tmt', isset($user->tmt) ? $user->tmt : ''); ?>" />
                         <span class="input-group-addon">
                           <span class="glyphicon glyphicon-calendar"></span>
                         </span>
@@ -253,33 +197,14 @@
                   </tr>
                   <tr>
                     <th>Cuti Reguler</th>
-                    <td><input type="number" name="cuti" class="form-control"></td>
+                    <td><input type="number" name="cuti" class="form-control" value="<?= set_value('cuti', isset($user->cuti) ? $user->cuti : ''); ?>"></td>
                   </tr>
-                  <!-- <tr>
-                    <th>
-                      Lokasi Presensi
-                    </th>
-                    <td>
-                      <select name="lokasi_presensi" class="form-control js-example-basic-multiple">
-                        <option value=""> -- Pilih Lokasi Presensi --</option>
-                        <?php
-                        $lokasi = $this->db->get('lokasi_presensi')->result();
-                        foreach ($lokasi as $data) {
-                        ?>
-                          <option value="<?= $data->id ?>"><?= $data->nama_lokasi ?></option>
-                        <?php } ?>
-                      </select>
-                    </td>
-                  </tr> -->
                   <tr>
                     <th>Cabang</th>
                     <td>
                       <select name="cabang" id="" class="form-control js-example-basic-multiple">
-                        <!-- <option value="0">None</option> -->
-                        <?php
-
-                        foreach ($cabang as $data) { ?>
-                          <option value="<?= $data->uid ?>"><?= $data->nama_cabang . ' - ' . $data->alamat_cabang ?></option>
+                        <?php foreach ($cabang as $data) { ?>
+                          <option value="<?= $data->uid ?>" <?= set_select('cabang', $data->uid, (isset($user->id_cabang) && $user->id_cabang == $data->uid)); ?>><?= $data->nama_cabang . ' - ' . $data->alamat_cabang ?></option>
                         <?php } ?>
                       </select>
                     </td>
@@ -289,20 +214,15 @@
                     <td width="800">
                       <div class="row">
                         <?php foreach ($all_menus_hierarchical as $parent_menu) : ?>
-                          <?php if ($parent_menu->is_active == 1) :
-                            // if ($parent_menu->menu_name == "Menu Admin" || "Perusahaan")
-                          ?>
+                          <?php if ($parent_menu->is_active == 1) : ?>
                             <div class="col-md-6 mb-3 mt-2">
                               <div class="form-check">
-                                <input class="form-check-input parent-checkbox" type="checkbox"
-                                  name="menu_ids[]"
+                                <input class="form-check-input parent-checkbox" type="checkbox" name="menu_ids[]"
                                   <?php if ($parent_menu->premium == 1) {
                                     echo $this->session->userdata('is_premium') == $parent_menu->premium ? '' : 'disabled';
                                   } ?>
-                                  <?= ($parent_menu->premium == 1 || $parent_menu->menu_name == "Menu Admin" || $parent_menu->menu_name == "Menu Perusahaan") ? "" : "Checked" ?>
-
-                                  value="<?= html_escape($parent_menu->Id); ?>"
-                                  id="menu_<?= html_escape($parent_menu->Id); ?>">
+                                  <?= set_checkbox('menu_ids[]', $parent_menu->Id, in_array($parent_menu->Id, isset($user_access_menus) ? $user_access_menus : []) || ($parent_menu->premium != 1 && $parent_menu->menu_name != "Menu Admin" && $parent_menu->menu_name != "Menu Perusahaan")); ?>
+                                  value="<?= html_escape($parent_menu->Id); ?>" id="menu_<?= html_escape($parent_menu->Id); ?>">
                                 <label class="form-check-label font-weight-bold" for="menu_<?= html_escape($parent_menu->Id); ?>">
                                   <i class="<?= html_escape($parent_menu->icon); ?>"></i> <?= html_escape($parent_menu->menu_name); ?>
                                   <?= $parent_menu->premium == 1 ? ' <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="16" height="16"><path fill="#FFD43B" d="M309 106c11.4-7 19-19.7 19-34c0-22.1-17.9-40-40-40s-40 17.9-40 40c0 14.4 7.6 27 19 34L209.7 220.6c-9.1 18.2-32.7 23.4-48.6 10.7L72 160c5-6.7 8-15 8-24c0-22.1-17.9-40-40-40S0 113.9 0 136s17.9 40 40 40c.2 0 .5 0 .7 0L86.4 427.4c5.5 30.4 32 52.6 63 52.6l277.2 0c30.9 0 57.4-22.1 63-52.6L535.3 176c.2 0 .5 0 .7 0c22.1 0 40-17.9 40-40s-17.9-40-40-40s-40 17.9-40 40c0 9 3 17.3 8 24l-89.1 71.3c-15.9 12.7-39.5 7.5-48.6-10.7L309 106z"/></svg>' : '' ?>
@@ -313,41 +233,12 @@
                                   <?php foreach ($parent_menu->children as $child_menu) : ?>
                                     <?php if ($child_menu->is_active == 1) : ?>
                                       <div class="form-check">
-                                        <input class="form-check-input child-checkbox" type="checkbox"
-                                          name="menu_ids[]"
-
+                                        <input class="form-check-input child-checkbox" type="checkbox" name="menu_ids[]"
                                           <?php if ($parent_menu->premium == 1) {
                                             echo $this->session->userdata('is_premium') == $parent_menu->premium ? '' : 'disabled';
                                           } ?>
-
-                                          value="<?= html_escape($child_menu->Id); ?>"
-                                          id="menu_<?= html_escape($child_menu->Id); ?>"
-                                          data-parent-id="<?= html_escape($parent_menu->Id); ?>"
-
-                                          <?php
-                                          if ($child_menu->menu_name == "Buat Pengajuan" || $child_menu->menu_name == "List Pengajuan") {
-                                            if ($this->uri->segment(4) == "Staff") {
-                                              echo "Checked";
-                                            }
-                                          } else if ($child_menu->menu_name == "Approval Supervisi") {
-                                            if ($this->uri->segment(4) == "Manager") {
-                                              echo "Checked";
-                                            }
-                                          } else if ($child_menu->menu_name == "Approval Keuangan") {
-                                            if ($this->uri->segment(4) == "Keuangan") {
-                                              echo "Checked";
-                                            }
-                                          } else if ($child_menu->menu_name == "Approval Direktur" || $child_menu->menu_name == "Approval Direksi") {
-                                            if ($this->uri->segment(4) == "Direktur") {
-                                              echo "Checked";
-                                            }
-                                          } else if ($parent_menu->menu_name == "Menu Admin" || $parent_menu->menu_name == "Menu Perusahaan") {
-                                          } else if ($this->session->userdata('is_premium') != $parent_menu->premium) {
-                                            // continue;
-                                          } else {
-                                            echo "Checked";
-                                          }
-                                          ?>>
+                                          value="<?= html_escape($child_menu->Id); ?>" id="menu_<?= html_escape($child_menu->Id); ?>" data-parent-id="<?= html_escape($parent_menu->Id); ?>"
+                                          <?= set_checkbox('menu_ids[]', $child_menu->Id, in_array($child_menu->Id, isset($user_access_menus) ? $user_access_menus : []) || (in_array($child_menu->Id, isset($user_predefined_menus) ? $user_predefined_menus : []))); ?>>
                                         <label class="form-check-label" for="menu_<?= html_escape($child_menu->Id); ?>">
                                           <i class="<?= html_escape($child_menu->icon); ?>"></i> <?= html_escape($child_menu->menu_name); ?>
                                           <?= $parent_menu->premium == 1 ? ' <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="16" height="16"><path fill="#FFD43B" d="M309 106c11.4-7 19-19.7 19-34c0-22.1-17.9-40-40-40s-40 17.9-40 40c0 14.4 7.6 27 19 34L209.7 220.6c-9.1 18.2-32.7 23.4-48.6 10.7L72 160c5-6.7 8-15 8-24c0-22.1-17.9-40-40-40S0 113.9 0 136s17.9 40 40 40c.2 0 .5 0 .7 0L86.4 427.4c5.5 30.4 32 52.6 63 52.6l277.2 0c30.9 0 57.4-22.1 63-52.6L535.3 176c.2 0 .5 0 .7 0c22.1 0 40-17.9 40-40s-17.9-40-40-40s-40 17.9-40 40c0 9 3 17.3 8 24l-89.1 71.3c-15.9 12.7-39.5 7.5-48.6-10.7L309 106z"/></svg>' : '' ?>
