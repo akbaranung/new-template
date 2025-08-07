@@ -255,7 +255,7 @@ class Auth extends CI_Controller
         'level_jabatan'        => '99',
         'bagian'        => '1',
         'nama_jabatan'        => 'Super Admin',
-        'is_premium'        => '0',
+        // 'is_premium'        => '0',
         'id_cabang'        => '0',
         'token'        => $token,
         'ns_address' => 'ns1.bariskode.id',

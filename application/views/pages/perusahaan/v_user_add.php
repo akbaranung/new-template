@@ -100,21 +100,25 @@
                       <select name="level_jabatan" id="" class="form-control" <?= ($this->uri->segment(3)) ? 'readonly' : '' ?>>
                         <?php
                         if ($this->uri->segment(3)) {
+                          $uri3 = $this->uri->segment(3);
+                          if ($this->uri->segment(4) == "Keuangan") {
+                            $uri3 = 1;
+                          }
                         ?>
-                          <option selected value="<?= $this->uri->segment(3) ?>"><?= $this->uri->segment(4) ?></option>
+                          <option selected value="<?= $uri3 ?>"><?= $this->uri->segment(4) ?></option>
                           <?php
                         } else {
                           if ($this->session->userdata('is_premium')) {
                           ?>
                             <option disabled>Pilih Jabatan</option>
                             <option value="1" <?= set_select('level_jabatan', '1'); ?>>Staff</option>
-                            <option value="2" <?= set_select('level_jabatan', '2'); ?>>Manager</option>
-                            <!-- <option value="2">Supervisor</option> -->
-                            <option value="3" <?= set_select('level_jabatan', '3'); ?>>Keuangan</option>
-                            <!-- <option value="3">Manajer</option> -->
-                            <!-- <option value="4">General Manajer</option> -->
+                            <!-- <option value="2" <?= set_select('level_jabatan', '2'); ?>>Manager</option> -->
+                            <option value="2" <?= set_select('level_jabatan', '2'); ?>>Supervisor</option>
+                            <!-- <option value="3" <?= set_select('level_jabatan', '3'); ?>>Keuangan</option> -->
+                            <option value="3" <?= set_select('level_jabatan', '3'); ?>>Manajer</option>
+                            <option value="4" <?= set_select('level_jabatan', '4'); ?>>General Manajer</option>
                             <option value="5" <?= set_select('level_jabatan', '5'); ?>>Direktur</option>
-                            <!-- <option value="6">Direktur Utama</option> -->
+                            <option value="6" <?= set_select('level_jabatan', '6'); ?>>Direktur Utama</option>
 
                           <?php
                           } else {
@@ -124,13 +128,13 @@
                             $user_counts = isset($user_counts) ? $user_counts : [];
                             $roles = [
                               1 => 'Staff',
-                              2 => 'Manager',
-                              // 2 => 'Supervisor',
-                              3 => 'Keuangan',
-                              // 3 => 'Manajer',
-                              // 4 => 'General Manajer', // This one is commented out in your example, so keep it commented
+                              // 2 => 'Manager',
+                              2 => 'Supervisor',
+                              // 3 => 'Keuangan',
+                              3 => 'Manajer',
+                              4 => 'General Manajer', // This one is commented out in your example, so keep it commented
                               5 => 'Direktur',
-                              // 6 => 'Direktur Utama',
+                              6 => 'Direktur Utama',
                             ];
                             foreach ($roles as $value => $label) {
                               if (isset($user_counts[$value]) && $user_counts[$value] >= 1) {

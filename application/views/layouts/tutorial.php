@@ -39,12 +39,10 @@
   $cek_coa_cabang = $this->cb->get()->num_rows();
   $user_counts = isset($user_counts) ? $user_counts : [];
   $roles = [
-
     5 => 'Direktur',
-    3 => 'Keuangan',
-    2 => 'Manager',
+    3 => 'Manager',
+    2 => 'Keuangan',
     1 => 'Staff',
-
   ];
   $active_p = 0;
 
