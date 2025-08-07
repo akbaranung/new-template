@@ -21,7 +21,12 @@ class M_app extends CI_Model
     }
 
     if ($this->session->userdata('level_jabatan') == 1) {
+
+      $this->db->group_start();
       $this->db->where('level_jabatan', 1);
+      $this->db->or_where('level_jabatan', 3);
+      $this->db->where('bagian', $this->session->userdata('bagian'));
+      $this->db->group_end();
     } else if ($this->session->userdata('level_jabatan') == 2) {
       // Selects records where the level_jabatan is 1 AND the 'bagian' is the same as the session
       $this->db->group_start();
