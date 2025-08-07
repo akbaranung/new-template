@@ -42,7 +42,7 @@ class M_app extends CI_Model
     $this->db->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
     $this->db->where('username !=', $this->session->userdata('username'));
 
-
+    $this->db->order_by('level_jabatan', 'Desc');
 
     $this->db->limit($limit, $offset);
     $query = $this->db->get();
