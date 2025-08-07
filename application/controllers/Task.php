@@ -145,7 +145,7 @@ class Task extends CI_Controller
       $msg = "There's a new task\nTask Name : *$task_name*\n\nCreated By :  *$nama_session*";
 
       $send_wa = implode(',', $phone_member);
-      $this->api_whatsapp->wa_notif($msg, $send_wa);
+      // $this->api_whatsapp->wa_notif($msg, $send_wa);
 
       $response = [
         'success' => true,
@@ -353,7 +353,7 @@ class Task extends CI_Controller
           $user = $this->db->select('phone')->from('users')->where('nip', $responsible)->get()->row_array();
           $msg = "There's a new card\nTask Name:*$task[name]*\nCard Name : *$card_name*\n\nCreated By :  *$nama_session*";
 
-          $this->api_whatsapp->wa_notif($msg, $user['phone']);
+          // $this->api_whatsapp->wa_notif($msg, $user['phone']);
 
           $response = [
             'success' => true,
@@ -379,7 +379,7 @@ class Task extends CI_Controller
         $user = $this->db->select('phone')->from('users')->where('nip', $responsible)->get()->row_array();
         $msg = "There's a new card\nTask Name:*$task[name]*\nCard Name : *$card_name*\n\nCreated By :  *$nama_session*";
 
-        $this->api_whatsapp->wa_notif($msg, $user['phone']);
+        // $this->api_whatsapp->wa_notif($msg, $user['phone']);
 
         $response = [
           'success' => true,

@@ -96,7 +96,7 @@ class M_app extends CI_Model
 
     $nip = $this->session->userdata('username');
 
-    $query = $this->db->select('a.*,b.nama_jabatan,b.nama,b.supervisi,c.kode_nama,b.level_jabatan')->from('memo a')->join('users b', 'b.username = a.nip_dari', 'LEFT')->join('bagian c', 'b.bagian = c.kode', 'left')->where('a.Id', $id)->group_start()->like('a.nip_dari', $nip, 'both')->or_like('a.nip_kpd', $nip, 'both')->or_like('a.nip_cc', $nip, 'both')->group_end()->get();
+    $query = $this->db->select('a.*,b.nama_jabatan,b.nama,b.supervisi,c.kode_nama,b.level_jabatan')->from('memo a')->join('users b', 'b.username = a.nip_dari', 'LEFT')->join('bagian c', 'b.bagian = c.kode_nama', 'left')->where('a.Id', $id)->group_start()->like('a.nip_dari', $nip, 'both')->or_like('a.nip_kpd', $nip, 'both')->or_like('a.nip_cc', $nip, 'both')->group_end()->get();
     return $query->row();
   }
 

@@ -240,7 +240,7 @@ class App extends CI_Controller
           }
 
           $send_wa = implode(',', $phone_user);
-          $this->api_whatsapp->wa_notif($msg, $send_wa);
+          // $this->api_whatsapp->wa_notif($msg, $send_wa);
 
           $response = [
             'success' => true,
@@ -286,7 +286,7 @@ class App extends CI_Controller
         }
 
         $send_wa = implode(',', $phone_user);
-        $this->api_whatsapp->wa_notif($msg, $send_wa);
+        // $this->api_whatsapp->wa_notif($msg, $send_wa);
 
         $response = [
           'success' => true,
