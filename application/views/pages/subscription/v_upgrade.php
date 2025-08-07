@@ -60,10 +60,12 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="title-box text-center">
-                    <h3 class="title-heading mt-4">Best Pricing Package </h3>
-                    <p class="text-muted f-17 mt-3">Vivamus ac nulla ultrices laoreet neque mollis mi morbi
-                        elementum mauris
-                        sit amet arcu <br> fringilla auctor In eleifend maximus nisi sed vulputate.</p>
+                    <h3 class="title-heading mt-4">Pilihan Mahkota Terbaik untuk Kerajaan Anda</h3>
+                    <p class="text-muted f-17 mt-3">
+                        Persembahan khusus dari istana, paket-paket istimewa yang dirancang untuk
+                        mengukuhkan kejayaan dan kekuasaan.<br> Pilih mahkota yang paling sesuai
+                        untuk memimpin tahta Anda menuju era keemasan.
+                    </p>
                 </div>
             </div>
         </div>
