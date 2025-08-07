@@ -58,7 +58,22 @@
                     <td onclick="openMemo(<?= $data->Id ?>)" class="open-memo"><?= ++$page; ?></td>
                     <td style="max-width: 150px;" onclick="openMemo(<?= $data->Id ?>)" class="open-memo"><?= $data->judul ?></td>
                     <td onclick="openMemo(<?= $data->Id ?>)" class="open-memo"><?= date('d/m/y | H:i:s', strtotime($data->tanggal)) ?></td>
-                    <td onclick="openMemo(<?= $data->Id ?>)" class="open-memo"><?= $data->nama; ?></td>
+                    <td onclick="openMemo(<?= $data->Id ?>)" class="open-memo">
+
+                      <?php
+                      $no = 0;
+                      $string = substr($data->nip_kpd, 0, -1);
+                      $arr_kpd = explode(";", $string);
+                      foreach ($arr_kpd as $nip) :
+                        $sql = "SELECT nama,nama_jabatan FROM users WHERE nip='$nip';";
+                        $query = $this->db->query($sql);
+                        $result = $query->row();
+                        echo $result->nama . " (" . $result->nama_jabatan . "), ";
+                        // echo "</br>";
+                        $no++;
+                      endforeach;
+                      ?>
+                    </td>
                   </tr>
               <?php }
               } ?>

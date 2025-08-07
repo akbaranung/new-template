@@ -131,7 +131,7 @@ class App extends CI_Controller
       // cek no memo
       if ($this->session->userdata('level_jabatan') >= 1) {
         $bagian = $this->session->userdata('kode_nama');
-        $sql = "SELECT MAX(nomor_memo) FROM memo WHERE bagian = '$bagian' AND YEAR(tanggal) = year(curdate());";
+        $sql = "SELECT MAX(nomor_memo) FROM memo WHERE bagian = '$bagian' AND id_perusahaan = '" . $this->session->userdata('user_perusahaan_id') . "' AND YEAR(tanggal) = year(curdate());";
         $res1 = $this->db->query($sql);
 
         if ($res1->num_rows() > 0) {
