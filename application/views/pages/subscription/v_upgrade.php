@@ -108,7 +108,7 @@
                     <p class="mt-4 pt-2 text-muted">Dirancang untuk para bangsawan muda yang mencari landasan kokoh. Dapatkan kendali penuh atas wilayah kecil Anda dan bangunlah kekuatan.</p>
                     <div class="pricing-plan mt-4 pt-2">
                         <h4 class="text-muted"><s> $9.99</s> <span class="plan pl-3 text-dark">$8.99 </span></h4>
-                        <p class="text-muted mb-0">Per Month</p>
+                        <p class="text-muted mb-0">Per Bulan</p>
                     </div>
 
 
@@ -149,7 +149,7 @@
                     <p class="mt-4 pt-2 text-muted">Paket ini dirancang untuk para pemimpin yang baru memulai perjalanan. Sebuah fondasi kuat untuk membangun kekuasaan Anda.</p>
                     <div class="pricing-plan mt-4 pt-2">
                         <h4 class="text-muted"><s> $19.99</s> <span class="plan pl-3 text-dark">$18.99 </span></h4>
-                        <p class="text-muted mb-0">Per Month</p>
+                        <p class="text-muted mb-0">Per Bulan</p>
                     </div>
 
                     <div class="mt-4 pt-3">
@@ -185,7 +185,7 @@
 
                     <div class="pricing-plan mt-4 pt-2">
                         <h4 class="text-muted"><s> $29.99</s> <span class="plan pl-3 text-dark">$28.99 </span></h4>
-                        <p class="text-muted mb-0">Per Month</p>
+                        <p class="text-muted mb-0">Per Bulan</p>
                     </div>
 
                     <div class="mt-4 pt-3">
