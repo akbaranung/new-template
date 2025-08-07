@@ -66,6 +66,19 @@
                         mengukuhkan kejayaan dan kekuasaan.<br> Pilih mahkota yang paling sesuai
                         untuk memimpin tahta Anda menuju era keemasan.
                     </p>
+                    <!-- <h3 class="title-heading mt-4">Dekrit Kerajaan: Penawaran Harga Agung</h3>
+                    <p class="text-muted f-17 mt-3">
+                        Dari balairung agung, kami persembahkan paket-paket layanan pilihan
+                        yang akan melayani setiap kebutuhan penguasa. Setiap dekrit ini
+                        adalah janji untuk kemegahan, dirancang untuk memastikan
+                        takhta Anda berdiri kokoh abadi.
+                    </p> -->
+                    <!-- <h3 class="title-heading mt-4">Takhta Terbaik Menanti: Paket Harga Raja</h3>
+                    <p class="text-muted f-17 mt-3">
+                        Jadilah penguasa sejati dengan paket-paket harga terbaik yang pernah ada.
+                        Dapatkan kendali penuh, otoritas tak terbatas, dan semua fasilitas
+                        yang layak bagi seorang raja. Kekuasaan ada di tangan Anda.
+                    </p> -->
                 </div>
             </div>
         </div>
@@ -91,8 +104,8 @@
                         </p> -->
                     </div>
 
-                    <p class="mt-4 pt-2 text-muted">Semper urna veal tempus pharetra elit habisse platea dictumst.
-                    </p>
+                    <!-- <p class="mt-4 pt-2 text-muted">Semper urna veal tempus pharetra elit habisse platea dictumst. </p> -->
+                    <p class="mt-4 pt-2 text-muted">Dirancang untuk para bangsawan muda yang mencari landasan kokoh. Dapatkan kendali penuh atas wilayah kecil Anda dan bangunlah kekuatan.</p>
                     <div class="pricing-plan mt-4 pt-2">
                         <h4 class="text-muted"><s> $9.99</s> <span class="plan pl-3 text-dark">$8.99 </span></h4>
                         <p class="text-muted mb-0">Per Month</p>
@@ -100,7 +113,9 @@
 
 
                     <div class="mt-4 pt-3">
-                        <a href="" class="btn btn-primary btn-rounded">Purchase Now</a>
+                        <a href="" class="btn btn-primary btn-rounded">Pilih Tahta</a>
+                        <!-- <a href="" class="btn btn-primary btn-rounded">Ambil Takhta Ini</a> -->
+                        <!-- <a href="" class="btn btn-primary btn-rounded">Dapatkan Mahkota</a> -->
                     </div>
                 </div>
             </div>
@@ -129,16 +144,16 @@
                         </p> -->
                     </div>
 
-                    <p class="mt-4 pt-2 text-muted">Semper urna veal tempus pharetra elit habisse platea dictumst.
-                    </p>
+                    <!-- <p class="mt-4 pt-2 text-muted">Semper urna veal tempus pharetra elit habisse platea dictumst.</p> -->
 
+                    <p class="mt-4 pt-2 text-muted">Paket ini dirancang untuk para pemimpin yang baru memulai perjalanan. Sebuah fondasi kuat untuk membangun kekuasaan Anda.</p>
                     <div class="pricing-plan mt-4 pt-2">
                         <h4 class="text-muted"><s> $19.99</s> <span class="plan pl-3 text-dark">$18.99 </span></h4>
                         <p class="text-muted mb-0">Per Month</p>
                     </div>
 
                     <div class="mt-4 pt-3">
-                        <a href="" class="btn btn-primary btn-rounded">Purchase Now</a>
+                        <a href="" class="btn btn-primary btn-rounded">Pilih Tahta</a>
                     </div>
                 </div>
             </div>
@@ -164,8 +179,9 @@
                         </p>
                     </div>
 
-                    <p class="mt-4 pt-2 text-muted">Semper urna veal tempus pharetra elit habisse platea dictumst.
-                    </p>
+                    <!-- <p class="mt-4 pt-2 text-muted">Semper urna veal tempus pharetra elit habisse platea dictumst.</p> -->
+
+                    <p class="mt-4 pt-2 text-muted">Paket ini dirancang untuk para pemimpin yang baru memulai perjalanan. Sebuah fondasi kuat untuk membangun kekuasaan Anda.</p>
 
                     <div class="pricing-plan mt-4 pt-2">
                         <h4 class="text-muted"><s> $29.99</s> <span class="plan pl-3 text-dark">$28.99 </span></h4>
@@ -173,7 +189,7 @@
                     </div>
 
                     <div class="mt-4 pt-3">
-                        <a href="" class="btn btn-primary btn-rounded">Purchase Now</a>
+                        <a href="" class="btn btn-primary btn-rounded">Pilih Tahta</a>
                     </div>
                 </div>
             </div>
