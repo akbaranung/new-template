@@ -45,7 +45,21 @@
         <div class="card-body">
           <div class="row mb-3">
             <div class="col-lg-12 col-md-12 col-sm-12">
-              <a href="<?= site_url('pengajuan/list') ?>" class="btn btn-warning">Kembali</a>
+              <?php
+              // if ($child_menu->menu_name == "Buat Pengajuan") {
+              if ($this->session->userdata('level_jabatan') == 1) {
+                $url_kembali = base_url('pengajuan/list');
+              } else if ($this->session->userdata('level_jabatan') == 3) {
+                $url_kembali = base_url('pengajuan/approval_spv');
+              } else if ($this->session->userdata('level_jabatan') == 5) {
+                $url_kembali = base_url('pengajuan/approval_direksi');
+              } else {
+                $url_kembali = base_url('pengajuan/list');
+              }
+
+              ?>
+              <!-- <a href="<?= site_url('pengajuan/list') ?>" class="btn btn-warning">Kembali</a> -->
+              <a href="<?= $url_kembali ?>" class="btn btn-warning">Kembali</a>
             </div>
             <div class="col-12 mt-4 mb-4">
               <?php
@@ -128,10 +142,16 @@
                       <td align="right"><?= rupiah($pengajuan->total) ?></td>
                       <td align="right"><?= $pengajuan->total_realisasi ? rupiah($pengajuan->total) : "-" ?></td>
                     </tr>
-                    <tr>
-                      <td colspan="2">Lampiran</td>
-                      <td colspan="4"><a href="<?= base_url('uploads/pengajuan/') . $pengajuan->bukti_pengajuan ?>" class="btn btn-success btn-sm" target="_blank"><i class="fe fe-download fe-12"> Lampiran</i></a></td>
-                    </tr>
+                    <?php
+                    if ($this->session->userdata('is_premium')) {
+                    ?>
+                      <tr>
+                        <td colspan="2">Lampiran</td>
+                        <td colspan="4"><a href="<?= base_url('uploads/pengajuan/') . $pengajuan->bukti_pengajuan ?>" class="btn btn-success btn-sm" target="_blank"><i class="fe fe-download fe-12"> Lampiran</i></a></td>
+                      </tr>
+                    <?php
+                    }
+                    ?>
                     <tr>
                       <td colspan="2">Bukti Bayar</td>
                       <td colspan="4">
@@ -317,10 +337,17 @@
                         <td colspan="3" align="right">Total</td>
                         <td align="right"><?= rupiah($pengajuan->total) ?></td>
                       </tr>
-                      <tr>
-                        <td colspan="2">Lampiran</td>
-                        <td colspan="3"><a href="<?= base_url('uploads/pengajuan/') . $pengajuan->bukti_pengajuan ?>" class="btn btn-success btn-sm" target="_blank"><i class="fe fe-download fe-12"> Lampiran</i></a></td>
-                      </tr>
+                      <?php
+                      if ($this->session->userdata('is_premium')) {
+                      ?>
+                        <tr>
+                          <td colspan="2">Lampiran</td>
+                          <td colspan="3"><a href="<?= base_url('uploads/pengajuan/') . $pengajuan->bukti_pengajuan ?>" class="btn btn-success btn-sm" target="_blank"><i class="fe fe-download fe-12"> Lampiran</i></a></td>
+                        </tr>
+
+                      <?php
+                      }
+                      ?>
                       <tr>
                         <td colspan="2">Bukti Bayar</td>
                         <td colspan="3">

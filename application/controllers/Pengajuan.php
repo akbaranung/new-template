@@ -305,7 +305,7 @@ class Pengajuan extends CI_Controller
       $pengajuan = $this->M_pengajuan->pengajuan_by_kode($kode);
       $cabang = $this->session->userdata('kode_cabang');
 
-      if ($_FILES['file']['name']) {
+      if (isset($_FILES['file']) && $_FILES['file']['name']) {
         // Upload File
         $config['upload_path'] = './uploads/pengajuan';
         $config['allowed_types'] = 'jpg|jpeg|png|pdf';

@@ -89,7 +89,28 @@
                 <a class="nav-link <?= ($controller == $menu->controller) ? 'active' : '' ?> <?= $menu_disabled_class ?>"
                   href="<?= site_url($menu_url) ?>" <?= $menu_onclick_attr ?>>
                   <i class="<?= $menu->icon ?>"></i>
-                  <span class="ml-3 item-text"><?= $menu->menu_name ?> <?= $menu_mahkota ?></span>
+                  <span class="ml-3 item-text" style="width: 80%;"><?= $menu->menu_name ?> <?= $menu_mahkota ?>
+                    <?php
+                    if ($menu->menu_name == "Tello") {
+                      $nip = $this->session->userdata('nip');
+
+                      $sql4 = "SELECT COUNT(id) FROM task WHERE (FIND_IN_SET('$nip', REPLACE(`member`, ';', ',')) > 0 OR FIND_IN_SET('$nip', REPLACE(`pic`, ';', ',')) > 0) AND activity = '1'";
+
+                      // $sql4 = "SELECT COUNT(id) FROM task WHERE (`member` LIKE '%$nip%' or `pic` like '%$nip%') and activity='1'";
+                      // $sql4 = "SELECT COUNT(id) FROM task WHERE (`member` LIKE '%$nip%') and activity='1'";
+                      $query4 = $this->db->query($sql4);
+                      $res4 = $query4->result_array();
+                      $result4 = $res4[0]['COUNT(id)'];
+                      $jumlah_notifikasi = $result4;
+                      // $jumlah_notifikasi = 5;
+                      if ($jumlah_notifikasi > 0) {
+                    ?>
+                        <span class="badge rounded-pill bg-danger text-white"><?= $jumlah_notifikasi ?></span>
+                    <?php
+                      }
+                    }
+                    ?>
+                  </span>
                 </a>
               </li>
             <?php else: // Has submenus 
@@ -122,7 +143,27 @@
                       <a class="nav-link <?= ($current_uri == $submenu->url) ? 'active' : '' ?> pl-3 <?= $submenu_disabled_class ?>"
                         href="<?= site_url($submenu_url) ?>" <?= $submenu_onclick_attr ?>>
                         <i class="<?= $submenu->icon ?>"></i>
-                        <span class="ml-1 item-text"><?= $submenu->menu_name ?> <?= $submenu_mahkota ?></span>
+                        <span class="ml-1 item-text"><?= $submenu->menu_name ?> <?= $submenu_mahkota ?>
+                          <?php
+                          if ($submenu->menu_name == "Inbox") {
+                            $nip = $this->session->userdata('nip');
+                            // Mengubah string nip_cc dengan mengganti ';' menjadi ',' agar bisa dipakai FIND_IN_SET
+                            $sql = "SELECT COUNT(Id) FROM memo WHERE FIND_IN_SET('$nip', REPLACE(nip_cc, ';', ',')) AND NOT FIND_IN_SET('$nip', REPLACE(`read`, ';', ',')) = 0;";
+                            // $sql = "SELECT COUNT(Id) FROM memo WHERE (nip_kpd LIKE '%$nip%' OR nip_cc LIKE '%$nip%') AND (`read` NOT LIKE '%$nip%');";
+                            // $sql = "SELECT COUNT(Id) FROM memo WHERE (nip_kpd LIKE '%$nip%') AND (`read` NOT LIKE '%$nip%');";
+                            // $sql = "SELECT COUNT(Id) FROM memo WHERE (nip_cc LIKE '%$nip%') AND (`read` NOT LIKE '%$nip%');";
+                            $query = $this->db->query($sql);
+                            $res2 = $query->result_array();
+                            $result = $res2[0]['COUNT(Id)'];
+                            $jumlah_notifikasi = $result;
+                            // $jumlah_notifikasi = 5;
+                            if ($jumlah_notifikasi > 0) {
+                          ?>
+                              <span class="badge rounded-pill bg-danger text-white"><?= $jumlah_notifikasi ?></span>
+                          <?php
+                            }
+                          } ?>
+                        </span>
                       </a>
                     </li>
                   <?php endforeach; ?>

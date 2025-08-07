@@ -349,6 +349,7 @@
 
                                           <?php
                                           if ($child_menu->menu_name == "Buat Pengajuan" || $child_menu->menu_name == "List Pengajuan") {
+                                            // if ($child_menu->menu_name == "Buat Pengajuan") {
                                             if ($this->uri->segment(4) == "Staff") {
                                               echo "Checked";
                                             }
