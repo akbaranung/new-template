@@ -94,9 +94,9 @@
                     if ($menu->menu_name == "Tello") {
                       $nip = $this->session->userdata('nip');
 
-                      $sql4 = "SELECT COUNT(id) FROM task WHERE (FIND_IN_SET('$nip', REPLACE(`member`, ';', ',')) > 0 OR FIND_IN_SET('$nip', REPLACE(`pic`, ';', ',')) > 0) AND activity = '1'";
+                      // $sql4 = "SELECT COUNT(id) FROM task WHERE (FIND_IN_SET('$nip', REPLACE(`member`, ';', ',')) > 0 OR FIND_IN_SET('$nip', REPLACE(`pic`, ';', ',')) > 0) AND activity = '1'";
 
-                      // $sql4 = "SELECT COUNT(id) FROM task WHERE (`member` LIKE '%$nip%' or `pic` like '%$nip%') and activity='1'";
+                      $sql4 = "SELECT COUNT(id) FROM task WHERE (`member` LIKE '%$nip%' or `pic` like '%$nip%') and activity='1'";
                       // $sql4 = "SELECT COUNT(id) FROM task WHERE (`member` LIKE '%$nip%') and activity='1'";
                       $query4 = $this->db->query($sql4);
                       $res4 = $query4->result_array();
@@ -148,8 +148,8 @@
                           if ($submenu->menu_name == "Inbox") {
                             $nip = $this->session->userdata('nip');
                             // Mengubah string nip_cc dengan mengganti ';' menjadi ',' agar bisa dipakai FIND_IN_SET
-                            $sql = "SELECT COUNT(Id) FROM memo WHERE FIND_IN_SET('$nip', REPLACE(nip_cc, ';', ',')) AND NOT FIND_IN_SET('$nip', REPLACE(`read`, ';', ',')) = 0;";
-                            // $sql = "SELECT COUNT(Id) FROM memo WHERE (nip_kpd LIKE '%$nip%' OR nip_cc LIKE '%$nip%') AND (`read` NOT LIKE '%$nip%');";
+                            // $sql = "SELECT COUNT(Id) FROM memo WHERE FIND_IN_SET('$nip', REPLACE(nip_cc, ';', ',')) AND NOT FIND_IN_SET('$nip', REPLACE(`read`, ';', ',')) = 0;";
+                            $sql = "SELECT COUNT(Id) FROM memo WHERE (nip_kpd LIKE '%$nip%' OR nip_cc LIKE '%$nip%') AND (`read` NOT LIKE '%$nip%');";
                             // $sql = "SELECT COUNT(Id) FROM memo WHERE (nip_kpd LIKE '%$nip%') AND (`read` NOT LIKE '%$nip%');";
                             // $sql = "SELECT COUNT(Id) FROM memo WHERE (nip_cc LIKE '%$nip%') AND (`read` NOT LIKE '%$nip%');";
                             $query = $this->db->query($sql);
