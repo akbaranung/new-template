@@ -48,7 +48,7 @@
                   </div>
                 </div>
                 <div class="col-md-4 mb-4">
-                  <div class="card shadow bg-secondary text-white">
+                  <div class="card shadow text-white" style="background-color: #34495e;">
                     <div class="card-body">
                       <div class="row align-items-center">
                         <div class="col">
