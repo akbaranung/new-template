@@ -937,7 +937,7 @@ class Pengajuan extends CI_Controller
   public function update_close($kode)
   {
     $coa_beban = $this->input->post('coa_beban[]');
-    $realisasi = $this->input->post('realisasi[]');
+    $realisasi = $this->_parse_rupiah($this->input->post('realisasi[]'));
     $id_item = $this->input->post('id_item[]');
 
     $tgl = $this->input->post('tanggal');
@@ -980,8 +980,8 @@ class Pengajuan extends CI_Controller
           return;
         };
 
-        $selisih[] = $item[$i]['total'] - $this->_parse_rupiah($realisasi[$i]);
-        // $selisih[] = $item[$i]['total'] - $realisasi[$i];
+        // $selisih[] = $item[$i]['total'] - $this->_parse_rupiah($realisasi[$i]);
+        $selisih[] = $item[$i]['total'] - $realisasi[$i];
 
         if ($selisih[$i] > 0) {
           // Kredit 
