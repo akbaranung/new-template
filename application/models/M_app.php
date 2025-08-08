@@ -82,7 +82,7 @@ class M_app extends CI_Model
   public function memo_get_detail($id)
   {
     $nip = $this->session->userdata('username');
-    $result = $this->db->select('read')->from('memo')->where('Id', $id)->get()->row();
+    $result = $this->db->select('read')->from('memo')->like('read', $nip, 'both')->where('Id', $id)->get()->row();
     $kalimat = $result->read;
 
     if ($result) {
