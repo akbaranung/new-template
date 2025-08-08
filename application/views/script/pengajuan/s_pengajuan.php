@@ -445,4 +445,21 @@
       });
     });
   });
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const inputs = document.querySelectorAll('.rupiah-input');
+
+    inputs.forEach(input => {
+      input.addEventListener('keyup', function(e) {
+        // Dapatkan nilai input tanpa tanda titik atau karakter non-digit lainnya
+        let value = this.value.replace(/\D/g, '');
+
+        // Format ulang dengan menambahkan titik sebagai pemisah ribuan
+        value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+        // Perbarui nilai input
+        this.value = value;
+      });
+    });
+  });
 </script>

@@ -41,7 +41,7 @@
                             <?php endforeach ?>
                           </select>
                         </td>
-                        <td><input type="text" class="form-control" name="realisasi[]"></td>
+                        <td><input type="text" class="form-control rupiah-input" name="realisasi[]"></td>
                       </tr>
                     <?php endforeach ?>
                     <tr>

@@ -995,11 +995,20 @@ class Pengajuan extends CI_Controller
           // Ambil saldo debit
           $saldo_debit = $this->get_saldo_coa($coa_beban[$i]);
 
+          // Ambil nilai dari input yang diformat
+          $realisasi_formatted = $realisasi[$i];
+
+          // Hapus semua titik (pemisah ribuan) untuk mendapatkan nilai numerik
+          $jumlah_debit = str_replace('.', '', $realisasi_formatted);
+
+          // Gunakan nilai yang sudah bersih untuk operasi database atau perhitungan
+
           // insert jurnal
           $jurnal[] = [
             'tanggal' => $tgl,
             'akun_debit' => $coa_beban[$i],
-            'jumlah_debit' => $realisasi[$i],
+            // 'jumlah_debit' => $realisasi[$i],
+            'jumlah_debit' => $jumlah_debit,
             'akun_kredit' => $item[$i]['debit'],
             'jumlah_kredit' => $realisasi[$i],
             'saldo_debit' => $saldo_debit,
