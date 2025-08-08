@@ -113,20 +113,20 @@
                     $color = '';
                   }
                 ?>
-                  <tr style="background-color: <?= $color ?>; color:white">
+                  <tr>
                     <td><?= $data->kode; ?></td>
                     <td><?= $data->nama ?></td>
                     <td><?= $data->no_rekening ?></td>
                     <td><?= date('d/m/y', strtotime($data->tanggal)) ?></td>
                     <td><?= rupiah($data->total); ?></td>
-                    <td><?= $data->posisi; ?></td>
+                    <td style="background-color: <?= $color ?>; color:white"><?= $data->posisi; ?></td>
                     <td>
-                      <a href="<?= site_url('pengajuan/detail/') . $data->kode . '/finance' ?>" class="btn btn-primary btn-sm"><i class="fe fe-eye fe-12"></i> Detail</a>
+                      <a href="<?= site_url('pengajuan/detail/') . $data->kode . '/finance' ?>" class="btn btn-sm" style="background-color: #3498db; color:white;"><i class="fe fe-eye fe-12"></i> Detail</a>
                       <?php if ($data->status == 3 and $data->posisi == 'Diarahkan ke pembayaran') { ?>
-                        <a href="<?= site_url('pengajuan/bayar/') . $data->kode ?>" class="btn btn-primary btn-sm"><i class="fe fe-dollar-sign fe-12"></i> Bayar</a>
+                        <a href="<?= site_url('pengajuan/bayar/') . $data->kode ?>" class="btn btn-sm" style="background-color: #3498db; color:white;"><i class="fe fe-dollar-sign fe-12"></i> Bayar</a>
                       <?php } ?>
                       <?php if ($data->status == 4 and $data->posisi == 'Sudah dibayar') { ?>
-                        <a href="<?= site_url('pengajuan/close/') . $data->kode ?>" class="btn btn-primary btn-sm"><i class="fe fe-x-square fe-12"></i> Close</a>
+                        <a href="<?= site_url('pengajuan/close/') . $data->kode ?>" class="btn btn-sm" style="background-color: #3498db; color:white;"><i class="fe fe-x-square fe-12"></i> Close</a>
                       <?php } ?>
                     </td>
                   </tr>

@@ -82,14 +82,14 @@
                     $color = '';
                   }
                 ?>
-                  <tr style="background-color: <?= $color ?>; color: white;">
+                  <tr>
                     <td><?= $data->kode; ?></td>
                     <td><?= $data->nama ?></td>
                     <td><?= date('d/m/y', strtotime($data->tanggal)) ?></td>
                     <td><?= rupiah($data->total); ?></td>
-                    <td><?= $data->posisi; ?></td>
+                    <td style="background-color: <?= $color ?>; color:white"><?= $data->posisi; ?></td>
                     <td>
-                      <a href="<?= site_url('pengajuan/detail/') . $data->kode . '/spv' ?>" class="btn btn-primary btn-sm"><i class="fe fe-eye fe-12"></i> Detail</a>
+                      <a href="<?= site_url('pengajuan/detail/') . $data->kode . '/spv' ?>" class="btn btn-sm" style="background-color: #3498db; color:white;"><i class="fe fe-eye fe-12"></i> Detail</a>
                     </td>
                   </tr>
               <?php }

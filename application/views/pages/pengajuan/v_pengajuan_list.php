@@ -64,17 +64,17 @@
                         $color = '';
                       }
                     ?>
-                      <tr style="background-color: <?= $color ?>; color:white">
+                      <tr>
                         <td><?= $data->kode; ?></td>
                         <td><?= $data->no_rekening ?></td>
                         <td><?= date('d/m/y', strtotime($data->tanggal)) ?></td>
                         <td><?= rupiah($data->total); ?></td>
-                        <td><?= $data->posisi; ?></td>
+                        <td style="background-color: <?= $color ?>; color:white"><?= $data->posisi; ?></td>
                         <td>
                           <?php if ($data->status == 0) { ?>
-                            <a href="<?= site_url('pengajuan/ubah/') . $data->kode ?>" class="btn btn-primary btn-sm"><i class="fe fe-edit-3 fe-12"></i> Update</a>
+                            <a href="<?= site_url('pengajuan/ubah/') . $data->kode ?>" class="btn btn-sm" style="background-color: #3498db; color:white;"><i class="fe fe-edit-3 fe-12"></i> Update</a>
                           <?php } ?>
-                          <a href="<?= site_url('pengajuan/detail/') . $data->kode ?>" class="btn btn-primary btn-sm"><i class="fe fe-eye fe-12"></i> Detail</a>
+                          <a href="<?= site_url('pengajuan/detail/') . $data->kode ?>" class="btn btn-sm" style="background-color: #3498db; color:white;"><i class="fe fe-eye fe-12"></i> Detail</a>
                         </td>
                       </tr>
                   <?php }
