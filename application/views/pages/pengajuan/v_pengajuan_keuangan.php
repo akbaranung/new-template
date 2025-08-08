@@ -33,7 +33,7 @@
                   </div>
                 </div>
                 <div class="col-md-4 mb-4">
-                  <div class="card shadow bg-secondary text-white">
+                  <div class="card shadow text-white" style="background-color: #27ae60;">
                     <div class="card-body">
                       <div class="row align-items-center">
                         <div class="col">
@@ -48,12 +48,12 @@
                   </div>
                 </div>
                 <div class="col-md-4 mb-4">
-                  <div class="card shadow bg-danger text-white">
+                  <div class="card shadow bg-secondary text-white">
                     <div class="card-body">
                       <div class="row align-items-center">
                         <div class="col">
                           <span class="h2 mb-0 text-white"><?= $belum_close ?></span>
-                          <p class="small mb-0">Pertangung Jawaban (Closing)</p>
+                          <p class="small mb-0">Pertangungjawaban</p>
                         </div>
                         <div class="col-auto">
                           <span class="fe fe-32 fe-x-square mb-0"></span>
