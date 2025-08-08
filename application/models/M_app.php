@@ -82,13 +82,13 @@ class M_app extends CI_Model
   public function memo_get_detail($id)
   {
     $nip = $this->session->userdata('username');
-    $result = $this->db->select('read')->from('memo')->like('read', $nip, 'both')->where('Id', $id)->get()->row();
-    $kalimat = $result->read;
+    $result = $this->db->select('read')->from('memo')->not_like('read', $nip)->where('Id', $id)->get()->row();
 
-    if (!$result) {
+    if ($result) {
+      $kalimat = $result->read;
       $kalimat1 = $kalimat . ' ' . $nip;
-      $data_update1    = array(
-        'read'    => $kalimat1
+      $data_update1 = array(
+        'read' => $kalimat1
       );
       $this->db->where('Id', $id);
       $this->db->update('memo', $data_update1);
