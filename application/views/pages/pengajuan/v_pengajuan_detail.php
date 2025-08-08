@@ -47,8 +47,8 @@
             <div class="col-lg-12 col-md-12 col-sm-12">
               <?php
               // if ($child_menu->menu_name == "Buat Pengajuan") {
-              if ($this->session->userdata('level_jabatan') == 1) {
-                $url_kembali = base_url('pengajuan/list');
+              if ($this->uri->segment(4) == "finance") {
+                $url_kembali = base_url('pengajuan/approval_keuangan');
               } else if ($this->session->userdata('level_jabatan') == 3) {
                 $url_kembali = base_url('pengajuan/approval_spv');
               } else if ($this->session->userdata('level_jabatan') == 5) {
@@ -92,29 +92,53 @@
               //   $i = 0;
               // }
 
-              if ($pengajuan->posisi == "Diajukan kepada direksi" || $pengajuan->posisi == "Diarahkan ke pembayaran") {
+              if ($pengajuan->posisi == "Closed") {
                 $Pengajuan = 'active';
                 $Supervisi = 'active';
                 $Keuangan = 'active';
                 $Direksi = 'active';
+                $Pembayaran = 'active';
+                $Closed = 'active';
+                $i = 5;
+              } elseif ($pengajuan->posisi == "Diarahkan ke pembayaran") {
+                $Pengajuan = 'active';
+                $Supervisi = 'active';
+                $Keuangan = 'active';
+                $Direksi = 'active';
+                $Pembayaran = 'active';
+                $Closed = '';
+                $i = 4;
+              } else if ($pengajuan->posisi == "Diajukan kepada direksi") {
+                $Pengajuan = 'active';
+                $Supervisi = 'active';
+                $Keuangan = 'active';
+                $Direksi = 'active';
+                $Pembayaran = '';
+                $Closed = '';
                 $i = 3;
               } else if ($pengajuan->posisi == "Diajukan kepada keuangan") {
                 $Pengajuan = 'active';
                 $Supervisi = 'active';
                 $Keuangan = 'active';
                 $Direksi = '';
+                $Pembayaran = '';
+                $Closed = '';
                 $i = 2;
               } else if ($pengajuan->posisi == "Diajukan kepada supervisi") {
                 $Pengajuan = 'active';
                 $Supervisi = 'active';
                 $Keuangan = '';
                 $Direksi = '';
+                $Pembayaran = '';
+                $Closed = '';
                 $i = 1;
               } else if ($pengajuan->posisi == "Ditolak oleh keuangan" || $pengajuan->posisi == "Ditolak oleh supervisi" || $pengajuan->posisi == "Ditolak oleh direksi") {
                 $Pengajuan = 'active';
                 $Supervisi = '';
                 $Keuangan = '';
                 $Direksi = '';
+                $Pembayaran = '';
+                $Closed = '';
                 $i = 0;
               }
               ?>
@@ -135,6 +159,8 @@
                   <div class="circle <?= $Supervisi ?>" data-label="Supervisi">2</div>
                   <div class="circle <?= $Keuangan ?>" data-label="Keuangan">3</div>
                   <div class="circle <?= $Direksi ?>" data-label="Direksi">4</div>
+                  <div class="circle <?= $Pembayaran ?>" data-label="Pembayaran">4</div>
+                  <div class="circle <?= $Closed ?>" data-label="Closed">5</div>
                 </div>
               </div>
             </div>
