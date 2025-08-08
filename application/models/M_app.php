@@ -85,7 +85,7 @@ class M_app extends CI_Model
     $result = $this->db->select('read')->from('memo')->like('read', $nip, 'both')->where('Id', $id)->get()->row();
     $kalimat = $result->read;
 
-    if ($result) {
+    if (!$result) {
       $kalimat1 = $kalimat . ' ' . $nip;
       $data_update1    = array(
         'read'    => $kalimat1
