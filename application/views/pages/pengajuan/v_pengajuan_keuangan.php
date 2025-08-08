@@ -23,7 +23,7 @@
                       <div class="row align-items-center">
                         <div class="col">
                           <span class="h2 mb-0 text-white"><?= $belum_proses_keuangan ?></span>
-                          <p class="small mb-0">Belum Diproses</p>
+                          <p class="small mb-0">Diajukan Kepada Keuangan</p>
                         </div>
                         <div class="col-auto">
                           <span class="fe fe-32 fe-clock mb-0"></span>
@@ -38,7 +38,7 @@
                       <div class="row align-items-center">
                         <div class="col">
                           <span class="h2 mb-0 text-white"><?= $belum_bayar ?></span>
-                          <p class="small mb-0">Belum Bayar</p>
+                          <p class="small mb-0">Diarahkan Ke Pembarayan</p>
                         </div>
                         <div class="col-auto">
                           <span class="fe fe-32 fe-dollar-sign mb-0"></span>
@@ -53,7 +53,7 @@
                       <div class="row align-items-center">
                         <div class="col">
                           <span class="h2 mb-0 text-white"><?= $belum_close ?></span>
-                          <p class="small mb-0">Belum Close</p>
+                          <p class="small mb-0">Pertangung Jawaban (Closing)</p>
                         </div>
                         <div class="col-auto">
                           <span class="fe fe-32 fe-x-square mb-0"></span>
@@ -101,8 +101,19 @@
                 <?php } else {
                 $nip = $this->session->userdata('nip');
                 foreach ($data_pengajuan as $data) {
+                  if ($data->status == 1) {
+                    $color = '#f39c12';
+                  } else if ($data->status > 1 and $data->status < 4) {
+                    $color = '#2ecc71';
+                  } else if ($data->status == 4) {
+                    $color = '#16a085';
+                  } else if ($data->status == 5) {
+                    $color = '#34495e';
+                  } else {
+                    $color = '';
+                  }
                 ?>
-                  <tr>
+                  <tr style="background-color: <?= $color ?>; color:white">
                     <td><?= $data->kode; ?></td>
                     <td><?= $data->nama ?></td>
                     <td><?= $data->no_rekening ?></td>
@@ -110,12 +121,12 @@
                     <td><?= rupiah($data->total); ?></td>
                     <td><?= $data->posisi; ?></td>
                     <td>
-                      <a href="<?= site_url('pengajuan/detail/') . $data->kode . '/finance' ?>" class="btn btn-warning btn-sm"><i class="fe fe-eye fe-12"></i> Detail</a>
+                      <a href="<?= site_url('pengajuan/detail/') . $data->kode . '/finance' ?>" class="btn btn-primary btn-sm"><i class="fe fe-eye fe-12"></i> Detail</a>
                       <?php if ($data->status == 3 and $data->posisi == 'Diarahkan ke pembayaran') { ?>
-                        <a href="<?= site_url('pengajuan/bayar/') . $data->kode ?>" class="btn btn-success btn-sm"><i class="fe fe-dollar-sign fe-12"></i> Bayar</a>
+                        <a href="<?= site_url('pengajuan/bayar/') . $data->kode ?>" class="btn btn-primary btn-sm"><i class="fe fe-dollar-sign fe-12"></i> Bayar</a>
                       <?php } ?>
                       <?php if ($data->status == 4 and $data->posisi == 'Sudah dibayar') { ?>
-                        <a href="<?= site_url('pengajuan/close/') . $data->kode ?>" class="btn btn-success btn-sm"><i class="fe fe-x-square fe-12"></i> Close</a>
+                        <a href="<?= site_url('pengajuan/close/') . $data->kode ?>" class="btn btn-primary btn-sm"><i class="fe fe-x-square fe-12"></i> Close</a>
                       <?php } ?>
                     </td>
                   </tr>

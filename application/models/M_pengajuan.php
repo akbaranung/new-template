@@ -30,7 +30,7 @@ class M_pengajuan extends CI_Model
     if ($keyword) {
       $this->cb->like('kode', $keyword, 'both');
     }
-    $this->cb->order_by('a.tanggal', 'DESC');
+    $this->cb->order_by('a.status', 'ASC');
     return $this->cb->limit($limit, $start)->get()->result();
   }
 
@@ -57,7 +57,7 @@ class M_pengajuan extends CI_Model
     if ($keyword) {
       $this->cb->like('a.kode', $keyword, 'both');
     }
-    $this->cb->order_by('a.tanggal', 'DESC');
+    $this->cb->order_by('a.status', 'ASC');
     return $this->cb->limit($limit, $start)->get()->result();
   }
 
@@ -84,7 +84,7 @@ class M_pengajuan extends CI_Model
     if ($keyword) {
       $this->cb->like('a.kode', $keyword, 'both');
     }
-    $this->cb->order_by('a.tanggal', 'DESC');
+    $this->cb->order_by('a.status', 'ASC');
     return $this->cb->limit($limit, $start)->get()->result();
   }
 
@@ -111,7 +111,7 @@ class M_pengajuan extends CI_Model
     if ($keyword) {
       $this->cb->like('a.kode', $keyword, 'both');
     }
-    $this->cb->order_by('a.tanggal', 'DESC');
+    $this->cb->order_by('a.status', 'ASC');
     return $this->cb->limit($limit, $start)->get()->result();
   }
 

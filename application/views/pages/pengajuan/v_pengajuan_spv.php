@@ -70,15 +70,26 @@
                 <?php } else {
                 $nip = $this->session->userdata('nip');
                 foreach ($data_pengajuan as $data) {
+                  if ($data->status == 0) {
+                    $color = '#f39c12';
+                  } else if ($data->status > 0 and $data->status < 4) {
+                    $color = '#2ecc71';
+                  } else if ($data->status == 4) {
+                    $color = '#16a085';
+                  } else if ($data->status == 5) {
+                    $color = '#34495e';
+                  } else {
+                    $color = '';
+                  }
                 ?>
-                  <tr>
+                  <tr style="background-color: <?= $color ?>; color: white;">
                     <td><?= $data->kode; ?></td>
                     <td><?= $data->nama ?></td>
                     <td><?= date('d/m/y', strtotime($data->tanggal)) ?></td>
                     <td><?= rupiah($data->total); ?></td>
                     <td><?= $data->posisi; ?></td>
                     <td>
-                      <a href="<?= site_url('pengajuan/detail/') . $data->kode . '/spv' ?>" class="btn btn-warning btn-sm"><i class="fe fe-eye fe-12"></i> Detail</a>
+                      <a href="<?= site_url('pengajuan/detail/') . $data->kode . '/spv' ?>" class="btn btn-primary btn-sm"><i class="fe fe-eye fe-12"></i> Detail</a>
                     </td>
                   </tr>
               <?php }

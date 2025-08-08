@@ -70,8 +70,19 @@
                 <?php } else {
                 $nip = $this->session->userdata('nip');
                 foreach ($data_pengajuan as $data) {
+                  if ($data->status == 1) {
+                    $color = '#f39c12';
+                  } else if ($data->status > 1 and $data->status < 4) {
+                    $color = '#2ecc71';
+                  } else if ($data->status == 4) {
+                    $color = '#16a085';
+                  } else if ($data->status == 5) {
+                    $color = '#34495e';
+                  } else {
+                    $color = '';
+                  }
                 ?>
-                  <tr>
+                  <tr style="background-color: <?= $color ?>; color: white;">
                     <td><?= $data->kode; ?></td>
                     <td><?= $data->nama ?></td>
                     <td><?= date('d/m/y', strtotime($data->tanggal)) ?></td>
