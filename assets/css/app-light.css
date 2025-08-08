@@ -1981,9 +1981,9 @@ fieldset:disabled a.btn {
 
 /* Base Pink Button */
 .btn-pink {
-  color: #ffffff; /* Text color remains white for good contrast */
-  background-color: #e81f63; /* Your base pink color */
-  border-color: #e81f63; /* Border matches background */
+  color: #ffffff !important; /* Text color remains white for good contrast */
+  background-color: #e81f63 !important; /* Your base pink color */
+  border-color: #e81f63 !important; /* Border matches background */
 }
 
 /* Hover state for Pink Button */

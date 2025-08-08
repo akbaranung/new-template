@@ -82,18 +82,7 @@
                 <div class="row">
                   <div class="col-lg-12 col-md-12 col-sm-12 col-12">
                     <a href="<?= site_url('pengajuan/list') ?>" class="btn btn-warning">Kembali</a>
-                    <?php
-                    if ($pengajuan->posisi == "Ditolak oleh keuangan" || $pengajuan->posisi == "Ditolak oleh supervisi" || $pengajuan->posisi == "Ditolak oleh direksi") {
-                    ?>
-                      <button class="btn btn-primary btn-submit" type="submit">Ajukan</button>
-
-                    <?php
-                    } else {
-                    ?>
-                      <button class="btn btn-primary btn-submit" type="submit">Simpan</button>
-                    <?php
-                    }
-                    ?>
+                    <button class="btn btn-primary btn-submit" type="submit">Ajukan Kembali</button>
                   </div>
                 </div>
               </div>
