@@ -15,7 +15,7 @@
           <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-12">
               <form action="<?= site_url('pengajuan/update_bayar/') . $this->uri->segment(3) ?>" method="post">
-                <table class="table table-bordered">
+                <table class="table table-sm table-bordered">
                   <thead class="thead-light">
                     <tr>
                       <th width="25px">No.</th>
