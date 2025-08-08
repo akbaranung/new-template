@@ -776,7 +776,6 @@ class Pengajuan extends CI_Controller
     $data['coa'] = $this->cb->select('no_sbb, nama_perkiraan')
       ->from('v_coa_all')
       ->where('id_cabang', $this->session->userdata('kode_cabang'))
-      ->where('no_sbb LIKE "5%"')
       ->get()
       ->result();
 
@@ -923,7 +922,7 @@ class Pengajuan extends CI_Controller
     $data['pengajuan_detail'] = $this->M_pengajuan->pengajuan_get_detail($kode);
     $data['pengajuan'] = $this->M_pengajuan->pengajuan_by_kode($kode);
 
-    $data['coa'] = $this->cb->select('no_sbb, nama_perkiraan')->from('v_coa_all')->where('id_cabang', $this->session->userdata('kode_cabang'))->get()->result();
+    $data['coa'] = $this->cb->select('no_sbb, nama_perkiraan')->from('v_coa_all')->where('id_cabang', $this->session->userdata('kode_cabang'))->where('no_sbb LIKE "5%"')->get()->result();
 
     $user = $this->db->select('users.Id, bagian.nama as nama_bagian')->from('users')->join('bagian', 'bagian.Id = users.bagian')->where('users.nip', $this->session->userdata('nip'))->where('users.id_cabang', $this->session->userdata('kode_cabang'))->get()->row();
 
