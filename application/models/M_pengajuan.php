@@ -149,4 +149,33 @@ class M_pengajuan extends CI_Model
     $this->cb->where('no_pengajuan', $id);
     return $this->cb->delete('t_pengajuan_detail');
   }
+
+
+  // NEW
+  public function get_coa_nominal($no_sbb, $id_cabang)
+  {
+    $this->cb->select('nominal');
+    $this->cb->from('v_coa_all');
+    $this->cb->where('no_sbb', $no_sbb);
+    $this->cb->where('id_cabang', $id_cabang);
+    $query = $this->cb->get();
+
+    if ($query->num_rows() > 0) {
+      return (float) $query->row()->nominal;
+    }
+    return 0.0;
+  }
+
+  public function get_item_name_by_id($item_id)
+  {
+    $this->cb->select('item');
+    $this->cb->from('t_pengajuan_detail');
+    $this->cb->where('Id', $item_id);
+    $query = $this->cb->get();
+
+    if ($query->num_rows() > 0) {
+      return $query->row()->item;
+    }
+    return 'Uraian Tidak Dikenal';
+  }
 }

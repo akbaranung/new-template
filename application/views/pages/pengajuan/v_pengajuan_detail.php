@@ -100,7 +100,7 @@
                 $Pembayaran = 'active';
                 $Closed = 'active';
                 $i = 5;
-              } elseif ($pengajuan->posisi == "Diarahkan ke pembayaran") {
+              } elseif ($pengajuan->posisi == "Diarahkan ke pembayaran" || $pengajuan->posisi == "Sudah dibayar") {
                 $Pengajuan = 'active';
                 $Supervisi = 'active';
                 $Keuangan = 'active';
@@ -379,12 +379,14 @@
                               <select name="coa[]" id="coa-<?= $no++ ?>" class="form-control select2">
                                 <?php foreach ($coa as $c) : ?>
                                   <option value="<?= $c->no_sbb ?>" <?= $c->no_sbb == '15110' ? 'selected' : '' ?>><?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?></option>
+                                  <!-- <option value="<?= $c->no_sbb ?>"><?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?></option> -->
                                 <?php endforeach ?>
                               </select>
                             <?php } else { ?>
                               <select name="coa[]" id="coa-<?= $no++ ?>" class="form-control select2" disabled>
                                 <?php foreach ($coa as $c) : ?>
                                   <option value="<?= $c->no_sbb ?>" <?= $c->no_sbb == '15110' ? 'selected' : '' ?>><?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?></option>
+                                  <!-- <option value="<?= $c->no_sbb ?>"><?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?></option> -->
                                 <?php endforeach ?>
                               </select>
                             <?php } ?>

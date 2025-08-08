@@ -771,7 +771,14 @@ class Pengajuan extends CI_Controller
     $data['pengajuan_detail'] = $this->M_pengajuan->pengajuan_get_detail($kode);
     $data['pengajuan'] = $this->M_pengajuan->pengajuan_by_kode($kode);
 
-    $data['coa'] = $this->cb->select('no_sbb, nama_perkiraan')->from('v_coa_all')->where('id_cabang', $this->session->userdata('kode_cabang'))->get()->result();
+    // $data['coa'] = $this->cb->select('no_sbb, nama_perkiraan')->from('v_coa_all')->where('id_cabang', $this->session->userdata('kode_cabang'))->get()->result();
+
+    $data['coa'] = $this->cb->select('no_sbb, nama_perkiraan')
+      ->from('v_coa_all')
+      ->where('id_cabang', $this->session->userdata('kode_cabang'))
+      ->where('no_sbb LIKE "5%"')
+      ->get()
+      ->result();
 
     $user = $this->db->select('users.Id, bagian.nama as nama_bagian')->from('users')->join('bagian', 'bagian.Id = users.bagian')->where('users.nip', $this->session->userdata('nip'))->where('users.id_cabang', $this->session->userdata('kode_cabang'))->get()->row();
 
@@ -1198,5 +1205,41 @@ class Pengajuan extends CI_Controller
     // Hilangkan Rp, titik, dan ganti koma dengan titik
     $rupiah = str_replace(['Rp', '.', ' '], '', $rupiah);
     return floatval(str_replace(',', '.', $rupiah));
+  }
+
+  public function check_bayar_coa_details()
+  {
+    // Mengatur header agar respons berupa JSON
+    header('Content-Type: application/json');
+
+    $coa_data = $this->input->post('coa_data');
+    $id_cabang = $this->session->userdata('kode_cabang');
+    $overdraft_detected = false;
+    $overdraft_messages = [];
+
+    if (!empty($coa_data) && is_array($coa_data)) {
+      foreach ($coa_data as $item_data) {
+        $item_id = $item_data['item_id'];
+        $coa_credit = $item_data['coa_credit'];
+        $subtotal = $item_data['subtotal'];
+
+        $item_name = $this->M_pengajuan->get_item_name_by_id($item_id);
+        $nominal_coa = $this->M_pengajuan->get_coa_nominal($coa_credit, $id_cabang);
+
+        if ($subtotal > $nominal_coa) {
+          $overdraft_detected = true;
+          $overdraft_messages[] = "Uraian <strong>" . htmlspecialchars($item_name) . "</strong> (COA: " . htmlspecialchars($coa_credit) . ") melebihi nominal COA. Nominal tersedia: Rp. " . number_format($nominal_coa, 0, ',', '.') . ", Diajukan: Rp. " . number_format($subtotal, 0, ',', '.') . "<br><br> Apakah Anda Ingin Tetap Melanjutkan Pembayaran?";
+        }
+      }
+    } else {
+      echo json_encode(['status' => 'error', 'message' => 'Tidak ada data COA yang diterima.']);
+      return;
+    }
+
+    if ($overdraft_detected) {
+      echo json_encode(['status' => 'error', 'message' => implode('<br>', $overdraft_messages)]);
+    } else {
+      echo json_encode(['status' => 'success', 'message' => 'Nominal COA mencukupi.']);
+    }
   }
 }

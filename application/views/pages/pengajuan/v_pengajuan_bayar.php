@@ -40,7 +40,7 @@
                         <td align="right"><?= rupiah($row->total) ?></td>
                         <td>
                           <select name="coa_credit[]" class="form-control select2">
-                            <option value=""> :: Pilih Coa Kredit</option>
+                            <option value="" selected> :: Pilih Coa Kredit</option>
                             <?php foreach ($coa as $c) : ?>
                               <option value="<?= $c->no_sbb ?>"><?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?></option>
                             <?php endforeach ?>
@@ -77,7 +77,7 @@
                         </div>
                       </div>
                       <div>
-                        <button type="submit" class="btn btn-primary btn-submit">Simpan</button>
+                        <button type="submit" class="btn btn-primary btn-submit-bayar">Simpan</button>
                       </div>
                     </div>
                   </div>
