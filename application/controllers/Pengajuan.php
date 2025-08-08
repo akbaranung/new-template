@@ -329,7 +329,7 @@ class Pengajuan extends CI_Controller
             'no_rekening' => $rekening,
             'metode_pembayaran' => $metode,
             'status' => 0,
-            'posisi' => 'Diajukan kepada spv',
+            'posisi' => 'Diajukan kepada supervisi',
             'bukti_pengajuan' => $upload['file_name'],
             'catatan' => $catatan,
             'total' => $this->_parse_rupiah($total),

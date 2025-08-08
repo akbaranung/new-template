@@ -61,27 +61,56 @@
               <!-- <a href="<?= site_url('pengajuan/list') ?>" class="btn btn-warning">Kembali</a> -->
               <a href="<?= $url_kembali ?>" class="btn btn-warning">Kembali</a>
             </div>
+            <?php
+            // if ($pengajuan->posisi != "Diarahkan ke pembayaran" || $pengajuan->posisi != "Diarahkan ke pembayaran" || $pengajuan->posisi != "Diarahkan ke pembayaran" || $pengajuan->posisi != "Diarahkan ke pembayaran" ||)
+            ?>
             <div class="col-12 mt-4 mb-4">
               <?php
-              if ($pengajuan->direksi != Null || $pengajuan->direksi) {
+              // if ($pengajuan->direksi != Null || $pengajuan->direksi) {
+              //   $Pengajuan = 'active';
+              //   $Supervisi = 'active';
+              //   $Keuangan = 'active';
+              //   $Direksi = 'active';
+              //   $i = 3;
+              // } else if ($pengajuan->keuangan != Null || $pengajuan->keuangan) {
+              //   $Pengajuan = 'active';
+              //   $Supervisi = 'active';
+              //   $Keuangan = 'active';
+              //   $Direksi = '';
+              //   $i = 2;
+              // } else if ($pengajuan->spv != Null || $pengajuan->spv) {
+              //   $Pengajuan = 'active';
+              //   $Supervisi = 'active';
+              //   $Keuangan = '';
+              //   $Direksi = '';
+              //   $i = 1;
+              // } else if ($pengajuan->spv == Null || !$pengajuan->spv) {
+              //   $Pengajuan = 'active';
+              //   $Supervisi = '';
+              //   $Keuangan = '';
+              //   $Direksi = '';
+              //   $i = 0;
+              // }
+
+              if ($pengajuan->posisi == "Diajukan kepada direksi") {
                 $Pengajuan = 'active';
                 $Supervisi = 'active';
                 $Keuangan = 'active';
                 $Direksi = 'active';
                 $i = 3;
-              } else if ($pengajuan->keuangan != Null || $pengajuan->keuangan) {
+              } else if ($pengajuan->posisi == "Diajukan kepada keuangan") {
                 $Pengajuan = 'active';
                 $Supervisi = 'active';
                 $Keuangan = 'active';
                 $Direksi = '';
                 $i = 2;
-              } else if ($pengajuan->spv != Null || $pengajuan->spv) {
+              } else if ($pengajuan->posisi == "Diajukan kepada supervisi") {
                 $Pengajuan = 'active';
                 $Supervisi = 'active';
                 $Keuangan = '';
                 $Direksi = '';
                 $i = 1;
-              } else if ($pengajuan->spv == Null || !$pengajuan->spv) {
+              } else if ($pengajuan->posisi == "Ditolak oleh keuangan" || $pengajuan->posisi == "Ditolak oleh supervisi" || $pengajuan->posisi == "Ditolak oleh direksi") {
                 $Pengajuan = 'active';
                 $Supervisi = '';
                 $Keuangan = '';
@@ -110,6 +139,9 @@
               </div>
             </div>
           </div>
+          <?php
+
+          ?>
           <?php if ($this->uri->segment(4) != 'finance' or !$this->uri->segment(4)) { ?>
             <div class="row">
               <div class="col-lg-12 col-md-12 col-sm-12 col-12">
