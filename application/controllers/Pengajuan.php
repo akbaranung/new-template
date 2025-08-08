@@ -978,9 +978,10 @@ class Pengajuan extends CI_Controller
           $this->cb->trans_rollback();
           echo json_encode($response);
           return;
-        }
+        };
 
-        $selisih[] = $item[$i]['total'] - $realisasi[$i];
+        $selisih[] = $item[$i]['total'] - $this->_parse_rupiah($realisasi[$i]);
+        // $selisih[] = $item[$i]['total'] - $realisasi[$i];
 
         if ($selisih[$i] > 0) {
           // Kredit 
@@ -995,20 +996,11 @@ class Pengajuan extends CI_Controller
           // Ambil saldo debit
           $saldo_debit = $this->get_saldo_coa($coa_beban[$i]);
 
-          // Ambil nilai dari input yang diformat
-          $realisasi_formatted = $realisasi[$i];
-
-          // Hapus semua titik (pemisah ribuan) untuk mendapatkan nilai numerik
-          $jumlah_debit = str_replace('.', '', $realisasi_formatted);
-
-          // Gunakan nilai yang sudah bersih untuk operasi database atau perhitungan
-
           // insert jurnal
           $jurnal[] = [
             'tanggal' => $tgl,
             'akun_debit' => $coa_beban[$i],
-            // 'jumlah_debit' => $realisasi[$i],
-            'jumlah_debit' => $jumlah_debit,
+            'jumlah_debit' => $realisasi[$i],
             'akun_kredit' => $item[$i]['debit'],
             'jumlah_kredit' => $realisasi[$i],
             'saldo_debit' => $saldo_debit,
