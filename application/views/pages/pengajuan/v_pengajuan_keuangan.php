@@ -104,7 +104,7 @@
                   if ($data->status == 1) {
                     $color = '#f39c12';
                   } else if ($data->status > 1 and $data->status < 4) {
-                    $color = '#2ecc71';
+                    $color = '#27ae60';
                   } else if ($data->status == 4) {
                     $color = '#16a085';
                   } else if ($data->status == 5) {

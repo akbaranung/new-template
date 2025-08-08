@@ -52,8 +52,19 @@
                     <?php } else {
                     $nip = $this->session->userdata('nip');
                     foreach ($data_pengajuan as $data) {
+                      if ($data->status == 1) {
+                        $color = '#f39c12';
+                      } else if ($data->status > 1 and $data->status < 4) {
+                        $color = '#27ae60';
+                      } else if ($data->status == 4) {
+                        $color = '#16a085';
+                      } else if ($data->status == 5) {
+                        $color = '#34495e';
+                      } else {
+                        $color = '';
+                      }
                     ?>
-                      <tr>
+                      <tr style="background-color: <?= $color ?>; color:white">
                         <td><?= $data->kode; ?></td>
                         <td><?= $data->no_rekening ?></td>
                         <td><?= date('d/m/y', strtotime($data->tanggal)) ?></td>
@@ -61,9 +72,9 @@
                         <td><?= $data->posisi; ?></td>
                         <td>
                           <?php if ($data->status == 0) { ?>
-                            <a href="<?= site_url('pengajuan/ubah/') . $data->kode ?>" class="btn btn-success btn-sm"><i class="fe fe-edit-3 fe-12"></i> Update</a>
+                            <a href="<?= site_url('pengajuan/ubah/') . $data->kode ?>" class="btn btn-primary btn-sm"><i class="fe fe-edit-3 fe-12"></i> Update</a>
                           <?php } ?>
-                          <a href="<?= site_url('pengajuan/detail/') . $data->kode ?>" class="btn btn-warning btn-sm"><i class="fe fe-eye fe-12"></i> Detail</a>
+                          <a href="<?= site_url('pengajuan/detail/') . $data->kode ?>" class="btn btn-primary btn-sm"><i class="fe fe-eye fe-12"></i> Detail</a>
                         </td>
                       </tr>
                   <?php }
