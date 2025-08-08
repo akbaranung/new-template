@@ -4,7 +4,7 @@
       <h1 class="page-title">Pengajuan Biaya</h1>
       <div class="card shadow mb-4">
         <div class="card-header">
-          <p class="card-title"><strong>Detail Pengajuan <?= $pengajuan->kode ?></strong></p>
+          <p class="card-title"><strong>Closing Pengajuan <?= $pengajuan->kode ?></strong></p>
         </div>
         <div class="card-body">
           <div class="row mb-3">
@@ -16,7 +16,7 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-12">
               <form action="<?= site_url('pengajuan/update_close/') . $this->uri->segment(3) ?>" method="post">
                 <table class="table table-bordered">
-                  <thead>
+                  <thead class="thead-light">
                     <tr>
                       <th width="400px">Uraian</th>
                       <th>Total</th>
