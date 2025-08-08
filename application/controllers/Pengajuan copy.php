@@ -82,15 +82,14 @@ class Pengajuan extends CI_Controller
             'msg' => $this->upload->display_errors()
           ];
         }
-        $upload = $this->upload->data();
-        $file_name = $upload['file_name'];
       } else {
-        $file_name = NULL;
+        $upload['file_name'] = NULL;
       }
       // else {
       $this->db->trans_begin();
       $this->cb->trans_begin();
 
+      $upload = $this->upload->data();
       $cabang = $this->session->userdata('kode_cabang');
       $user = $this->db->select('supervisi')->from('users')->where('nip', $this->session->userdata('nip'))->get()->row();
       $max = $this->cb->select('max(no_pengajuan) as maximal')->from('t_pengajuan')->where('cabang', $cabang)->get()->row();
@@ -106,7 +105,7 @@ class Pengajuan extends CI_Controller
         'metode_pembayaran' => $metode,
         'spv' => $user->supervisi,
         'posisi' => 'Diajukan kepada supervisi',
-        'bukti_pengajuan' => $file_name,
+        'bukti_pengajuan' => $upload['file_name'],
         'catatan' => $catatan,
         'total' => $this->_parse_rupiah($total),
         'cabang' => $cabang
@@ -306,7 +305,7 @@ class Pengajuan extends CI_Controller
       $pengajuan = $this->M_pengajuan->pengajuan_by_kode($kode);
       $cabang = $this->session->userdata('kode_cabang');
 
-      if (isset($_FILES['file']) && $_FILES['file']['name'] && $this->session->userdata('is_premium')) {
+      if (isset($_FILES['file']) && $_FILES['file']['name']) {
         // Upload File
         $config['upload_path'] = './uploads/pengajuan';
         $config['allowed_types'] = 'jpg|jpeg|png|pdf';
@@ -683,19 +682,11 @@ class Pengajuan extends CI_Controller
       } else {
         $this->cb->trans_commit();
 
-        if ($status_pengajuan == 3) {
-          $response = [
-            'success' => true,
-            'msg' => 'Status pengajuan ' . $kode . ' berhasil diubah!',
-            'reload' => site_url('pengajuan/bayar/' . $kode)
-          ];
-        } else {
-          $response = [
-            'success' => true,
-            'msg' => 'Status pengajuan ' . $kode . ' berhasil diubah!',
-            'reload' => site_url('pengajuan/approval_keuangan')
-          ];
-        }
+        $response = [
+          'success' => true,
+          'msg' => 'Status pengajuan ' . $kode . ' berhasil diubah!',
+          'reload' => site_url('pengajuan/approval_keuangan')
+        ];
       }
     }
 
@@ -799,108 +790,101 @@ class Pengajuan extends CI_Controller
         'msg' => array_values($this->form_validation->error_array())[0]
       ];
     } else {
+      $config['upload_path']          = './uploads/pengajuan';
+      $config['allowed_types']        = 'jpg|jpeg|png|pdf';
+      // $config['encrypt_name']         = TRUE;
 
-      if ($this->session->userdata('is_premium')) {
-        $config['upload_path']          = './uploads/pengajuan';
-        $config['allowed_types']        = 'jpg|jpeg|png|pdf';
-        // $config['encrypt_name']         = TRUE;
+      $file_extension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
+      $custom_file_name = 'Kode_Cabang_' . $this->session->userdata('kode_cabang') . '_memo_attachment_' . time()  . '.' . $file_extension;
+      $config['file_name'] = $custom_file_name;
+      $config['encrypt_name']  = FALSE; // Set to FALSE to use your custom file_name
 
-        $file_extension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
-        $custom_file_name = 'Kode_Cabang_' . $this->session->userdata('kode_cabang') . '_memo_attachment_' . time()  . '.' . $file_extension;
-        $config['file_name'] = $custom_file_name;
-        $config['encrypt_name']  = FALSE; // Set to FALSE to use your custom file_name
-
-        $this->upload->initialize($config);
-        if (!$this->upload->do_upload('file')) {
-          $response = [
-            'success' => false,
-            'msg' => $this->upload->display_errors()
-          ];
-        }
+      $this->upload->initialize($config);
+      if (!$this->upload->do_upload('file')) {
+        $response = [
+          'success' => false,
+          'msg' => $this->upload->display_errors()
+        ];
+      } else {
+        $this->cb->trans_start();
         $upload = $this->upload->data();
 
-        $file_name = $upload['file_name'];
-      } else {
-        $file_name = null;
-      }
+        // Update table pengajuan
+        $update = [
+          'user_bayar' => $this->session->userdata('nip'),
+          'status' => 4,
+          'posisi' => 'Sudah dibayar',
+          'date_bayar' => $tgl,
+          'bukti_bayar' => $upload['file_name'],
+        ];
 
-      $this->cb->trans_start();
+        $this->cb->where(['kode' => $kode]);
+        $this->cb->update('t_pengajuan', $update);
 
-      // Update table pengajuan
-      $update = [
-        'user_bayar' => $this->session->userdata('nip'),
-        'status' => 4,
-        'posisi' => 'Sudah dibayar',
-        'date_bayar' => $tgl,
-        'bukti_bayar' => $file_name,
-      ];
+        $jurnal = [];
+        $pengajuan_detail = [];
+        for ($i = 0; $i < count($id_item); $i++) {
+          $item[] = $this->cb->get_where('t_pengajuan_detail', ['Id' => $id_item[$i]])->row_array();
 
-      $this->cb->where(['kode' => $kode]);
-      $this->cb->update('t_pengajuan', $update);
+          if ($item[$i]['debit'] == $coa_kredit[$i]) {
+            $response = [
+              'success' => false,
+              'msg' => 'Coa debit dan kredit tidak boleh sama'
+            ];
 
-      $jurnal = [];
-      $pengajuan_detail = [];
-      for ($i = 0; $i < count($id_item); $i++) {
-        $item[] = $this->cb->get_where('t_pengajuan_detail', ['Id' => $id_item[$i]])->row_array();
+            $this->cb->trans_rollback();
+            echo json_encode($response);
+            return;
+          }
 
-        if ($item[$i]['debit'] == $coa_kredit[$i]) {
-          $response = [
-            'success' => false,
-            'msg' => 'Coa debit dan kredit tidak boleh sama'
+          // Update coa debit
+          $this->update_saldo_coa($item[$i]['debit'], $subtotal[$i], 'debit');
+
+          // Update coa kredit
+          $this->update_saldo_coa($coa_kredit[$i], $subtotal[$i], 'kredit');
+
+          // Ambil saldo terbaru dari coa_sbb untuk akun debit
+          $saldo_debit = $this->get_saldo_coa($item[$i]['debit']);
+
+          // Ambil saldo terbaru dari coa_sbb untuk akun kredit
+          $saldo_kredit = $this->get_saldo_coa($coa_kredit[$i]);
+
+          // insert jurnal
+          $jurnal[] = [
+            'tanggal' => $tgl,
+            'akun_debit' => $item[$i]['debit'],
+            'jumlah_debit' => $subtotal[$i],
+            'akun_kredit' => $coa_kredit[$i],
+            'jumlah_kredit' => $subtotal[$i],
+            'saldo_debit' => $saldo_debit,
+            'saldo_kredit' => $saldo_kredit,
+            'keterangan' => $item[$i]['item'] . ' - Pengajuan ' . $kode,
+            'created_by' => $this->session->userdata('nip'),
+            'id_cabang' => $this->session->userdata('kode_cabang')
           ];
 
-          $this->cb->trans_rollback();
-          echo json_encode($response);
-          return;
+          $pengajuan_detail[] = [
+            'Id' => $id_item[$i],
+            'kredit' => $coa_kredit[$i]
+          ];
         }
 
-        // Update coa debit
-        $this->update_saldo_coa($item[$i]['debit'], $subtotal[$i], 'debit');
+        $this->cb->insert_batch('jurnal_neraca', $jurnal);
+        $this->cb->update_batch('t_pengajuan_detail', $pengajuan_detail, 'Id');
 
-        // Update coa kredit
-        $this->update_saldo_coa($coa_kredit[$i], $subtotal[$i], 'kredit');
+        $this->cb->trans_complete();
 
-        // Ambil saldo terbaru dari coa_sbb untuk akun debit
-        $saldo_debit = $this->get_saldo_coa($item[$i]['debit']);
+        if ($this->cb->trans_status() === FALSE) {
+          $this->cb->trans_rollback();
+        } else {
+          $this->cb->trans_commit();
 
-        // Ambil saldo terbaru dari coa_sbb untuk akun kredit
-        $saldo_kredit = $this->get_saldo_coa($coa_kredit[$i]);
-
-        // insert jurnal
-        $jurnal[] = [
-          'tanggal' => $tgl,
-          'akun_debit' => $item[$i]['debit'],
-          'jumlah_debit' => $subtotal[$i],
-          'akun_kredit' => $coa_kredit[$i],
-          'jumlah_kredit' => $subtotal[$i],
-          'saldo_debit' => $saldo_debit,
-          'saldo_kredit' => $saldo_kredit,
-          'keterangan' => $item[$i]['item'] . ' - Pengajuan ' . $kode,
-          'created_by' => $this->session->userdata('nip'),
-          'id_cabang' => $this->session->userdata('kode_cabang')
-        ];
-
-        $pengajuan_detail[] = [
-          'Id' => $id_item[$i],
-          'kredit' => $coa_kredit[$i]
-        ];
-      }
-
-      $this->cb->insert_batch('jurnal_neraca', $jurnal);
-      $this->cb->update_batch('t_pengajuan_detail', $pengajuan_detail, 'Id');
-
-      $this->cb->trans_complete();
-
-      if ($this->cb->trans_status() === FALSE) {
-        $this->cb->trans_rollback();
-      } else {
-        $this->cb->trans_commit();
-
-        $response = [
-          'success' => true,
-          'msg' => 'Pengajuan ' . $kode . ' berhasil dibayar!',
-          'reload' => site_url('pengajuan/approval_keuangan')
-        ];
+          $response = [
+            'success' => true,
+            'msg' => 'Pengajuan ' . $kode . ' berhasil dibayar!',
+            'reload' => site_url('pengajuan/approval_keuangan')
+          ];
+        }
       }
     }
     echo json_encode($response);

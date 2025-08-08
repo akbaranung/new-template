@@ -92,7 +92,7 @@
               //   $i = 0;
               // }
 
-              if ($pengajuan->posisi == "Diajukan kepada direksi") {
+              if ($pengajuan->posisi == "Diajukan kepada direksi" || $pengajuan->posisi == "Diarahkan ke pembayaran") {
                 $Pengajuan = 'active';
                 $Supervisi = 'active';
                 $Keuangan = 'active';
