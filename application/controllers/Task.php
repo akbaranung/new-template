@@ -106,6 +106,7 @@ class Task extends CI_Controller
 
   public function save_task()
   {
+    $id_task = $this->input->post('id_task');
     $task_name = $this->input->post('judul');
     $member = $this->input->post('member[]');
     $activity = $this->input->post('activity');
@@ -129,16 +130,40 @@ class Task extends CI_Controller
         $phone_member[] = $get_member[$i]['phone'];
       }
 
-      $save_task = [
-        'name' => $task_name,
-        'member' => $member_task,
-        'activity' => $activity,
-        'comment' => $description,
-        'pic' => $this->session->userdata('nip')
-      ];
+      if ($id_task) {
+        $update_task = [
+          'name' => $task_name,
+          'member' => $member_task,
+          'activity' => $activity,
+          'comment' => $description,
+          'pic' => $this->session->userdata('nip')
+        ];
+        $this->db->where('id', $id_task);
+        $this->db->update('task', $update_task);
 
-      $this->db->insert('task', $save_task);
-      $last_id = $this->db->insert_id();
+        $response = [
+          'success' => true,
+          'msg' => 'Task berhasil diubah!',
+        ];
+      } else {
+        $save_task = [
+          'name' => $task_name,
+          'member' => $member_task,
+          'activity' => $activity,
+          'comment' => $description,
+          'pic' => $this->session->userdata('nip')
+        ];
+
+        $this->db->insert('task', $save_task);
+        $last_id = $this->db->insert_id();
+
+        $response = [
+          'success' => true,
+          'msg' => 'Task berhasil dibuat! selanjutnya buat card atau detail task!',
+        ];
+      }
+
+
 
       // Send wa
       $nama_session = $this->session->userdata('nama');
@@ -146,12 +171,6 @@ class Task extends CI_Controller
 
       $send_wa = implode(',', $phone_member);
       // $this->api_whatsapp->wa_notif($msg, $send_wa);
-
-      $response = [
-        'success' => true,
-        'msg' => 'Task berhasil dibuat! selanjutnya buat card atau detail task!',
-        'reload' => site_url('task/detail_task/' . $last_id)
-      ];
     }
 
     echo json_encode($response);
@@ -431,6 +450,84 @@ class Task extends CI_Controller
     }
 
     $this->load->view('index', $data);
+  }
+
+  public function card_edit($id)
+  {
+    $data['title'] = 'Edit Card';
+    $data['utility'] = $this->db->get('utility')->row_array();
+    $data['pages_script'] = 'script/task/s_task';
+    $data['pages'] = 'pages/tello/v_edit_card';
+    $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
+
+    $get_task = $this->db->select('member')->from('task')->where('Id', $id)->get()->row_array();
+    $nip_member = explode(';', $get_task['member']);
+
+    $this->db->where_in('nip', $nip_member);
+    $data['member'] = $this->db->get('users')->result();
+
+    $data['detail_task'] = $this->db->get_where('task_detail', ['id_detail' => $this->uri->segment(4)])->row();
+
+    $this->load->view('index', $data);
+  }
+
+  public function save_detail_task()
+  {
+    $nip_session = $this->session->userdata('nip');
+    $user_session = $this->db->get_where('users', ['nip' => $nip_session])->row();
+    $id_task = $this->input->post('id_task');
+    $id_card = $this->input->post('id_card');
+    $cardname = $this->input->post('project-name');
+    $responsible = $this->input->post('responsible');
+    $description = $this->input->post('description');
+    $start = $this->input->post('start');
+    $end = $this->input->post('end');
+    $activity = $this->input->post('activity');
+
+    $this->form_validation->set_rules('project-name', 'Nama card', 'required|trim', ['required' => "%s harus diisi!"]);
+    $this->form_validation->set_rules('responsible', 'Responsible', 'required', ['required' => "%s harus diisi!"]);
+    $this->form_validation->set_rules('description', 'Description', 'required|trim', ['required' => "%s harus diisi!"]);
+    $this->form_validation->set_rules('start', 'Tanggal mulai', 'required', ['required' => "%s harus diisi!"]);
+    $this->form_validation->set_rules('end', 'Tanggal selesai', 'required', ['required' => "%s harus diisi!"]);
+    $this->form_validation->set_rules('activity', 'Activity', 'required', ['required' => "%s harus diisi!"]);
+
+    if ($this->form_validation->run() == FALSE) {
+      $response = [
+        'success' => false,
+        'msg' => array_values($this->form_validation->error_array())[0]
+      ];
+    } else {
+      $this->db->trans_start();
+      $update = [
+        "task_name" => $cardname,
+        "responsible" => $responsible,
+        "description" => $description,
+        "start_date" => $start,
+        "due_date" => $end,
+        "activity" => $activity,
+        "read" => 0,
+      ];
+      $this->db->where('id_detail', $id_card);
+      $this->db->update('task_detail', $update);
+
+      // update task 
+      $this->db->where('id', $id_task);
+      $this->db->update('task', ['read' => 0]);
+
+      $this->db->trans_complete();
+      if ($this->db->trans_status() === FALSE) {
+        $this->db->trans_rollback();
+      } else {
+        $this->db->trans_commit();
+        $response = [
+          'success' => true,
+          'msg' => 'Data card berhasil diubah!',
+          'reload' => site_url('task/task_view/' . $id_task)
+        ];
+      }
+    }
+
+    echo json_encode($response);
   }
 
   public function activity_comment()

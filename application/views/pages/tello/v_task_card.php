@@ -75,7 +75,7 @@
                     <td class="open-task-detail" onclick="openCard(<?= $data->id_detail ?>)"><?= $data->due_date; ?></td>
                     <td class="open-task-detail" onclick="openCard(<?= $data->id_detail ?>)"><?= $activity ?></td>
                     <td>
-                      <a href="#" class="btn btn-outline-success"><span class="fe fe-edit-3"></span></a>
+                      <a href="<?= site_url('task/card_edit/') . $data->id_task . '/' . $data->id_detail ?>" class="btn btn-outline-success"><span class="fe fe-edit-3"></span></a>
                       <?php if (empty($user_read)) { ?>
                         <span class="badge badge-pill badge-danger">New</span>
                       <?php } ?>

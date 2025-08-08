@@ -20,6 +20,7 @@
         </div>
         <div class="card-body">
           <form method="post" action="<?= site_url('task/save_task') ?>" enctype="multipart/form-data">
+            <input type="hidden" name="id_task" value="<?= $task->id ?>">
             <div class="form-group row">
               <label for="judul" class="col-sm-3 col-form-label">Task Name <strong>(*)</strong></label>
               <div class="col-sm-9">
@@ -41,9 +42,9 @@
               <label for="attach" class="col-sm-3 col-form-label">Task Activity</label>
               <div class="col-sm-9">
                 <select name="activity" id="activity" class="form-control">
-                  <option value="1">Open</option>
-                  <option value="2">Pending</option>
-                  <option value="3">Close</option>
+                  <option value="1" <?= $task->activity == 1 ? 'selected' : '' ?>>Open</option>
+                  <option value="2" <?= $task->activity == 2 ? 'selected' : '' ?>>Pending</option>
+                  <option value="3" <?= $task->activity == 3 ? 'selected' : '' ?>>Close</option>
                 </select>
               </div>
             </div>
