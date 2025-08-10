@@ -26,8 +26,8 @@
                   <label for="metode" class="form-label">Metode Pembayaran</label>
                   <select name="metode" id="metode" class="form-control">
                     <option value=""> :: Pilih Metode Pembayaran</option>
-                    <option value="1" <?= $pengajuan->metode_pembayaran == 'Reimburse' ? "selected" : '' ?>>Reimburse</option>
-                    <option value="2" <?= $pengajuan->metode_pembayaran == 'Transfer' ? "selected" : '' ?>>Transfer</option>
+                    <option value="1" <?= $pengajuan->metode_pembayaran == '1' ? "selected" : '' ?>>Reimburse</option>
+                    <option value="2" <?= $pengajuan->metode_pembayaran == '2' ? "selected" : '' ?>>Uang Muka</option>
                   </select>
                 </div>
               </div>

@@ -26,8 +26,8 @@
                   <label for="metode" class="form-label">Metode Pembayaran</label>
                   <select name="metode" id="metode" class="form-control">
                     <option value=""> :: Pilih Metode Pembayaran</option>
-                    <option value="Reimburse">Reimburse</option>
-                    <option value="Transfer">Transfer</option>
+                    <option value="1">Reimburse</option>
+                    <option value="2">Uang Muka</option>
                   </select>
                 </div>
               </div>

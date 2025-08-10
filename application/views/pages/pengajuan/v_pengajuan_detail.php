@@ -361,7 +361,7 @@
                         <th width="25px">Qty</th>
                         <th>Price</th>
                         <th>Total</th>
-                        <th>COA</th>
+                        <!-- <th>COA</th> -->
                       </tr>
                     </thead>
                     <tbody>
@@ -374,23 +374,21 @@
                           <td><?= $row->qty ?></td>
                           <td align="right"><?= rupiah($row->price) ?></td>
                           <td align="right"><?= rupiah($row->total) ?></td>
-                          <td>
+                          <!-- <td>
                             <?php if ($row->status == 1) { ?>
                               <select name="coa[]" id="coa-<?= $no++ ?>" class="form-control select2">
                                 <?php foreach ($coa as $c) : ?>
                                   <option value="<?= $c->no_sbb ?>" <?= $c->no_sbb == '15110' ? 'selected' : '' ?>><?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?></option>
-                                  <!-- <option value="<?= $c->no_sbb ?>"><?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?></option> -->
                                 <?php endforeach ?>
                               </select>
                             <?php } else { ?>
                               <select name="coa[]" id="coa-<?= $no++ ?>" class="form-control select2" disabled>
                                 <?php foreach ($coa as $c) : ?>
                                   <option value="<?= $c->no_sbb ?>" <?= $c->no_sbb == '15110' ? 'selected' : '' ?>><?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?></option>
-                                  <!-- <option value="<?= $c->no_sbb ?>"><?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?></option> -->
                                 <?php endforeach ?>
                               </select>
                             <?php } ?>
-                          </td>
+                          </td> -->
                         </tr>
                       <?php endforeach ?>
                       <tr>
@@ -453,7 +451,7 @@
                       <div class="col-lg-4 col-md-4 col-sm-4 col-12">
                         <div class="form-group">
                           <label for="metode" class="form-label">Metode Pembayaran</label>
-                          <input type="text" class="form-control" name="metode" id="metode" value="<?= $pengajuan->metode_pembayaran ?>" disabled>
+                          <input type="text" class="form-control" name="metode" id="metode" value="<?= $pengajuan->metode_pembayaran == 1 ? "Reimburse" : 'Uang Muka' ?>" disabled>
                         </div>
                       </div>
                       <div class="col-lg-4 col-md-4 col-sm-4 col-12">

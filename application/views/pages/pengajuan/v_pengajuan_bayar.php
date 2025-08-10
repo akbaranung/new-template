@@ -23,7 +23,7 @@
                       <th width="25px">Qty</th>
                       <th>Price</th>
                       <th>Total</th>
-                      <th>COA Credit</th>
+                      <th>COA</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -39,12 +39,33 @@
                         <input type="hidden" name="subtotal[]" value="<?= $row->total ?>">
                         <td align="right"><?= rupiah($row->total) ?></td>
                         <td>
-                          <select name="coa_credit[]" class="form-control select2">
-                            <option value="" selected> :: Pilih Coa Kredit</option>
-                            <?php foreach ($coa as $c) : ?>
-                              <option value="<?= $c->no_sbb ?>"><?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?></option>
-                            <?php endforeach ?>
-                          </select>
+                          <?php if ($pengajuan->metode_pembayaran == 1) { ?>
+                            <select name="coa_debit[]" class="form-control select2">
+                              <option value="" selected> :: Pilih Coa Beban</option>
+                              <?php foreach ($coa as $c) : ?>
+                                <option value="<?= $c->no_sbb ?>"><?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?></option>
+                              <?php endforeach ?>
+                            </select>
+                            <select name="coa_credit[]" class="form-control select2">
+                              <option value="" selected> :: Pilih Coa Kredit</option>
+                              <?php foreach ($coa as $c) : ?>
+                                <option value="<?= $c->no_sbb ?>"><?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?></option>
+                              <?php endforeach ?>
+                            </select>
+                          <?php } else { ?>
+                            <select name="coa_debit[]" class="form-control select2">
+                              <option value="" selected> :: Pilih Coa Uang Muka</option>
+                              <?php foreach ($coa as $c) : ?>
+                                <option value="<?= $c->no_sbb ?>"><?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?></option>
+                              <?php endforeach ?>
+                            </select>
+                            <select name="coa_credit[]" class="form-control select2">
+                              <option value="" selected> :: Pilih Coa Kredit</option>
+                              <?php foreach ($coa as $c) : ?>
+                                <option value="<?= $c->no_sbb ?>"><?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?></option>
+                              <?php endforeach ?>
+                            </select>
+                          <?php } ?>
                         </td>
                       </tr>
                     <?php endforeach ?>
@@ -59,6 +80,12 @@
                   <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-12">
                       <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-12">
+                          <div class="form-group">
+                            <label for="tanggal" class="form-label">Metode Pembayaran</label>
+                            <input type="text" class="form-control" value="<?= $pengajuan->metode_pembayaran == 1 ? 'Reimburse' : 'Uang Muka' ?>" disabled>
+                          </div>
+                        </div>
                         <div class="col-lg-4 col-md-4 col-sm-4 col-12">
                           <div class="form-group">
                             <label for="tanggal" class="form-label">Tanggal</label>

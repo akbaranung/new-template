@@ -611,7 +611,7 @@ class Pengajuan extends CI_Controller
 
   public function update_keuangan($kode)
   {
-    $coa_debit = $this->input->post('coa[]');
+    // $coa_debit = $this->input->post('coa[]');
     $tanggal = $this->input->post('tanggal');
     $status = $this->input->post('status');
     $direksi = $this->input->post('direksi');
@@ -623,7 +623,7 @@ class Pengajuan extends CI_Controller
     $this->form_validation->set_rules('status', 'status pengajuan', 'required');
     $this->form_validation->set_rules('tanggal', 'date', 'required');
     if ($status == 1) {
-      $this->form_validation->set_rules('coa[]', 'coa', 'required');
+      // $this->form_validation->set_rules('coa[]', 'coa', 'required');
       $this->form_validation->set_rules('direksi', 'Approval direksi', 'required');
     }
 
@@ -649,15 +649,15 @@ class Pengajuan extends CI_Controller
           $nama_direksi = null;
         }
 
-        $update_detail = [];
-        for ($i = 0; $i < count($id_item); $i++) {
-          $update_detail[] = [
-            'Id' => $id_item[$i],
-            'debit' => $coa_debit[$i]
-          ];
-        }
+        // $update_detail = [];
+        // for ($i = 0; $i < count($id_item); $i++) {
+        //   $update_detail[] = [
+        //     'Id' => $id_item[$i],
+        //     // 'debit' => $coa_debit[$i]
+        //   ];
+        // }
 
-        $this->cb->update_batch('t_pengajuan_detail', $update_detail, 'Id');
+        // $this->cb->update_batch('t_pengajuan_detail', $update_detail, 'Id');
       } else {
         $status_pengajuan = 0;
         $posisi = 'Ditolak oleh keuangan';
@@ -791,11 +791,13 @@ class Pengajuan extends CI_Controller
 
   public function update_bayar($kode)
   {
-
+    $coa_debit = $this->input->post('coa_debit[]');
     $coa_kredit = $this->input->post('coa_credit[]');
     $id_item = $this->input->post('id_item[]');
     $subtotal = $this->input->post('subtotal[]');
     $tgl = $this->input->post('tanggal');
+
+    $pengajuan = $this->cb->get_where('t_pengajuan', ['kode' => $kode])->row();
 
     $this->form_validation->set_rules('coa_credit[]', 'coa', 'required');
 
@@ -812,7 +814,7 @@ class Pengajuan extends CI_Controller
         // $config['encrypt_name']         = TRUE;
 
         $file_extension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
-        $custom_file_name = 'Kode_Cabang_' . $this->session->userdata('kode_cabang') . '_memo_attachment_' . time()  . '.' . $file_extension;
+        $custom_file_name = 'Kode_Cabang_' . $this->session->userdata('kode_cabang') . '_bayar_attachment_' . time()  . '.' . $file_extension;
         $config['file_name'] = $custom_file_name;
         $config['encrypt_name']  = FALSE; // Set to FALSE to use your custom file_name
 
@@ -833,10 +835,18 @@ class Pengajuan extends CI_Controller
       $this->cb->trans_start();
 
       // Update table pengajuan
+      if ($pengajuan->metode_pembayaran == 1) {
+        $status = 5;
+        $posisi = 'Closed';
+      } else {
+        $status = 4;
+        $posisi = 'Sudah dibayar';
+      }
+
       $update = [
         'user_bayar' => $this->session->userdata('nip'),
-        'status' => 4,
-        'posisi' => 'Sudah dibayar',
+        'status' => $status,
+        'posisi' => $posisi,
         'date_bayar' => $tgl,
         'bukti_bayar' => $file_name,
       ];
@@ -861,13 +871,13 @@ class Pengajuan extends CI_Controller
         }
 
         // Update coa debit
-        $this->update_saldo_coa($item[$i]['debit'], $subtotal[$i], 'debit');
+        $this->update_saldo_coa($coa_debit[$i], $subtotal[$i], 'debit');
 
         // Update coa kredit
         $this->update_saldo_coa($coa_kredit[$i], $subtotal[$i], 'kredit');
 
         // Ambil saldo terbaru dari coa_sbb untuk akun debit
-        $saldo_debit = $this->get_saldo_coa($item[$i]['debit']);
+        $saldo_debit = $this->get_saldo_coa($coa_debit[$i]);
 
         // Ambil saldo terbaru dari coa_sbb untuk akun kredit
         $saldo_kredit = $this->get_saldo_coa($coa_kredit[$i]);
@@ -875,7 +885,7 @@ class Pengajuan extends CI_Controller
         // insert jurnal
         $jurnal[] = [
           'tanggal' => $tgl,
-          'akun_debit' => $item[$i]['debit'],
+          'akun_debit' => $coa_debit[$i],
           'jumlah_debit' => $subtotal[$i],
           'akun_kredit' => $coa_kredit[$i],
           'jumlah_kredit' => $subtotal[$i],
@@ -888,7 +898,8 @@ class Pengajuan extends CI_Controller
 
         $pengajuan_detail[] = [
           'Id' => $id_item[$i],
-          'kredit' => $coa_kredit[$i]
+          'kredit' => $coa_kredit[$i],
+          'debit' => $coa_debit[$i]
         ];
       }
 
@@ -937,7 +948,7 @@ class Pengajuan extends CI_Controller
   public function update_close($kode)
   {
     $coa_beban = $this->input->post('coa_beban[]');
-    $realisasi = $this->_parse_rupiah($this->input->post('realisasi[]'));
+    $realisasi = $this->input->post('realisasi[]');
     $id_item = $this->input->post('id_item[]');
 
     $tgl = $this->input->post('tanggal');
@@ -981,14 +992,14 @@ class Pengajuan extends CI_Controller
         };
 
         // $selisih[] = $item[$i]['total'] - $this->_parse_rupiah($realisasi[$i]);
-        $selisih[] = $item[$i]['total'] - $realisasi[$i];
+        $selisih[] = $item[$i]['total'] - $this->_parse_rupiah($realisasi[$i]);
 
         if ($selisih[$i] > 0) {
           // Kredit 
-          $this->update_saldo_coa($item[$i]['debit'], $realisasi[$i], 'kredit');
+          $this->update_saldo_coa($item[$i]['debit'], $this->_parse_rupiah($realisasi[$i]), 'kredit');
 
           // Debit
-          $this->update_saldo_coa($coa_beban[$i], $realisasi[$i], 'debit');
+          $this->update_saldo_coa($coa_beban[$i], $this->_parse_rupiah($realisasi[$i]), 'debit');
 
           // Ambil saldo kredit
           $saldo_kredit = $this->get_saldo_coa($item[$i]['debit']);
@@ -1000,9 +1011,9 @@ class Pengajuan extends CI_Controller
           $jurnal[] = [
             'tanggal' => $tgl,
             'akun_debit' => $coa_beban[$i],
-            'jumlah_debit' => $realisasi[$i],
+            'jumlah_debit' => $this->_parse_rupiah($realisasi[$i]),
             'akun_kredit' => $item[$i]['debit'],
-            'jumlah_kredit' => $realisasi[$i],
+            'jumlah_kredit' => $this->_parse_rupiah($realisasi[$i]),
             'saldo_debit' => $saldo_debit,
             'saldo_kredit' => $saldo_kredit,
             'keterangan' => $item[$i]['item'] . ' - close pengajuan ' . $kode,
@@ -1086,9 +1097,9 @@ class Pengajuan extends CI_Controller
 
         if ($selisih[$i] == 0) {
           // Debit
-          $this->update_saldo_coa($coa_beban[$i], $realisasi[$i], 'debit');
+          $this->update_saldo_coa($coa_beban[$i], $this->_parse_rupiah($realisasi[$i]), 'debit');
           // Kredit
-          $this->update_saldo_coa($item[$i]['debit'], $realisasi[$i], 'kredit');
+          $this->update_saldo_coa($item[$i]['debit'], $this->_parse_rupiah($realisasi[$i]), 'kredit');
 
           // Ambil saldo debit
           $saldo_debit = $this->get_saldo_coa($coa_beban[$i]);
@@ -1099,9 +1110,9 @@ class Pengajuan extends CI_Controller
           $jurnal[] = [
             'tanggal' => $tgl,
             'akun_debit' => $coa_beban[$i],
-            'jumlah_debit' => $realisasi[$i],
+            'jumlah_debit' => $this->_parse_rupiah($realisasi[$i]),
             'akun_kredit' => $item[$i]['debit'],
-            'jumlah_kredit' => $realisasi[$i],
+            'jumlah_kredit' => $this->_parse_rupiah($realisasi[$i]),
             'saldo_debit' => $saldo_debit,
             'saldo_kredit' => $saldo_kredit,
             'keterangan' => $item[$i]['item'] . ' - close pengajuan ' . $kode,
@@ -1113,7 +1124,7 @@ class Pengajuan extends CI_Controller
         $pengajuan_detail[] = [
           'Id' => $item[$i]['Id'],
           'beban' => $coa_beban[$i],
-          'realisasi' => $realisasi[$i]
+          'realisasi' => $this->_parse_rupiah($realisasi[$i])
         ];
       }
 
