@@ -50,7 +50,7 @@
                     </tr>
                   </tbody>
                 </table>
-                <?php if ($pengajuan->posisi == 'Sudah dibayar' or $pengajuan->status == 4) { ?>
+                <?php if ($pengajuan->posisi == 'Menunggu Pertanggungjawaban' or $pengajuan->status == 4) { ?>
                   <hr>
                   <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-12">
