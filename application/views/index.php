@@ -335,7 +335,7 @@
   <?php if (isset($pages_script)) $this->load->view($pages_script); ?>
 
   <script>
-    const chartColors_dashboard = ["#5E72E4", "#e91e63"];
+    const chartColors_dashboard = ["#5E72E4", "#e91e63", "#34495e"];
     const colors_dashboard = {
       mutedColor: "#8898aa",
       borderColor: "#e3e3e3",
@@ -351,6 +351,9 @@
           data: <?= $json_pendapatan ?>
         },
         {
+          name: "Selisih",
+          data: <?= $json_laba_rugi ?>
+        }, {
           name: "Biaya",
           data: <?= $json_biaya ?>
         }

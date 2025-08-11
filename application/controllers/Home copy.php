@@ -76,10 +76,6 @@ class Home extends CI_Controller
       if (!$row || !isset($row['coa']) || empty($row['coa'])) {
 
         $tanggal_awal = date('Y-m-d', $date); // gunakan tanggal periode
-        if ($i == 0) {
-          $tanggal_awal = date('Y-m-d'); // gunakan tanggal periode
-
-        }
         $tanggal = new DateTime($tanggal_awal);
         $tanggal->modify('first day of previous month');
         $periode_before = $tanggal->format('Y-m');
@@ -133,15 +129,7 @@ class Home extends CI_Controller
 
         if (preg_match('/^4/', $kode)) {
           $total_pendapatan += $saldo;
-        } elseif (preg_match('/^8/', $kode)) {
-          $total_pendapatan += $saldo;
         } elseif (preg_match('/^5/', $kode)) {
-          $total_biaya += $saldo;
-        } elseif (preg_match('/^6/', $kode)) {
-          $total_biaya += $saldo;
-        } elseif (preg_match('/^7/', $kode)) {
-          $total_biaya += $saldo;
-        } elseif (preg_match('/^9/', $kode)) {
           $total_biaya += $saldo;
         }
       }
