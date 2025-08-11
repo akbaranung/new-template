@@ -23,6 +23,7 @@
                   <th>OS 3</th>
                   <th>OS 4</th>
                   <th>Total</th>
+                  <th>Aksi</th>
                 </tr>
               </thead>
               <tbody>
@@ -46,6 +47,12 @@
                       <td class="text-right"><?= number_format($i['out3']) ?></td>
                       <td class="text-right"><?= number_format($i['out4']) ?></td>
                       <td class="text-right"><?= number_format($i['total']) ?></td>
+                      <td>
+                        <form class="form-horizontal form-label-left" method="POST" action="<?= base_url('financial/invoice') ?>">
+                          <input type="hidden" value="<?= $i['id_customer'] ?>" name="customer_id">
+                          <button type="submit" class="btn btn-primary btn-sm">Detail</button>
+                        </form>
+                      </td>
                     </tr>
 
                   <?php
