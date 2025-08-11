@@ -772,7 +772,7 @@ class Pengajuan extends CI_Controller
     $data['pengajuan'] = $this->M_pengajuan->pengajuan_by_kode($kode);
 
     // $data['coa'] = $this->cb->select('no_sbb, nama_perkiraan')->from('v_coa_all')->where('id_cabang', $this->session->userdata('kode_cabang'))->get()->result();
-    $pengajuan = $data['pegajuan'];
+    $pengajuan = $data['pengajuan'];
     if ($pengajuan->metode_pembayaran == 1) {
       $data['coa_debit'] = $this->cb->select('no_sbb, nama_perkiraan')
         ->from('v_coa_all')->group_start()->like('no_sbb', '5', 'after')->or_like('no_sbb', '6', 'after')->or_like('no_sbb', '7', 'after')->group_end()
