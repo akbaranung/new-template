@@ -11,7 +11,7 @@
             <div class="row">
               <div class="col-md-4 col-xs-12">
                 <h5>
-                  Laba berjalan: <strong>Rp <?= (isset($neraca)) ? number_format($neraca, 2) : 0 ?></strong>
+                  Laba berjalan: <strong>Rp <?= number_format($total_pendapatan, 2) ?></strong>
                 </h5>
               </div>
               <div class="col-md-2 col-xs-12">
@@ -109,3 +109,37 @@
     </div> <!-- .col-12 -->
   </div> <!-- .row -->
 </div> <!-- .container-fluid -->
+
+<div class="modal fade" id="detailModal2" tabindex="-1" role="dialog" aria-labelledby="detailModal2" aria-modal="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="defaultModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <form class="form-horizontal form-label-left" method="POST" action="<?= base_url('financial/coa_report') ?>" target="_blank">
+        <div class="modal-body">
+          <div class="modal-body">
+            <div class="row">
+              <input type="hidden" class="form-control" name="no_coa">
+              <div class="col-md-6 col-xs-12">
+                <label for="tgl_dari" class="form-label">Dari</label>
+                <input type="date" class="form-control" name="tgl_dari" required>
+              </div>
+              <div class="col-md-6 col-xs-12">
+                <label for="tgl_sampai" class="form-label">Sampai</label>
+                <input type="date" class="form-control" name="tgl_sampai" value="<?= date('Y-m-d') ?>" required>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Lihat</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
