@@ -48,13 +48,13 @@ class Auth extends CI_Controller
       if (!$this->session->userdata('nama_perusahaan')) {
         $response = [
           'success' => true,
-          'msg' => 'Anda sudah login sebelumnya!',
+          'msg' => 'Anda sudah Masuk sebelumnya!',
           'reload' => base_url('auth/register_perusahaan')
         ];
       } else {
         $response = [
           'success' => true,
-          'msg' => 'Anda sudah login sebelumnya!',
+          'msg' => 'Anda sudah Masuk sebelumnya!',
           'reload' => base_url('home')
         ];
 
@@ -122,7 +122,7 @@ class Auth extends CI_Controller
         if (empty($setting)) {
           $response = [
             'success' => TRUE,
-            'msg' => 'Login berhasil! Register Perusahaan',
+            'msg' => 'Berhasil Masuk! Register Perusahaan',
             'reload' => base_url('auth/register_perusahaan')
           ];
         } else {
@@ -139,14 +139,14 @@ class Auth extends CI_Controller
           $this->session->set_userdata('is_premium', $is_premium_boolean);
           $response = [
             'success' => TRUE,
-            'msg' => 'Login berhasil!',
+            'msg' => 'Berhasil Masuk!',
             'reload' => base_url('home')
           ];
         }
       } else {
         $response = [
           'success' => FALSE,
-          'msg' => 'Gagal Login : Cek username dan password anda'
+          'msg' => 'Gagal Masuk : Cek username dan password anda'
         ];
       }
     }
@@ -277,7 +277,7 @@ class Auth extends CI_Controller
         //Send notif wa
         $msg = "Kode verifikasi Akun *Bariskode* Anda adalah *$token*, Gunakan Token Saat Login untuk pertama kali. Jangan bagikan kode ini kepada siapa pun.";
         if ($this->api_whatsapp->wa_notif($msg, $this->input->post('phone'))) {
-          $this->session->set_flashdata('success', 'Berhasil Membuat Akun, silahkan login.');
+          $this->session->set_flashdata('success', 'Berhasil Membuat Akun, silahkan Masuk.');
           redirect('auth');
         } else {
 
