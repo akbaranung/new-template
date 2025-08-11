@@ -36,7 +36,7 @@
                 </div>
               </div>
               <div class="col-md-2 col-xs-12">
-                <button type="submit" class="btn btn-success">Cari</button>
+                <button type="submit" class="btn btn-primary">Cari</button>
                 <a href="<?= base_url('financial/invoice') ?>" class="btn btn-warning">Reset</a>
               </div>
             </div>
@@ -65,22 +65,27 @@
                       <td><?= $i['nama_customer'] ?></td>
                       <td class="text-right"><?= number_format($i['total_nonpph'], 0) ?></td>
                       <td><?= isset($i['created_by_name']) ? $i['created_by_name'] : 'N/A' ?></td>
-                      <td>
-                        <?php
-                        if ($i['status_void'] == "1") {
-                        ?>
+                      <?php
+                      if ($i['status_void'] == "1") {
+                      ?>
+                        <td style="background-color: #1c252dff; color:white">
                           <span class="badge badge-pill badge-danger" data-toggle="tooltip" data-placement="right" title="" data-original-title="Alasan: <?= $i['alasan_void'] ?>">Sudah divoid</span>
-                        <?php
-                        }
+                        </td>
+                      <?php
+                      }
 
-                        if ($i['status_bayar'] == "1") {
-                        ?>
-                          <span class="badge badge-pill badge-success">Sudah dibayar</span>
-                        <?php
-                        }
+                      if ($i['status_bayar'] == "1") {
+                      ?>
+                        <td style="background-color: #95a5a6; color:white">
+                          <!-- <span class="badge badge-pill badge-success">Sudah dibayar</span> -->
+                          Sudah dibayar
+                        </td>
+                      <?php
+                      }
 
-                        if ($i['status_bayar'] == "0" and $i['status_void'] != "1") {
-                          $piutang = $i['total_denganpph'] - $i['total_termin']; ?>
+                      if ($i['status_bayar'] == "0" and $i['status_void'] != "1") {
+                        $piutang = $i['total_denganpph'] - $i['total_termin']; ?>
+                        <td style="background-color: #3f51b5; color:white">
                           <a href="#" class="badge btn-danger" data-toggle="modal" data-target="#void<?= $i['Id'] ?>">Void</a>
                           <a href="#" class="badge btn-primary" data-toggle="modal" data-target="#modal<?= $i['Id'] ?>">Bayar</a>
 
@@ -208,8 +213,9 @@
                               </div>
                             </div>
                           </div>
-                        <?php
-                        } ?>
+                        </td>
+                      <?php
+                      } ?>
                       </td>
                       <td>
                         <a href="<?= base_url('financial/print_invoice/' . $i['Id']) ?>" class="badge btn-warning" target="_blank" style="vertical-align: top;">
