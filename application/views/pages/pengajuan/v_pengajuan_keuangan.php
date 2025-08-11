@@ -126,7 +126,7 @@
                         <a href="<?= site_url('pengajuan/bayar/') . $data->kode ?>" class="btn btn-sm" style="background-color: #3498db; color:white;"><i class="fe fe-dollar-sign fe-12"></i> Bayar</a>
                       <?php } ?>
                       <?php if ($data->status == 4 and $data->posisi == 'Menunggu Pertanggungjawaban') { ?>
-                        <a href="<?= site_url('pengajuan/close/') . $data->kode ?>" class="btn btn-sm" style="background-color: #3498db; color:white;"><i class="fe fe-x-square fe-12"></i> Close</a>
+                        <a href="<?= site_url('pengajuan/close/') . $data->kode ?>" class="btn btn-sm" style="background-color: #3498db; color:white;"><i class="fe fe-x-square fe-12"></i> Tutup</a>
                       <?php } ?>
                     </td>
                   </tr>
