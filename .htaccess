@@ -8,7 +8,7 @@ RewriteRule ^(.*)$ index.php?$1
 RewriteRule ^(.*/)?\.git(/|$) - [F,L]
 
 # Block all access to assets/ except CSS, JS, images etc.
-RewriteCond %{REQUEST_URI} !\.(css|js|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot|otf|xls|xlsx)$ [NC]
+RewriteCond %{REQUEST_URI} !\.(css|js|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot|otf|xls|xlsx|mp3|json)$ [NC]
 RewriteRule ^assets(/|$) - [F,L]
 
 # Allow only images, videos, PDFs, and text files in uploads/
