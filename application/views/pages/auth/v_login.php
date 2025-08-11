@@ -83,7 +83,7 @@
         <input type="password" id="password" name="password" class="form-control form-control-lg" placeholder="Password">
       </div> -->
       <button id="checkUsernameBtn" class="btn btn-lg btn-primary btn-block" type="button" onclick="onCheck()">
-        Next
+        Lanjut
       </button>
       <button id="loginbtn" class="btn btn-lg btn-primary btn-block btn-login d-none" type="button" disabled>Login</button>
       <p class="mt-5 mb-3 text-muted text-center">Belum punya akun? <a href="<?= base_url('auth/') ?>register">Daftarkan Akun Perusahaan Anda</a></p>
