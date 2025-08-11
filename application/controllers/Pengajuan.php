@@ -604,7 +604,7 @@ class Pengajuan extends CI_Controller
 
     $data['belum_bayar'] = $this->cb->select('Id')->from('t_pengajuan')->where('posisi', 'Diarahkan ke pembayaran')->where('status', 3)->where('cabang', $this->session->userdata('kode_cabang'))->get()->num_rows();
 
-    $data['belum_close'] = $this->cb->select('Id')->from('t_pengajuan')->where('posisi', 'Sudah dibayar')->where('status', 4)->where('cabang', $this->session->userdata('kode_cabang'))->get()->num_rows();
+    $data['belum_close'] = $this->cb->select('Id')->from('t_pengajuan')->where('posisi', 'Menunggu Pertanggungjawaban')->where('status', 4)->where('cabang', $this->session->userdata('kode_cabang'))->get()->num_rows();
 
     $this->load->view('index', $data);
   }
@@ -860,7 +860,7 @@ class Pengajuan extends CI_Controller
         $posisi = 'Closed';
       } else {
         $status = 4;
-        $posisi = 'Sudah dibayar';
+        $posisi = 'Menunggu Pertanggungjawaban';
       }
 
       $update = [

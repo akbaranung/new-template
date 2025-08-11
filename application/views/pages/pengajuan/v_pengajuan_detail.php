@@ -100,7 +100,7 @@
                 $Pembayaran = 'active';
                 $Closed = 'active';
                 $i = 5;
-              } elseif ($pengajuan->posisi == "Diarahkan ke pembayaran" || $pengajuan->posisi == "Sudah dibayar") {
+              } elseif ($pengajuan->posisi == "Diarahkan ke pembayaran" || $pengajuan->posisi == "Menunggu Pertanggungjawaban") {
                 $Pengajuan = 'active';
                 $Supervisi = 'active';
                 $Keuangan = 'active';

@@ -106,9 +106,9 @@
                   } else if ($data->status > 1 and $data->status < 4) {
                     $color = '#3f51b5';
                   } else if ($data->status == 4) {
-                    $color = '#16a085';
-                  } else if ($data->status == 5) {
                     $color = '#34495e';
+                  } else if ($data->status == 5) {
+                    $color = '#95a5a6';
                   } else {
                     $color = '';
                   }
@@ -125,7 +125,7 @@
                       <?php if ($data->status == 3 and $data->posisi == 'Diarahkan ke pembayaran') { ?>
                         <a href="<?= site_url('pengajuan/bayar/') . $data->kode ?>" class="btn btn-sm" style="background-color: #3498db; color:white;"><i class="fe fe-dollar-sign fe-12"></i> Bayar</a>
                       <?php } ?>
-                      <?php if ($data->status == 4 and $data->posisi == 'Sudah dibayar') { ?>
+                      <?php if ($data->status == 4 and $data->posisi == 'Menunggu Pertanggungjawaban') { ?>
                         <a href="<?= site_url('pengajuan/close/') . $data->kode ?>" class="btn btn-sm" style="background-color: #3498db; color:white;"><i class="fe fe-x-square fe-12"></i> Close</a>
                       <?php } ?>
                     </td>
