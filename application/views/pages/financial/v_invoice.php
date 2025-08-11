@@ -218,13 +218,13 @@
                       } ?>
                       </td>
                       <td>
-                        <a href="<?= base_url('financial/print_invoice/' . $i['Id']) ?>" class="badge btn-warning" target="_blank" style="vertical-align: top;">
+                        <a href="<?= base_url('financial/print_invoice/' . $i['Id']) ?>" class="btn btn-primary" target="_blank" style="vertical-align: top;">
                           Cetak
                         </a>
                         <?php
                         if ($i['status_bayar'] == "0" and $i['status_void'] != "1") {
                         ?>
-                          <a href="<?= base_url('financial/edit_invoice/' . $i['Id']) ?>" class="badge btn-success" style="vertical-align: top;">
+                          <a href="<?= base_url('financial/edit_invoice/' . $i['Id']) ?>" class="btn btn-pink" style="vertical-align: top;">
                             Edit
                           </a>
                         <?php
