@@ -335,7 +335,7 @@
   <?php if (isset($pages_script)) $this->load->view($pages_script); ?>
 
   <script>
-    const chartColors_dashboard = ["#5E72E4", "#e91e63", "#34495e"];
+    const chartColors_dashboard = ["#5E72E4", "#34495e", "#e91e63"];
     const colors_dashboard = {
       mutedColor: "#8898aa",
       borderColor: "#e3e3e3",
@@ -347,17 +347,15 @@
 
     var areaChartOptions = {
       series: [{
-          name: "Pendapatan",
-          data: <?= $json_pendapatan ?>
-        },
-        {
-          name: "Profit",
-          data: <?= $json_laba_rugi ?>
-        }, {
-          name: "Biaya",
-          data: <?= $json_biaya ?>
-        }
-      ],
+        name: "Pendapatan",
+        data: <?= $json_pendapatan ?>
+      }, {
+        name: "Biaya",
+        data: <?= $json_biaya ?>
+      }, {
+        name: "Profit",
+        data: <?= $json_laba_rugi ?>
+      }, ],
       chart: {
         type: "area",
         height: 350,
