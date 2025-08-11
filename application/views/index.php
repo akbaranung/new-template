@@ -481,12 +481,13 @@
       const currentMemoCount = parseInt(memoCountElement.getAttribute('data-count'));
       const previousMemoCount = localStorage.getItem('previousMemoCount') || 0;
 
+
       // Check if the current count is greater than the previous count
       console.log(currentMemoCount);
       console.log(previousMemoCount);
       if (currentMemoCount > previousMemoCount) {
         // Create an audio element and play the sound
-        const audio = new Audio('https://<?= base_url("assets/sounds/notification_sword.mp3") ?>');
+        const audio = new Audio('https://<?= base_url("assets/sounds/notification_swords.mp3") ?>');
         audio.play().catch(e => {
           // This catches a common browser error where autoplay is blocked
           console.log("Audio autoplay failed:", e);
