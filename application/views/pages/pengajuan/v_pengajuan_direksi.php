@@ -75,9 +75,9 @@
                   } else if ($data->status > 2 and $data->status < 4) {
                     $color = '#27ae60';
                   } else if ($data->status == 4) {
-                    $color = '#16a085';
-                  } else if ($data->status == 5) {
                     $color = '#34495e';
+                  } else if ($data->status == 5) {
+                    $color = '#95a5a6';
                   } else {
                     $color = '';
                   }
