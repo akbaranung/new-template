@@ -1,3 +1,18 @@
+<style>
+  /* This is a general rule for positioning notification badges. 
+   Adjust values as needed for your specific theme. */
+  .badge-counter {
+    position: absolute;
+    top: 5px;
+    /* Adjust this value to move the badge up or down */
+    right: 5px;
+    /* Adjust this value to move the badge left or right */
+    border-radius: 50%;
+    font-size: 10px;
+    padding: 3px 5px;
+  }
+</style>
+
 <nav class="topnav navbar navbar-light">
   <button type="button" class="navbar-toggler text-muted mt-2 p-0 mr-3 collapseSidebar">
     <i class="fe fe-menu navbar-toggler-icon"></i>
@@ -20,6 +35,48 @@
         <i class="fe fe-sun fe-16"></i>
       </a>
     </li>
+    <?php
+    $nip = $this->session->userdata('nip');
+
+    // Count unread memos
+    $sql = "SELECT COUNT(Id) FROM memo WHERE (nip_kpd LIKE '%$nip%' OR nip_cc LIKE '%$nip%') AND (`read` NOT LIKE '%$nip%');";
+    $query = $this->db->query($sql);
+    $res2 = $query->result_array();
+    $jumlah_notifikasi_memo = $res2[0]['COUNT(Id)'];
+
+    // Count unread tasks
+    $sql4 = "SELECT COUNT(id) FROM task WHERE (`member` LIKE '%$nip%' or `pic` like '%$nip%') and activity='1'";
+    $query4 = $this->db->query($sql4);
+    $res4 = $query4->result_array();
+    $jumlah_notifikasi_tello = $res4[0]['COUNT(id)'];
+
+    $jumlah_notifikasi = $jumlah_notifikasi_memo + $jumlah_notifikasi_tello;
+    ?>
+
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle text-muted pr-0 my-2" href="#" id="navbarDropdownNotification" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fe fe-bell fe-16"></i>
+        <?php if ($jumlah_notifikasi > 0): ?>
+          <span class="badge badge-pill badge-danger badge-counter"><?= $jumlah_notifikasi ?></span>
+        <?php endif; ?>
+      </a>
+      <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownNotification">
+        <a class="dropdown-item" href="<?= site_url('app/inbox') ?>">
+          Inbox Memo
+          <?php if ($jumlah_notifikasi_memo > 0): ?>
+            <span class="badge badge-pill badge-danger float-right"><?= $jumlah_notifikasi_memo ?></span>
+          <?php endif; ?>
+        </a>
+        <a class="dropdown-item" href="<?= site_url('task') ?>">
+          Tello
+          <?php if ($jumlah_notifikasi_tello > 0): ?>
+            <span class="badge badge-pill badge-danger float-right"><?= $jumlah_notifikasi_tello ?></span>
+          <?php endif; ?>
+        </a>
+      </div>
+    </li>
+    <span id="memo-notification-count" data-count="<?= $jumlah_notifikasi_memo ?>" style="display:none;"></span>
+
     <li class="nav-item dropdown">
       <a class="nav-link dropdown-toggle text-muted pr-0" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <span class="avatar avatar-sm mt-2">
