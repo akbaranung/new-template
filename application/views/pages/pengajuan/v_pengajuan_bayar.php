@@ -42,26 +42,26 @@
                           <?php if ($pengajuan->metode_pembayaran == 1) { ?>
                             <select name="coa_debit[]" class="form-control select2">
                               <option value="" selected> :: Pilih Coa Beban</option>
-                              <?php foreach ($coa as $c) : ?>
+                              <?php foreach ($coa_debit as $c) : ?>
                                 <option value="<?= $c->no_sbb ?>"><?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?></option>
                               <?php endforeach ?>
                             </select>
                             <select name="coa_credit[]" class="form-control select2">
                               <option value="" selected> :: Pilih Coa Kredit</option>
-                              <?php foreach ($coa as $c) : ?>
+                              <?php foreach ($coa_kredit as $c) : ?>
                                 <option value="<?= $c->no_sbb ?>"><?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?></option>
                               <?php endforeach ?>
                             </select>
                           <?php } else { ?>
                             <select name="coa_debit[]" class="form-control select2">
                               <option value="" selected> :: Pilih Coa Uang Muka</option>
-                              <?php foreach ($coa as $c) : ?>
+                              <?php foreach ($coa_debit as $c) : ?>
                                 <option value="<?= $c->no_sbb ?>"><?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?></option>
                               <?php endforeach ?>
                             </select>
                             <select name="coa_credit[]" class="form-control select2">
                               <option value="" selected> :: Pilih Coa Kredit</option>
-                              <?php foreach ($coa as $c) : ?>
+                              <?php foreach ($coa_kredit as $c) : ?>
                                 <option value="<?= $c->no_sbb ?>"><?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?></option>
                               <?php endforeach ?>
                             </select>
