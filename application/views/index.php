@@ -351,7 +351,7 @@
           data: <?= $json_pendapatan ?>
         },
         {
-          name: "Selisih",
+          name: "Profit",
           data: <?= $json_laba_rugi ?>
         }, {
           name: "Biaya",
