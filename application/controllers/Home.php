@@ -73,71 +73,88 @@ class Home extends CI_Controller
 
       $row = $this->M_coa->cek_saldo_awal($periode);
 
-      if (!$row || !isset($row['coa']) || empty($row['coa'])) {
+      if ($i == 0) {
 
-        $tanggal_awal = date('Y-m-d', $date); // gunakan tanggal periode
-        $tanggal = new DateTime($tanggal_awal);
-        $tanggal->modify('first day of previous month');
-        $periode_before = $tanggal->format('Y-m');
 
-        $cek = $this->M_coa->cek_saldo_awal($periode_before);
-        $coaLastPeriod = json_decode($cek['coa'] ?? '[]', true);
+        // $pendapatan_transaksi = $this->M_coa->getNeracaByDate('t_coalr_sbb', 'PASIVA', $tanggal_awal);
+        // $beban = $this->M_coa->getNeracaByDate('t_coalr_sbb', 'AKTIVA', $tanggal_awal);
+        $nominal_pasiva = $this->cb->select_sum('nominal')->from('t_coalr_sbb')->where('posisi', 'PASIVA')->get()->row();
+        $total_pendapatan = $nominal_pasiva->nominal;
 
-        $pendapatan_transaksi = $this->M_coa->getNeracaByDate('t_coalr_sbb', 'PASIVA', $tanggal_awal);
-        $beban = $this->M_coa->getNeracaByDate('t_coalr_sbb', 'AKTIVA', $tanggal_awal);
+        $nominal_aktiva = $this->cb->select_sum('nominal')->from('t_coalr_sbb')->where('posisi', 'AKTIVA')->get()->row();
+        $total_biaya = $nominal_aktiva->nominal;
 
-        $gabung = [];
+        $pendapatan[] = $total_pendapatan;
+        $biaya[] = $total_biaya;
+        $laba_rugi[] = $total_pendapatan - $total_biaya;
+      } else {
+        if (!$row || !isset($row['coa']) || empty($row['coa'])) {
 
-        foreach ($coaLastPeriod as $item) {
-          $kode = $item['no_sbb'];
-          $gabung[$kode] = [
-            'no_sbb' => $kode,
-            'saldo_awal' => $item['saldo_awal'],
-            'posisi' => $item['posisi'],
-            'table_source' => $item['table_source'],
-          ];
-        }
+          $tanggal_awal = date('Y-m-d', $date); // gunakan tanggal periode
+          $tanggal = new DateTime($tanggal_awal);
+          $tanggal->modify('first day of previous month');
+          $periode_before = $tanggal->format('Y-m');
 
-        $combineTransaksi = array_merge($pendapatan_transaksi, $beban);
+          $cek = $this->M_coa->cek_saldo_awal($periode_before);
+          $coaLastPeriod = json_decode($cek['coa'] ?? '[]', true);
 
-        foreach ($combineTransaksi as $transaksi) {
-          $kode = $transaksi->no_sbb;
-          if (isset($gabung[$kode])) {
-            $gabung[$kode]['saldo_awal'] += $transaksi->saldo_awal;
-          } else {
+          $pendapatan_transaksi = $this->M_coa->getNeracaByDate('t_coalr_sbb', 'PASIVA', $tanggal_awal);
+          $beban = $this->M_coa->getNeracaByDate('t_coalr_sbb', 'AKTIVA', $tanggal_awal);
+
+          $gabung = [];
+
+          foreach ($coaLastPeriod as $item) {
+            $kode = $item['no_sbb'];
             $gabung[$kode] = [
               'no_sbb' => $kode,
-              'saldo_awal' => $transaksi->saldo_awal,
-              'posisi' => $transaksi->posisi,
-              'table_source' => 't_coalr_sbb'
+              'saldo_awal' => $item['saldo_awal'],
+              'posisi' => $item['posisi'],
+              'table_source' => $item['table_source'],
             ];
+          }
+
+          $combineTransaksi = array_merge($pendapatan_transaksi, $beban);
+
+          foreach ($combineTransaksi as $transaksi) {
+            $kode = $transaksi->no_sbb;
+            if (isset($gabung[$kode])) {
+              $gabung[$kode]['saldo_awal'] += $transaksi->saldo_awal;
+            } else {
+              $gabung[$kode] = [
+                'no_sbb' => $kode,
+                'saldo_awal' => $transaksi->saldo_awal,
+                'posisi' => $transaksi->posisi,
+                'table_source' => 't_coalr_sbb'
+              ];
+            }
+          }
+
+          $coa_json = json_encode(array_values($gabung));
+        } else {
+          $coa_json = $row['coa'];
+        }
+
+        $coa_array = json_decode($coa_json, true);
+        $total_pendapatan = 0;
+        $total_biaya = 0;
+
+        foreach ($coa_array as $coa) {
+          $kode = $coa['no_sbb'];
+          $saldo = $coa['saldo_awal'];
+
+          if (preg_match('/^4/', $kode)) {
+            $total_pendapatan += $saldo;
+          } elseif (preg_match('/^5/', $kode)) {
+            $total_biaya += $saldo;
           }
         }
 
-        $coa_json = json_encode(array_values($gabung));
-      } else {
-        $coa_json = $row['coa'];
+        $pendapatan[] = $total_pendapatan;
+        $biaya[] = $total_biaya;
+        $laba_rugi[] = $total_pendapatan - $total_biaya;
       }
-
-      $coa_array = json_decode($coa_json, true);
-      $total_pendapatan = 0;
-      $total_biaya = 0;
-
-      foreach ($coa_array as $coa) {
-        $kode = $coa['no_sbb'];
-        $saldo = $coa['saldo_awal'];
-
-        if (preg_match('/^4/', $kode)) {
-          $total_pendapatan += $saldo;
-        } elseif (preg_match('/^5/', $kode)) {
-          $total_biaya += $saldo;
-        }
-      }
-
-      $pendapatan[] = $total_pendapatan;
-      $biaya[] = $total_biaya;
-      $laba_rugi[] = $total_pendapatan - $total_biaya;
     }
+
 
     return [
       'categories' => $categories,
