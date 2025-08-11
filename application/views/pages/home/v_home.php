@@ -3,8 +3,8 @@
     <div class="col-12">
       <div class="row align-items-center mb-2">
         <div class="col">
-          <h2 class="h3 page-title"><?= ($this->session->userdata('is_premium') == '1') ? 'Premium' : 'Free User' ?></h2>
-          <h2 class="h5 page-title">Welcome!, <?= $this->session->userdata('nama') ?></h2>
+          <h2 class="h3 page-title"><?= ($this->session->userdata('is_premium') == '1') ? 'Premium' : '' ?></h2>
+          <h2 class="h5 page-title">Selamat Datang!, <?= $this->session->userdata('nama') ?></h2>
         </div>
         <div class="col-auto">
           <form class="form-inline">
