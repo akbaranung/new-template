@@ -92,7 +92,7 @@
               //   $i = 0;
               // }
 
-              if ($pengajuan->posisi == "Closed") {
+              if ($pengajuan->posisi == "Selesai") {
                 $Pengajuan = 'active';
                 $Supervisi = 'active';
                 $Keuangan = 'active';
@@ -160,7 +160,7 @@
                   <div class="circle <?= $Keuangan ?>" data-label="Keuangan">3</div>
                   <div class="circle <?= $Direksi ?>" data-label="Direksi">4</div>
                   <div class="circle <?= $Pembayaran ?>" data-label="Pembayaran">4</div>
-                  <div class="circle <?= $Closed ?>" data-label="Closed">5</div>
+                  <div class="circle <?= $Closed ?>" data-label="Selesai">5</div>
                 </div>
               </div>
             </div>

@@ -857,7 +857,7 @@ class Pengajuan extends CI_Controller
       // Update table pengajuan
       if ($pengajuan->metode_pembayaran == 1) {
         $status = 5;
-        $posisi = 'Closed';
+        $posisi = 'Selesai';
       } else {
         $status = 4;
         $posisi = 'Menunggu Pertanggungjawaban';
@@ -988,7 +988,7 @@ class Pengajuan extends CI_Controller
       $update = [
         'user_bayar' => $this->session->userdata('nip'),
         'status' => 5,
-        'posisi' => 'Closed',
+        'posisi' => 'Selesai',
         'date_close' => $tgl,
       ];
 
