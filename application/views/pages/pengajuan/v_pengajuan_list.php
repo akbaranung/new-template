@@ -53,9 +53,9 @@
                     $nip = $this->session->userdata('nip');
                     foreach ($data_pengajuan as $data) {
                       if ($data->status == 0) {
-                        $color = '#f39c12';
+                        $color = '#e91e63';
                       } else if ($data->status > 0 and $data->status < 4) {
-                        $color = '#27ae60';
+                        $color = '#3f51b5';
                       } else if ($data->status == 4) {
                         $color = '#16a085';
                       } else if ($data->status == 5) {
