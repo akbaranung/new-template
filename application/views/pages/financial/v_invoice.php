@@ -263,6 +263,66 @@
                         <a href="<?= base_url('financial/print_invoice/' . $i['Id']) ?>" class="btn btn-primary" target="_blank" style="vertical-align: top;">
                           Cetak
                         </a>
+                        <a href="#" class="btn btn-info" data-toggle="modal" data-target="#modalRiwayat<?= $i['Id'] ?>">Riwayat</a>
+
+                        <div class="modal fade" id="modalRiwayat<?= $i['Id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
+                          <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h4 class="modal-title" id="myModalLabel">
+                                  Riwayat <?= $i['no_invoice'] ?>
+                                </h4>
+                              </div>
+                              <form action="<?= base_url('financial/paid/' . $i['Id']) ?>" method="post">
+                                <div class="modal-body">
+                                  <div class="table-responsive">
+                                    <table class="table table-hover">
+                                      <thead>
+                                        <tr>
+                                          <th>#</th>
+                                          <th>Tanggal</th>
+                                          <th>Nominal</th>
+                                          <th>Keterangan</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <?php
+                                        $no = 1;
+                                        $list = $this->cb->where('id_invoice', $i['Id'])->get('t_log_pembayaran')->result();
+
+                                        if ($list) {
+
+                                          foreach ($list as $l) : ?>
+                                            <tr>
+                                              <td><?= $no++; ?></td>
+                                              <td><?= format_indo($l->created_at) ?></td>
+                                              <td><?= number_format($l->nominal_bayar) ?></td>
+                                              <td><?= $l->keterangan ?></td>
+                                            </tr>
+                                          <?php
+                                          endforeach;
+                                        } else {
+                                          ?>
+                                          <tr>
+                                            <td colspan="3">Tidak ada riwayat pembayaran</td>
+                                          </tr>
+                                        <?php
+                                        }
+
+                                        ?>
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                    Close
+                                  </button>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
                         <?php
                         if ($i['status_bayar'] == "0" and $i['status_void'] != "1") {
                         ?>
