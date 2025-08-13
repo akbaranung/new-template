@@ -122,7 +122,7 @@
               <div class="col-md-1 col-xs-12">
                 <label for="termin" class="form-label">Termin</label>
                 <div class="checkbox text-end">
-                  <input type="checkbox" class="icheckbox_flat-green" style="margin-left: 0px;" name="opsi_termin" value="1">
+                  <input type="checkbox" class="icheckbox_flat-green" style="margin-left: 0px;" name="opsi_termin" value="1" checked>
                 </div>
               </div>
               <div class="col-md-1 col-xs-12">
