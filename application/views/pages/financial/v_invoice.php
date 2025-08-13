@@ -163,7 +163,7 @@
                                       <div class="col-sm-6 col-xs-12">
                                         <div class="form-group">
                                           <label for="tanggal_bayar" class="form-label">Tanggal bayar</label>
-                                          <input type="date" name="tanggal_bayar" id="tanggal_bayar" class="form-control" required>
+                                          <input type="date" name="tanggal_bayar" id="tanggal_bayar" class="form-control" value="<?= date('Y-m-d') ?>" required>
                                         </div>
                                       </div>
                                       <div class="col-sm-6 col-xs-12">

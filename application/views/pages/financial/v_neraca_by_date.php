@@ -154,7 +154,7 @@
               <input type="hidden" class="form-control" name="no_coa">
               <div class="col-md-6 col-xs-12">
                 <label for="tgl_dari" class="form-label">Dari</label>
-                <input type="date" class="form-control" name="tgl_dari" required>
+                <input type="date" class="form-control" name="tgl_dari" value="<?= date('Y-m-01') ?>" required>
               </div>
               <div class="col-md-6 col-xs-12">
                 <label for="tgl_sampai" class="form-label">Sampai</label>
