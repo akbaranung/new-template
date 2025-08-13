@@ -24,6 +24,7 @@
                   <select name="jenis_laporan" id="jenis_laporan" class="form-control">
                     <option <?= ($this->input->post('jenis_laporan') == "neraca") ? "selected" : "" ?> value="neraca">Neraca SBB</option>
                     <option <?= ($this->input->post('jenis_laporan') == "laba_rugi") ? "selected" : "" ?> value="laba_rugi">Laba Rugi SBB</option>
+                    <option <?= ($this->input->post('jenis_laporan') == "laba_rugi_tanpa_sawal") ? "selected" : "" ?> value="laba_rugi_tanpa_sawal">Laba Rugi SBB Tanpa Sawal</option>
                     <option <?= ($this->input->post('jenis_laporan') == "neraca_bb") ? "selected" : "" ?> value="neraca_bb">Neraca BB</option>
                     <option <?= ($this->input->post('jenis_laporan') == "lr_bb") ? "selected" : "" ?> value="lr_bb">Laba Rugi BB</option>
                   </select>

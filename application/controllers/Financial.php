@@ -69,6 +69,8 @@ class Financial extends CI_Controller
         $this->prepareNeracaReportByDate($data, $per_tanggal, $button_sbm);
       } else if ($jenis_laporan == "laba_rugi") {
         $this->prepareLabaRugiReportByDate($data, $per_tanggal, $button_sbm);
+      } else if ($jenis_laporan == "laba_rugi_tanpa_sawal") {
+        $this->prepareLabaRugiReportByDateNoSawal($data, $per_tanggal, $button_sbm);
       } else if ($jenis_laporan == "neraca_bb") {
         $this->prepareNeracaBbReportByDate($data, $per_tanggal, $button_sbm);
       } else if ($jenis_laporan == "lr_bb") {
@@ -370,6 +372,179 @@ class Financial extends CI_Controller
           $combinedPendapatan[$item->no_sbb]->saldo_awal += $item->saldo_awal;
         }
       }
+      $total_pendapatan = array_sum(array_column($combinedPendapatan, 'saldo_awal'));
+
+      // Part Beban
+      $filteredCoaBeban = array_filter($coaLastPeriod, function ($item) {
+        return $item->posisi === 'AKTIVA' && $item->table_source === 't_coalr_sbb';
+      });
+
+      $combinedBeban = [];
+
+      foreach ($beban as $item) {
+        if (!isset($combinedBeban[$item->no_sbb])) {
+          $combinedBeban[$item->no_sbb] = (object) [
+            'no_sbb' => $item->no_sbb,
+            'saldo_awal' => $item->saldo_awal,
+          ];
+        } else {
+          $combinedBeban[$item->no_sbb]->saldo_awal += $item->saldo_awal;
+        }
+      }
+      foreach ($filteredCoaBeban as $item) {
+        if (!isset($combinedBeban[$item->no_sbb])) {
+          $combinedBeban[$item->no_sbb] = (object) [
+            'no_sbb' => $item->no_sbb,
+            'saldo_awal' => $item->saldo_awal,
+          ];
+        } else {
+          $combinedBeban[$item->no_sbb]->saldo_awal += $item->saldo_awal;
+        }
+      }
+      $total_beban = array_sum(array_column($combinedBeban, 'saldo_awal'));
+
+      $data['biaya'] = $combinedBeban;
+      $data['pendapatan'] = $combinedPendapatan;
+      $data['sum_biaya'] = $total_beban;
+      $data['sum_pendapatan'] = $total_pendapatan;
+      $data['total_pendapatan'] = $total_pendapatan - $total_beban;
+    } else {
+      $this->session->set_flashdata('message_error', 'Closing bulan ' . format_indo($periode) . ' tidak ditemukan');
+    }
+
+    // print_r($data['total_pendapatan']);
+    // exit;
+    $data['title'] = 'Laba rugi per tanggal ' . format_indo($tanggal);
+    $data['utility'] = $this->db->get('utility')->row_array();
+    $data['pages_script'] = 'script/financial/s_financial';
+    $data['pages'] = 'pages/financial/v_laba_rugi_by_date';
+    $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
+
+    if ($button_sbm == "excel") {
+      require_once(APPPATH . 'libraries/PHPExcel/IOFactory.php');
+
+      $excel = new PHPExcel();
+      $sheet = $excel->getActiveSheet();
+
+      $excel->getProperties()->setCreator('SLS')
+        ->setLastModifiedBy('SLS')
+        ->setTitle("Laba rugi SBB")
+        ->setSubject("Laba rugi SBB")
+        ->setDescription("Laba rugi SBB per tanggal " . format_indo($tanggal))
+        ->setKeywords("Laba rugi SBB");
+
+      // Merge cells untuk header utama
+      $sheet->mergeCells('A1:G1');
+      $sheet->mergeCells('A2:C2');
+      $sheet->mergeCells('E2:G2');
+
+      // Isi data header
+      $sheet->setCellValue('A1', 'Laba rugi SBB per tanggal ' . format_indo($tanggal));
+      $sheet->setCellValue('A2', 'BEBAN');
+      $sheet->setCellValue('E2', 'PENDAPATAN');
+      $sheet->setCellValue('B3', 'Total: ');
+      $sheet->setCellValue('C3', $total_beban);
+      $sheet->setCellValue('F3', 'Total: ');
+      $sheet->setCellValue('G3', $total_pendapatan);
+
+      // Buat sub-header untuk tabel
+      $sheet->setCellValue('A4', 'No. CoA');
+      $sheet->setCellValue('B4', 'Nama CoA');
+      $sheet->setCellValue('C4', 'Nominal');
+      $sheet->setCellValue('E4', 'No. CoA');
+      $sheet->setCellValue('F4', 'Nama CoA');
+      $sheet->setCellValue('G4', 'Nominal');
+
+      // Tambahkan data Aktiva
+      $numrowActiva = 5;
+      foreach ($combinedBeban as $t) {
+        $coa = $this->M_coa->getCoa($t->no_sbb);
+        if ($coa['table_source'] == "t_coalr_sbb" && $coa['posisi'] == 'AKTIVA' && $t->saldo_awal != 0) :
+          $sheet->setCellValue('A' . $numrowActiva, $t->no_sbb);
+          $sheet->setCellValue('B' . $numrowActiva, $coa['nama_perkiraan']);
+          $sheet->setCellValue('C' . $numrowActiva, $t->saldo_awal);
+          $numrowActiva++;
+        endif;
+      }
+
+      // Tambahkan data Pasiva
+      $numrowPasiva = 5;
+      foreach ($combinedPendapatan as $t) {
+        $coa = $this->M_coa->getCoa($t->no_sbb);
+        if ($coa['table_source'] == "t_coalr_sbb" && $coa['posisi'] == 'PASIVA' && $t->saldo_awal != 0) :
+          $sheet->setCellValue('E' . $numrowPasiva, $t->no_sbb);
+          $sheet->setCellValue('F' . $numrowPasiva, $coa['nama_perkiraan']);
+          $sheet->setCellValue('G' . $numrowPasiva, $t->saldo_awal);
+          $numrowPasiva++;
+        endif;
+      }
+
+      // Set auto size untuk semua kolom
+      foreach (range('A', 'G') as $columnID) {
+        $sheet->getColumnDimension($columnID)->setAutoSize(true);
+      }
+
+      header('Content-Type: application/vnd.ms-excel');
+      header('Content-Disposition: attachment;filename="Laba rugi per tanggal ' . format_indo($tanggal) . '.xls"');
+      header('Cache-Control: max-age=0');
+      header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+      header('Cache-Control: cache, must-revalidate');
+      header('Pragma: public');
+
+      $objWriter = PHPExcel_IOFactory::createWriter($excel, 'Excel5');
+      $objWriter->save('php://output');
+      exit;
+    } else {
+      $this->load->view('index', $data);
+    }
+  }
+
+  private function prepareLabaRugiReportByDateNoSawal($data, $tanggal, $button_sbm = null)
+  {
+    $date = new DateTime($tanggal);
+
+    $date->modify('first day of previous month');
+    $periode = $date->format('Y-m');
+
+    $cek = $this->M_coa->cek_saldo_awal($periode);
+
+    $data['total_pendapatan'] = 0;
+    $data['sum_biaya'] = 0;
+    $data['sum_pendapatan'] = 0;
+    $data['biaya'] = [];
+    $data['pendapatan'] = [];
+    if ($cek) {
+      $coaLastPeriod = json_decode($cek['coa']);
+
+      $pendapatan = $this->M_coa->getNeracaByDate('t_coalr_sbb', 'PASIVA', $tanggal, $periode);
+      $beban = $this->M_coa->getNeracaByDate('t_coalr_sbb', 'AKTIVA', $tanggal, $periode);
+
+      // Part Pendapatan
+      // $filteredCoaPendapatan = array_filter($coaLastPeriod, function ($item) {
+      //   return $item->posisi === 'PASIVA' && $item->table_source === 't_coalr_sbb';
+      // });
+      $combinedPendapatan = [];
+
+      foreach ($pendapatan as $item) {
+        if (!isset($combinedPendapatan[$item->no_sbb])) {
+          $combinedPendapatan[$item->no_sbb] = (object) [
+            'no_sbb' => $item->no_sbb,
+            'saldo_awal' => $item->saldo_awal,
+          ];
+        } else {
+          $combinedPendapatan[$item->no_sbb]->saldo_awal += $item->saldo_awal;
+        }
+      }
+      // foreach ($filteredCoaPendapatan as $item) {
+      //   if (!isset($combinedPendapatan[$item->no_sbb])) {
+      //     $combinedPendapatan[$item->no_sbb] = (object) [
+      //       'no_sbb' => $item->no_sbb,
+      //       'saldo_awal' => $item->saldo_awal,
+      //     ];
+      //   } else {
+      //     $combinedPendapatan[$item->no_sbb]->saldo_awal += $item->saldo_awal;
+      //   }
+      // }
       $total_pendapatan = array_sum(array_column($combinedPendapatan, 'saldo_awal'));
 
       // Part Beban
