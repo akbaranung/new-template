@@ -12,9 +12,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
 |
 */
 
-$hook['pre_controller'][] = array(
-  'class'    => 'UserAccess',
-  'function' => 'checkAccess',
-  'filename' => 'UserAccess.php',
-  'filepath' => 'hooks'
+// $hook['pre_controller'][] = array(
+//   'class'    => 'UserAccess',
+//   'function' => 'checkAccess',
+//   'filename' => 'UserAccess.php',
+//   'filepath' => 'hooks'
+// );
+
+$hook['post_controller_constructor'][] = array(
+  'class'    => 'Subscription_check',
+  'function' => 'check_user_subscription',
+  'filename' => 'Subscription_check.php',
+  'filepath' => 'hooks',
+  'params'   => array()
 );

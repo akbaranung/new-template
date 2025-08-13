@@ -10,8 +10,9 @@
           </p>
         </div> -->
         <div class="card-body">
+          <a href="<?= base_url('financial/invoice') ?>" class="btn btn-sm btn-warning"><i class="bi bi-arrow-return-left"></i> Back</a>
 
-          <form class="form-horizontal form-label-left" method="POST" action="<?= base_url('financial/store_invoice/khusus') ?>">
+          <form class="form-horizontal form-label-left mt-3" method="POST" action="<?= base_url('financial/store_invoice/khusus') ?>">
             <div class="form-group row">
               <!-- <div class="col-md-2 col-xs-12">
                                             <label for="no_invoice" class="form-label">Number</label>
@@ -134,8 +135,8 @@
               <div class="col-md-2 col-xs-12 text-right">
                 <label for="keterangan" class="form-label">&nbsp;</label>
                 <div class="mt-2">
-                  <a href="<?= base_url('financial/invoice') ?>" class="btn btn-sm btn-warning"><i class="bi bi-arrow-return-left"></i> Back</a>
-                  <button type="submit" class="btn btn-primary btn-sm">Save <i class="bi bi-save"></i></button>
+                  <!-- <a href="<?= base_url('financial/invoice') ?>" class="btn btn-sm btn-warning"><i class="bi bi-arrow-return-left"></i> Back</a> -->
+                  <!-- <button type="submit" class="btn btn-primary btn-sm">Save <i class="bi bi-save"></i></button> -->
                 </div>
               </div>
             </div>
@@ -146,7 +147,7 @@
                   <th style="color: #6c757d;">Jumlah</th>
                   <th style="color: #6c757d;">Nominal</th>
                   <th style="color: #6c757d;">Amount</th>
-                  <th style="color: #6c757d;">Del.</th>
+                  <th style="color: #6c757d;">#</th>
                 </tr>
               </thead>
               <tbody>
@@ -164,6 +165,8 @@
                     <input type="text" class="form-control" name="total_amount[]" value="0" readonly>
                   </td>
                   <td>
+                    <!-- <button type="button" class="btn btn-secondary btn-sm" id="addRow">Add new row</button> -->
+                    <button type="button" class="btn btn-secondary btn-sm" id="addRow"><i class="fe fe-plus"></i></button>
                     <button type="button" class="btn btn-danger btn-sm hapusRow">Hapus</button>
                   </td>
                 </tr>
@@ -171,7 +174,8 @@
             </table>
             <div class="row">
               <div class="col-lg-12 text-end">
-                <button type="button" class="btn btn-secondary btn-sm" id="addRow">Add new row</button>
+                <!-- <button type="button" class="btn btn-secondary btn-sm" id="addRow">Add new row</button> -->
+                <button type="submit" class="btn btn-primary btn-sm">Save <i class="bi bi-save"></i></button>
               </div>
             </div>
           </form>

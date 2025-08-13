@@ -1,9 +1,6 @@
 <script>
   $(document).ready(function() {
-    applyPriceFormat();
-  })
 
-  $(document).ready(function() {
     var rowCount = 1; // Inisialisasi row
 
     $('#addRow').on('click', function() {
@@ -44,6 +41,14 @@
       // Tambahkan baris baru setelah baris terakhir
       previousRow.after(newRow);
     });
+  });
+</script>
+<script>
+  $(document).ready(function() {
+    applyPriceFormat();
+  })
+
+  $(document).ready(function() {
 
     $(document).on('change click keyup input paste', 'input[name="jumlah[]"], input[name="total[]"]', function(event) {
       $(this).val(function(index, value) {

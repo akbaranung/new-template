@@ -133,23 +133,40 @@
   <script src="<?= base_url('assets') ?>/js/cleave.min.js"></script>
   <!-- DataTables -->
   <script src="<?= base_url('assets') ?>/dataTables/js/datatables.min.js"></script>
+  <?php
+  // application/views/your_main_template.php (or header/footer)
+
+  // --- Debugging Flashdata ---
+  echo '<pre>';
+  echo '<h3>Flashdata on this page load:</h3>';
+  var_dump($this->session->flashdata());
+  echo '</pre>';
+
+  // You can also check individual flashdata items
+  if ($this->session->flashdata('swal_type')) {
+    echo '<p>Swal Type (from flashdata): ' . $this->session->flashdata('swal_type') . '</p>';
+  } else {
+    echo '<p>Swal Type (from flashdata): NOT SET</p>';
+  }
+  // --- End Debugging Flashdata ---
+  ?>
+
+  <!-- Your SweetAlert2 JS check (as provided previously) -->
+  <script>
+    <?php if ($this->session->flashdata('swal_type')): ?>
+      Swal.fire({
+        icon: '<?php echo $this->session->flashdata('swal_type'); ?>',
+        title: '<?php echo $this->session->flashdata('swal_title'); ?>',
+        text: '<?php echo $this->session->flashdata('swal_text'); ?>',
+        confirmButtonText: 'OK'
+      });
+    <?php endif; ?>
+  </script>
   <script>
     const progress = document.getElementById("progress");
     const circles = document.querySelectorAll(".circle");
 
     let currentActive = <?= ($i) ? $i : 1 ?>;
-
-    next.addEventListener("click", () => {
-      currentActive++;
-      if (currentActive > circles.length) currentActive = circles.length;
-      update();
-    });
-
-    prev.addEventListener("click", () => {
-      currentActive--;
-      if (currentActive < 1) currentActive = 1;
-      update();
-    });
 
     const update = () => {
       circles.forEach((circle, index) => {

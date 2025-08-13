@@ -84,58 +84,10 @@
         </div>
 
 
+        <!-- <div class="row pt-4 justify-content-center"> -->
+
+        <!-- </div> -->
         <div class="row pt-4 justify-content-center">
-            <div class="col-lg-4">
-                <div class="pricing-box mt-4">
-                    <i class="mdi mdi-account h1"></i>
-                    <!-- <h4 class="f-20">Paket Kesatria Perintis (Dasar Gratis)</h4> -->
-                    <h4 class="f-20">Paket Pengembara (Dasar Gratis)</h4>
-
-                    <div class="mt-4 pt-2">
-                        <p class="mb-2 f-18">Fitur</p>
-
-                        <p class="mb-2"><i class="fa-solid fa-circle-check" style="color: #3ad29f;"></i> <b>Unlimited</b>
-                            Jurnal Arus Kas</p>
-                        <p class="mb-2"><i class="fa-solid fa-circle-check" style="color: #3ad29f;"></i> <b>Unlimited</b>
-                            Manajemen Penugasan (Tello)</p>
-                        <p class="mb-2"><i class="fa-solid fa-circle-check" style="color: #3ad29f;"></i> <b>1000</b>
-                            Invoice / Bulan</p>
-                        <p class="mb-2"><i class="fa-solid fa-circle-check" style="color: #3ad29f;"></i> <b>500</b>
-                            Digital Memorandum / Bulan</p>
-                        <p class="mb-2"><i class="fa-solid fa-circle-check" style="color: #3ad29f;"></i> <b>1000</b>
-                            Pengajuan Multi Layer Approval / Bulan</p>
-                        <p class="mb-2"><i class="fa-solid fa-circle-check" style="color: #3ad29f;"></i> <b>1000</b>
-                            Nota Penjualan / Bulan</p>
-                        <p class="mb-2"><i class="fa-solid fa-circle-check" style="color: #3ad29f;"></i> Jumlah Cabang <b>1</b></p>
-                        <p class="mb-2"><i class="fa-solid fa-circle-check" style="color: #3ad29f;"></i> <b>5</b> User</p>
-                        <p class="mb-2"><i class="fa-solid fa-circle-xmark text-danger f-18 mr-2"></i>Fitur
-                            <b>Premium</b>
-                        </p>
-                        <p class="mb-2"><i class="fa-solid fa-circle-xmark text-danger f-18 mr-2" style="color: #3ad29f;"></i> <b>Cuti Online</b></p>
-                        <p class="mb-2"><i class="fa-solid fa-circle-xmark text-danger f-18 mr-2" style="color: #3ad29f;"></i> <b>Absen Online (by Face Recognition & Geo-Location)</b></p>
-                        <p class="mb-2"><i class="fa-solid fa-circle-xmark text-danger f-18 mr-2" style="color: #3ad29f;"></i> <b>Surat-menyurat</b></p>
-                        <p class="mb-2"><i class="fa-solid fa-circle-xmark text-danger f-18 mr-2" style="color: #3ad29f;"></i> <b>Manajemen Aset & Otomasi Penyusutan</b></p>
-                        <p class="mb-2"><i class="fa-solid fa-circle-xmark text-danger f-18 mr-2" style="color: #3ad29f;"></i> <b>Fitur-fitur Premium Lainnya</b></p>
-                    </div>
-
-                    <!-- <p class="mt-4 pt-2 text-muted">Semper urna veal tempus pharetra elit habisse platea dictumst. </p> -->
-                    <!-- <p class="mt-4 pt-2 text-muted">Dirancang untuk para bangsawan muda yang mencari landasan kokoh. Dapatkan kendali penuh atas wilayah kecil Anda dan bangunlah kekuatan.</p> -->
-                    <div class="pricing-plan mt-4 pt-2">
-                        <!-- <h4 class="text-muted"><s> $9.99</s> <span class="plan pl-3 text-dark">$8.99 </span></h4> -->
-                        <span class="plan text-dark">Free </span>
-                        <!-- <p class="text-muted mb-0">Per Bulan</p> -->
-                    </div>
-
-
-                    <!-- <div class="mt-4 pt-3"> -->
-                    <!-- <a href="" class="btn btn-primary btn-rounded">Pilih Tahta</a> -->
-                    <!-- <a href="" class="btn btn-primary btn-rounded">Ambil Takhta Ini</a> -->
-                    <!-- <a href="" class="btn btn-primary btn-rounded">Dapatkan Mahkota</a> -->
-                    <!-- </div> -->
-                </div>
-            </div>
-        </div>
-        <div class="row">
             <div class="col-lg-4">
                 <div class="pricing-box mt-4">
                     <i class="mdi mdi-account h1"></i>
@@ -281,6 +233,55 @@
                         <!-- <a href="" class="btn btn-primary btn-rounded">Ambil Takhta Ini</a> -->
                         <!-- <a href="" class="btn btn-primary btn-rounded">Dapatkan Mahkota</a> -->
                     </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="pricing-box mt-4">
+                    <i class="mdi mdi-account h1"></i>
+                    <!-- <h4 class="f-20">Paket Kesatria Perintis (Dasar Gratis)</h4> -->
+                    <h4 class="f-20">Paket Pengembara (Dasar Gratis)</h4>
+
+                    <div class="mt-4 pt-2">
+                        <p class="mb-2 f-18">Fitur</p>
+
+                        <p class="mb-2"><i class="fa-solid fa-circle-check" style="color: #3ad29f;"></i> <b>Unlimited</b>
+                            Jurnal Arus Kas</p>
+                        <p class="mb-2"><i class="fa-solid fa-circle-check" style="color: #3ad29f;"></i> <b>Unlimited</b>
+                            Manajemen Penugasan (Tello)</p>
+                        <p class="mb-2"><i class="fa-solid fa-circle-check" style="color: #3ad29f;"></i> <b>1000</b>
+                            Invoice / Bulan</p>
+                        <p class="mb-2"><i class="fa-solid fa-circle-check" style="color: #3ad29f;"></i> <b>500</b>
+                            Digital Memorandum / Bulan</p>
+                        <p class="mb-2"><i class="fa-solid fa-circle-check" style="color: #3ad29f;"></i> <b>1000</b>
+                            Pengajuan Multi Layer Approval / Bulan</p>
+                        <p class="mb-2"><i class="fa-solid fa-circle-check" style="color: #3ad29f;"></i> <b>1000</b>
+                            Nota Penjualan / Bulan</p>
+                        <p class="mb-2"><i class="fa-solid fa-circle-check" style="color: #3ad29f;"></i> Jumlah Cabang <b>1</b></p>
+                        <p class="mb-2"><i class="fa-solid fa-circle-check" style="color: #3ad29f;"></i> <b>5</b> User</p>
+                        <p class="mb-2"><i class="fa-solid fa-circle-xmark text-danger f-18 mr-2"></i>Fitur
+                            <b>Premium</b>
+                        </p>
+                        <p class="mb-2"><i class="fa-solid fa-circle-xmark text-danger f-18 mr-2" style="color: #3ad29f;"></i> <b>Cuti Online</b></p>
+                        <p class="mb-2"><i class="fa-solid fa-circle-xmark text-danger f-18 mr-2" style="color: #3ad29f;"></i> <b>Absen Online (by Face Recognition & Geo-Location)</b></p>
+                        <p class="mb-2"><i class="fa-solid fa-circle-xmark text-danger f-18 mr-2" style="color: #3ad29f;"></i> <b>Surat-menyurat</b></p>
+                        <p class="mb-2"><i class="fa-solid fa-circle-xmark text-danger f-18 mr-2" style="color: #3ad29f;"></i> <b>Manajemen Aset & Otomasi Penyusutan</b></p>
+                        <p class="mb-2"><i class="fa-solid fa-circle-xmark text-danger f-18 mr-2" style="color: #3ad29f;"></i> <b>Fitur-fitur Premium Lainnya</b></p>
+                    </div>
+
+                    <!-- <p class="mt-4 pt-2 text-muted">Semper urna veal tempus pharetra elit habisse platea dictumst. </p> -->
+                    <!-- <p class="mt-4 pt-2 text-muted">Dirancang untuk para bangsawan muda yang mencari landasan kokoh. Dapatkan kendali penuh atas wilayah kecil Anda dan bangunlah kekuatan.</p> -->
+                    <div class="pricing-plan mt-4 pt-2">
+                        <!-- <h4 class="text-muted"><s> $9.99</s> <span class="plan pl-3 text-dark">$8.99 </span></h4> -->
+                        <span class="plan text-dark">Free </span>
+                        <!-- <p class="text-muted mb-0">Per Bulan</p> -->
+                    </div>
+
+
+                    <!-- <div class="mt-4 pt-3"> -->
+                    <!-- <a href="" class="btn btn-primary btn-rounded">Pilih Tahta</a> -->
+                    <!-- <a href="" class="btn btn-primary btn-rounded">Ambil Takhta Ini</a> -->
+                    <!-- <a href="" class="btn btn-primary btn-rounded">Dapatkan Mahkota</a> -->
+                    <!-- </div> -->
                 </div>
             </div>
         </div>
