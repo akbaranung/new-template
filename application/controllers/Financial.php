@@ -1985,9 +1985,16 @@ class Financial extends CI_Controller
     // kalau tidak 
 
     // J1: PAD berkurang sebesar nominal pendapatan, Pendapatan bertambah sebesar nominal pendapatan
-    $j1_coa_debit = $inv['coa_kredit'];
-    $j1_coa_kredit = $coa_kredit;
-    $this->posting($j1_coa_debit, $j1_coa_kredit, $keterangan, $inv['nominal_pendapatan'], $tanggal_bayar);
+    if ($nominal_bayar == $inv['nominal_pendapatan']) {
+      $j1_coa_debit = $inv['coa_kredit'];
+      $j1_coa_kredit = $coa_kredit;
+      $this->posting($j1_coa_debit, $j1_coa_kredit, $keterangan, $inv['nominal_pendapatan'], $tanggal_bayar);
+    } else {
+      $j1_coa_debit = $inv['coa_kredit'];
+      $j1_coa_kredit = $coa_kredit;
+      $this->posting($j1_coa_debit, $j1_coa_kredit, $keterangan, $nominal_bayar, $tanggal_bayar);
+    }
+
 
     // J3: Kas/Bank bertambah sebesar nominal bayar, piutang usaha keluaran berkurang sebesar nominal bayar
     $j1_coa_debit = $coa_debit;

@@ -302,6 +302,77 @@
       // var total = qty * harga;
       // row.find('input[name="newTotal[]"]').val(formatNumber(total));
     }
+
+    // Function to clean and convert number strings (e.g., "1.234.567" to 1234567)
+    function cleanAndParseNumber(value) {
+      // Remove commas (if any) and periods (if they are thousand separators)
+      // Then parse as a float
+      return parseFloat(value.replace(/\./g, '').replace(/,/g, ''));
+    }
+
+    // Use event delegation for inputs with name="nominal_bayar"
+    // This handles dynamically added rows as well
+    $(document).on('input change', 'input[name="nominal_bayar"]', function() {
+      var $this = $(this); // The current nominal_bayar input that changed
+      var currentId = $this.attr('id').replace('nominal_bayar', ''); // Extract the dynamic ID (e.g., '1' from 'nominal_bayar1')
+
+      // Get the corresponding piutang and status_bayar elements using the extracted ID
+      var $piutangInput = $('#piutang' + currentId);
+      var $statusBayarCheckbox = $('#status_bayar' + currentId);
+
+      // Get values and clean them for comparison
+      var nominalBayar = cleanAndParseNumber($this.val());
+      var piutang = cleanAndParseNumber($piutangInput.val());
+
+      // Compare the values
+      if (nominalBayar === piutang && piutang > 0) { // Add check for piutang > 0 to avoid checking if both are 0
+        $statusBayarCheckbox.prop('checked', true);
+      } else {
+        $statusBayarCheckbox.prop('checked', false);
+      }
+    });
+
+    // --- Your existing addRowInvoice/addRow function would be here ---
+    var rowCount = 1; // Inisialisasi row
+
+    $('#addRow').on('click', function() {
+      console.log('masuk');
+      var previousRow = $('.baris').last();
+      var inputs = previousRow.find('input[type="text"], input[type="datetime-local"]');
+      var isEmpty = false;
+
+      inputs.each(function() {
+        if ($(this).val().trim() === '' && $(this).attr('name') !== 'total_amount[]') { // Exclude readonly total_amount
+          isEmpty = true;
+          return false;
+        }
+      });
+
+      if (isEmpty) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Mohon isi semua input pada baris sebelumnya terlebih dahulu!',
+        });
+        return;
+      }
+
+      var newRow = previousRow.clone();
+
+      newRow.find('input').val('');
+      newRow.find('input[name="total[]"]').val('0');
+      newRow.find('input[name="jumlah[]"]').val('0');
+      newRow.find('input[name="total_amount[]"]').val('0');
+      newRow.find('input[type="checkbox"]').prop('checked', false); // Uncheck cloned checkbox
+
+      newRow.find('.hapusRow').removeClass('d-none');
+
+      previousRow.after(newRow);
+      rowCount++;
+    });
+    // --- End of existing addRowInvoice/addRow function ---
+
+    // Ensure SweetAlert2 and jQuery are loaded before this script.
   });
 </script>
 <script>

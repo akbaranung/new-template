@@ -50,6 +50,7 @@
                   <th>Tanggal</th>
                   <th>Customer</th>
                   <th>Total</th>
+                  <th>Outs</th>
                   <th>User</th>
                   <th>Stt. Bayar</th>
                   <th>Aksi</th>
@@ -64,6 +65,8 @@
                       <td><?= format_indo($i['tanggal_invoice']) ?></td>
                       <td><?= $i['nama_customer'] ?></td>
                       <td class="text-right"><?= number_format($i['total_nonpph'], 0) ?></td>
+                      <!-- <td class="text-right"><?= number_format($i['total_termin'], 0) ?></td> -->
+                      <td class="text-right"><?= number_format($i['total_nonpph'] - $i['total_termin'], 0) ?></td>
                       <td><?= isset($i['created_by_name']) ? $i['created_by_name'] : 'N/A' ?></td>
                       <?php
                       if ($i['status_void'] == "1") {
@@ -78,7 +81,8 @@
                       ?>
                         <td style="background-color: #95a5a6; color: white;">
                           <!-- <span class="badge badge-pill badge-success">Sudah dibayar</span> -->
-                          Sudah dibayar
+                          <!-- Sudah dibayar -->
+                          Lunas
                         </td>
                       <?php
                       }
