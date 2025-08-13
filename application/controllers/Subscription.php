@@ -27,7 +27,7 @@ class Subscription extends CI_Controller
         $data['utility'] = $this->db->get('utility')->row_array();
         $data['user'] = $this->db->get_where('users', ['nip' => $nip])->row_array();
         $data['pages'] = 'pages/subscription/v_upgrade';
-        // $data['pages_script'] = 'script/perusahaan/s_perusahaan';
+        $data['pages_script'] = 'script/subscription/s_upgrade';
         $data['menus'] = $this->M_menu->get_accessible_menus($nip);
 
         $this->load->view('index', $data);
