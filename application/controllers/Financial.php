@@ -88,152 +88,152 @@ class Financial extends CI_Controller
     $date->modify('first day of previous month');
     $periode = $date->format('Y-m');
 
-    // $cek = $this->M_coa->cek_saldo_awal($periode);
+    $cek = $this->M_coa->cek_saldo_awal($periode);
 
-    // if ($cek) {
-    $coaLastPeriod = json_decode($cek['coa']);
-    $filteredCoaAktiva = array_filter($coaLastPeriod, function ($item) {
-      return $item->posisi === 'AKTIVA' && $item->table_source === 't_coa_sbb';
-    });
+    if ($cek) {
+      $coaLastPeriod = json_decode($cek['coa']);
+      $filteredCoaAktiva = array_filter($coaLastPeriod, function ($item) {
+        return $item->posisi === 'AKTIVA' && $item->table_source === 't_coa_sbb';
+      });
 
-    $activa = $this->M_coa->getNeracaByDate('t_coa_sbb', 'AKTIVA', $tanggal, $periode);
-    $pasiva = $this->M_coa->getNeracaByDate('t_coa_sbb', 'PASIVA', $tanggal, $periode);
-    $pendapatan = $this->M_coa->getNeracaByDate('t_coalr_sbb', 'PASIVA', $tanggal, $periode);
-    $beban = $this->M_coa->getNeracaByDate('t_coalr_sbb', 'AKTIVA', $tanggal, $periode);
+      $activa = $this->M_coa->getNeracaByDate('t_coa_sbb', 'AKTIVA', $tanggal, $periode);
+      $pasiva = $this->M_coa->getNeracaByDate('t_coa_sbb', 'PASIVA', $tanggal, $periode);
+      $pendapatan = $this->M_coa->getNeracaByDate('t_coalr_sbb', 'PASIVA', $tanggal, $periode);
+      $beban = $this->M_coa->getNeracaByDate('t_coalr_sbb', 'AKTIVA', $tanggal, $periode);
 
-    // Part Aktiva
-    $combinedActiva = [];
+      // Part Aktiva
+      $combinedActiva = [];
 
-    foreach ($activa as $item) {
-      if (!isset($combinedActiva[$item->no_sbb])) {
-        $combinedActiva[$item->no_sbb] = (object) [
-          'no_sbb' => $item->no_sbb,
-          'saldo_awal' => $item->saldo_awal,
-        ];
-      } else {
-        $combinedActiva[$item->no_sbb]->saldo_awal += $item->saldo_awal;
+      foreach ($activa as $item) {
+        if (!isset($combinedActiva[$item->no_sbb])) {
+          $combinedActiva[$item->no_sbb] = (object) [
+            'no_sbb' => $item->no_sbb,
+            'saldo_awal' => $item->saldo_awal,
+          ];
+        } else {
+          $combinedActiva[$item->no_sbb]->saldo_awal += $item->saldo_awal;
+        }
       }
-    }
 
-    foreach ($filteredCoaAktiva as $item) {
-      if (!isset($combinedActiva[$item->no_sbb])) {
-        $combinedActiva[$item->no_sbb] = (object) [
-          'no_sbb' => $item->no_sbb,
-          'saldo_awal' => $item->saldo_awal,
-        ];
-      } else {
-        $combinedActiva[$item->no_sbb]->saldo_awal += $item->saldo_awal;
+      foreach ($filteredCoaAktiva as $item) {
+        if (!isset($combinedActiva[$item->no_sbb])) {
+          $combinedActiva[$item->no_sbb] = (object) [
+            'no_sbb' => $item->no_sbb,
+            'saldo_awal' => $item->saldo_awal,
+          ];
+        } else {
+          $combinedActiva[$item->no_sbb]->saldo_awal += $item->saldo_awal;
+        }
       }
-    }
 
-    usort($combinedActiva, function ($a, $b) {
-      return strcmp($a->no_sbb, $b->no_sbb);
-    });
-    $total_activa = array_sum(array_column($combinedActiva, 'saldo_awal'));
+      usort($combinedActiva, function ($a, $b) {
+        return strcmp($a->no_sbb, $b->no_sbb);
+      });
+      $total_activa = array_sum(array_column($combinedActiva, 'saldo_awal'));
 
-    // Part Pasiva
-    $filteredCoaPasiva = array_filter($coaLastPeriod, function ($item) {
-      return $item->posisi === 'PASIVA' && $item->table_source === 't_coa_sbb';
-    });
+      // Part Pasiva
+      $filteredCoaPasiva = array_filter($coaLastPeriod, function ($item) {
+        return $item->posisi === 'PASIVA' && $item->table_source === 't_coa_sbb';
+      });
 
-    $combinedPasiva = [];
+      $combinedPasiva = [];
 
-    foreach ($pasiva as $item) {
-      if (!isset($combinedPasiva[$item->no_sbb])) {
-        $combinedPasiva[$item->no_sbb] = (object) [
-          'no_sbb' => $item->no_sbb,
-          'saldo_awal' => $item->saldo_awal,
-        ];
-      } else {
-        $combinedPasiva[$item->no_sbb]->saldo_awal += $item->saldo_awal;
+      foreach ($pasiva as $item) {
+        if (!isset($combinedPasiva[$item->no_sbb])) {
+          $combinedPasiva[$item->no_sbb] = (object) [
+            'no_sbb' => $item->no_sbb,
+            'saldo_awal' => $item->saldo_awal,
+          ];
+        } else {
+          $combinedPasiva[$item->no_sbb]->saldo_awal += $item->saldo_awal;
+        }
       }
-    }
-    foreach ($filteredCoaPasiva as $item) {
-      if (!isset($combinedPasiva[$item->no_sbb])) {
-        $combinedPasiva[$item->no_sbb] = (object) [
-          'no_sbb' => $item->no_sbb,
-          'saldo_awal' => $item->saldo_awal,
-        ];
-      } else {
-        $combinedPasiva[$item->no_sbb]->saldo_awal += $item->saldo_awal;
+      foreach ($filteredCoaPasiva as $item) {
+        if (!isset($combinedPasiva[$item->no_sbb])) {
+          $combinedPasiva[$item->no_sbb] = (object) [
+            'no_sbb' => $item->no_sbb,
+            'saldo_awal' => $item->saldo_awal,
+          ];
+        } else {
+          $combinedPasiva[$item->no_sbb]->saldo_awal += $item->saldo_awal;
+        }
       }
-    }
 
-    usort($combinedPasiva, function ($a, $b) {
-      return strcmp($a->no_sbb, $b->no_sbb);
-    });
-    $total_pasiva = array_sum(array_column($combinedPasiva, 'saldo_awal'));
+      usort($combinedPasiva, function ($a, $b) {
+        return strcmp($a->no_sbb, $b->no_sbb);
+      });
+      $total_pasiva = array_sum(array_column($combinedPasiva, 'saldo_awal'));
 
-    // Part Pendapatan
-    $filteredCoaPendapatan = array_filter($coaLastPeriod, function ($item) {
-      return $item->posisi === 'PASIVA' && $item->table_source === 't_coalr_sbb';
-    });
-    $combinedPendapatan = [];
+      // Part Pendapatan
+      $filteredCoaPendapatan = array_filter($coaLastPeriod, function ($item) {
+        return $item->posisi === 'PASIVA' && $item->table_source === 't_coalr_sbb';
+      });
+      $combinedPendapatan = [];
 
-    foreach ($pendapatan as $item) {
-      if (!isset($combinedPendapatan[$item->no_sbb])) {
-        $combinedPendapatan[$item->no_sbb] = (object) [
-          'no_sbb' => $item->no_sbb,
-          'saldo_awal' => $item->saldo_awal,
-        ];
-      } else {
-        $combinedPendapatan[$item->no_sbb]->saldo_awal += $item->saldo_awal;
+      foreach ($pendapatan as $item) {
+        if (!isset($combinedPendapatan[$item->no_sbb])) {
+          $combinedPendapatan[$item->no_sbb] = (object) [
+            'no_sbb' => $item->no_sbb,
+            'saldo_awal' => $item->saldo_awal,
+          ];
+        } else {
+          $combinedPendapatan[$item->no_sbb]->saldo_awal += $item->saldo_awal;
+        }
       }
-    }
-    foreach ($filteredCoaPendapatan as $item) {
-      if (!isset($combinedPendapatan[$item->no_sbb])) {
-        $combinedPendapatan[$item->no_sbb] = (object) [
-          'no_sbb' => $item->no_sbb,
-          'saldo_awal' => $item->saldo_awal,
-        ];
-      } else {
-        $combinedPendapatan[$item->no_sbb]->saldo_awal += $item->saldo_awal;
+      foreach ($filteredCoaPendapatan as $item) {
+        if (!isset($combinedPendapatan[$item->no_sbb])) {
+          $combinedPendapatan[$item->no_sbb] = (object) [
+            'no_sbb' => $item->no_sbb,
+            'saldo_awal' => $item->saldo_awal,
+          ];
+        } else {
+          $combinedPendapatan[$item->no_sbb]->saldo_awal += $item->saldo_awal;
+        }
       }
-    }
-    $total_pendapatan = array_sum(array_column($combinedPendapatan, 'saldo_awal'));
+      $total_pendapatan = array_sum(array_column($combinedPendapatan, 'saldo_awal'));
 
-    // Part Beban
-    $filteredCoaBeban = array_filter($coaLastPeriod, function ($item) {
-      return $item->posisi === 'AKTIVA' && $item->table_source === 't_coalr_sbb';
-    });
+      // Part Beban
+      $filteredCoaBeban = array_filter($coaLastPeriod, function ($item) {
+        return $item->posisi === 'AKTIVA' && $item->table_source === 't_coalr_sbb';
+      });
 
-    $combinedBeban = [];
+      $combinedBeban = [];
 
-    foreach ($beban as $item) {
-      if (!isset($combinedBeban[$item->no_sbb])) {
-        $combinedBeban[$item->no_sbb] = (object) [
-          'no_sbb' => $item->no_sbb,
-          'saldo_awal' => $item->saldo_awal,
-        ];
-      } else {
-        $combinedBeban[$item->no_sbb]->saldo_awal += $item->saldo_awal;
+      foreach ($beban as $item) {
+        if (!isset($combinedBeban[$item->no_sbb])) {
+          $combinedBeban[$item->no_sbb] = (object) [
+            'no_sbb' => $item->no_sbb,
+            'saldo_awal' => $item->saldo_awal,
+          ];
+        } else {
+          $combinedBeban[$item->no_sbb]->saldo_awal += $item->saldo_awal;
+        }
       }
-    }
-    foreach ($filteredCoaBeban as $item) {
-      if (!isset($combinedBeban[$item->no_sbb])) {
-        $combinedBeban[$item->no_sbb] = (object) [
-          'no_sbb' => $item->no_sbb,
-          'saldo_awal' => $item->saldo_awal,
-        ];
-      } else {
-        $combinedBeban[$item->no_sbb]->saldo_awal += $item->saldo_awal;
+      foreach ($filteredCoaBeban as $item) {
+        if (!isset($combinedBeban[$item->no_sbb])) {
+          $combinedBeban[$item->no_sbb] = (object) [
+            'no_sbb' => $item->no_sbb,
+            'saldo_awal' => $item->saldo_awal,
+          ];
+        } else {
+          $combinedBeban[$item->no_sbb]->saldo_awal += $item->saldo_awal;
+        }
       }
+
+      $total_beban = array_sum(array_column($combinedBeban, 'saldo_awal'));
+
+      $laba = $total_pendapatan - $total_beban;
+      $sum_pasiva = $total_pasiva + $laba;
+
+      $data['activa'] = $combinedActiva;
+      $data['sum_activa'] = $total_activa;
+      $data['pasiva'] = $combinedPasiva;
+      $data['laba'] = $laba;
+      $data['sum_pasiva'] = $sum_pasiva;
+      $data['neraca'] = $sum_pasiva - $total_activa;
+    } else {
+      $this->session->set_flashdata('message_error', 'Closing bulan ' . format_indo($periode) . ' tidak ditemukan');
     }
-
-    $total_beban = array_sum(array_column($combinedBeban, 'saldo_awal'));
-
-    $laba = $total_pendapatan - $total_beban;
-    $sum_pasiva = $total_pasiva + $laba;
-
-    $data['activa'] = $combinedActiva;
-    $data['sum_activa'] = $total_activa;
-    $data['pasiva'] = $combinedPasiva;
-    $data['laba'] = $laba;
-    $data['sum_pasiva'] = $sum_pasiva;
-    $data['neraca'] = $sum_pasiva - $total_activa;
-    // } else {
-    //   $this->session->set_flashdata('message_error', 'Closing bulan ' . format_indo($periode) . ' tidak ditemukan');
-    // }
 
     $data['title'] = 'Neraca per tanggal ' . format_indo($tanggal);
     $data['utility'] = $this->db->get('utility')->row_array();
@@ -506,84 +506,84 @@ class Financial extends CI_Controller
     $date->modify('first day of previous month');
     $periode = $date->format('Y-m');
 
-    $cek = $this->M_coa->cek_saldo_awal($periode);
+    // $cek = $this->M_coa->cek_saldo_awal($periode);
 
     $data['total_pendapatan'] = 0;
     $data['sum_biaya'] = 0;
     $data['sum_pendapatan'] = 0;
     $data['biaya'] = [];
     $data['pendapatan'] = [];
-    if ($cek) {
-      $coaLastPeriod = json_decode($cek['coa']);
+    // if ($cek) {
+    // $coaLastPeriod = json_decode($cek['coa']);
 
-      $pendapatan = $this->M_coa->getNeracaByDate('t_coalr_sbb', 'PASIVA', $tanggal, $periode);
-      $beban = $this->M_coa->getNeracaByDate('t_coalr_sbb', 'AKTIVA', $tanggal, $periode);
+    $pendapatan = $this->M_coa->getNeracaByDate('t_coalr_sbb', 'PASIVA', $tanggal, $periode);
+    $beban = $this->M_coa->getNeracaByDate('t_coalr_sbb', 'AKTIVA', $tanggal, $periode);
 
-      // Part Pendapatan
-      // $filteredCoaPendapatan = array_filter($coaLastPeriod, function ($item) {
-      //   return $item->posisi === 'PASIVA' && $item->table_source === 't_coalr_sbb';
-      // });
-      $combinedPendapatan = [];
+    // Part Pendapatan
+    // $filteredCoaPendapatan = array_filter($coaLastPeriod, function ($item) {
+    //   return $item->posisi === 'PASIVA' && $item->table_source === 't_coalr_sbb';
+    // });
+    $combinedPendapatan = [];
 
-      foreach ($pendapatan as $item) {
-        if (!isset($combinedPendapatan[$item->no_sbb])) {
-          $combinedPendapatan[$item->no_sbb] = (object) [
-            'no_sbb' => $item->no_sbb,
-            'saldo_awal' => $item->saldo_awal,
-          ];
-        } else {
-          $combinedPendapatan[$item->no_sbb]->saldo_awal += $item->saldo_awal;
-        }
+    foreach ($pendapatan as $item) {
+      if (!isset($combinedPendapatan[$item->no_sbb])) {
+        $combinedPendapatan[$item->no_sbb] = (object) [
+          'no_sbb' => $item->no_sbb,
+          'saldo_awal' => $item->saldo_awal,
+        ];
+      } else {
+        $combinedPendapatan[$item->no_sbb]->saldo_awal += $item->saldo_awal;
       }
-      // foreach ($filteredCoaPendapatan as $item) {
-      //   if (!isset($combinedPendapatan[$item->no_sbb])) {
-      //     $combinedPendapatan[$item->no_sbb] = (object) [
-      //       'no_sbb' => $item->no_sbb,
-      //       'saldo_awal' => $item->saldo_awal,
-      //     ];
-      //   } else {
-      //     $combinedPendapatan[$item->no_sbb]->saldo_awal += $item->saldo_awal;
-      //   }
-      // }
-      $total_pendapatan = array_sum(array_column($combinedPendapatan, 'saldo_awal'));
-
-      // Part Beban
-      $filteredCoaBeban = array_filter($coaLastPeriod, function ($item) {
-        return $item->posisi === 'AKTIVA' && $item->table_source === 't_coalr_sbb';
-      });
-
-      $combinedBeban = [];
-
-      foreach ($beban as $item) {
-        if (!isset($combinedBeban[$item->no_sbb])) {
-          $combinedBeban[$item->no_sbb] = (object) [
-            'no_sbb' => $item->no_sbb,
-            'saldo_awal' => $item->saldo_awal,
-          ];
-        } else {
-          $combinedBeban[$item->no_sbb]->saldo_awal += $item->saldo_awal;
-        }
-      }
-      foreach ($filteredCoaBeban as $item) {
-        if (!isset($combinedBeban[$item->no_sbb])) {
-          $combinedBeban[$item->no_sbb] = (object) [
-            'no_sbb' => $item->no_sbb,
-            'saldo_awal' => $item->saldo_awal,
-          ];
-        } else {
-          $combinedBeban[$item->no_sbb]->saldo_awal += $item->saldo_awal;
-        }
-      }
-      $total_beban = array_sum(array_column($combinedBeban, 'saldo_awal'));
-
-      $data['biaya'] = $combinedBeban;
-      $data['pendapatan'] = $combinedPendapatan;
-      $data['sum_biaya'] = $total_beban;
-      $data['sum_pendapatan'] = $total_pendapatan;
-      $data['total_pendapatan'] = $total_pendapatan - $total_beban;
-    } else {
-      $this->session->set_flashdata('message_error', 'Closing bulan ' . format_indo($periode) . ' tidak ditemukan');
     }
+    // foreach ($filteredCoaPendapatan as $item) {
+    //   if (!isset($combinedPendapatan[$item->no_sbb])) {
+    //     $combinedPendapatan[$item->no_sbb] = (object) [
+    //       'no_sbb' => $item->no_sbb,
+    //       'saldo_awal' => $item->saldo_awal,
+    //     ];
+    //   } else {
+    //     $combinedPendapatan[$item->no_sbb]->saldo_awal += $item->saldo_awal;
+    //   }
+    // }
+    $total_pendapatan = array_sum(array_column($combinedPendapatan, 'saldo_awal'));
+
+    // Part Beban
+    // $filteredCoaBeban = array_filter($coaLastPeriod, function ($item) {
+    //   return $item->posisi === 'AKTIVA' && $item->table_source === 't_coalr_sbb';
+    // });
+
+    $combinedBeban = [];
+
+    foreach ($beban as $item) {
+      if (!isset($combinedBeban[$item->no_sbb])) {
+        $combinedBeban[$item->no_sbb] = (object) [
+          'no_sbb' => $item->no_sbb,
+          'saldo_awal' => $item->saldo_awal,
+        ];
+      } else {
+        $combinedBeban[$item->no_sbb]->saldo_awal += $item->saldo_awal;
+      }
+    }
+    // foreach ($filteredCoaBeban as $item) {
+    //   if (!isset($combinedBeban[$item->no_sbb])) {
+    //     $combinedBeban[$item->no_sbb] = (object) [
+    //       'no_sbb' => $item->no_sbb,
+    //       'saldo_awal' => $item->saldo_awal,
+    //     ];
+    //   } else {
+    //     $combinedBeban[$item->no_sbb]->saldo_awal += $item->saldo_awal;
+    //   }
+    // }
+    $total_beban = array_sum(array_column($combinedBeban, 'saldo_awal'));
+
+    $data['biaya'] = $combinedBeban;
+    $data['pendapatan'] = $combinedPendapatan;
+    $data['sum_biaya'] = $total_beban;
+    $data['sum_pendapatan'] = $total_pendapatan;
+    $data['total_pendapatan'] = $total_pendapatan - $total_beban;
+    // } else {
+    //   $this->session->set_flashdata('message_error', 'Closing bulan ' . format_indo($periode) . ' tidak ditemukan');
+    // }
 
     // print_r($data['total_pendapatan']);
     // exit;
