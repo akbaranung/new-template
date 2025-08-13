@@ -99,6 +99,44 @@
                                 </div>
                                 <form action="<?= base_url('financial/paid/' . $i['Id']) ?>" method="post">
                                   <div class="modal-body">
+                                    <div class="table-responsive">
+                                      <table class="table table-hover">
+                                        <thead>
+                                          <tr>
+                                            <th>#</th>
+                                            <th>Tanggal</th>
+                                            <th>Nominal</th>
+                                            <th>Keterangan</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          <?php
+                                          $no = 1;
+                                          $list = $this->cb->where('id_invoice', $i['Id'])->get('t_log_pembayaran')->result();
+
+                                          if ($list) {
+
+                                            foreach ($list as $l) : ?>
+                                              <tr>
+                                                <td><?= $no++; ?></td>
+                                                <td><?= format_indo($l->created_at) ?></td>
+                                                <td><?= number_format($l->nominal_bayar) ?></td>
+                                                <td><?= $l->keterangan ?></td>
+                                              </tr>
+                                            <?php
+                                            endforeach;
+                                          } else {
+                                            ?>
+                                            <tr>
+                                              <td colspan="3">Tidak ada riwayat pembayaran</td>
+                                            </tr>
+                                          <?php
+                                          }
+
+                                          ?>
+                                        </tbody>
+                                      </table>
+                                    </div>
                                     <div class="row">
                                       <div class="col-sm-6 col-xs-12">
                                         <div class="form-group">
