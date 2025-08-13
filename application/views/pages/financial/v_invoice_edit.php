@@ -9,7 +9,9 @@
           </p>
         </div> -->
         <div class="card-body">
-          <form class="form-horizontal form-label-left" method="POST" action="<?= base_url('financial/update_invoice/' . $inv['Id']) ?>">
+          <a href="<?= base_url('financial/invoice') ?>" class="btn btn-sm btn-warning"><i class="bi bi-arrow-return-left"></i> Back</a>
+
+          <form class="form-horizontal form-label-left mt-2" method="POST" action="<?= base_url('financial/update_invoice/' . $inv['Id']) ?>">
             <div class="form-group row">
               <div class="col-md-2 col-xs-12">
                 <label for="no_invoice" class="form-label">Number</label>
@@ -129,8 +131,8 @@
               <div class="col-md-2 col-xs-12 text-right">
                 <label for="keterangan" class="form-label">&nbsp;</label>
                 <div class="mt-2">
-                  <a href="<?= base_url('financial/invoice') ?>" class="btn btn-sm btn-warning"><i class="bi bi-arrow-return-left"></i> Back</a>
-                  <button type="submit" class="btn btn-primary btn-sm">Save <i class="bi bi-save"></i></button>
+                  <!-- <a href="<?= base_url('financial/invoice') ?>" class="btn btn-sm btn-warning"><i class="bi bi-arrow-return-left"></i> Back</a> -->
+                  <!-- <button type="submit" class="btn btn-primary btn-sm">Save <i class="bi bi-save"></i></button> -->
                 </div>
               </div>
             </div>
@@ -162,7 +164,9 @@
                         <input type="text" class="form-control" name="total_amount[]" value="<?= number_format($d->total_amount, 0, ",", ",") ?>" readonly>
                       </td>
                       <td>
-                        <button type="button" class="btn btn-danger btn-sm hapusRow">Hapus</button>
+                        <button type="button" class="btn btn-danger btn-sm hapusRow d-none">Hapus</button>
+                        <br>
+                        <button type="button" class="btn btn-secondary btn-sm mt-2" id="addRow"><i class="fe fe-plus"></i></button>
                       </td>
                     </tr>
                   <?php
@@ -193,7 +197,8 @@
             </table>
             <div class="row">
               <div class="col-lg-12 text-end">
-                <button type="button" class="btn btn-secondary btn-sm" id="addRow">Add new row</button>
+                <button type="submit" class="btn btn-primary btn-sm">Save <i class="bi bi-save"></i></button>
+                <!-- <button type="button" class="btn btn-secondary btn-sm" id="addRow">Add new row</button> -->
               </div>
             </div>
           </form>

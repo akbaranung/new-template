@@ -68,7 +68,7 @@
                       <?php
                       if ($i['status_void'] == "1") {
                       ?>
-                        <td style="background-color: #1c252dff; color:white">
+                        <td style="background-color: #1c252dff; color: white;">
                           <span class="badge badge-pill badge-danger" data-toggle="tooltip" data-placement="right" title="" data-original-title="Alasan: <?= $i['alasan_void'] ?>">Sudah divoid</span>
                         </td>
                       <?php
@@ -76,7 +76,7 @@
 
                       if ($i['status_bayar'] == "1") {
                       ?>
-                        <td style="background-color: #95a5a6; color:white">
+                        <td style="background-color: #95a5a6; color: white;">
                           <!-- <span class="badge badge-pill badge-success">Sudah dibayar</span> -->
                           Sudah dibayar
                         </td>
@@ -85,7 +85,7 @@
 
                       if ($i['status_bayar'] == "0" and $i['status_void'] != "1") {
                         $piutang = $i['total_denganpph'] - $i['total_termin']; ?>
-                        <td style="background-color: #3f51b5; color:white">
+                        <td style="background-color: #2a3844ff;">
                           <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#void<?= $i['Id'] ?>">Void</a>
                           <a href="#" class="btn btn-info" data-toggle="modal" data-target="#modal<?= $i['Id'] ?>">Bayar</a>
 
@@ -195,7 +195,7 @@
                                     <div class="row">
                                       <div class="col-sm-12 col-xs-12">
                                         <div class="form-group">
-                                          <label for="keterangan" class="form-label">Keterangan</label>
+                                          <label for="keterangan" class="form-label">Alasan Void</label>
                                           <textarea name="keterangan" id="keterangan" class="form-control uppercase" required></textarea>
                                         </div>
                                       </div>
