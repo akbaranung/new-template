@@ -322,7 +322,16 @@
                                   <?php if ($parent_menu->premium == 1) {
                                     echo $this->session->userdata('is_premium') == $parent_menu->premium ? '' : 'disabled';
                                   } ?>
-                                  <?= ($parent_menu->premium == 1 || $parent_menu->menu_name == "Menu Admin" || $parent_menu->menu_name == "Menu Perusahaan") ? "" : "Checked" ?>
+                                  <?php
+                                  if ($parent_menu->premium == 1 && !$this->session->userdata('is_premium')) {
+                                  } else if ($parent_menu->menu_name == "Menu Admin" || $parent_menu->menu_name == "Menu Perusahaan") {
+                                  } else if ($this->uri->segment(4) == "Manager" && $parent_menu->menu_name == "Financial") {
+                                  } else if ($this->uri->segment(4) == "Staff" && $parent_menu->menu_name == "Financial") {
+                                  } else {
+                                    echo "Checked";
+                                  }
+                                  ?>
+
 
                                   value="<?= html_escape($parent_menu->Id); ?>"
                                   id="menu_<?= html_escape($parent_menu->Id); ?>">
@@ -366,8 +375,13 @@
                                               echo "Checked";
                                             }
                                           } else if ($parent_menu->menu_name == "Menu Admin" || $parent_menu->menu_name == "Menu Perusahaan") {
-                                          } else if ($this->session->userdata('is_premium') != $parent_menu->premium) {
+                                          } else if ($this->uri->segment(4) == "Manager" && $parent_menu->menu_name == "Financial") {
+                                          } else if ($this->uri->segment(4) == "Staff" && $parent_menu->menu_name == "Financial") {
+                                          } else if ($this->session->userdata('is_premium') && $parent_menu->premium == 1) {
                                             // continue;
+                                            echo "Checked";
+                                          } else if (!$this->session->userdata('is_premium') && $parent_menu->premium == 1) {
+                                            // echo "Checked";
                                           } else {
                                             echo "Checked";
                                           }
