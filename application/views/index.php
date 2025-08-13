@@ -143,11 +143,11 @@
   // echo '</pre>';
 
   // You can also check individual flashdata items
-  if ($this->session->flashdata('swal_type')) {
-    echo '<p>Swal Type (from flashdata): ' . $this->session->flashdata('swal_type') . '</p>';
-  } else {
-    echo '<p>Swal Type (from flashdata): NOT SET</p>';
-  }
+  // if ($this->session->flashdata('swal_type')) {
+  //   echo '<p>Swal Type (from flashdata): ' . $this->session->flashdata('swal_type') . '</p>';
+  // } else {
+  //   echo '<p>Swal Type (from flashdata): NOT SET</p>';
+  // }
   // --- End Debugging Flashdata ---
   ?>
 
