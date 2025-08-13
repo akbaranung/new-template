@@ -86,8 +86,8 @@
                       if ($i['status_bayar'] == "0" and $i['status_void'] != "1") {
                         $piutang = $i['total_denganpph'] - $i['total_termin']; ?>
                         <td style="background-color: #3f51b5; color:white">
-                          <a href="#" class="badge btn-danger" data-toggle="modal" data-target="#void<?= $i['Id'] ?>">Void</a>
-                          <a href="#" class="badge btn-primary" data-toggle="modal" data-target="#modal<?= $i['Id'] ?>">Bayar</a>
+                          <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#void<?= $i['Id'] ?>">Void</a>
+                          <a href="#" class="btn btn-info" data-toggle="modal" data-target="#modal<?= $i['Id'] ?>">Bayar</a>
 
                           <div class="modal fade" id="modal<?= $i['Id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
                             <div class="modal-dialog modal-lg">
