@@ -166,8 +166,9 @@
                   </td>
                   <td>
                     <!-- <button type="button" class="btn btn-secondary btn-sm" id="addRow">Add new row</button> -->
-                    <button type="button" class="btn btn-secondary btn-sm" id="addRow"><i class="fe fe-plus"></i></button>
                     <button type="button" class="btn btn-danger btn-sm hapusRow">Hapus</button>
+                    <br>
+                    <button type="button" class="btn btn-secondary btn-sm mt-2" id="addRow"><i class="fe fe-plus"></i></button>
                   </td>
                 </tr>
               </tbody>
