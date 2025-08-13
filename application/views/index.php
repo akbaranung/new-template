@@ -137,10 +137,10 @@
   // application/views/your_main_template.php (or header/footer)
 
   // --- Debugging Flashdata ---
-  echo '<pre>';
-  echo '<h3>Flashdata on this page load:</h3>';
-  var_dump($this->session->flashdata());
-  echo '</pre>';
+  // echo '<pre>';
+  // echo '<h3>Flashdata on this page load:</h3>';
+  // var_dump($this->session->flashdata());
+  // echo '</pre>';
 
   // You can also check individual flashdata items
   if ($this->session->flashdata('swal_type')) {

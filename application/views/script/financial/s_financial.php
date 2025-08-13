@@ -36,6 +36,7 @@
       newRow.find('input[name="total_amount[]"]').val('0');
       // Show the 'Hapus' button by removing the 'd-none' class
       newRow.find('.hapusRow').removeClass('d-none');
+      newRow.find('.brRow').removeClass('d-none');
 
       // Perbarui tag <h4> pada baris baru dengan nomor urut yang baru
       rowCount++;

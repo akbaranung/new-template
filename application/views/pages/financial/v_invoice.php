@@ -246,7 +246,7 @@
           </div>
           <div class="row">
             <div class="col-md-6">
-              <h6>*klik nomor invoice untuk lihat detail invoice</h6>
+              <!-- <h6>*klik nomor invoice untuk lihat detail invoice</h6> -->
             </div>
             <div class="col-md-6 text-right">
               <?= $this->pagination->create_links() ?>
