@@ -419,7 +419,7 @@
                     <!-- <p class="mt-4 pt-2 text-muted">Dirancang untuk para bangsawan muda yang mencari landasan kokoh. Dapatkan kendali penuh atas wilayah kecil Anda dan bangunlah kekuatan.</p> -->
                     <div class="pricing-plan pt-2">
                         <!-- <h4 class="text-muted"><s> $9.99</s> <span class="plan pl-3 text-dark">$8.99 </span></h4> -->
-                        <span class="plan text-dark">Free </span>
+                        <span class="plan text-dark">Gratis </span>
                         <!-- <p class="text-muted mb-0">Per Bulan</p> -->
                     </div>
 
