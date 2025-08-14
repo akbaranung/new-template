@@ -122,6 +122,10 @@
         /* Adds a shadow for a "lifted" effect */
         z-index: 1;
     }
+
+    .text-bariskode {
+        color: #3f51b5;
+    }
 </style>
 
 <section class="section" id="pricing">
@@ -165,13 +169,13 @@
 
                     <!-- <p class="mt-4 pt-2 text-muted">Semper urna veal tempus pharetra elit habisse platea dictumst. </p> -->
                     <!-- <p class="mt-4 pt-2 text-muted">Dirancang untuk para bangsawan muda yang mencari landasan kokoh. Dapatkan kendali penuh atas wilayah kecil Anda dan bangunlah kekuatan.</p> -->
-                    <div class="pricing-plan mt-4 pt-2">
+                    <div class="pricing-plan pt-2">
                         <!-- <h4 class="text-muted"><s> $9.99</s> <span class="plan pl-3 text-dark">$8.99 </span></h4> -->
-                        <span class="plan text-dark">Rp. 300rb</span>
+                        <span class="plan text-bariskode">Rp. 300rb</span>
                         <p class="text-muted mb-0">Per Bulan</p>
                     </div>
 
-                    <div class="mt-4 pt-2">
+                    <div class="mt-1 pt-2">
                         <p class="mb-2 f-18">Fitur</p>
 
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
@@ -217,13 +221,13 @@
 
                     <!-- <p class="mt-4 pt-2 text-muted">Semper urna veal tempus pharetra elit habisse platea dictumst. </p> -->
                     <!-- <p class="mt-4 pt-2 text-muted">Dirancang untuk para bangsawan muda yang mencari landasan kokoh. Dapatkan kendali penuh atas wilayah kecil Anda dan bangunlah kekuatan.</p> -->
-                    <div class="pricing-plan mt-4 pt-2">
+                    <div class="pricing-plan pt-2">
                         <!-- <h4 class="text-muted"><s> $9.99</s> <span class="plan pl-3 text-dark">$8.99 </span></h4> -->
-                        <span class="plan text-dark">Rp. 500rb</span>
+                        <span class="plan text-bariskode">Rp. 500rb</span>
                         <p class="text-muted mb-0">Per Bulan</p>
                     </div>
 
-                    <div class="mt-4 pt-2">
+                    <div class="mt-1 pt-2">
                         <p class="mb-2 f-18">Fitur</p>
 
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
@@ -266,13 +270,13 @@
 
                     <!-- <p class="mt-4 pt-2 text-muted">Semper urna veal tempus pharetra elit habisse platea dictumst. </p> -->
                     <!-- <p class="mt-4 pt-2 text-muted">Dirancang untuk para bangsawan muda yang mencari landasan kokoh. Dapatkan kendali penuh atas wilayah kecil Anda dan bangunlah kekuatan.</p> -->
-                    <div class="pricing-plan mt-4 pt-2">
+                    <div class="pricing-plan pt-2">
                         <!-- <h4 class="text-muted"><s> $9.99</s> <span class="plan pl-3 text-dark">$8.99 </span></h4> -->
-                        <span class="plan text-dark">Rp. 1jt</span>
+                        <span class="plan text-bariskode">Rp. 1jt</span>
                         <p class="text-muted mb-0">Per Bulan</p>
                     </div>
 
-                    <div class="mt-4 pt-2">
+                    <div class="mt-1 pt-2">
                         <p class="mb-2 f-18">Fitur</p>
 
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
@@ -313,17 +317,17 @@
 
                     <!-- <p class="mt-4 pt-2 text-muted">Semper urna veal tempus pharetra elit habisse platea dictumst. </p> -->
                     <!-- <p class="mt-4 pt-2 text-muted">Dirancang untuk para bangsawan muda yang mencari landasan kokoh. Dapatkan kendali penuh atas wilayah kecil Anda dan bangunlah kekuatan.</p> -->
-                    <div class="pricing-plan mt-4 pt-2">
+                    <div class="pricing-plan pt-2">
                         <!-- <h4 class="text-muted"><s> $9.99</s> <span class="plan pl-3 text-dark">$8.99 </span></h4> -->
-                        <span class="plan text-dark">Rp.
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" height="64" width="64"><!--!Font Awesome Free v7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
-                                <path d="M0 320C0 231.6 71.6 160 160 160C210.4 160 257.8 183.7 288 224L320 266.7L352 224C382.2 183.7 429.6 160 480 160C568.4 160 640 231.6 640 320C640 408.4 568.4 480 480 480C429.6 480 382.2 456.3 352 416L320 373.3L288 416C257.8 456.3 210.4 480 160 480C71.6 480 0 408.4 0 320zM280 320L236.8 262.4C218.7 238.2 190.2 224 160 224C107 224 64 267 64 320C64 373 107 416 160 416C190.2 416 218.7 401.8 236.8 377.6L280 320zM360 320L403.2 377.6C421.3 401.8 449.8 416 480 416C533 416 576 373 576 320C576 267 533 224 480 224C449.8 224 421.3 238.2 403.2 262.4L360 320z" />
+                        <span class="plan text-bariskode">Rp.
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" height="64" width="64" style="color: #3f51b5;"><!--!Font Awesome Free v7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
+                                <path fill="#3f51b5" d="M0 320C0 231.6 71.6 160 160 160C210.4 160 257.8 183.7 288 224L320 266.7L352 224C382.2 183.7 429.6 160 480 160C568.4 160 640 231.6 640 320C640 408.4 568.4 480 480 480C429.6 480 382.2 456.3 352 416L320 373.3L288 416C257.8 456.3 210.4 480 160 480C71.6 480 0 408.4 0 320zM280 320L236.8 262.4C218.7 238.2 190.2 224 160 224C107 224 64 267 64 320C64 373 107 416 160 416C190.2 416 218.7 401.8 236.8 377.6L280 320zM360 320L403.2 377.6C421.3 401.8 449.8 416 480 416C533 416 576 373 576 320C576 267 533 224 480 224C449.8 224 421.3 238.2 403.2 262.4L360 320z" />
                             </svg>
                         </span>
                         <p class="text-muted mb-0">Per Bulan</p>
                     </div>
 
-                    <div class="mt-4 pt-2">
+                    <div class="mt-1 pt-2">
                         <p class="mb-2 f-18">Fitur</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Full Customize
                             </b></p>
@@ -366,7 +370,16 @@
                     <!-- <h4 class="f-20">Paket Kesatria Perintis (Dasar Gratis)</h4> -->
                     <h4 class="f-20">Jiwa Pengembara</h4>
 
-                    <div class="mt-4 pt-2">
+
+                    <!-- <p class="mt-4 pt-2 text-muted">Semper urna veal tempus pharetra elit habisse platea dictumst. </p> -->
+                    <!-- <p class="mt-4 pt-2 text-muted">Dirancang untuk para bangsawan muda yang mencari landasan kokoh. Dapatkan kendali penuh atas wilayah kecil Anda dan bangunlah kekuatan.</p> -->
+                    <div class="pricing-plan pt-2">
+                        <!-- <h4 class="text-muted"><s> $9.99</s> <span class="plan pl-3 text-dark">$8.99 </span></h4> -->
+                        <span class="plan text-dark">Free </span>
+                        <!-- <p class="text-muted mb-0">Per Bulan</p> -->
+                    </div>
+
+                    <div class="mt-1 pt-2">
                         <p class="mb-2 f-18">Fitur</p>
 
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
@@ -383,23 +396,16 @@
                             Nota Penjualan / Bulan</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> Jumlah Cabang <b>1</b></p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>5</b> User</p>
-                        <p class="mb-2"><i class="fa-solid fa-circle-xmark text-danger f-18 mr-2"></i>Fitur
+                        <p class="mb-2"><i class="fa-solid fa-xmark fa-lg text-danger f-18 mr-2"></i>Fitur
                             <b>Premium</b>
                         </p>
-                        <p class="mb-2"><i class="fa-solid fa-circle-xmark text-danger f-18 mr-2" style="color: #3ad29f;"></i> <b>Cuti Online</b></p>
-                        <p class="mb-2"><i class="fa-solid fa-circle-xmark text-danger f-18 mr-2" style="color: #3ad29f;"></i> <b>Absen Online (by Face Recognition & Geo-Location)</b></p>
-                        <p class="mb-2"><i class="fa-solid fa-circle-xmark text-danger f-18 mr-2" style="color: #3ad29f;"></i> <b>Surat-menyurat</b></p>
-                        <p class="mb-2"><i class="fa-solid fa-circle-xmark text-danger f-18 mr-2" style="color: #3ad29f;"></i> <b>Manajemen Aset & Otomasi Penyusutan</b></p>
-                        <p class="mb-2"><i class="fa-solid fa-circle-xmark text-danger f-18 mr-2" style="color: #3ad29f;"></i> <b>Fitur-fitur Premium Lainnya</b></p>
+                        <p class="mb-2"><i class="fa-solid fa-xmark fa-lg text-danger f-18 mr-2" style="color: #3ad29f;"></i> <b>Cuti Online</b></p>
+                        <p class="mb-2"><i class="fa-solid fa-xmark fa-lg text-danger f-18 mr-2" style="color: #3ad29f;"></i> <b>Absen Online (by Face Recognition & Geo-Location)</b></p>
+                        <p class="mb-2"><i class="fa-solid fa-xmark fa-lg text-danger f-18 mr-2" style="color: #3ad29f;"></i> <b>Surat-menyurat</b></p>
+                        <p class="mb-2"><i class="fa-solid fa-xmark fa-lg text-danger f-18 mr-2" style="color: #3ad29f;"></i> <b>Manajemen Aset & Otomasi Penyusutan</b></p>
+                        <p class="mb-2"><i class="fa-solid fa-xmark fa-lg text-danger f-18 mr-2" style="color: #3ad29f;"></i> <b>Fitur-fitur Premium Lainnya</b></p>
                     </div>
 
-                    <!-- <p class="mt-4 pt-2 text-muted">Semper urna veal tempus pharetra elit habisse platea dictumst. </p> -->
-                    <!-- <p class="mt-4 pt-2 text-muted">Dirancang untuk para bangsawan muda yang mencari landasan kokoh. Dapatkan kendali penuh atas wilayah kecil Anda dan bangunlah kekuatan.</p> -->
-                    <div class="pricing-plan mt-4 pt-2">
-                        <!-- <h4 class="text-muted"><s> $9.99</s> <span class="plan pl-3 text-dark">$8.99 </span></h4> -->
-                        <span class="plan text-dark">Free </span>
-                        <!-- <p class="text-muted mb-0">Per Bulan</p> -->
-                    </div>
 
 
                     <!-- <div class="mt-4 pt-3"> -->
