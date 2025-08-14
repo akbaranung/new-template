@@ -14,10 +14,6 @@
         height: 100%;
         /* Ensures the box fills the full height of its stretched parent column */
         /* --- REMOVE any 'display: flex', 'flex-direction', 'justify-content' from .pricing-box if you added them --- */
-
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        z-index: 1;
-        /* Ensures the hovered box is on top of its neighbors */
     }
 
     .pricing-box .plan {
@@ -64,34 +60,8 @@
     }
 
     .nopadding {
-        /* margin-top: 20px; */
-        padding-left: 5px !important;
-        padding-right: 5px !important;
+        padding: 0 !important;
         /* margin: 0 !important; */
-    }
-
-    @media (max-width: 990px) {
-        .nopadding {
-            margin-top: 20px;
-        }
-    }
-
-    @media (min-width: 990px) {
-
-        .noborderradius {
-            border-radius: 0 !important;
-            /* margin: 0 !important; */
-        }
-
-        .noborderradius-right {
-            border-radius: 20px 0 0 20px !important;
-            /* margin: 0 !important; */
-        }
-
-        .noborderradius-left {
-            border-radius: 0 20px 20px 0 !important;
-            /* margin: 0 !important; */
-        }
     }
 
     /* --- ADD THIS NEW RULE FOR THE PARENT ROW --- */
@@ -111,16 +81,8 @@
         .container-md,
         .container-lg,
         .container-xl {
-            max-width: 1400px;
+            max-width: 1300px;
         }
-    }
-
-    .pricing-box:hover {
-        transform: scale(1.05);
-        /* Slightly enlarges the box on hover */
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
-        /* Adds a shadow for a "lifted" effect */
-        z-index: 1;
     }
 </style>
 
@@ -159,7 +121,7 @@
         <!-- </div> -->
         <div class="row pt-4 justify-content-center">
             <div class="col-lg-3 nopadding">
-                <div class="pricing-box mt-4 noborderradius-right">
+                <div class="pricing-box mt-4">
                     <i class="mdi mdi-account h1"></i>
                     <h4 class="f-20">Bangsawan Muda</h4>
 
@@ -211,7 +173,7 @@
 
 
             <div class="col-lg-3 nopadding">
-                <div class="pricing-box mt-4 noborderradius">
+                <div class="pricing-box mt-4">
                     <i class="mdi mdi-account h1"></i>
                     <h4 class="f-20">Kesatria Sejati</h4>
 
@@ -260,7 +222,7 @@
             </div>
 
             <div class="col-lg-3 nopadding">
-                <div class="pricing-box mt-4 noborderradius">
+                <div class="pricing-box mt-4">
                     <i class="mdi mdi-account h1"></i>
                     <h4 class="f-20">Raja Sultan</h4>
 
@@ -307,7 +269,7 @@
                 </div>
             </div>
             <div class="col-lg-3 nopadding">
-                <div class="pricing-box mt-4 noborderradius-left">
+                <div class="pricing-box mt-4">
                     <i class="mdi mdi-account h1"></i>
                     <h4 class="f-20">Kaisar Agung</h4>
 
