@@ -5,7 +5,7 @@
     .pricing-box {
         -webkit-box-shadow: 0px 5px 30px -10px rgba(0, 0, 0, 0.1);
         box-shadow: 0px 5px 30px -10px rgba(0, 0, 0, 0.1);
-        padding: 35px 50px;
+        padding: 35px 25px;
         border-radius: 20px;
         border: 1px solid #e9ecef;
         position: relative;
