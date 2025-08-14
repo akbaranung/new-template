@@ -9,15 +9,11 @@
         border-radius: 20px;
         border: 1px solid #e9ecef;
         position: relative;
-
-        /* --- ADD THIS RULE TO .pricing-box --- */
         height: 100%;
-        /* Ensures the box fills the full height of its stretched parent column */
-        /* --- REMOVE any 'display: flex', 'flex-direction', 'justify-content' from .pricing-box if you added them --- */
-
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        /* Combine all transitions for a smooth effect */
+        transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
         z-index: 1;
-        /* Ensures the hovered box is on top of its neighbors */
+        /* Default z-index for all boxes */
     }
 
     .pricing-box .plan {
@@ -65,8 +61,8 @@
 
     .nopadding {
         /* margin-top: 20px; */
-        padding-left: 5px !important;
-        padding-right: 5px !important;
+        padding-left: 7px !important;
+        padding-right: 7px !important;
         /* margin: 0 !important; */
     }
 
@@ -123,8 +119,55 @@
         z-index: 1;
     }
 
+    .pricing-box:hover .feature {
+        transform: scale(1);
+        transition: transform 0.3s ease;
+        /* Add a smooth transition */
+    }
+
     .text-bariskode {
         color: #3f51b5;
+    }
+
+    .pricing-box.feature {
+        transform: scale(1.05);
+        /* Featured box is larger by default */
+        background-color: #e81f63;
+        border: 1px solid #a81647;
+        /* Corrected syntax */
+        color: #ffffff;
+        /* Sets default text color for the featured box */
+        z-index: 2;
+        /* Ensures it's slightly above others by default */
+    }
+
+    .pricing-box.feature h4,
+    .pricing-box.feature .plan,
+    .pricing-box.feature p,
+    .pricing-box.feature .fa-solid {
+        color: #ffffff !important;
+    }
+
+    /* Ensure SVG path color for featured box is also white */
+    .pricing-box.feature .plan svg path {
+        fill: #ffffff !important;
+    }
+
+    /* When any pricing box is hovered, it scales up a bit more and gets a stronger shadow. */
+    .pricing-box:hover {
+        transform: scale(1.07);
+        /* Any hovered box scales up further */
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        /* Stronger shadow for the hovered box */
+        z-index: 3;
+        /* The actively hovered box is on top */
+    }
+
+    .row:has(.col-lg-3:hover) .col-lg-3:not(:hover) .pricing-box.feature {
+        transform: scale(1);
+        /* Scale down the featured box to normal size (1) */
+        z-index: 1;
+        /* Bring its z-index back down */
     }
 </style>
 
@@ -184,7 +227,7 @@
                             Manajemen Penugasan (Tello)</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>5000</b>
                             Invoice / Bulan</p>
-                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>1000</b>
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>5000</b>
                             Digital Memorandum / Bulan</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>5000</b>
                             Pengajuan Multi Layer Approval / Bulan</p>
@@ -236,7 +279,7 @@
                             Manajemen Penugasan (Tello)</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>10000</b>
                             Invoice / Bulan</p>
-                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>3000</b>
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>10000</b>
                             Digital Memorandum / Bulan</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>10000</b>
                             Pengajuan Multi Layer Approval / Bulan</p>
@@ -264,7 +307,7 @@
             </div>
 
             <div class="col-lg-3 nopadding">
-                <div class="pricing-box mt-4 noborderradius">
+                <div class="pricing-box mt-4 noborderradius feature">
                     <i class="mdi mdi-account h1"></i>
                     <h4 class="f-20">Raja Sultan</h4>
 
@@ -272,8 +315,9 @@
                     <!-- <p class="mt-4 pt-2 text-muted">Dirancang untuk para bangsawan muda yang mencari landasan kokoh. Dapatkan kendali penuh atas wilayah kecil Anda dan bangunlah kekuatan.</p> -->
                     <div class="pricing-plan pt-2">
                         <!-- <h4 class="text-muted"><s> $9.99</s> <span class="plan pl-3 text-dark">$8.99 </span></h4> -->
-                        <span class="plan text-bariskode">IDR. 1000K</span>
-                        <p class="text-muted mb-0">Per Bulan</p>
+                        <span class="plan">IDR. 1000K</span>
+                        <!-- <p class="text-muted mb-0">Per Bulan</p> -->
+                        <p class="mb-0">Per Bulan</p>
                     </div>
 
                     <div class="mt-1 pt-2">
@@ -285,7 +329,7 @@
                             Manajemen Penugasan (Tello)</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>25000</b>
                             Invoice / Bulan</p>
-                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>10000</b>
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>25000</b>
                             Digital Memorandum / Bulan</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>25000</b>
                             Pengajuan Multi Layer Approval / Bulan</p>
@@ -364,7 +408,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3 nopadding mt-3">
+            <div class="col-lg-3 nopadding mt-5">
                 <div class="pricing-box mt-4">
                     <i class="mdi mdi-account h1"></i>
                     <!-- <h4 class="f-20">Paket Kesatria Perintis (Dasar Gratis)</h4> -->
@@ -388,7 +432,7 @@
                             Manajemen Penugasan (Tello)</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>1000</b>
                             Invoice / Bulan</p>
-                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>500</b>
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>1000</b>
                             Digital Memorandum / Bulan</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>1000</b>
                             Pengajuan Multi Layer Approval / Bulan</p>
