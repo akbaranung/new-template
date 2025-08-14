@@ -134,8 +134,8 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="title-box text-center">
-                    <h3 class="title-heading mt-4">Pilihan Mahkota Terbaik untuk Kerajaan Anda</h3>
-                    <p class="text-muted f-17 mt-3">
+                    <h3 class="title-heading mt-2">Pilihan Mahkota Terbaik untuk Kerajaan Anda</h3>
+                    <p class="text-muted f-17 mt-2">
                         Persembahan khusus dari istana, paket-paket istimewa yang dirancang untuk
                         mengukuhkan kejayaan dan kekuasaan.<br> Pilih mahkota yang paling sesuai
                         untuk memimpin tahta Anda menuju era keemasan.
@@ -161,7 +161,7 @@
         <!-- <div class="row pt-4 justify-content-center"> -->
 
         <!-- </div> -->
-        <div class="row pt-4 justify-content-center">
+        <div class="row pt-2 justify-content-center">
             <div class="col-lg-3 nopadding">
                 <div class="pricing-box mt-4 noborderradius-right">
                     <i class="mdi mdi-account h1"></i>
@@ -171,7 +171,7 @@
                     <!-- <p class="mt-4 pt-2 text-muted">Dirancang untuk para bangsawan muda yang mencari landasan kokoh. Dapatkan kendali penuh atas wilayah kecil Anda dan bangunlah kekuatan.</p> -->
                     <div class="pricing-plan pt-2">
                         <!-- <h4 class="text-muted"><s> $9.99</s> <span class="plan pl-3 text-dark">$8.99 </span></h4> -->
-                        <span class="plan text-bariskode">Rp. 300rb</span>
+                        <span class="plan text-bariskode">IDR. 300rb</span>
                         <p class="text-muted mb-0">Per Bulan</p>
                     </div>
 
@@ -223,7 +223,7 @@
                     <!-- <p class="mt-4 pt-2 text-muted">Dirancang untuk para bangsawan muda yang mencari landasan kokoh. Dapatkan kendali penuh atas wilayah kecil Anda dan bangunlah kekuatan.</p> -->
                     <div class="pricing-plan pt-2">
                         <!-- <h4 class="text-muted"><s> $9.99</s> <span class="plan pl-3 text-dark">$8.99 </span></h4> -->
-                        <span class="plan text-bariskode">Rp. 500rb</span>
+                        <span class="plan text-bariskode">IDR. 500rb</span>
                         <p class="text-muted mb-0">Per Bulan</p>
                     </div>
 
@@ -272,7 +272,7 @@
                     <!-- <p class="mt-4 pt-2 text-muted">Dirancang untuk para bangsawan muda yang mencari landasan kokoh. Dapatkan kendali penuh atas wilayah kecil Anda dan bangunlah kekuatan.</p> -->
                     <div class="pricing-plan pt-2">
                         <!-- <h4 class="text-muted"><s> $9.99</s> <span class="plan pl-3 text-dark">$8.99 </span></h4> -->
-                        <span class="plan text-bariskode">Rp. 1jt</span>
+                        <span class="plan text-bariskode">IDR. 1jt</span>
                         <p class="text-muted mb-0">Per Bulan</p>
                     </div>
 
@@ -319,7 +319,7 @@
                     <!-- <p class="mt-4 pt-2 text-muted">Dirancang untuk para bangsawan muda yang mencari landasan kokoh. Dapatkan kendali penuh atas wilayah kecil Anda dan bangunlah kekuatan.</p> -->
                     <div class="pricing-plan pt-2">
                         <!-- <h4 class="text-muted"><s> $9.99</s> <span class="plan pl-3 text-dark">$8.99 </span></h4> -->
-                        <span class="plan text-bariskode">Rp.
+                        <span class="plan text-bariskode">IDR.
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" height="64" width="64" style="color: #3f51b5;"><!--!Font Awesome Free v7.0.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
                                 <path fill="#3f51b5" d="M0 320C0 231.6 71.6 160 160 160C210.4 160 257.8 183.7 288 224L320 266.7L352 224C382.2 183.7 429.6 160 480 160C568.4 160 640 231.6 640 320C640 408.4 568.4 480 480 480C429.6 480 382.2 456.3 352 416L320 373.3L288 416C257.8 456.3 210.4 480 160 480C71.6 480 0 408.4 0 320zM280 320L236.8 262.4C218.7 238.2 190.2 224 160 224C107 224 64 267 64 320C64 373 107 416 160 416C190.2 416 218.7 401.8 236.8 377.6L280 320zM360 320L403.2 377.6C421.3 401.8 449.8 416 480 416C533 416 576 373 576 320C576 267 533 224 480 224C449.8 224 421.3 238.2 403.2 262.4L360 320z" />
                             </svg>
