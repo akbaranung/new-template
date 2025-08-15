@@ -61,14 +61,26 @@ class Subscription extends CI_Controller
             ]);
             return;
         }
+        // --- NEW: Generate a complete timestamp for start and end dates ---
+        $now = new DateTime();
+        $start_date_with_time = $now->format('Y-m-d H:i:s');
+
+        // Calculate the end date by adding months to the current time
+        $months = $data['months'];
+        $end_date_obj = clone $now;
+        $end_date_obj->modify("+{$months} months");
+        // $end_date_with_time = $end_date_obj->format('Y-m-d H:i:s');
+        $end_date_with_time = $end_date_obj->format('Y-m-d');
 
         // Prepare the data for insertion, mapping the front-end keys to your database columns
         $add = [
             "id_perusahaan" => $data['id_perusahaan'],
             "paket" => $data['planName'],
             "total_bulan" => $data['months'],
-            "tanggal_mulai" => $data['startDate'],
-            "tanggal_selesai" => $data['endDate'],
+            // "tanggal_mulai" => $data['startDate'],
+            // "tanggal_selesai" => $data['endDate'],
+            "tanggal_mulai" => $start_date_with_time,
+            "tanggal_selesai" => $end_date_with_time,
             "nominal" => $data['confirmationPrice'],
             "status_bayar" => 0, // Assuming 0 is the default for 'pending'
         ];
@@ -94,11 +106,11 @@ class Subscription extends CI_Controller
         ];
 
         // Create DateTime objects from the YYYY-MM-DD strings
-        $start_date_obj = new DateTime($data['startDate']);
-        $end_date_obj = new DateTime($data['endDate']);
+        $start_date_obj = new DateTime($start_date_with_time);
+        $end_date_obj = new DateTime($end_date_with_time);
 
         // Format the dates to "DD Month YYYY" and replace the month name
-        $tanggal_mulai_formatted = strtr($start_date_obj->format('d F Y'), $indonesian_months);
+        $tanggal_mulai_formatted = strtr($start_date_obj->format('d F Y H:i:s'), $indonesian_months);
         $tanggal_selesai_formatted = strtr($end_date_obj->format('d F Y'), $indonesian_months);
         // --- End Date Formatting Logic ---
 
@@ -185,7 +197,7 @@ Mohon untuk memproses pembayaran segera.";
             $start_date_obj = new DateTime($cat->tanggal_mulai);
             $end_date_obj = new DateTime($cat->tanggal_selesai);
 
-            $formatted_start_date = strtr($start_date_obj->format('d F Y'), $indonesian_months);
+            $formatted_start_date = strtr($start_date_obj->format('d F Y H:i:s'), $indonesian_months);
             $formatted_end_date = strtr($end_date_obj->format('d F Y'), $indonesian_months);
 
             // Nominal formatting
@@ -290,6 +302,7 @@ Mohon untuk memproses pembayaran segera.";
                     $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
                     $this->db->where('t_cabang.id_perusahaan', $confirmation_detail->id_perusahaan);
                     $this->db->where('nama_jabatan', 'Super Admin');
+                    $this->db->where('level_jabatan', 99);
                     $detail_user = $this->db->get()->row();
                     // Send a success response
 
@@ -299,7 +312,7 @@ Mohon untuk memproses pembayaran segera.";
                     $formatted_start_date = strtr($start_date_obj->format('d F Y'), $indonesian_months);
 
 
-                    $msg = "Terima kasih, pembayaran Anda telah berhasil kami konfirmasi. Akun Anda telah *di-upgrade* ke *premium*, berlaku hingga tanggal *{$formatted_start_date}*. Kami harap Anda puas dengan layanan kami.";
+                    $msg = "Terima kasih, pembayaran Anda telah berhasil kami konfirmasi. Akun Anda telah *di-upgrade* ke *premium*, berlaku hingga tanggal *{$formatted_start_date}*.Dimohon untuk logout akun untuk menikmati fitur premium anda. Kami harap Anda puas dengan layanan kami.";
 
                     // $this->api_whatsapp->wa_notif($msg, "085157563305");
                     if ($this->api_whatsapp->wa_notif($msg, $detail_user->phone)) {

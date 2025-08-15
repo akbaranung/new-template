@@ -42,16 +42,16 @@
         </a>
       </li>
       <?php
-      // if ($this->session->userdata('username') == "08127070700") {
+      if ($this->session->userdata('username') == "08127070700") {
       ?>
-      <li class="nav-item w-100">
-        <a class="nav-link <?= ($current_uri == 'Subscription' or $current_uri == '') ? 'active' : '' ?>" href="<?= site_url('Subscription/premium_confirmation') ?>">
-          <i class="fe fe-home fe-16"></i>
-          <span class="ml-3 item-text">Premium Confirmation</span>
-        </a>
-      </li>
+        <li class="nav-item w-100">
+          <a class="nav-link <?= ($current_uri == 'Subscription' or $current_uri == '') ? 'active' : '' ?>" href="<?= site_url('Subscription/premium_confirmation') ?>">
+            <i class="fe fe-home fe-16"></i>
+            <span class="ml-3 item-text">Premium Confirmation</span>
+          </a>
+        </li>
       <?php
-      // }
+      }
       ?>
     </ul>
     <?php

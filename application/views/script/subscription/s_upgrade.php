@@ -276,6 +276,24 @@
                 detailsContainer.innerHTML = secondDetailHTML;
                 detailsContainer.classList.add('visible'); // Show the new box with fade-in
 
+
+                const thirdDetailHTML = `
+    <div class="detail-box text-center">
+        <h3 class="f-20">Pembayaran Terkirim!</h3>
+        <p>Terima kasih. Permintaan pembayaran Anda telah berhasil kami terima. <br>
+           Mohon tunggu beberapa saat, tim kami akan segera memprosesnya.
+           Anda akan menerima pesan konfirmasi melalui WhatsApp setelah pembayaran Anda disetujui.
+        </p>
+        <div class="mt-4 pt-3">
+            <a href="${BASE_URL}home" class="btn btn-primary btn-rounded w-75">Kembali ke Dashboard</a>
+        </div>
+    </div>
+`;
+
+
+
+
+
                 const payNowBtn = document.getElementById('pay-now-btn');
                 payNowBtn.addEventListener('click', () => {
                     // Data to be sent via Ajax
@@ -330,6 +348,13 @@
                                     title: 'Berhasil!',
                                     text: data.message,
                                     timer: 1500
+                                }).then(() => {
+                                    // After the SweetAlert is dismissed, update the content
+                                    detailsContainer.classList.remove('visible');
+                                    setTimeout(() => {
+                                        detailsContainer.innerHTML = thirdDetailHTML;
+                                        detailsContainer.classList.add('visible');
+                                    }, 500); // This delay should match your transition time
                                 });
                                 // alert('Pembayaran berhasil dikonfirmasi! Silakan lanjutkan.');
                             } else {
