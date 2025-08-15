@@ -88,7 +88,7 @@
                 // Generate and display the new payment details content
                 const detailHTML = `
                 <div class="detail-box">
-                    <h3 class="f-20">Detail Pembayaran untuk Plan: ${planName}</h3>
+                    <h3 class="f-20">Rincian Pembayaran : ${planName}</h3>
                     <p>Pilih jangka waktu pembayaran:</p>
                     <div class="month-selection">
                         <button class="month-btn" data-months="1">1 Bulan</button>
