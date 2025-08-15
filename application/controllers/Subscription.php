@@ -149,7 +149,7 @@ Mohon untuk memproses pembayaran segera.";
 
     public function premium_confirmation()
     {
-        if ($this->session->userdata('username') == "08127070700") {
+        if ($this->session->userdata('username') == "bariskode") {
             $has_access = TRUE;
         } else {
             $has_access = FALSE;
