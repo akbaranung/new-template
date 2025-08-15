@@ -497,10 +497,14 @@
                       <!-- <label>Level Jabatan <?= $user->level_jabatan ?></label> -->
                       <label>Role</label>
                       <!-- <input type="text" name="level_jabatan" class="form-control" value="<?= $user->level_jabatan ?>"> -->
-                      <select name="level_jabatan" id="" class="form-control">
+                      <select name="level_jabatan" id="" class="form-control" <?= ($user->level_jabatan == "99") ? "readonly" : '' ?>>
                         <option selected disabled>Pilih Jabatan</option>
                         <?php
-                        if ($this->session->userdata('is_premium')) {
+                        if ($user->level_jabatan == "99") {
+                        ?>
+                          <option selected value="99">Super Admin</option>
+                        <?php
+                        } else if ($this->session->userdata('is_premium')) {
                         ?>
                           <option <?= ($user->level_jabatan == "1") ? 'selected' : '' ?> value="1">Staff</option>
                           <option <?= ($user->level_jabatan == "2") ? 'selected' : '' ?> value="2">Manager</option>
@@ -608,7 +612,7 @@
                   <div class="col-md-6">
                     <div class="form-group">
                       <label>Nama Jabatan</label>
-                      <input type="text" name="nama_jabatan" class="form-control" value="<?= $user->nama_jabatan ?>">
+                      <input type="text" name="nama_jabatan" class="form-control" value="<?= $user->nama_jabatan ?>" <?= ($user->nama_jabatan == "Super Admin") ? "readonly" : '' ?>>
                     </div>
                   </div>
                   <div class="col-md-6">

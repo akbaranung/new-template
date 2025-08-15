@@ -268,7 +268,7 @@
     </div>
     
     <div class="mt-4 pt-3 d-flex justify-content-center">
-        <button type="button" id="pay-now-btn" class="btn btn-primary btn-rounded w-50">Bayar Sekarang</button>
+        <button type="button" id="pay-now-btn" class="btn btn-primary btn-rounded w-50">Konfirmasi Pembayaran</button>
     </div>
 </div>
             `;
@@ -279,6 +279,18 @@
                 const payNowBtn = document.getElementById('pay-now-btn');
                 payNowBtn.addEventListener('click', () => {
                     // Data to be sent via Ajax
+
+                    swal.fire({
+                        title: 'Mohon Tunggu...',
+                        text: 'Sedang memproses pembayaran Anda',
+                        icon: 'info',
+                        showConfirmButton: false,
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            swal.showLoading();
+                        }
+                    });
+
                     const data = {
                         planName: planName,
                         months: months,
@@ -300,6 +312,7 @@
                             body: JSON.stringify(data)
                         })
                         .then(response => {
+                            swal.close();
                             if (!response.ok) {
                                 throw new Error('Network response was not ok');
                             }
@@ -331,6 +344,8 @@
                             }
                         })
                         .catch((error) => {
+                            swal.close();
+
                             console.error('Error:', error);
                             // Handle errors, e.g., show an error message to the user
                             alert('Terjadi kesalahan saat mengonfirmasi pembayaran. Silakan coba lagi.');
