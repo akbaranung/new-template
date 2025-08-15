@@ -42,7 +42,7 @@
         </a>
       </li>
       <?php
-      if ($this->session->userdata('username') == "08127070700") {
+      if ($this->session->userdata('username') == "bariskode") {
       ?>
         <li class="nav-item w-100">
           <a class="nav-link <?= ($current_uri == 'Subscription' or $current_uri == '') ? 'active' : '' ?>" href="<?= site_url('Subscription/premium_confirmation') ?>">
