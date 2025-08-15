@@ -169,6 +169,78 @@
         z-index: 1;
         /* Bring its z-index back down */
     }
+
+    /* Add this new CSS to your existing stylesheet */
+
+    /* Rule to hide and zoom out the unselected boxes */
+    .pricing-box.hidden {
+        transform: scale(0.8);
+        opacity: 0;
+        transition: all 0.5s ease-out;
+    }
+
+    /* New rule to hide the payment details container by default */
+    .pricing-details {
+        opacity: 0;
+        visibility: hidden;
+        /* Use visibility to remove it from screen readers */
+        transition: opacity 0.5s ease-in, visibility 0.5s ease-in;
+    }
+
+    /* When the 'visible' class is added, the container will fade in */
+    .pricing-details.visible {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* Styles for the new pricing details content */
+    .detail-box {
+        padding: 35px 25px;
+        border-radius: 20px;
+        border: 1px solid #e9ecef;
+        background: #fff;
+        box-shadow: 0px 5px 30px -10px rgba(0, 0, 0, 0.1);
+    }
+
+    .detail-box h3 {
+        margin-bottom: 20px;
+    }
+
+    .month-selection {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 30px;
+    }
+
+    .month-btn {
+        padding: 10px 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        cursor: pointer;
+        background-color: #f8f9fa;
+        transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .month-btn:hover {
+        background-color: #e2e6ea;
+    }
+
+    .month-btn.selected {
+        background-color: #3f51b5;
+        color: #fff;
+        border-color: #3f51b5;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .selected-col {
+        transform: scale(1.07);
+        /* Any hovered box scales up further */
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        /* Stronger shadow for the hovered box */
+        z-index: 3;
+        /* The actively hovered box is on top */
+    }
 </style>
 
 <section class="section" id="pricing">
@@ -206,7 +278,7 @@
         <!-- </div> -->
         <div class="row pt-2 justify-content-center">
             <div class="col-lg-3 nopadding">
-                <div class="pricing-box mt-4 noborderradius-right">
+                <div class="pricing-box mt-4 noborderradius-right" id="pricing-1">
                     <i class="mdi mdi-account h1"></i>
                     <h4 class="f-20">Bangsawan Muda</h4>
 
@@ -249,16 +321,14 @@
 
 
                     <div class="mt-4 pt-3">
-                        <a href="" class="btn btn-primary btn-rounded">Pilih Tahta</a>
+                        <a href="" class="btn btn-primary btn-rounded pilih-tahta-btn" data-plan="1" data-price="300000">Pilih Tahta</a>
                         <!-- <a href="" class="btn btn-primary btn-rounded">Ambil Takhta Ini</a> -->
                         <!-- <a href="" class="btn btn-primary btn-rounded">Dapatkan Mahkota</a> -->
                     </div>
                 </div>
             </div>
-
-
             <div class="col-lg-3 nopadding">
-                <div class="pricing-box mt-4 noborderradius">
+                <div class="pricing-box mt-4 noborderradius" id="pricing-2">
                     <i class="mdi mdi-account h1"></i>
                     <h4 class="f-20">Kesatria Sejati</h4>
 
@@ -299,15 +369,14 @@
 
 
                     <div class="mt-4 pt-3">
-                        <a href="" class="btn btn-primary btn-rounded">Pilih Tahta</a>
+                        <a href="" class="btn btn-primary btn-rounded pilih-tahta-btn" data-plan="2" data-price="500000">Pilih Tahta</a>
                         <!-- <a href="" class="btn btn-primary btn-rounded">Ambil Takhta Ini</a> -->
                         <!-- <a href="" class="btn btn-primary btn-rounded">Dapatkan Mahkota</a> -->
                     </div>
                 </div>
             </div>
-
             <div class="col-lg-3 nopadding">
-                <div class="pricing-box mt-4 noborderradius feature">
+                <div class="pricing-box mt-4 noborderradius feature" id="pricing-3">
                     <i class="mdi mdi-account h1"></i>
                     <h4 class="f-20">Raja Sultan</h4>
 
@@ -348,14 +417,14 @@
                     </div>
 
                     <div class="mt-4 pt-3">
-                        <a href="" class="btn btn-primary btn-rounded">Pilih Tahta</a>
+                        <a href="" class="btn btn-primary btn-rounded pilih-tahta-btn" data-plan="3" data-price="1000000">Pilih Tahta</a>
                         <!-- <a href="" class="btn btn-primary btn-rounded">Ambil Takhta Ini</a> -->
                         <!-- <a href="" class="btn btn-primary btn-rounded">Dapatkan Mahkota</a> -->
                     </div>
                 </div>
             </div>
             <div class="col-lg-3 nopadding">
-                <div class="pricing-box mt-4 noborderradius-left">
+                <div class="pricing-box mt-4 noborderradius-left" id="pricing-4">
                     <i class="mdi mdi-account h1"></i>
                     <h4 class="f-20">Kaisar Agung</h4>
 
@@ -408,6 +477,8 @@
                     </div>
                 </div>
             </div>
+            <div class="col-lg-9 pricing-details d-none" id="pricing-details-container"></div>
+
             <div class="col-lg-3 nopadding mt-5">
                 <div class="pricing-box mt-4">
                     <i class="mdi mdi-account h1"></i>
