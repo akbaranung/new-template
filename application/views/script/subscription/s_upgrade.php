@@ -291,6 +291,19 @@
     </div>
 `;
 
+                const fourthDetailHTML = `
+    <div class="detail-box text-center">
+        <h3 class="f-20">Pembayaran Menunggu Konfirmasi</h3>
+        <p>Kami mendeteksi bahwa Anda sudah memiliki permintaan konfirmasi pembayaran sebelumnya.<br>
+           Mohon bersabar, tim kami sedang memprosesnya. Anda akan mendapatkan notifikasi setelah verifikasi selesai.<br>
+           Terima kasih atas kesabaran Anda.
+        </p>
+        <div class="mt-4 pt-3">
+            <a href="${BASE_URL}home" class="btn btn-primary btn-rounded w-75">Kembali ke Dashboard</a>
+        </div>
+    </div>
+`;
+
 
 
 
@@ -358,6 +371,22 @@
                                     }, 500); // This delay should match your transition time
                                 });
                                 // alert('Pembayaran berhasil dikonfirmasi! Silakan lanjutkan.');
+                            } else if (data.status == "proses") {
+                                swal.fire({
+                                    customClass: 'slow-animation',
+                                    icon: 'info',
+                                    showConfirmButton: false,
+                                    title: 'Proses!',
+                                    text: data.message,
+                                    timer: 3000
+                                }).then(() => {
+                                    // After the SweetAlert is dismissed, update the content
+                                    detailsContainer.classList.remove('visible');
+                                    setTimeout(() => {
+                                        detailsContainer.innerHTML = fourthDetailHTML;
+                                        detailsContainer.classList.add('visible');
+                                    }, 500); // This delay should match your transition time
+                                });
                             } else {
                                 swal.fire({
                                     customClass: 'slow-animation',

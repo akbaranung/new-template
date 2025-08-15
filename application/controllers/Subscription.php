@@ -73,6 +73,8 @@ class Subscription extends CI_Controller
         $end_date_with_time = $end_date_obj->format('Y-m-d');
 
         // Prepare the data for insertion, mapping the front-end keys to your database columns
+
+
         $add = [
             "id_perusahaan" => $data['id_perusahaan'],
             "paket" => $data['planName'],
@@ -118,9 +120,28 @@ class Subscription extends CI_Controller
         $detail_perusahaan = $this->db->from('utility')->where('Id', $data['id_perusahaan'])->get()->row();
 
         // Attempt to insert the data into the database
-        if ($this->db->insert('premium_confirmation', $add)) {
-            // Send a success response
-            $msg = "Pembayaran Premium telah masuk.
+        $confirmation_num = $this->db
+            ->from('premium_confirmation')
+            ->where('id_perusahaan', $data['id_perusahaan'])
+            ->where('status_bayar', 0)
+            ->get()
+            ->num_rows(); // Note the s at the end of num_rows()
+
+        if ($confirmation_num) {
+            $confirmation_detail = $this->db
+                ->from('premium_confirmation')
+                ->where('id_perusahaan', $data['id_perusahaan'])
+                ->where('status_bayar', 0)
+                ->get()
+                ->row(); // Note the s at the end of num_rows()
+            echo json_encode([
+                'status'  => 'proses',
+                'message' => 'Anda sudah melakukan Proses Pembayaran dengan Paket :' . $confirmation_detail->paket
+            ]);
+        } else {
+            if ($this->db->insert('premium_confirmation', $add)) {
+                // Send a success response
+                $msg = "Pembayaran Premium telah masuk.
 Rincian:
 - Perusahaan: *$detail_perusahaan->nama_perusahaan* (ID: *$detail_perusahaan->Id*)
 - Nama Paket: *" . $data['planName'] . "*
@@ -131,19 +152,20 @@ Rincian:
 
 Mohon untuk memproses pembayaran segera.";
 
-            // $this->api_whatsapp->wa_notif($msg, "085157563305");
-            $this->api_whatsapp->wa_notif($msg, "08127070700");
+                // $this->api_whatsapp->wa_notif($msg, "085157563305");
+                $this->api_whatsapp->wa_notif($msg, "08127070700");
 
-            echo json_encode([
-                'status'  => 'success',
-                'message' => 'Pembayaran berhasil disimpan. Silahkan menunggu konfirmasi.'
-            ]);
-        } else {
-            // Send a detailed error response if the insertion fails
-            echo json_encode([
-                'status'  => 'error',
-                'message' => 'Gagal menyimpan pembayaran ke database.'
-            ]);
+                echo json_encode([
+                    'status'  => 'success',
+                    'message' => 'Pembayaran berhasil disimpan. Silahkan menunggu konfirmasi.'
+                ]);
+            } else {
+                // Send a detailed error response if the insertion fails
+                echo json_encode([
+                    'status'  => 'error',
+                    'message' => 'Gagal menyimpan pembayaran ke database.'
+                ]);
+            }
         }
     }
 
@@ -269,8 +291,17 @@ Mohon untuk memproses pembayaran segera.";
         $this->db->where('id', $id);
         if ($this->db->update('premium_confirmation', $edit_data)) {
 
+            $confirmation_detail = $this->db->from('premium_confirmation')->where('Id', $id)->get()->row();
+            $this->db->select('users.*'); // Select all from users, and specific columns from t_cabang
+            $this->db->from('users');
+            $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
+            $this->db->where('t_cabang.id_perusahaan', $confirmation_detail->id_perusahaan);
+            $this->db->where('nama_jabatan', 'Super Admin');
+            $this->db->where('level_jabatan', 99);
+            $detail_user = $this->db->get()->row();
+
             if ($status_bayar == 1) {
-                $confirmation_detail = $this->db->from('premium_confirmation')->where('Id', $id)->get()->row();
+                // $confirmation_detail = $this->db->from('premium_confirmation')->where('Id', $id)->get()->row();
                 // $perusahaan_detail = $this->db->from('premium_confirmation')->where('Id', $id)->get()->row();
                 if ($confirmation_detail->paket == "Bangsawan Muda") {
                     $kuota_invoice = 5000;
@@ -332,7 +363,13 @@ Mohon untuk memproses pembayaran segera.";
                     echo json_encode(array("status" => 'error', "message" => "Gagal Update Perusahaan"));
                 }
             } else {
-                echo json_encode(array("status" => 'success', "message" => "Berhasil Mengkonfirmasi"));
+                $msg = "Mohon maaf, permintaan konfirmasi pembayaran Anda untuk paket {$confirmation_detail->paket} tidak dapat kami setujui. Silakan periksa kembali rincian pembayaran atau hubungi tim support kami untuk bantuan lebih lanjut.";
+
+                // $this->api_whatsapp->wa_notif($msg, "085157563305");
+                if ($this->api_whatsapp->wa_notif($msg, $detail_user->phone)) {
+                    echo json_encode(array("status" => 'success', "message" => "Berhasil Mengkonfirmasi"));
+                }
+                // echo json_encode(array("status" => 'success', "message" => "Berhasil Mengkonfirmasi"));
             }
         } else {
             echo json_encode(array("status" => 'error', "message" => "Gagal Mengkonfirmasi"));
