@@ -27,6 +27,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         const pricingBoxes = document.querySelectorAll('.pricing-box');
         const pilihTahtaButtons = document.querySelectorAll('.pilih-tahta-btn');
+        const pilihDonasiButtons = document.querySelectorAll('.pilih-donasi-btn');
         const detailsContainer = document.getElementById('pricing-details-container');
         const pricingRow = document.querySelector('.row.justify-content-center');
         const BASE_URL = '<?php echo base_url(); ?>';
@@ -380,10 +381,122 @@
             }, 500); // This delay should match your transition time
         }
 
+        function handlePilihDonasiClick(event) {
+            event.preventDefault(); // Prevent the default link behavior
+
+            const selectedButton = event.currentTarget;
+            const selectedPricingBox = selectedButton.closest('.pricing-box');
+            const planName = selectedPricingBox.querySelector('h4').innerText;
+            const basePrice = parseInt(selectedButton.getAttribute('data-price'));
+            const planDetailsHTML = selectedPricingBox.querySelector('.mt-1.pt-2').innerHTML;
+
+            // Hide other pricing boxes with animation
+            // pricingBoxes.forEach(box => {
+            //     if (box !== selectedPricingBox) {
+            //         box.classList.add('hidden');
+            //         box.closest('.col-lg-3').style.display = 'none';
+            //     }
+            // });
+
+            const allPricingCols = document.querySelectorAll('.col-lg-3.nopadding');
+
+            allPricingCols.forEach(col => {
+                if (col.querySelector('.pricing-box') !== selectedPricingBox) {
+                    col.querySelector('.pricing-box').classList.add('hidden');
+
+                    setTimeout(() => {
+                        col.classList.add('d-none');
+                    }, 500);
+                }
+
+
+            });
+            // setTimeout(() => {
+            //     pricingBoxes.forEach(box => {
+            //         if (box !== selectedPricingBox) {
+            //             box.classList.add('hidden');
+            //             box.closest('.col-lg-3').style.display = 'none';
+            //         }
+            //     });
+            // }, 600);
+            // After the animation (0.5s), display the detail container
+            setTimeout(() => {
+                // Adjust width of the selected box
+                // detailsContainer.classList.remove('d-none');
+
+                const selectedCol = selectedPricingBox.closest('.col-lg-3');
+                selectedCol.classList.remove('col-lg-3', 'nopadding', 'noborderradius-right', 'noborderradius', 'noborderradius-left', 'mt-5');
+                selectedCol.classList.add('col-lg-3', 'd-flex', 'flex-column', 'justify-content-center');
+
+                selectedPricingBox.classList.remove('nopadding', 'noborderradius-right', 'noborderradius', 'noborderradius-left');
+                selectedPricingBox.classList.add('selected-col');
+
+                selectedPricingBox.style.height = 'auto';
+                selectedPricingBox.classList.remove('feature');
+
+                // Generate and display the new payment details content
+                const detailHTML = `
+                <div class="detail-box">
+    <h3 class="f-20">Donasi</h3>
+</ul>
+    <hr>
+    <h4 class="text-center">Silakan Donasi Ke Rekening Berikut:</h4>
+    
+    <div class="mt-4 pt-3 text-center">
+        <img src="${BASE_URL}assets/images/bank/BSI_1.png" alt="Logo Bank BSI" class="mb-2 w-25">
+        <h2 class="mt-3 text-bariskode">(NOMOR REKENING)</h2>
+    </div>
+</div>
+            `;
+                detailsContainer.classList.remove('d-none');
+
+                detailsContainer.innerHTML = detailHTML;
+                setTimeout(() => {
+                    detailsContainer.classList.add('visible');
+                }, 300);
+
+
+                // Add event listeners to the new month selection buttons
+                const monthButtons = detailsContainer.querySelectorAll('.month-btn');
+                monthButtons.forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        // Remove 'selected' class from all buttons
+                        monthButtons.forEach(b => b.classList.remove('selected'));
+                        // Add 'selected' class to the clicked button
+                        e.currentTarget.classList.add('selected');
+
+                        const months = parseInt(e.currentTarget.getAttribute('data-months'));
+                        const totalPrice = basePrice * months;
+                        document.getElementById('total-price').innerText = formatRupiah(totalPrice);
+                        document.getElementById('months-display').innerText = months;
+                    });
+                });
+
+                // Set the default button to selected (1 Month)
+                if (monthButtons.length > 0) {
+                    monthButtons[0].classList.add('selected');
+                }
+
+                // ADD THE BACK BUTTON LISTENER HERE
+                document.getElementById('back-button').addEventListener('click', handleBackClick);
+                // document.getElementById('btn-pembayaran').addEventListener('click', detailPembayaran);
+                document.getElementById('btn-pembayaran').addEventListener('click', () => {
+                    // Pass the necessary data to the new function
+                    const selectedMonths = parseInt(detailsContainer.querySelector('.month-btn.selected').getAttribute('data-months'));
+                    detailPembayaran(planName, basePrice, selectedMonths);
+                });
+
+
+            }, 500); // Wait for the zoom-out animation to finish
+        }
+
 
         // Add click event listeners to all "Pilih Tahta" buttons
         pilihTahtaButtons.forEach(button => {
             button.addEventListener('click', handlePilihTahtaClick);
+        });
+        pilihDonasiButtons.forEach(button => {
+            button.addEventListener('click', handlePilihDonasiClick);
         });
 
     });

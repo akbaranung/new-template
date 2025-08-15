@@ -149,7 +149,15 @@ Mohon untuk memproses pembayaran segera.";
 
     public function premium_confirmation()
     {
+        if ($this->session->userdata('username') == "08127070700") {
+            $has_access = TRUE;
+        } else {
+            $has_access = FALSE;
+        }
 
+        if (!$has_access) {
+            show_error('Forbidden Access: You do not have permission to view this page.', 403, '403 Forbidden');
+        }
 
         $nip = $this->session->userdata('nip');
 

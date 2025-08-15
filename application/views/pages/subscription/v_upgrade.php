@@ -491,8 +491,6 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-9 pricing-details d-none" id="pricing-details-container"></div>
-
             <div class="col-lg-3 nopadding mt-5">
                 <div class="pricing-box mt-4">
                     <i class="mdi mdi-account h1"></i>
@@ -542,8 +540,14 @@
                     <!-- <a href="" class="btn btn-primary btn-rounded">Ambil Takhta Ini</a> -->
                     <!-- <a href="" class="btn btn-primary btn-rounded">Dapatkan Mahkota</a> -->
                     <!-- </div> -->
+                    <div class="mt-4 pt-3">
+                        <a href="" class="btn btn-primary btn-rounded pilih-donasi-btn">Donasi</a>
+                        <!-- <a href="" class="btn btn-primary btn-rounded">Ambil Takhta Ini</a> -->
+                        <!-- <a href="" class="btn btn-primary btn-rounded">Dapatkan Mahkota</a> -->
+                    </div>
                 </div>
             </div>
+            <div class="col-lg-9 pricing-details d-none" id="pricing-details-container"></div>
         </div>
     </div>
 </section>
