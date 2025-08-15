@@ -27,7 +27,7 @@
     }).addTo(map);
 
     // Default radius (can be changed based on user input)
-    let radius = parseInt(document.getElementById('radius_lokasi').value) || 500; // Default to 500 if empty
+    let radius = parseInt(document.getElementById('radius_lokasi').value) || 100; // Default to 500 if empty
 
     // Create the circle with initial radius
     const circle = L.circle(marker.getLatLng(), {
@@ -66,11 +66,15 @@
 
     // Event listener for radius input change
     document.getElementById('radius_lokasi').addEventListener('input', (event) => {
-        // Update the radius based on input value
+        // Get the new radius value directly
         const newRadius = parseInt(event.target.value);
+
+        // Make sure the new value is a valid number and greater than 0
         if (!isNaN(newRadius) && newRadius > 0) {
-            radius = newRadius / 1000; // Update radius variable
-            circle.setRadius(radius); // Update the circle's radius
+            // radius = newRadius / 1000; // Update radius variable
+
+            // Now, pass the newRadius directly to setRadius() without dividing
+            circle.setRadius(newRadius);
         }
     });
 
