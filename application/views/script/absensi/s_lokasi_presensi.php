@@ -5,12 +5,6 @@
             rowReorder: {
                 selector: 'td:nth-child(2)'
             },
-            // If you are using Scroller, you would add 'deferRender: true' and 'scrollY' options here,
-            // and optionally 'scroller: true'.
-            // Example:
-            // deferRender: true,
-            // scrollY: 200, // or '50vh'
-            // scroller: true,
             processing: true,
             serverSide: true,
             ajax: {
@@ -23,8 +17,12 @@
                 targets: -1, // Adjust target index if 'Action' column is not always the 9th column (index 8)
                 orderable: false
             }],
-            // Custom DOM structure for layout (from previous answer)
-            dom: '<"dataTables_top_wrapper clear-fix"<"dataTables_length_custom"l><"dataTables_filter_custom"f>>t<"dataTables_bottom_wrapper clear-fix"<"dataTables_info_custom"i><"dataTables_paginate_custom"p>>'
+            layout: {
+                topStart: 'search',
+                topEnd: '',
+                bottomStart: 'info',
+                bottomEnd: 'paging'
+            }
         });
     });
 
