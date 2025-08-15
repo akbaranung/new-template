@@ -22,8 +22,17 @@
 
 <nav class="topnav navbar navbar-light">
   <button type="button" class="navbar-toggler text-muted mt-2 p-0 mr-3 collapseSidebar">
-    <i class="fe fe-menu navbar-toggler-icon"></i>
+
+    <?php
+    if ($this->uri->segment(1) != "subscription") {
+    ?>
+      <i class="fe fe-menu navbar-toggler-icon"></i>
+    <?php
+    }
+    ?>
   </button>
+
+
   <ul class="nav">
 
     <li class="nav-item">

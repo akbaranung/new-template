@@ -245,7 +245,7 @@
 
 <section class="section" id="pricing">
     <div class="container">
-
+        <a class="btn btn-primary" href="<?= base_url() ?>"><i class="fa-solid fa-arrow-left"></i> Back</a>
         <div class="row">
             <div class="col-lg-12">
                 <div class="title-box text-center">

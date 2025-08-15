@@ -19,7 +19,9 @@
         if (currentPath === target_relative_path && $(window).width() > 980) {
             // Add the 'collapsed' class only if both conditions are true
             $(".vertical").addClass("collapsed");
+
         }
+
     });
 
     document.addEventListener('DOMContentLoaded', function() {

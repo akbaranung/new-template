@@ -46,9 +46,16 @@
     <!-- Navbar -->
     <?php $this->load->view('layouts/navbar.php') ?>
     <!-- Sidebar -->
-    <?php $this->load->view('layouts/sidebar.php') ?>
+    <?php
+    $margin_subs = '';
+    if ($this->uri->segment(1) != "subscription") {
+      $this->load->view('layouts/sidebar.php');
+    } else {
+      $margin_subs = 'style="margin-left: 0;"';
+    }
+    ?>
     <!-- Main Content -->
-    <main role="main" class="main-content">
+    <main role="main" class="main-content" <?= $margin_subs ?>>
       <?php
 
       $this->db->from('users');
