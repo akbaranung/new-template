@@ -241,6 +241,20 @@
         z-index: 3;
         /* The actively hovered box is on top */
     }
+
+    /* CSS to align the colons using pseudo-elements */
+    .list-unstyled strong {
+        display: inline-block;
+        width: 150px;
+        /* Adjust this width as needed */
+        position: relative;
+    }
+
+    .list-unstyled strong::after {
+        content: ":";
+        position: absolute;
+        right: 0;
+    }
 </style>
 
 <section class="section" id="pricing">

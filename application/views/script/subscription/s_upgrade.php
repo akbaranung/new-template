@@ -252,11 +252,11 @@
     <h3 class="f-20">Konfirmasi Pembayaran</h3>
     <p>Terima kasih telah memilih Plan ${planName}. Berikut rincian pesanan Anda:</p>
     <ul class="list-unstyled">
-        <li><strong>Paket:</strong> ${planName}</li>
-        <li><strong>Jangka Waktu:</strong> ${months} Bulan</li>
-        <li><strong>Tanggal Mulai:</strong> ${startStr}</li>
-        <li><strong>Tanggal Selesai:</strong> ${endStr}</li>
-    </ul>
+    <li><strong>Paket</strong> ${planName}</li>
+    <li><strong>Jangka Waktu</strong> ${months} Bulan</li>
+    <li><strong>Tanggal Mulai</strong> ${startStr}</li>
+    <li><strong>Tanggal Selesai</strong> ${endStr}</li>
+</ul>
     <hr>
     <h4 class="text-center">Total Tagihan:</h4>
     <h2 class="text-bariskode text-center">${formatRupiah(confirmationPrice)}</h2>
