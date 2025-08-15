@@ -351,7 +351,7 @@ Mohon untuk memproses pembayaran segera.";
                     $formatted_start_date = strtr($start_date_obj->format('d F Y'), $indonesian_months);
 
 
-                    $msg = "Terima kasih, pembayaran Anda telah berhasil kami konfirmasi. Akun Anda telah *di-upgrade* ke *premium*, berlaku hingga tanggal *{$formatted_start_date}*.Dimohon untuk logout akun untuk menikmati fitur premium anda. Kami harap Anda puas dengan layanan kami.";
+                    $msg = "Terima kasih, pembayaran Anda telah berhasil kami konfirmasi. Akun Anda telah *di-upgrade* ke *premium*, berlaku hingga tanggal *{$formatted_start_date}*.Dimohon untuk logout akun dan login kembali untuk menikmati fitur premium anda. Kami harap Anda puas dengan layanan kami.";
 
                     // $this->api_whatsapp->wa_notif($msg, "085157563305");
                     if ($this->api_whatsapp->wa_notif($msg, $detail_user->phone)) {
