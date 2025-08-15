@@ -59,7 +59,7 @@
             const swalWithBootstrapButtons = Swal.mixin({
                 customClass: {
                     InputEvent: 'form-control',
-                    confirmButton: 'btn btn-success text-white',
+                    confirmButton: 'btn btn-primary text-white',
                     cancelButton: 'btn btn-danger'
                 },
                 buttonsStyling: false
