@@ -327,7 +327,7 @@
 									</td>
 								</tr>
 								<tr>
-									<th><a href="<?= base_url('app/user') ?>" class="btn btn-warning"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</a></th>
+									<th><a href="<?= base_url('home') ?>" class="btn btn-warning"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</a></th>
 								</tr>
 							</table>
 							<br>

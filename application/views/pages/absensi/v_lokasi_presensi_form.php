@@ -74,10 +74,10 @@
               </div>
 
               <div class="row" style="margin-bottom: 10px;">
-                <div class="col-md-3">
+                <!-- <div class="col-md-3">
                   <label for="tipe_lokasi">Tipe Lokasi</label>
                   <input type="text" class="form-control" name="tipe_lokasi" id="tipe_lokasi">
-                </div>
+                </div> -->
                 <div class="col-md-3">
                   <label for="latitude_lokasi">Latitude Lokasi</label>
                   <input type="number" step="any" class="form-control" name="latitude_lokasi" id="latitude_lokasi">
@@ -131,10 +131,10 @@
               </div>
 
               <div class="row" style="margin-bottom: 10px;">
-                <div class="col-md-3">
+                <!-- <div class="col-md-3">
                   <label for="tipe_lokasi">Tipe Lokasi</label>
                   <input type="text" class="form-control" name="tipe_lokasi" id="tipe_lokasi" value="<?= $detail->tipe_lokasi ?>">
-                </div>
+                </div> -->
                 <div class="col-md-3">
                   <label for="latitude_lokasi">Latitude Lokasi</label>
                   <input type="number" step="any" class="form-control" name="latitude_lokasi" id="latitude_lokasi" value="<?= $detail->latitude ?>">

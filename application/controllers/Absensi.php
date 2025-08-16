@@ -852,7 +852,7 @@ class Absensi extends CI_Controller
             $row[] = $cat->nama_lokasi;
             $row[] = $cat->alamat_lokasi;
 
-            $row[] = $cat->tipe_lokasi;
+            // $row[] = $cat->tipe_lokasi;
             $row[] = $cat->latitude;
             $row[] = $cat->longitude;
             $radius_meter = $cat->radius * 1000;
@@ -918,7 +918,7 @@ class Absensi extends CI_Controller
             'nama_lokasi'                 => $this->input->post('nama_lokasi'),
             'slug'            => $slug,
             'alamat_lokasi'            => $this->input->post('alamat_lokasi'),
-            'tipe_lokasi'                => $this->input->post('tipe_lokasi'),
+            // 'tipe_lokasi'                => $this->input->post('tipe_lokasi'),
             'latitude'            => $this->input->post('latitude_lokasi'),
             'longitude'                => $this->input->post('longitude_lokasi'),
             'radius'                => $radius,
@@ -941,7 +941,7 @@ class Absensi extends CI_Controller
             'nama_lokasi'                 => $this->input->post('nama_lokasi'),
             'slug'            => $slug,
             'alamat_lokasi'            => $this->input->post('alamat_lokasi'),
-            'tipe_lokasi'                => $this->input->post('tipe_lokasi'),
+            // 'tipe_lokasi'                => $this->input->post('tipe_lokasi'),
             'latitude'            => $this->input->post('latitude_lokasi'),
             'longitude'                => $this->input->post('longitude_lokasi'),
             'radius'                => $radius,

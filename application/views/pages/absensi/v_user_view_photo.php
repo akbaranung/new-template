@@ -170,7 +170,7 @@
               <?php } ?>
               <tr>
                 <th>
-                  <a href="<?= base_url('app/user') ?>" class="btn btn-warning"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</a>
+                  <a href="<?= base_url('home') ?>" class="btn btn-warning"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</a>
                   <?php if (empty($user->userImage)) { ?>
                     <button type="submit" class="btn btn-primary">Submit</button>
                   <?php } ?>

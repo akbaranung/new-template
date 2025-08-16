@@ -309,7 +309,7 @@
 								</tr>
 								<tr>
 									<th>
-										<a href="<?= base_url('app/user') ?>" class="btn btn-warning"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</a>
+										<a href="<?= base_url('home') ?>" class="btn btn-warning"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</a>
 									</th>
 								</tr>
 							</table>
@@ -366,7 +366,7 @@
 									<?php } ?>
 									<tr>
 										<th>
-											<a href="<?= base_url('app/user') ?>" class="btn btn-warning"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</a>
+											<a href="<?= base_url('home') ?>" class="btn btn-warning"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</a>
 											<?php if ($mode != 'view') { ?>
 												<button type="submit" class="btn btn-primary"><?= ($mode == 'add') ? 'Submit' : 'Update' ?></button>
 											<?php } ?>
