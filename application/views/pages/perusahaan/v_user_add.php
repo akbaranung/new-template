@@ -278,7 +278,7 @@
                     <th>Cuti Reguler</th>
                     <td><input type="number" name="cuti" class="form-control" value="<?= set_value('cuti', $form_data['cuti'] ?? '') ?>"></td>
                   </tr>
-                  <!-- <tr>
+                  <tr>
                     <th>
                       Lokasi Presensi
                     </th>
@@ -286,14 +286,14 @@
                       <select name="lokasi_presensi" class="form-control js-example-basic-multiple">
                         <option value=""> -- Pilih Lokasi Presensi --</option>
                         <?php
-                        $lokasi = $this->db->get('lokasi_presensi')->result();
+                        $lokasi = $this->db->where('id_perusahaan', $this->session->userdata('user_perusahaan_id'))->get('lokasi_presensi')->result();
                         foreach ($lokasi as $data) {
                         ?>
                           <option value="<?= $data->id ?>"><?= $data->nama_lokasi ?></option>
                         <?php } ?>
                       </select>
                     </td>
-                  </tr> -->
+                  </tr>
                   <tr>
                     <th>Cabang</th>
                     <td>
@@ -656,7 +656,7 @@
                       <select name="lokasi_presensi" class="form-control js-example-basic-multiple">
                         <option value=""> -- Pilih Lokasi Presensi --</option>
                         <?php
-                        $lokasi = $this->db->get('lokasi_presensi')->result();
+                        $lokasi = $this->db->where('id_perusahaan', $this->session->userdata('user_perusahaan_id'))->get('lokasi_presensi')->result();
                         foreach ($lokasi as $data) {
                           if ($user->id_lokasi_presensi != null || $user->id_lokasi_presensi != "") {
                             $selected = $user->id_lokasi_presensi == $data->id ? "selected" : "";

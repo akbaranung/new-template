@@ -57,7 +57,11 @@
                 cancelButtonText: 'Tidak',
                 reverseButtons: true
             }).then((result) => {
-                updateTable();
+                if (result.isConfirmed) {
+                    updateTable();
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    window.location.href = ' <?= base_url() ?>home'; // You'll need to replace 'base_url home' with the actual URL.
+                }
             });
         }
     }
