@@ -20,7 +20,7 @@ class M_asset extends CI_Model
       $this->db->or_like('a.spesifikasi', $keyword, 'both');
       $this->db->or_like('a.nama_asset', $keyword, 'both');
       $this->db->or_like('b.remark', $keyword, 'both');
-      $this->db->or_like('c.nama_ruangan', $keyword, 'both');
+      $this->db->or_like('c.keterangan', $keyword, 'both');
       $this->db->or_like('d.nama_jenis', $keyword, 'both');
       $this->db->group_end();
     }
@@ -38,9 +38,12 @@ class M_asset extends CI_Model
     if ($keyword) {
       $this->db->group_start();
       $this->db->like('a.kode', $keyword, 'both');
+      $this->db->like('a.kode', $keyword, 'both');
       $this->db->or_like('a.spesifikasi', $keyword, 'both');
       $this->db->or_like('a.nama_asset', $keyword, 'both');
       $this->db->or_like('b.remark', $keyword, 'both');
+      $this->db->or_like('c.keterangan', $keyword, 'both');
+      $this->db->or_like('d.nama_jenis', $keyword, 'both');
       $this->db->group_end();
     }
     $this->db->group_by('b.kode');
