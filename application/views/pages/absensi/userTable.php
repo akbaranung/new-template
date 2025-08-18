@@ -16,7 +16,7 @@
                 <th>Attendance</th>
                 <th>Lokasi</th>
                 <th>Tanggal/Waktu</th>
-                <th>Settings</th>
+                <!-- <th>Settings</th> -->
             </tr>
         </thead>
         <tbody id="studentTableContainer" class="body-table">
@@ -32,7 +32,7 @@
                     echo "<td></td>";
                     echo "<td hidden></td>";
                     echo "<td></td>";
-                    echo "<td><span><i class='ri-edit-line edit'></i><i class='ri-delete-bin-line delete'></i></span></td>";
+                    // echo "<td><span><i class='ri-edit-line edit'></i><i class='ri-delete-bin-line delete'></i></span></td>";
                     echo "</tr>";
                 endforeach;
             } else if ($tipe == 'masuk' || $tipe == 'pulang' || $tipe == 'absensi') {
@@ -45,7 +45,7 @@
                     echo "<td>" . $user["attendanceStatus"] . "</td>";
                     echo "<td>" . $user["lokasiAttendance"] . "</td>";
                     echo "<td>" . $user["date"] . ' - ' . $user["waktu"] . "</td>";
-                    echo "<td><span><i class='ri-edit-line edit'></i><i class='ri-delete-bin-line delete'></i></span></td>";
+                    // echo "<td><span><i class='ri-edit-line edit'></i><i class='ri-delete-bin-line delete'></i></span></td>";
                     echo "</tr>";
                 endforeach;
             }
