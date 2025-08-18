@@ -169,6 +169,11 @@
       });
     <?php endif; ?>
   </script>
+  <?php if ($this->session->flashdata('swal_message')): ?>
+    <script>
+      Swal.fire(<?= json_encode($this->session->flashdata('swal_message')); ?>);
+    </script>
+  <?php endif; ?>
   <script>
     const progress = document.getElementById("progress");
     const circles = document.querySelectorAll(".circle");

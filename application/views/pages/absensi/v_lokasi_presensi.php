@@ -28,7 +28,7 @@
                   <th class="text-center">No.</th>
                   <th class="text-center">Nama Lokasi</th>
                   <th class="text-center">Alamat Lokasi</th>
-                  <th class="text-center">Tipe Lokasi</th>
+                  <!-- <th class="text-center">Tipe Lokasi</th> -->
                   <th class="text-center">Latitude</th>
                   <th class="text-center">Longitude</th>
                   <th class="text-center">Radius</th>

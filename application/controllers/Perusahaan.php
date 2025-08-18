@@ -660,7 +660,7 @@ class Perusahaan extends CI_Controller
       echo json_encode([
         'status'       => 'success',
         'new_id'       => $insert_id,
-        'display_text' => $data['kode'] . ' - ' . $data['nama']
+        'display_text' => $data['kode_nama'] . ' - ' . $data['nama']
       ]);
     } else {
       $db_error = $this->db->error();

@@ -238,6 +238,15 @@
                     }, 500);
                     $('#input_kode').focus(); // Focus on the first input field
                 }
+
+                $('#add-bagian-div').toggle(); // Toggles display: none/table-row
+                // Optionally, scroll to the new input fields if they appear off-screen
+                if ($('#add-bagian-div').is(':visible')) {
+                    $('html, body').animate({
+                        scrollTop: $('#add-bagian-div').offset().top - 100 // Adjust offset as needed
+                    }, 500);
+                    $('#input_kode').focus(); // Focus on the first input field
+                }
             <?php
             } else {
             ?>
@@ -274,7 +283,7 @@
 
         // --- Event Listener for "Submit" Button (Handles AJAX call) ---
         $('#submitNewBagianBtn').on('click', function() {
-            const inputKode = $('#input_kode').val().trim();
+            // const inputKode = $('#input_kode').val().trim();
             const inputNama = $('#input_nama').val().trim();
             const inputKodeNama = $('#input_kode_nama').val().trim();
             const inputIdPrsh = $('#input_id_prsh').val(); // Hidden field, should always have a value
@@ -297,7 +306,7 @@
                 url: '<?php echo base_url("perusahaan/save_new_bagian"); ?>', // *** REPLACE with your actual CI URL ***
                 method: 'POST',
                 data: {
-                    kode: inputKode,
+                    // kode: inputKode,
                     nama: inputNama,
                     kode_nama: inputKodeNama,
                     id_prsh: inputIdPrsh
