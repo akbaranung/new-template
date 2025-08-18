@@ -45,6 +45,21 @@ class Absensi extends CI_Controller
 
         $data['pages'] = 'pages/absensi/v_absensi_list';
 
+        $this->db->select('*');
+        $this->db->from('users');
+        $this->db->where('id', $this->session->userdata('user_user_id')); // Filter by username
+        $query = $this->db->get()->row(); // Execute the query
+        $supervisi = $query->supervisi; // Fetch results
+        // var_dump($lokasi_presensi_by_id);
+        if (empty($supervisi) || $supervisi == null || $supervisi == 0 || $supervisi == '0') {
+            $this->session->set_flashdata('swal_message', [
+                'icon' => 'info',
+                'title' => 'Supervisor Belum Ditentukan',
+                'text' => 'Anda harus memiliki supervisor untuk menggunakan fitur Approval. Silakan hubungi admin untuk pengaturan.',
+                'confirmButtonText' => 'Mengerti',
+            ]);
+        }
+
         $this->load->view('index', $data);
     }
 
