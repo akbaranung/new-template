@@ -74,7 +74,7 @@
                 break;
             case error.POSITION_UNAVAILABLE:
                 // Swal.fire('Error', 'Location information is unavailable.', 'error');
-                Swal.fire('Error', 'Informasi lokasi tidak tersedia.', 'error');
+                Swal.fire('Error', 'Informasi lokasi tidak tersedia. Silahkan Aktifkan GPS/Lokasi', 'error');
                 break;
             case error.TIMEOUT:
                 // Swal.fire('Error', 'The request to get your location timed out.', 'error');
