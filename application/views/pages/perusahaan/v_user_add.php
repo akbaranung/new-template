@@ -507,10 +507,10 @@
                         } else if ($this->session->userdata('is_premium')) {
                         ?>
                           <option <?= ($user->level_jabatan == "1") ? 'selected' : '' ?> value="1">Staff</option>
-                          <option <?= ($user->level_jabatan == "2") ? 'selected' : '' ?> value="2">Manager</option>
+                          <!-- <option <?= ($user->level_jabatan == "2") ? 'selected' : '' ?> value="2">Manager</option> -->
                           <!-- <option <?= ($user->level_jabatan == "2") ? 'selected' : '' ?> value="2">Supervisor</option> -->
-                          <option value="3">Keuangan</option>
-                          <!-- <option <?= ($user->level_jabatan == "3") ? 'selected' : '' ?> value="3">Manajer</option> -->
+                          <!-- <option value="3">Keuangan</option> -->
+                          <option <?= ($user->level_jabatan == "3") ? 'selected' : '' ?> value="3">Manajer</option>
                           <!-- <option <?= ($user->level_jabatan == "4") ? 'selected' : '' ?> value="4">General Manajer</option> -->
                           <option <?= ($user->level_jabatan == "5") ? 'selected' : '' ?> value="5">Direktur</option>
                           <!-- <option <?= ($user->level_jabatan == "6") ? 'selected' : '' ?> value="6">Direktur Utama</option> -->
@@ -521,8 +521,8 @@
                             1 => 'Staff',
                             2 => 'Manager',
                             // 2 => 'Supervisor',
-                            3 => 'Keuangan',
-                            // 3 => 'Manajer',
+                            // 3 => 'Keuangan',
+                            3 => 'Manajer',
                             // 4 => 'General Manajer', // This one is commented out in your example, so keep it commented
                             5 => 'Direktur',
                             // 6 => 'Direktur Utama',
