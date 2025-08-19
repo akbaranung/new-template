@@ -1595,6 +1595,32 @@ class Financial extends CI_Controller
     $data['utility'] = $this->db->get('utility')->row_array();
     $data['pages_script'] = 'script/financial/s_financial';
     $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
+
+    $this->cb->from('invoice');
+    $this->cb->join('t_cabang', 't_cabang.uid = invoice.id_cabang');
+    $this->cb->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
+    $this->cb->where('MONTH(invoice.created_at)', date('m'));
+    $this->cb->where('YEAR(invoice.created_at)', date('Y'));
+    $total_invoice = $this->cb->get()->num_rows(); // Get the number of rows
+
+    $this->db->from('utility');
+    $this->db->where('Id', $this->session->userdata('user_perusahaan_id'));
+    $perusahaan = $this->db->get()->row(); // Get the number of rows
+
+    $limit_invoice = $perusahaan->kuota_invoice;
+    if ($total_invoice >= $limit_invoice) {
+      $this->session->set_flashdata('swal_message', [
+        'icon' => 'info', // Tetap gunakan 'info' atau 'question' untuk kesan informatif
+        'title' => 'Singgasana Menunggu Anda!', // Judul yang menarik dan bertema
+        'text' => 'Batas jumlah arsip keuangan (invoice) dalam perbendaharaan kerajaan Anda telah tercapai. Tambah kapasitas perbendaharaan dan kelola lebih banyak dokumen penting dengan menaikkan derajat kekuasaan Anda.',
+        'confirmButtonText' => 'Klaim Takhta Sekarang!', // Kalimat persuasif untuk tombol
+        'showCancelButton' => true,
+        'cancelButtonText' => 'Tunda Penobatan', // Opsi yang lucu dan sesuai tema
+        'redirectUrl' => base_url('subscription/upgrade')
+      ]);
+      redirect('financial/invoice');
+    }
+
     $this->load->view('index', $data);
   }
 

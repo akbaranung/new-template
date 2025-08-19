@@ -219,6 +219,17 @@ class Absen_m extends CI_Model
         return $this->db->count_all_results();
     }
 
+    public function get_approval_num_rows()
+    {
+        $this->db->select('tblattendance.*,users.supervisi');
+        $this->db->from('tblattendance');
+        $this->db->where('attendanceStatus', 'Pending');
+        $this->db->where('supervisi', $this->session->userdata('nip'));
+        $this->db->where('id_perusahaan', $this->session->userdata('user_perusahaan_id'));
+        $this->db->join('users', 'users.username = tblattendance.username');
+        return $this->db->get()->num_rows();
+    }
+
     public function get_user()
     {
         $this->db->select('*'); // Fetch only these columns

@@ -27,6 +27,31 @@ class App extends CI_Controller
     $data['pages'] = 'pages/memo/v_create';
     $data['pages_script'] = 'script/memo/s_memo';
     $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
+
+    $this->db->from('memo');
+    $this->db->where('memo.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
+    $this->db->where('MONTH(memo.created_at)', date('m'));
+    $this->db->where('YEAR(memo.created_at)', date('Y'));
+    $total_memo = $this->db->get()->num_rows(); // Get the number of rows
+
+    $this->db->from('utility');
+    $this->db->where('Id', $this->session->userdata('user_perusahaan_id'));
+    $perusahaan = $this->db->get()->row(); // Get the number of rows
+
+    $limit_memo = $perusahaan->kuota_memo;
+    if ($total_memo >= $limit_memo) {
+      $this->session->set_flashdata('swal_message', [
+        'icon' => 'info', // Tetap gunakan 'info' atau 'question' untuk kesan informatif
+        'title' => 'Singgasana Menunggu Anda!', // Judul yang menarik dan bertema
+        'text' => 'Batas jumlah Surat (Memo) dalam kerajaan Anda telah tercapai. Tambah kapasitas utusan dan kirim lebih banyak pesan penting dengan menaikkan derajat kekuasaan Anda.',
+        'confirmButtonText' => 'Klaim Takhta Sekarang!', // Kalimat persuasif untuk tombol
+        'showCancelButton' => true,
+        'cancelButtonText' => 'Tunda Penobatan', // Opsi yang lucu dan sesuai tema
+        'redirectUrl' => base_url('subscription/upgrade')
+      ]);
+      redirect('home');
+    }
+
     $this->load->view('index', $data);
   }
 

@@ -369,32 +369,37 @@ class Asset extends CI_Controller
       $this->cb->trans_start();
 
       $penyusutanBulan = $this->_parse_rupiah($harga) / $umur;
-      if ($file_name) {
-        $config['upload_path']          = './uploads/asset';
-        $config['allowed_types']        = 'jpg|png|jpeg';
-        $config['max_size']             = 1024;
-        // $config['max_width']            = 1024;
-        // $config['max_height']           = 768;
-        $config['encrypt_name']          = TRUE;
-        $this->upload->initialize($config);
 
-        // Periksa apakah folder sudah ada
-        if (!is_dir('./uploads/asset')) {
-          // Jika tidak ada, buat folder dengan hak akses 0777
-          mkdir('./uploads/asset', 0777, TRUE);
-        }
+      if ($this->session->userdata('is_premium')) {
+        if ($file_name) {
+          $config['upload_path']          = './uploads/asset';
+          $config['allowed_types']        = 'jpg|png|jpeg';
+          $config['max_size']             = 1024;
+          // $config['max_width']            = 1024;
+          // $config['max_height']           = 768;
+          $config['encrypt_name']          = TRUE;
+          $this->upload->initialize($config);
 
-        if (!$this->upload->do_upload('foto')) {
-          $response = [
-            'success' => FALSE,
-            'msg' => $this->upload->display_errors()
-          ];
+          // Periksa apakah folder sudah ada
+          if (!is_dir('./uploads/asset')) {
+            // Jika tidak ada, buat folder dengan hak akses 0777
+            mkdir('./uploads/asset', 0777, TRUE);
+          }
 
-          echo json_encode($response);
-          return false;
+          if (!$this->upload->do_upload('foto')) {
+            $response = [
+              'success' => FALSE,
+              'msg' => $this->upload->display_errors()
+            ];
+
+            echo json_encode($response);
+            return false;
+          } else {
+            $gbr = $this->upload->data();
+            $foto = $gbr['file_name'];
+          }
         } else {
-          $gbr = $this->upload->data();
-          $foto = $gbr['file_name'];
+          $foto = null;
         }
       } else {
         $foto = null;
@@ -510,31 +515,35 @@ class Asset extends CI_Controller
 
       $asset = $this->M_asset->ambil_data_asset($id, $this->session->userdata('kode_cabang'));
 
-      if ($file_name) {
-        $config['upload_path']          = './uploads/asset';
-        $config['allowed_types']        = 'jpg|png|jpeg';
-        $config['max_size']             = 1024;
-        // $config['max_width']            = 1024;
-        // $config['max_height']           = 768;
-        $config['encrypt_name']          = TRUE;
-        $this->upload->initialize($config);
+      if ($this->session->userdata('is_premium')) {
+        if ($file_name) {
+          $config['upload_path']          = './uploads/asset';
+          $config['allowed_types']        = 'jpg|png|jpeg';
+          $config['max_size']             = 1024;
+          // $config['max_width']            = 1024;
+          // $config['max_height']           = 768;
+          $config['encrypt_name']          = TRUE;
+          $this->upload->initialize($config);
 
-        if (file_exists('./uploads/asset/' . $asset->pic) and !empty($asset->pic)) {
-          // Hapus file lama
-          unlink('./uploads/asset/' . $asset->pic);
-        }
+          if (file_exists('./uploads/asset/' . $asset->pic) and !empty($asset->pic)) {
+            // Hapus file lama
+            unlink('./uploads/asset/' . $asset->pic);
+          }
 
-        if (!$this->upload->do_upload('foto')) {
-          $response = [
-            'success' => FALSE,
-            'msg' => $this->upload->display_errors()
-          ];
+          if (!$this->upload->do_upload('foto')) {
+            $response = [
+              'success' => FALSE,
+              'msg' => $this->upload->display_errors()
+            ];
 
-          echo json_encode($response);
-          return false;
+            echo json_encode($response);
+            return false;
+          } else {
+            $gbr = $this->upload->data();
+            $foto = $gbr['file_name'];
+          }
         } else {
-          $gbr = $this->upload->data();
-          $foto = $gbr['file_name'];
+          $foto = $asset->pic;
         }
       } else {
         $foto = $asset->pic;

@@ -33,6 +33,32 @@ class Pengajuan extends CI_Controller
     $data['pages'] = 'pages/pengajuan/v_pengajuan_form';
     $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
 
+
+    $this->cb->from('t_pengajuan');
+    $this->cb->join('t_cabang', 't_cabang.uid = t_pengajuan.cabang');
+    $this->cb->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
+    $this->cb->where('MONTH(t_pengajuan.created_at)', date('m'));
+    $this->cb->where('YEAR(t_pengajuan.created_at)', date('Y'));
+    $total_pengajuan = $this->cb->get()->num_rows(); // Get the number of rows
+
+    $this->db->from('utility');
+    $this->db->where('Id', $this->session->userdata('user_perusahaan_id'));
+    $perusahaan = $this->db->get()->row(); // Get the number of rows
+
+    $limit_pengajuan = $perusahaan->kuota_pengajuan_biaya;
+    if ($total_pengajuan >= $limit_pengajuan) {
+      $this->session->set_flashdata('swal_message', [
+        'icon' => 'info', // Tetap gunakan 'info' atau 'question' untuk kesan informatif
+        'title' => 'Singgasana Menunggu Anda!', // Judul yang menarik dan bertema
+        'text' => 'Batas jumlah pengajuan biaya dalam kerajaan Anda telah tercapai. Tambah kapasitas perbendaharaan dan penuhi lebih banyak permohonan dengan menaikkan derajat kekuasaan Anda.',
+        'confirmButtonText' => 'Klaim Takhta Sekarang!', // Kalimat persuasif untuk tombol
+        'showCancelButton' => true,
+        'cancelButtonText' => 'Tunda Penobatan', // Opsi yang lucu dan sesuai tema
+        'redirectUrl' => base_url('subscription/upgrade')
+      ]);
+      redirect('pengajuan/list');
+    }
+
     $this->load->view('index', $data);
   }
 

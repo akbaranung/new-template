@@ -181,6 +181,28 @@ class Perusahaan extends CI_Controller
 
     // CEK PREMIUM
     if ($this->session->userdata('is_premium')) {
+      $this->db->from('users');
+      $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
+      $this->db->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
+      $total_user_perusahaan = $this->db->get()->num_rows(); // Get the number of rows
+
+      $this->db->from('utility');
+      $this->db->where('Id', $this->session->userdata('user_perusahaan_id'));
+      $perusahaan = $this->db->get()->row(); // Get the number of rows
+
+      $limit_user = $perusahaan->kuota_user;
+      if ($total_user_perusahaan >= $limit_user) {
+        $this->session->set_flashdata('swal_message', [
+          'icon' => 'info', // Tetap gunakan 'info' atau 'question' untuk kesan informatif
+          'title' => 'Singgasana Menunggu Anda!', // Judul yang menarik dan bertema
+          'text' => 'Batas jumlah pelayan (pengguna) dalam kerajaan Anda telah tercapai. Perluas kekuasaan Anda dan tambahkan lebih banyak rakyat dengan menaikan derajat kerajaan Anda!.',
+          'confirmButtonText' => 'Klaim Takhta Sekarang!', // Kalimat persuasif untuk tombol
+          'showCancelButton' => true,
+          'cancelButtonText' => 'Tunda Penobatan', // Opsi yang lucu dan sesuai tema
+          'redirectUrl' => base_url('subscription/upgrade')
+        ]);
+        redirect('perusahaan/user');
+      }
       $this->load->view('index', $data);
     } else {
       $this->db->from('users');
@@ -204,7 +226,6 @@ class Perusahaan extends CI_Controller
           'cancelButtonText' => 'Nanti Saja, Belum Siap Jadi Raja',
           'redirectUrl' => base_url('subscription/upgrade') // URL to redirect if confirmed
         ]);
-
         redirect('perusahaan/user');
       }
     }
@@ -244,6 +265,8 @@ class Perusahaan extends CI_Controller
     $data['pages_script'] = 'script/perusahaan/s_user';
     $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
     $data['pages'] = 'pages/perusahaan/v_user_add';
+
+
 
     $this->load->view('index', $data);
     // $this->load->view('pages/absensi/lokasi_presensi_form', $data);
@@ -412,11 +435,25 @@ class Perusahaan extends CI_Controller
 
     // Save the access
     if ($this->M_user_access->save_user_access($nip, $menu_id_string)) {
-      $this->session->set_flashdata('success', 'User menu access updated successfully!');
-      echo 'Berhasil';
+      // $this->session->set_flashdata('success', 'User menu access updated successfully!');
+      // echo 'Berhasil';
+      $this->session->set_flashdata('swal_message', [
+        'icon' => 'success', // or 'success', 'warning', 'info', 'question'
+        'title' => 'Berhasil!',
+        'text' => 'Berhasil Mengubah data!',
+        'timer' => 3000, // SweetAlert2 will close after 3 seconds (3000 milliseconds)
+        'timerProgressBar' => true, // Shows a progress bar for the timer
+      ]);
     } else {
-      $this->session->set_flashdata('error', 'Failed to update user menu access. Please try again.');
-      echo 'Tidak';
+      // $this->session->set_flashdata('error', 'Failed to update user menu access. Please try again.');
+      // echo 'Tidak';
+      $this->session->set_flashdata('swal_message', [
+        'icon' => 'error', // or 'success', 'warning', 'info', 'question'
+        'title' => 'Gagal!',
+        'text' => 'Gagal Mengubah data, silahkan coba lagi',
+        'timer' => 3000, // SweetAlert2 will close after 3 seconds (3000 milliseconds)
+        'timerProgressBar' => true, // Shows a progress bar for the timer
+      ]);
     }
 
     redirect('perusahaan/user');
@@ -488,6 +525,27 @@ class Perusahaan extends CI_Controller
     // CEK PREMIUM
     if ($this->session->userdata('is_premium')) {
 
+      $this->cb->from('t_cabang');
+      $this->cb->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
+      $total_cabang = $this->cb->get()->num_rows(); // Get the number of rows
+
+      $this->db->from('utility');
+      $this->db->where('Id', $this->session->userdata('user_perusahaan_id'));
+      $perusahaan = $this->db->get()->row(); // Get the number of rows
+
+      $limit_cabang = $perusahaan->kuota_cabang;
+      if ($total_cabang >= $limit_cabang) {
+        $this->session->set_flashdata('swal_message', [
+          'icon' => 'info', // Tetap gunakan 'info' atau 'question' untuk kesan informatif
+          'title' => 'Singgasana Menunggu Anda!', // Judul yang menarik dan bertema
+          'text' => 'Batas jumlah wilayah (cabang) dalam kerajaan Anda telah tercapai. Perluas kekuasaan Anda dan tambahkan lebih banyak rakyat dengan menaikan derajat kerajaan Anda!.',
+          'confirmButtonText' => 'Klaim Takhta Sekarang!', // Kalimat persuasif untuk tombol
+          'showCancelButton' => true,
+          'cancelButtonText' => 'Tunda Penobatan', // Opsi yang lucu dan sesuai tema
+          'redirectUrl' => base_url('subscription/upgrade')
+        ]);
+        redirect('perusahaan/cabang');
+      }
       $this->load->view('index', $data);
     } else {
 

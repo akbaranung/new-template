@@ -44,6 +44,8 @@ class Absensi extends CI_Controller
         $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
 
         $data['pages'] = 'pages/absensi/v_absensi_list';
+        $data['approval'] = $this->user->get_approval_num_rows();
+
 
         $this->db->select('*');
         $this->db->from('users');

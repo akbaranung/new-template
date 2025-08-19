@@ -48,9 +48,13 @@
             </div>
             <?php
             if ($this->session->userdata('level_jabatan') >= 3) {
+              $notif = '';
+              if ($approval > 0) {
+                $notif = '<span class="badge badge-pill badge-danger badge-counter ml-2">' . $approval . '</span>';
+              }
             ?>
               <div class="col-md-3">
-                <button class="btn btn-primary btn-block" onclick="showApproval()">Approval List</button>
+                <button class="btn btn-primary btn-block" onclick="showApproval()">Approval List <?= $notif ?></button>
               </div>
             <?php
             }
