@@ -579,6 +579,23 @@ class App extends CI_Controller
     $data['pages'] = 'pages/memo/v_outbox';
     $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
 
+
+    $this->db->from('memo');
+    $this->db->where('memo.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
+    $this->db->where('MONTH(memo.created_at)', date('m'));
+    $this->db->where('YEAR(memo.created_at)', date('Y'));
+    $total_memo = $this->db->get()->num_rows(); // Get the number of rows
+
+    $this->db->from('utility');
+    $this->db->where('Id', $this->session->userdata('user_perusahaan_id'));
+    $perusahaan = $this->db->get()->row(); // Get the number of rows
+
+    $limit_memo = $perusahaan->kuota_memo;
+
+    $data['limit_memo'] = $limit_memo ? $limit_memo : 0;
+    $data['total_memo'] = $total_memo ? $total_memo : 0;
+
+
     $this->load->view('index', $data);
   }
 }
