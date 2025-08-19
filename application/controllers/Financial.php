@@ -1564,6 +1564,23 @@ class Financial extends CI_Controller
     // echo '</pre>';
     // exit;
 
+
+    $this->cb->from('invoice');
+    $this->cb->join('t_cabang', 't_cabang.uid = invoice.id_cabang');
+    $this->cb->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
+    $this->cb->where('MONTH(invoice.created_at)', date('m'));
+    $this->cb->where('YEAR(invoice.created_at)', date('Y'));
+    $total_invoice = $this->cb->get()->num_rows(); // Get the number of rows
+
+    $this->db->from('utility');
+    $this->db->where('Id', $this->session->userdata('user_perusahaan_id'));
+    $perusahaan = $this->db->get()->row(); // Get the number of rows
+
+    $limit_invoice = $perusahaan->kuota_invoice;
+
+    $data['total_invoice'] = $total_invoice;
+    $data['limit_invoice'] = $limit_invoice;
+
     $this->load->view('index', $data);
   }
 

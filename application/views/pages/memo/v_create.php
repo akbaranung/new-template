@@ -5,6 +5,14 @@
       <div class="card shadow mb-4">
         <div class="card-header">
           <strong class="card-title">Create New Digital Memo</strong>
+          <span style="float:right; ">
+            <b>
+              (Kuota Memo Tersisa <?= $limit_memo - $total_memo ?>)
+              <?=
+              $total_memo . '/' . $limit_memo;
+              ?>
+            </b>
+          </span>
         </div>
         <div class="card-body">
           <form method="post" action="<?= site_url('app/send_memo') ?>" enctype="multipart/form-data">

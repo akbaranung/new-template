@@ -12,6 +12,15 @@
       <div class="card shadow mb-4">
         <div class="card-header">
           <a href="<?= site_url('pengajuan/create') ?>" class="btn btn-primary">Buat Pengajuan</a>
+
+          <span style="float:right; ">
+            <b>
+              (Kuota Pengajuan Biaya Tersisa <?= $limit_pengajuan - $total_pengajuan ?>)
+              <?=
+              $total_pengajuan . '/' . $limit_pengajuan;
+              ?>
+            </b>
+          </span>
           <!-- <strong class="card-title">List Pengajuan Biaya</strong> -->
         </div>
         <div class="card-body">

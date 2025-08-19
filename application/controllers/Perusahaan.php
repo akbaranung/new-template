@@ -50,6 +50,20 @@ class Perusahaan extends CI_Controller
     $data['pages'] = 'pages/perusahaan/v_cabang';
     $data['menus'] = $this->M_menu->get_accessible_menus($nip);
 
+
+    $this->cb->from('t_cabang');
+    $this->cb->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
+    $total_cabang = $this->cb->get()->num_rows(); // Get the number of rows
+
+    $this->db->from('utility');
+    $this->db->where('Id', $this->session->userdata('user_perusahaan_id'));
+    $perusahaan = $this->db->get()->row(); // Get the number of rows
+
+    $limit_cabang = $perusahaan->kuota_cabang;
+
+    $data['limit_cabang'] = $limit_cabang;
+    $data['total_cabang'] = $total_cabang;
+
     $this->load->view('index', $data);
   }
 
@@ -93,6 +107,19 @@ class Perusahaan extends CI_Controller
     $data['user'] = $this->db->get_where('users', ['nip' => $nip])->row_array();
     $data['pages'] = 'pages/perusahaan/v_user';
     $data['menus'] = $this->M_menu->get_accessible_menus($nip);
+    $this->db->from('users');
+    $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
+    $this->db->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
+    $total_user_perusahaan = $this->db->get()->num_rows(); // Get the number of rows
+
+    $this->db->from('utility');
+    $this->db->where('Id', $this->session->userdata('user_perusahaan_id'));
+    $perusahaan = $this->db->get()->row(); // Get the number of rows
+
+    $limit_user = $perusahaan->kuota_user;
+
+    $data['total_user_perusahaan'] = $total_user_perusahaan;
+    $data['limit_user'] = $limit_user;
 
     $this->load->view('index', $data);
   }
@@ -534,6 +561,10 @@ class Perusahaan extends CI_Controller
       $perusahaan = $this->db->get()->row(); // Get the number of rows
 
       $limit_cabang = $perusahaan->kuota_cabang;
+
+      $data['limit_cabang'] = $limit_cabang;
+      $data['total_cabang'] = $total_cabang;
+
       if ($total_cabang >= $limit_cabang) {
         $this->session->set_flashdata('swal_message', [
           'icon' => 'info', // Tetap gunakan 'info' atau 'question' untuk kesan informatif

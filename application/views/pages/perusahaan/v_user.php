@@ -109,7 +109,8 @@
         </div> -->
         <div class="card-body" id="user">
           <!-- <div class="d-flex justify-content-end align-items-center"> -->
-          <div class="d-flex align-items-center">
+          <!-- <div class="d-flex align-items-center"> -->
+          <div>
             <?php
             // if ($total_user <= 4) {
             ?>
@@ -165,6 +166,16 @@
             <?php
             }
             ?>
+            <?php if ($this->session->userdata('is_premium')) { ?>
+              <span style="float: right;">
+                <b>
+                  (Kuota User Tersisa <?= $limit_user - $total_user_perusahaan ?>)
+                  <?=
+                  $total_user_perusahaan . '/' . $limit_user;
+                  ?>
+                </b>
+              </span>
+            <?php } ?>
           </div>
           <div class="table-responsive">
             <table id="user-table" class="table table-sm table-striped table-bordered" style="width:100%">

@@ -5,6 +5,14 @@
       <div class="card shadow mb-4">
         <div class="card-header">
           <p class="card-title"><strong>Form Pengajuan</strong></p>
+          <span style="float:right; ">
+            <b>
+              (Kuota Pengajuan Biaya Tersisa <?= $limit_pengajuan - $total_pengajuan ?>)
+              <?=
+              $total_pengajuan . '/' . $limit_pengajuan;
+              ?>
+            </b>
+          </span>
         </div>
         <div class="card-body">
           <form action="<?= site_url('pengajuan/insert') ?>" method="post" enctype="multipart/form-data">

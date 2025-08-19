@@ -171,7 +171,12 @@
   </script>
   <?php if ($this->session->flashdata('swal_message')): ?>
     <script>
-      Swal.fire(<?= json_encode($this->session->flashdata('swal_message')); ?>);
+      var swalData = <?= json_encode($this->session->flashdata('swal_message')); ?>;
+      Swal.fire(swalData).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = swalData.redirectUrl;
+        }
+      });
     </script>
   <?php endif; ?>
   <script>

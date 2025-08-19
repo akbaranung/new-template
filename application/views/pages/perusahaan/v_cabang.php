@@ -59,7 +59,8 @@
         </div> -->
         <div class="card-body" id="user">
           <!-- <div class="d-flex justify-content-end align-items-center"> -->
-          <div class="d-flex align-items-center">
+          <!-- <div class="d-flex align-items-center"> -->
+          <div>
             <?php
             if ($total_cabang < 1) {
             ?>
@@ -76,6 +77,16 @@
             <?php
             }
             ?>
+            <?php if ($this->session->userdata('is_premium')) { ?>
+              <span style="float:right; ">
+                <b>
+                  (Kuota Cabang Tersisa <?= $limit_cabang - $total_cabang ?>)
+                  <?=
+                  $total_cabang . '/' . $limit_cabang;
+                  ?>
+                </b>
+              </span>
+            <?php } ?>
           </div>
           <div class="table-responsive">
             <table id="user-table" class="table table-striped table-bordered" style="width:100%">

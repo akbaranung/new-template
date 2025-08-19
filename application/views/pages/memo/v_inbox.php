@@ -12,6 +12,14 @@
       <div class="card shadow mb-4">
         <div class="card-header">
           <strong class="card-title">Digital Memo</strong>
+          <span style="float:right; ">
+            <b>
+              (Kuota Memo Tersisa <?= $limit_memo - $total_memo ?>)
+              <?=
+              $total_memo . '/' . $limit_memo;
+              ?>
+            </b>
+          </span>
         </div>
         <div class="card-body">
           <div class="row">

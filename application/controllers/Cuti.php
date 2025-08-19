@@ -837,7 +837,8 @@ class Cuti extends CI_Controller
                             'dirsdm' => '2195903',
                             'dirut' => '2146501',
                             'hrd_bagian' => 4,
-                            'hrd_jabatan' => 2
+                            'hrd_jabatan' => 2,
+                            'id_perusahaan' => $this->session->userdata('user_perusahaan_id')
                         ];
 
                         $this->M_cuti->insertCuti('cuti', $params);
@@ -868,7 +869,8 @@ class Cuti extends CI_Controller
                         // 'dirsdm' => '2195903',
                         // 'dirut' => '2146501',
                         // 'hrd_bagian' => 4,
-                        'hrd_jabatan' => 3
+                        'hrd_jabatan' => 3,
+                        'id_perusahaan' => $this->session->userdata('user_perusahaan_id')
                     ];
                     // Mengecek jumlah cuti dengan sisa cuti
                     $this->db->select('cuti');

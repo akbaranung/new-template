@@ -12,6 +12,15 @@
           <div class="row mb-3">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
               <a href="<?= site_url('financial/create_invoice') ?>" class="btn btn-primary">Create Inv.</a>
+
+              <span style="float:right; ">
+                <b>
+                  (Kuota Memo Tersisa <?= $limit_invoice - $total_invoice ?>)
+                  <?=
+                  $total_invoice . '/' . $limit_invoice;
+                  ?>
+                </b>
+              </span>
             </div>
           </div>
           <form class="form-horizontal form-label-left" method="POST" action="<?= base_url('financial/invoice') ?>">
