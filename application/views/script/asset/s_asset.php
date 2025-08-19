@@ -114,6 +114,119 @@
         }
       });
     });
+
+    $('.btn-penyusutan').click(function(e) {
+      var url = $(this).attr('href');
+      e.preventDefault();
+      Swal.fire({
+        title: "Apakah kamu yakin?",
+        text: "Untuk melakukan penyusutan bulan ini?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          $.ajax({
+            url: url,
+            method: "POST",
+            processData: false,
+            contentType: false,
+            dataType: "JSON",
+            beforeSend: () => {
+              Swal.fire({
+                title: "Loading....",
+                timerProgressBar: true,
+                allowOutsideClick: false,
+                didOpen: () => {
+                  Swal.showLoading();
+                },
+              });
+            },
+            success: function(res) {
+              if (res.success) {
+                Swal.fire({
+                  icon: "success",
+                  title: `${res.msg}`,
+                  showConfirmButton: false,
+                  timer: 1500,
+                }).then(function() {
+                  Swal.close();
+                  location.reload();
+                });
+              } else {
+                Swal.fire({
+                  icon: "error",
+                  title: `${res.msg}`,
+                  showConfirmButton: false,
+                  timer: 1500,
+                }).then(function() {
+                  Swal.close();
+                });
+              }
+            },
+            error: function(xhr, status, error) {
+              Swal.fire({
+                icon: "error",
+                title: `${error}`,
+                showConfirmButton: false,
+                timer: 1500,
+              });
+            },
+          });
+        }
+      });
+    })
+
+    $('#detail_penyusutan').DataTable({
+      "ajax": "<?php echo site_url('asset/get_penyusutan/' . $this->uri->segment(3)) ?>",
+      "columns": [{
+          "data": "kode"
+        },
+        {
+          "data": "asset"
+        },
+        {
+          "data": "spesifikasi"
+        },
+        {
+          "data": "harga_perolehan"
+        },
+        {
+          "data": "umur"
+        },
+        {
+          "data": "penyusutan_perbulan"
+        },
+        {
+          "data": "total_penyusutan"
+        },
+        {
+          "data": "nilai_buku"
+        },
+        {
+          "data": "sisa_umur"
+        }
+      ]
+    });
+
+    $('#tablePenyusutanPengecualian').DataTable({
+      "processing": true,
+      "serverSide": true,
+      "order": [],
+      "ajax": {
+        "url": "<?= base_url('asset/penyusutan_pengecualian_ajax_list') ?>",
+        "type": "POST",
+        // "success": function(res) {
+        //   console.log(res)
+        // }
+      },
+      "columnDefs": [{
+        "targets": [0, 3, 4],
+        "orderable": false
+      }],
+    })
   })
 
   function applyPriceFormat() {
@@ -127,6 +240,68 @@
         numeralDecimalScale: 2,
         rawValueTrimPrefix: true
       });
+    });
+  }
+
+  function hapusPengecualian(id) {
+    Swal.fire({
+      title: "Apakah kamu yakin?",
+      text: "Untuk menghapus asset ini dari pengecualian penyusutan?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: "<?= site_url('asset/hapus_pengecualian/') ?>" + id,
+          method: "POST",
+          processData: false,
+          contentType: false,
+          dataType: "JSON",
+          beforeSend: () => {
+            Swal.fire({
+              title: "Loading....",
+              timerProgressBar: true,
+              allowOutsideClick: false,
+              didOpen: () => {
+                Swal.showLoading();
+              },
+            });
+          },
+          success: function(res) {
+            if (res.success) {
+              Swal.fire({
+                icon: "success",
+                title: `${res.msg}`,
+                showConfirmButton: false,
+                timer: 1500,
+              }).then(function() {
+                Swal.close();
+                location.reload();
+              });
+            } else {
+              Swal.fire({
+                icon: "error",
+                title: `${res.msg}`,
+                showConfirmButton: false,
+                timer: 1500,
+              }).then(function() {
+                Swal.close();
+              });
+            }
+          },
+          error: function(xhr, status, error) {
+            Swal.fire({
+              icon: "error",
+              title: `${error}`,
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          },
+        });
+      }
     });
   }
 </script>

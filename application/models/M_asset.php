@@ -3,6 +3,11 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class M_asset extends CI_Model
 {
+
+  var $column_order_pengecualian = array(null, 'nama_asset', 'kode', null);
+  var $column_search_pengecualian = array('nama_asset', 'spesifikasi', 'kode');
+  var $order_pengecualian = array('Id' => 'desc');
+
   public function __construct()
   {
     parent::__construct();
@@ -127,5 +132,83 @@ class M_asset extends CI_Model
       ->where('lokasi', $cabang);
     $query = $this->db->get();
     return $query->result();
+  }
+
+  public function penyusutan_count($cabang, $keyword)
+  {
+    $this->cb->select('a.*')->from('t_penyusutan a')
+      ->group_start()
+      ->where('a.cabang', $cabang)
+      ->group_end();
+    if ($keyword) {
+      $this->cb->group_start();
+      $this->cb->where('a.periode', $keyword);
+      $this->cb->group_end();
+    }
+    return $this->cb->get()->num_rows();
+  }
+
+  public function penyusutan_get($limit, $start, $cabang, $keyword)
+  {
+    $this->cb->select('a.*')->from('t_penyusutan a')
+      ->group_start()
+      ->where('a.cabang', $cabang)
+      ->group_end();
+    if ($keyword) {
+      $this->cb->group_start();
+      $this->cb->where('a.periode', $keyword);
+      $this->cb->group_end();
+    }
+    $this->cb->order_by('Id', 'DESC');
+    return $this->cb->limit($limit, $start)->get()->result();
+  }
+
+  private function _get_datatables_query_penyusutan_pengecualian()
+  {
+    $this->db->select('a.*')->from('asset_list a');
+    $i = 0;
+    foreach ($this->column_search_pengecualian as $item) {
+      if ($this->input->post('search')['value']) {
+        if ($i === 0) {
+          $this->db->group_start();
+          $this->db->like($item, $this->input->post('search')['value']);
+        } else {
+          $this->db->or_like($item, $this->input->post('search')['value']);
+        }
+        if (count($this->column_search_pengecualian) - 1 == $i) //looping terakhir
+          $this->db->group_end();
+      }
+      $i++;
+    }
+    $this->db->where('penyusutan', 0);
+    // jika datatable mengirim POST untuk order
+    if ($this->input->post('order')) {
+      $this->db->order_by($this->column_order_pengecualian[$this->input->post('order')['0']['column']], $this->input->post('order')['0']['dir']);
+    } else if (isset($this->order)) {
+      $order = $this->order;
+      $this->db->order_by(key($order), $order[key($order)]);
+    }
+  }
+
+  public function get_datatables_penyusutan_pengecualian()
+  {
+    $this->_get_datatables_query_penyusutan_pengecualian();
+    if ($this->input->post('length') != -1)
+      $this->db->limit($this->input->post('length'), $this->input->post('start'));
+    $query = $this->db->get();
+    return $query->result();
+  }
+
+  public function count_filtered_pengecualian()
+  {
+    $this->_get_datatables_query_penyusutan_pengecualian();
+    $query = $this->db->get();
+    return $query->num_rows();
+  }
+
+  public function count_all_pengecualian()
+  {
+    $this->_get_datatables_query_penyusutan_pengecualian();
+    return $this->db->count_all_results();
   }
 }
