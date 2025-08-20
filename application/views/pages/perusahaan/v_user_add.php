@@ -264,7 +264,8 @@
                     </td>
                   </tr>
                   <tr>
-                    <th>TMT</th>
+                    <!-- <th>TMT</th> -->
+                    <th>Tanggal Masuk Kerja</th>
                     <td>
                       <div class='input-group date' id='myDatepicker2'>
                         <input type='date' name='tmt' class="form-control" placeholder="yyyy-mm-dd" data-validate-words="1" required="required" value="<?= set_value('tmt', $form_data['tmt'] ?? '') ?>">
@@ -548,7 +549,8 @@
 
                   <div class="col-md-6">
                     <div class="form-group">
-                      <label>TMT</label>
+                      <!-- <label>TMT</label> -->
+                      <label>Tanggal Masuk Kerja</label>
                       <input type="date" name="tmt" class="form-control" value="<?= $user->tmt ?>">
                     </div>
                   </div>

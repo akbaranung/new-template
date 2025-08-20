@@ -1357,15 +1357,11 @@ class Cuti extends CI_Controller
             redirect('cuti/view');
         }
 
-        if ($cuti['jenis'] == 2) {
-            if ($cuti['status_hrd'] != 'Disetujui' || $cuti['status_atasan'] != 'Disetujui' || $cuti['status_dirsdm'] != 'Disetujui' || $cuti['status_dirut'] != 'Disetujui') {
-                redirect('cuti/view');
-            }
-        } else {
-            if ($cuti['status_hrd'] !=  'Disetujui' || $cuti['status_atasan'] != 'Disetujui') {
-                redirect('cuti/view');
-            }
+
+        if ($cuti['status_atasan'] != 'Disetujui') {
+            redirect('cuti/view');
         }
+
 
         if ($cuti['jenis'] == 2) {
             $jumlah_cuti = "1 Bulan";
@@ -1385,10 +1381,6 @@ class Cuti extends CI_Controller
         $this->db->select('nama, nama_jabatan');
         $atasan = $this->db->get_where('users', ['nip' => $cuti['atasan']])->row_array();
 
-        // HRD
-        $this->db->select('nama');
-        $hrd = $this->db->get_where('users', ['nip' => $cuti['hrd']])->row_array();
-
         // Divisi
         $this->db->select('nama, kode_nama');
         $bagian = $this->db->get_where('bagian', ['Id' => $user['bagian']])->row_array();
@@ -1402,7 +1394,7 @@ class Cuti extends CI_Controller
             'bagian' => $bagian,
             'pengganti' => $pengganti,
             'atasan' => $atasan,
-            'hrd' => $hrd,
+            // 'hrd' => $hrd,
             'jumlah_cuti' => $jumlah_cuti,
 
         ];
@@ -1426,6 +1418,7 @@ class Cuti extends CI_Controller
 
         //orientasi paper potrait / landscape
         $orientation = "portrait";
+        // $this->load->view('pages/cuti/cetak_form_cuti', $data);
 
         $html = $this->load->view('pages/cuti/cetak_form_cuti', $data, true);
 
