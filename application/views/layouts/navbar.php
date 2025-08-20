@@ -134,7 +134,7 @@
           <?php
           if ($this->session->userdata('level_jabatan') == 3) {
           ?>
-            <a class="dropdown-item" href="<?= site_url('cuti/view') ?>">
+            <a class="dropdown-item" href="<?= site_url('cuti/data_approve_atasan_view') ?>">
               Cuti
               <?php if ($jumlah_notifikasi_cuti > 0): ?>
                 <span class="badge badge-pill badge-danger float-right"><?= $jumlah_notifikasi_cuti ?></span>
