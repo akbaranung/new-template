@@ -74,6 +74,22 @@ class Cuti extends CI_Controller
     {
         $nip = $this->session->userdata('nip');
 
+        $this->db->select('*');
+        $this->db->from('users');
+        $this->db->where('id', $this->session->userdata('user_user_id')); // Filter by username
+        $query = $this->db->get()->row(); // Execute the query
+        $supervisi = $query->supervisi; // Fetch results
+        // var_dump($lokasi_presensi_by_id);
+        if (empty($supervisi) || $supervisi == null || $supervisi == 0 || $supervisi == '0') {
+            $this->session->set_flashdata('swal_message', [
+                'icon' => 'info',
+                'title' => 'Supervisor Belum Ditentukan',
+                'text' => 'Anda harus memiliki supervisor untuk menggunakan fitur Approval. Silakan hubungi admin untuk pengaturan.',
+                'confirmButtonText' => 'Mengerti',
+            ]);
+        }
+
+        $data['sisa_cuti'] = $query->cuti;
         $data['jenis_cuti'] = $this->M_cuti->getJenisCuti();
         $data['all_jenis'] = $this->M_cuti->get_all_jenis_cuti();
         $data['karyawan'] = $this->M_cuti->getKaryawan();
@@ -1452,11 +1468,14 @@ class Cuti extends CI_Controller
         $this->db->where(['nip' => $nipSession]);
         $this->db->update('users');
 
+        // $data = [
+        //     'msg' => "Reset berhasil!",
+        //     'err' => false
+        // ];
         $data = [
-            'msg' => "Reset berhasil!",
-            'err' => false
+            'status' => "success",
+            'message' => "Reset berhasil!"
         ];
-
         echo json_encode($data);
     }
 

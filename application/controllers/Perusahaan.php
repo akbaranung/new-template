@@ -149,12 +149,16 @@ class Perusahaan extends CI_Controller
       if ($cat->nama_jabatan == "Super Admin") {
         $row[] = '<a href="' . base_url('perusahaan/edit_user/' . $cat->id) . '" class="btn btn-warning btn-di-td">
         Update
-      </a>';
+      </a> <button onclick="onResetCuti(' . $cat->id . ')" class="btn btn-warning btn-di-td">
+        Reset Cuti
+      </button>';
       } else {
         $row[] = '<a href="' . base_url('perusahaan/edit_user/' . $cat->id) . '" class="btn btn-warning btn-di-td">
         Update
       </a> <button onclick="onDelete(' . $cat->id . ')" class="btn btn-danger btn-di-td">
         Delete
+      </button> <button onclick="onResetCuti(' . $cat->nip . ')" class="btn btn-warning btn-di-td">
+        Reset Cuti
       </button>';
       }
       $data[] = $row;

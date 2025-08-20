@@ -18,27 +18,27 @@ class M_cuti extends CI_Model
         $sekarang = new DateTime('today');
         $tahun = $sekarang->diff($masuk)->y;
 
-        if ($tahun < 1) {
-            $this->db->where('Id', 7);
-        }
+        // if ($tahun < 1) {
+        //     $this->db->where('Id', 7);
+        // }
 
-        if ($tahun < 5) {
-            $this->db->where('Id !=', 2);
-        } else {
-            if ($user->cuti_panjang == 1) {
-                if ($tahun % 5 != 0) {
+        // if ($tahun < 5) {
+        //     $this->db->where('Id !=', 2);
+        // } else {
+        if ($user->cuti_panjang == 1) {
+            if ($tahun % 5 != 0) {
+                $this->db->where('Id !=', 2);
+            } else {
+                $this->db->order_by('tgl_cuti', 'DESC');
+                $this->db->limit(1);
+                $cutiPanjang = $this->db->get_where('cuti', ['nip' => $user->nip])->row();
+
+                if (date('Y', strtotime($cutiPanjang->tgl_cuti)) == date('Y')) {
                     $this->db->where('Id !=', 2);
-                } else {
-                    $this->db->order_by('tgl_cuti', 'DESC');
-                    $this->db->limit(1);
-                    $cutiPanjang = $this->db->get_where('cuti', ['nip' => $user->nip])->row();
-
-                    if (date('Y', strtotime($cutiPanjang->tgl_cuti)) == date('Y')) {
-                        $this->db->where('Id !=', 2);
-                    }
                 }
             }
         }
+        // }
 
         // Mengecek jika karyawan pernah mengambil cuti haji
         if ($user->cuti_haji == 1) {

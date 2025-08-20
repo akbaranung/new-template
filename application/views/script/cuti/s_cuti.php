@@ -142,6 +142,8 @@
             $("#mulaiCuti").val('');
             $("#akhirCuti").val('');
             $("#jumlahCuti").val('')
+            const sisa_cuti = <?= $sisa_cuti ?>
+
             var value = $(this).val();
             if (value > 0) {
                 $.ajax({
@@ -171,6 +173,7 @@
                                 $("#detailCuti").html(res.detail);
                             }
                         }
+
 
                         // JIka jenis cuti yang dipilih, cuti panjang
                         if (res.jenis.Id == 2) {
@@ -206,6 +209,74 @@
                                 }).datepicker('setDate', selesai);
                                 $("#akhirCuti").datepicker('remove').prop('readonly', true);
                             })
+                        } else if (res.jenis.Id == 1) {
+                            if (sisa_cuti == 0) {
+                                Swal.fire({
+                                    title: 'Perhatian!',
+                                    text: 'Sisa cuti Anda sudah habis. Anda Tidak dapat melakukan Pengajuan Cuti.',
+                                    icon: 'info',
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: 'Lanjutkan'
+                                });
+                            } else {
+                                $('#mulaiCuti').removeAttr('readonly');
+                                var mulai = res.jenis.min_hari_pengajuan;
+                                var disabledWeekend = []
+
+                                res.jenis.Id == 4 || res.jenis.Id == 5 ?
+                                    disabledWeekend = [] :
+                                    disabledWeekend = [0, 6]
+
+                                mulai > 0 ?
+                                    mulai = "+" + mulai + "d" :
+                                    mulai = "now()"
+
+                                var max = res.jenis.max_hari;
+                                if (max > 0) {
+                                    $("#mulaiCuti").datepicker({
+                                        autoclose: true,
+                                        startDate: "dateToday",
+                                        daysOfWeekDisabled: disabledWeekend,
+                                        datesDisabled: <?= $array ?>,
+                                        format: 'dd/mm/yyyy'
+                                    });
+                                    $("#mulaiCuti").datepicker('setStartDate', mulai).on('changeDate', function(selected) {
+                                        const minDate = new Date(selected.date.valueOf());
+                                        minDate.setTime(minDate.getTime() + 3600 * 1000 * 24 * max - 1);
+                                        $('#akhirCuti').datepicker({
+                                            format: "dd/mm/yyyy"
+                                        })
+                                        $('#akhirCuti').datepicker('setDate', minDate);
+                                        $("#akhirCuti").datepicker('remove').prop('readonly', true);
+                                    });
+                                } else {
+                                    var disabledWeekend = []
+                                    res.jenis.Id == 4 || res.jenis.Id == 5 ?
+                                        disabledWeekend = [] :
+                                        disabledWeekend = [0, 6]
+
+                                    $("#mulaiCuti").datepicker({
+                                        autoclose: true,
+                                        startDate: "dateToday",
+                                        daysOfWeekDisabled: disabledWeekend,
+                                        datesDisabled: <?= $array ?>,
+                                        format: 'dd/mm/yyyy'
+                                    });
+                                    $("#mulaiCuti").datepicker('setStartDate', mulai).on('changeDate', function(selected) {
+                                        $("#akhirCuti").removeAttr('readonly');
+                                        const minDate = new Date(selected.date.valueOf());
+                                        $("#akhirCuti").datepicker({
+                                            todayBtn: true,
+                                            todayHighlight: true,
+                                            autoclose: true,
+                                            daysOfWeekDisabled: disabledWeekend,
+                                            datesDisabled: <?= $array ?>,
+                                            format: 'dd/mm/yyyy'
+                                        })
+                                        $('#akhirCuti').datepicker('setStartDate', minDate)
+                                    });
+                                }
+                            }
                         } else {
                             if (res.detail == 0) {
                                 $('#mulaiCuti').removeAttr('readonly');
