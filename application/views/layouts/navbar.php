@@ -97,6 +97,17 @@
       $jumlah_notifikasi_tello = $res4[0]['COUNT(id)'];
 
       $jumlah_notifikasi = $jumlah_notifikasi_memo + $jumlah_notifikasi_tello;
+
+      if ($this->session->userdata('level_jabatan') == 3) {
+
+        // Count unread tasks
+        $sql5 = "SELECT COUNT(id_cuti) FROM cuti WHERE atasan = '$nip' AND status_atasan is NULL";
+        $query5 = $this->db->query($sql5);
+        $res5 = $query5->result_array();
+        $jumlah_notifikasi_cuti = $res5[0]['COUNT(id_cuti)'];
+
+        $jumlah_notifikasi = $jumlah_notifikasi + $jumlah_notifikasi_cuti;
+      }
       ?>
 
 
@@ -120,6 +131,18 @@
               <span class="badge badge-pill badge-danger float-right"><?= $jumlah_notifikasi_tello ?></span>
             <?php endif; ?>
           </a>
+          <?php
+          if ($this->session->userdata('level_jabatan') == 3) {
+          ?>
+            <a class="dropdown-item" href="<?= site_url('cuti/view') ?>">
+              Cuti
+              <?php if ($jumlah_notifikasi_cuti > 0): ?>
+                <span class="badge badge-pill badge-danger float-right"><?= $jumlah_notifikasi_cuti ?></span>
+              <?php endif; ?>
+            </a>
+          <?php
+          }
+          ?>
         </div>
       </li>
       <span id="memo-notification-count" data-count="<?= $jumlah_notifikasi_memo ?>" style="display:none;"></span>
