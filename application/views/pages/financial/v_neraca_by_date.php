@@ -33,7 +33,7 @@
               <div class="col-md-2 col-xs-12 text-right">
                 <div class="form-group">
                   <button type="submit" name="button_sbm" class="btn btn-primary btn-sm" value="lihat">Lihat</button>
-                  <button type="submit" name="button_sbm" class="btn btn-success btn-sm" value="excel"><i class='fa fa-file'></i> Excel</button>
+                  <button type="submit" name="button_sbm" class="btn btn-pink btn-sm" value="excel"><i class='fa fa-file'></i> Excel</button>
                 </div>
               </div>
             </div>

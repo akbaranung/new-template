@@ -86,7 +86,7 @@
             <div class="row">
               <div class="col-md-9 col-sm-9">
                 <button class="btn btn-primary" type="reset">Reset</button>
-                <button type="submit" class="btn btn-success">Submit</button>
+                <button type="submit" class="btn btn-pink">Submit</button>
               </div>
             </div>
           </form>

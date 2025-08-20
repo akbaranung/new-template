@@ -3692,6 +3692,16 @@ input[type="button"].btn-block {
   padding-left: 0.6em;
   border-radius: 10rem; }
 
+.badge-pink {
+  color: #ffffff;
+  background-color: #e81f63; }
+  a.badge-pink:hover, a.badge-pink:focus {
+    color: #ffffff;
+    background-color: #e81f63; }
+  a.badge-pink:focus, a.badge-pink.focus {
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(27, 104, 255, 0.5); }
+    
 .badge-primary {
   color: #ffffff;
   background-color: #1b68ff; }

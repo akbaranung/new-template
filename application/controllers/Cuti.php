@@ -351,8 +351,8 @@ class Cuti extends CI_Controller
 
             // Status atasan
             $statusAtasan = $res->status_atasan == "Disetujui"
-                ? "<p class='btn btn-success'>" . $res->status_atasan . "</p>"
-                : "<p class='btn btn-danger'>" . $res->status_atasan . "</p>";
+                ? "<p class='badge badge-primary'>" . $res->status_atasan . "</p>"
+                : "<p class='badge badge-pink'>" . $res->status_atasan . "</p>";
 
             // Jika status atasan atau status hrd tidak kosong
             $statusAtasan = $res->status_atasan != null ? $statusAtasan : "<p class='btn'>Belum diproses</p>";
@@ -895,7 +895,9 @@ class Cuti extends CI_Controller
                     $phone_atasan[] = $row->phone;
                 }
                 $send_notif = implode(',', $phone_atasan);
-                $this->api_whatsapp->wa_notif($msgatasan, $send_notif);
+                if ($this->session->userdata('is_premium')) {
+                    $this->api_whatsapp->wa_notif($msgatasan, $send_notif);
+                }
             }
             // Jika Form Validation Gagal Dijalankan 
         } else {
@@ -991,7 +993,10 @@ class Cuti extends CI_Controller
 
                         $catatan = $catatan != "" || $catatan != null ? $catatan : "Tidak ada catatan";
                         $msg = "*Notifikasi Cuti*\n\nCuti anda selesai di proses oleh *" . $atasan->nama . "* sebagai atasan/supervisi, dengan status *" . $status . "*.\n\n*Catatan* : " . $catatan;
-                        $this->api_whatsapp->wa_notif($msg, $user->phone);
+
+                        if ($this->session->userdata('is_premium')) {
+                            $this->api_whatsapp->wa_notif($msg, $user->phone);
+                        }
                     }
                 } else {
                     $data = [
@@ -1002,7 +1007,10 @@ class Cuti extends CI_Controller
                     $this->M_cuti->updateAtasan($params, $where);
                     $catatan = $catatan != "" || $catatan != null ? $catatan : "Tidak ada catatan";
                     $msg = "*Notifikasi Cuti*\n\nCuti anda selesai di proses oleh *" . $atasan->nama . "* sebagai atasan/supervisi, dengan status *" . $status . "*.\n\n*Catatan* : " . $catatan;
-                    $this->api_whatsapp->wa_notif($msg, $user->phone);
+                    if ($this->session->userdata('is_premium')) {
+
+                        $this->api_whatsapp->wa_notif($msg, $user->phone);
+                    }
                 }
             } else {
                 $data = [
@@ -1013,7 +1021,10 @@ class Cuti extends CI_Controller
 
                 $catatan = $catatan != "" || $catatan != null ? $catatan : "Tidak ada catatan";
                 $msg = "*Notifikasi Cuti*\n\nCuti anda selesai di proses oleh *" . $atasan->nama . "* sebagai atasan/supervisi, dengan status *" . $status . "*.\n\n*Catatan* : " . $catatan;
-                $this->api_whatsapp->wa_notif($msg, $user->phone);
+                if ($this->session->userdata('is_premium')) {
+
+                    $this->api_whatsapp->wa_notif($msg, $user->phone);
+                }
             }
         } else {
             $data = [
@@ -1026,212 +1037,212 @@ class Cuti extends CI_Controller
         echo json_encode($data);
     }
 
-    public function update_cuti_hrd($id)
-    {
-        $hrd = $this->db->get_where('users', ['nip' => $this->session->userdata['nip']])->row();
-        $cuti = $this->db->get_where('cuti', ['id_cuti' => $id])->row();
-        $user = $this->db->get_where('users', ['nip' => $cuti->nip])->row();
-        $atasan = $this->db->get_where('users', ['nip' => $cuti->atasan])->row();
-        $dirsdm = $this->db->get_where('users', ['nip' => $cuti->dirsdm])->row();
-        $status = $this->input->post('status_cuti');
-        $catatan = $this->input->post('catatan');
+    // public function update_cuti_hrd($id)
+    // {
+    //     $hrd = $this->db->get_where('users', ['nip' => $this->session->userdata['nip']])->row();
+    //     $cuti = $this->db->get_where('cuti', ['id_cuti' => $id])->row();
+    //     $user = $this->db->get_where('users', ['nip' => $cuti->nip])->row();
+    //     $atasan = $this->db->get_where('users', ['nip' => $cuti->atasan])->row();
+    //     $dirsdm = $this->db->get_where('users', ['nip' => $cuti->dirsdm])->row();
+    //     $status = $this->input->post('status_cuti');
+    //     $catatan = $this->input->post('catatan');
 
-        // Form validation
-        $this->form_validation->set_rules('status_cuti', 'Status cuti', 'required', array(
-            'required' => "%s wajib diisi!"
-        ));
+    //     // Form validation
+    //     $this->form_validation->set_rules('status_cuti', 'Status cuti', 'required', array(
+    //         'required' => "%s wajib diisi!"
+    //     ));
 
-        if ($this->form_validation->run()) {
-            $where = [
-                'id_cuti' => $id
-            ];
+    //     if ($this->form_validation->run()) {
+    //         $where = [
+    //             'id_cuti' => $id
+    //         ];
 
-            $params = [
-                'hrd' => $hrd->nip,
-                'status_hrd' => $status,
-                'catatan_hrd' => $catatan
-            ];
+    //         $params = [
+    //             'hrd' => $hrd->nip,
+    //             'status_hrd' => $status,
+    //             'catatan_hrd' => $catatan
+    //         ];
 
-            $this->M_cuti->statusHrd($params, $where);
+    //         $this->M_cuti->statusHrd($params, $where);
 
-            $data = [
-                'error' => false,
-                'msg' => 'Status cuti berhasil ' . $status . '!'
-            ];
+    //         $data = [
+    //             'error' => false,
+    //             'msg' => 'Status cuti berhasil ' . $status . '!'
+    //         ];
 
-            if ($status == 'Disetujui') {
-                if ($cuti->jenis == 2) {
-                    if ($cuti->atasan == $cuti->dirsdm || $cuti->atasan == $cuti->dirut) {
-                        $cuti_jenis = $this->db->get_where('jenis_cuti', ['Id' => $cuti->jenis])->row();
-                        $jenis_nama = $cuti_jenis->nama_jenis;
-                        $msg = "*Pengajuan Cuti*\n\nFrom: *$user->nama*\nJenis Cuti: *$jenis_nama*\n\nSudah selesai diproses oleh *" . $hrd->nama . "* sebagai HRD. Untuk selanjutnya diproses oleh anda sebagai Direktur SDM.";
-                        $this->api_whatsapp->wa_notif($msg, $dirsdm->phone);
-                    } else {
-                        $cuti_jenis = $this->db->get_where('jenis_cuti', ['Id' => $cuti->jenis])->row();
-                        $jenis_nama = $cuti_jenis->nama_jenis;
-                        $msg = "*Pengajuan Cuti*\n\nFrom: *$user->nama*\nJenis Cuti: *$jenis_nama*\n\nSudah selesai diproses oleh *" . $hrd->nama . "* sebagai HRD. Untuk selanjutnya diproses oleh anda sebagai atasan/supervisi.";
-                        $this->api_whatsapp->wa_notif($msg, $atasan->phone);
-                    }
-                } else {
-                    $cuti_jenis = $this->db->get_where('jenis_cuti', ['Id' => $cuti->jenis])->row();
-                    $jenis_nama = $cuti_jenis->nama_jenis;
-                    $msg = "*Pengajuan Cuti*\n\nFrom: *$user->nama*\nJenis Cuti: *$jenis_nama*\n\nSudah selesai diproses oleh *" . $hrd->nama . "* sebagai HRD. Untuk selanjutnya diproses oleh atasan/supervisi.";
-                    $this->api_whatsapp->wa_notif($msg, $atasan->phone);
-                }
-            } else {
-                $cuti_jenis = $this->db->get_where('jenis_cuti', ['Id' => $cuti->jenis])->row();
-                $jenis_nama = $cuti_jenis->nama_jenis;
-                $msgg = "*Pengajuan Cuti*\n\nFrom: *$user->nama*\nJenis Cuti: *$jenis_nama*\n\nSudah selesai diproses oleh *" . $hrd->nama . "* sebagai HRD, dengan status *" . $status . "*.\n\n*Catatan* : " . $catatan;
-                $this->api_whatsapp->wa_notif($msgg, $atasan->phone);
-            }
+    //         if ($status == 'Disetujui') {
+    //             if ($cuti->jenis == 2) {
+    //                 if ($cuti->atasan == $cuti->dirsdm || $cuti->atasan == $cuti->dirut) {
+    //                     $cuti_jenis = $this->db->get_where('jenis_cuti', ['Id' => $cuti->jenis])->row();
+    //                     $jenis_nama = $cuti_jenis->nama_jenis;
+    //                     $msg = "*Pengajuan Cuti*\n\nFrom: *$user->nama*\nJenis Cuti: *$jenis_nama*\n\nSudah selesai diproses oleh *" . $hrd->nama . "* sebagai HRD. Untuk selanjutnya diproses oleh anda sebagai Direktur SDM.";
+    //                     $this->api_whatsapp->wa_notif($msg, $dirsdm->phone);
+    //                 } else {
+    //                     $cuti_jenis = $this->db->get_where('jenis_cuti', ['Id' => $cuti->jenis])->row();
+    //                     $jenis_nama = $cuti_jenis->nama_jenis;
+    //                     $msg = "*Pengajuan Cuti*\n\nFrom: *$user->nama*\nJenis Cuti: *$jenis_nama*\n\nSudah selesai diproses oleh *" . $hrd->nama . "* sebagai HRD. Untuk selanjutnya diproses oleh anda sebagai atasan/supervisi.";
+    //                     $this->api_whatsapp->wa_notif($msg, $atasan->phone);
+    //                 }
+    //             } else {
+    //                 $cuti_jenis = $this->db->get_where('jenis_cuti', ['Id' => $cuti->jenis])->row();
+    //                 $jenis_nama = $cuti_jenis->nama_jenis;
+    //                 $msg = "*Pengajuan Cuti*\n\nFrom: *$user->nama*\nJenis Cuti: *$jenis_nama*\n\nSudah selesai diproses oleh *" . $hrd->nama . "* sebagai HRD. Untuk selanjutnya diproses oleh atasan/supervisi.";
+    //                 $this->api_whatsapp->wa_notif($msg, $atasan->phone);
+    //             }
+    //         } else {
+    //             $cuti_jenis = $this->db->get_where('jenis_cuti', ['Id' => $cuti->jenis])->row();
+    //             $jenis_nama = $cuti_jenis->nama_jenis;
+    //             $msgg = "*Pengajuan Cuti*\n\nFrom: *$user->nama*\nJenis Cuti: *$jenis_nama*\n\nSudah selesai diproses oleh *" . $hrd->nama . "* sebagai HRD, dengan status *" . $status . "*.\n\n*Catatan* : " . $catatan;
+    //             $this->api_whatsapp->wa_notif($msgg, $atasan->phone);
+    //         }
 
-            $catatan = $catatan != "" || $catatan != null ? $catatan : "Tidak ada catatan";
+    //         $catatan = $catatan != "" || $catatan != null ? $catatan : "Tidak ada catatan";
 
-            $msg = "*Notifikasi Cuti*\n\nCuti anda selesai di proses oleh *" . $hrd->nama . "* sebagai HRD, dengan status *" . $status . "*.\n\n*Catatan* : " . $catatan;
-            $this->api_whatsapp->wa_notif($msg, $user->phone);
-        } else {
-            $data = [
-                'error' => true,
-                'msg' => "Cuti gagal diupdate!",
-                'err_status' => form_error('status_cuti'),
-            ];
-        }
-        echo json_encode($data);
-    }
+    //         $msg = "*Notifikasi Cuti*\n\nCuti anda selesai di proses oleh *" . $hrd->nama . "* sebagai HRD, dengan status *" . $status . "*.\n\n*Catatan* : " . $catatan;
+    //         $this->api_whatsapp->wa_notif($msg, $user->phone);
+    //     } else {
+    //         $data = [
+    //             'error' => true,
+    //             'msg' => "Cuti gagal diupdate!",
+    //             'err_status' => form_error('status_cuti'),
+    //         ];
+    //     }
+    //     echo json_encode($data);
+    // }
 
-    public function update_cuti_direksi($id)
-    {
-        $status = $this->input->post('status_cuti');
-        $catatan = $this->input->post('catatan');
-        $direksi = $this->input->post('direksi');
-        $pengganti = $this->input->post('pengganti');
+    // public function update_cuti_direksi($id)
+    // {
+    //     $status = $this->input->post('status_cuti');
+    //     $catatan = $this->input->post('catatan');
+    //     $direksi = $this->input->post('direksi');
+    //     $pengganti = $this->input->post('pengganti');
 
-        $cuti = $this->db->get_where('cuti', ['id_cuti' => $id])->row();
-        $user = $this->db->get_where('users', ['nip' => $cuti->nip])->row();
-        $dirsdm = $this->db->get_where('users', ['nip' => $cuti->dirsdm])->row();
-        $dirut = $this->db->get_where('users', ['nip' => $cuti->dirut])->row();
-        $user_peng = $this->db->get_where('users', ['nip' => $pengganti])->row();
+    //     $cuti = $this->db->get_where('cuti', ['id_cuti' => $id])->row();
+    //     $user = $this->db->get_where('users', ['nip' => $cuti->nip])->row();
+    //     $dirsdm = $this->db->get_where('users', ['nip' => $cuti->dirsdm])->row();
+    //     $dirut = $this->db->get_where('users', ['nip' => $cuti->dirut])->row();
+    //     $user_peng = $this->db->get_where('users', ['nip' => $pengganti])->row();
 
-        // Form validation
-        $this->form_validation->set_rules('status_cuti', 'Status cuti', 'required', array(
-            'required' => "%s wajib diisi!"
-        ));
+    //     // Form validation
+    //     $this->form_validation->set_rules('status_cuti', 'Status cuti', 'required', array(
+    //         'required' => "%s wajib diisi!"
+    //     ));
 
-        if ($status == 'Disetujui') {
-            if ($direksi == 'dirsdm') {
-                if ($cuti->atasan == $cuti->dirsdm) {
-                    $this->form_validation->set_rules('pengganti', 'Pengganti', 'required', array(
-                        'required' => "%s wajib diisi!"
-                    ));
-                }
-            } else {
-                if ($cuti->atasan == $cuti->dirut) {
-                    $this->form_validation->set_rules('pengganti', 'Pengganti', 'required', array(
-                        'required' => "%s wajib diisi!"
-                    ));
-                }
-            }
-        }
+    //     if ($status == 'Disetujui') {
+    //         if ($direksi == 'dirsdm') {
+    //             if ($cuti->atasan == $cuti->dirsdm) {
+    //                 $this->form_validation->set_rules('pengganti', 'Pengganti', 'required', array(
+    //                     'required' => "%s wajib diisi!"
+    //                 ));
+    //             }
+    //         } else {
+    //             if ($cuti->atasan == $cuti->dirut) {
+    //                 $this->form_validation->set_rules('pengganti', 'Pengganti', 'required', array(
+    //                     'required' => "%s wajib diisi!"
+    //                 ));
+    //             }
+    //         }
+    //     }
 
-        if ($this->form_validation->run()) {
-            if ($direksi == 'dirsdm') {
-                $where = [
-                    'id_cuti' => $id
-                ];
+    //     if ($this->form_validation->run()) {
+    //         if ($direksi == 'dirsdm') {
+    //             $where = [
+    //                 'id_cuti' => $id
+    //             ];
 
-                if ($cuti->atasan == $cuti->dirsdm) {
-                    $params = [
-                        'status_dirsdm' => $status,
-                        'catatan_dirsdm' => $catatan,
-                        'pengganti' => $pengganti,
-                        'status_atasan' => $status,
-                        'catatan_atasan' => $catatan
-                    ];
+    //             if ($cuti->atasan == $cuti->dirsdm) {
+    //                 $params = [
+    //                     'status_dirsdm' => $status,
+    //                     'catatan_dirsdm' => $catatan,
+    //                     'pengganti' => $pengganti,
+    //                     'status_atasan' => $status,
+    //                     'catatan_atasan' => $catatan
+    //                 ];
 
-                    if ($status == 'Disetujui') {
-                        $msg = "*Pemberitahuan Pengganti*\n\nDikarenakan *$user->nama* mengajukan cuti, *$dirsdm->nama* sebagai Direktur SDM menunjuk anda sebagai pengganti.";
-                        $this->api_whatsapp->wa_notif($msg, $user_peng->phone);
-                    }
+    //                 if ($status == 'Disetujui') {
+    //                     $msg = "*Pemberitahuan Pengganti*\n\nDikarenakan *$user->nama* mengajukan cuti, *$dirsdm->nama* sebagai Direktur SDM menunjuk anda sebagai pengganti.";
+    //                     $this->api_whatsapp->wa_notif($msg, $user_peng->phone);
+    //                 }
 
-                    $catatan = $catatan != "" || $catatan != null ? $catatan : "Tidak ada catatan";
-                    $msg = "*Notifikasi Cuti*\n\nCuti anda selesai di proses oleh *" . $dirsdm->nama . "* sebagai atasan/supervisi dan Direktur SDM, dengan status *" . $status . "*.\n\n*Catatan* : " . $catatan;
-                    $this->api_whatsapp->wa_notif($msg, $user->phone);
-                } else {
-                    $params = [
-                        'status_dirsdm' => $status,
-                        'catatan_dirsdm' => $catatan,
-                    ];
+    //                 $catatan = $catatan != "" || $catatan != null ? $catatan : "Tidak ada catatan";
+    //                 $msg = "*Notifikasi Cuti*\n\nCuti anda selesai di proses oleh *" . $dirsdm->nama . "* sebagai atasan/supervisi dan Direktur SDM, dengan status *" . $status . "*.\n\n*Catatan* : " . $catatan;
+    //                 $this->api_whatsapp->wa_notif($msg, $user->phone);
+    //             } else {
+    //                 $params = [
+    //                     'status_dirsdm' => $status,
+    //                     'catatan_dirsdm' => $catatan,
+    //                 ];
 
-                    $catatan = $catatan != "" || $catatan != null ? $catatan : "Tidak ada catatan";
-                    $msg = "*Notifikasi Cuti*\n\nCuti anda selesai di proses oleh *" . $dirsdm->nama . "* sebagai Direktur SDM, dengan status *" . $status . "*.\n\n*Catatan* : " . $catatan;
-                    $this->api_whatsapp->wa_notif($msg, $user->phone);
-                }
+    //                 $catatan = $catatan != "" || $catatan != null ? $catatan : "Tidak ada catatan";
+    //                 $msg = "*Notifikasi Cuti*\n\nCuti anda selesai di proses oleh *" . $dirsdm->nama . "* sebagai Direktur SDM, dengan status *" . $status . "*.\n\n*Catatan* : " . $catatan;
+    //                 $this->api_whatsapp->wa_notif($msg, $user->phone);
+    //             }
 
-                if ($status == 'Disetujui') {
-                    $cuti_jenis = $this->db->get_where('jenis_cuti', ['Id' => $cuti->jenis])->row();
-                    $jenis_nama = $cuti_jenis->nama_jenis;
-                    $msg = "*Pengajuan Cuti*\n\nFrom: *$user->nama*\nJenis Cuti: *$jenis_nama*\n\nSudah selesai diproses oleh *" . $dirsdm->nama . "* sebagai Direktur SDM. Untuk selanjutnya diproses oleh anda sebagai Direktur Utama.";
-                    $this->api_whatsapp->wa_notif($msg, $dirut->phone);
-                }
-            }
+    //             if ($status == 'Disetujui') {
+    //                 $cuti_jenis = $this->db->get_where('jenis_cuti', ['Id' => $cuti->jenis])->row();
+    //                 $jenis_nama = $cuti_jenis->nama_jenis;
+    //                 $msg = "*Pengajuan Cuti*\n\nFrom: *$user->nama*\nJenis Cuti: *$jenis_nama*\n\nSudah selesai diproses oleh *" . $dirsdm->nama . "* sebagai Direktur SDM. Untuk selanjutnya diproses oleh anda sebagai Direktur Utama.";
+    //                 $this->api_whatsapp->wa_notif($msg, $dirut->phone);
+    //             }
+    //         }
 
-            if ($direksi == 'dirut') {
-                $where = [
-                    'id_cuti' => $id
-                ];
+    //         if ($direksi == 'dirut') {
+    //             $where = [
+    //                 'id_cuti' => $id
+    //             ];
 
-                if ($cuti->atasan == $cuti->dirut) {
-                    $params = [
-                        'status_dirut' => $status,
-                        'catatan_dirut' => $catatan,
-                        'pengganti' => $pengganti,
-                        'status_atasan' => $status,
-                        'catatan_atasan' => $catatan
-                    ];
+    //             if ($cuti->atasan == $cuti->dirut) {
+    //                 $params = [
+    //                     'status_dirut' => $status,
+    //                     'catatan_dirut' => $catatan,
+    //                     'pengganti' => $pengganti,
+    //                     'status_atasan' => $status,
+    //                     'catatan_atasan' => $catatan
+    //                 ];
 
-                    if ($status == 'Disetujui') {
-                        $msg = "*Pemberitahuan Pengganti*\n\nDikarenakan *$user->nama* mengajukan cuti, *$dirut->nama* sebagai Direktur Utama menunjuk anda sebagai pengganti.";
-                        $this->api_whatsapp->wa_notif($msg, $user_peng->phone);
-                    }
+    //                 if ($status == 'Disetujui') {
+    //                     $msg = "*Pemberitahuan Pengganti*\n\nDikarenakan *$user->nama* mengajukan cuti, *$dirut->nama* sebagai Direktur Utama menunjuk anda sebagai pengganti.";
+    //                     $this->api_whatsapp->wa_notif($msg, $user_peng->phone);
+    //                 }
 
-                    $catatan = $catatan != "" || $catatan != null ? $catatan : "Tidak ada catatan";
-                    $msg = "*Notifikasi Cuti*\n\nCuti anda selesai di proses oleh *" . $dirut->nama . "* sebagai atasan/supervisi dan Direktur Utama, dengan status *" . $status . "*.\n\n*Catatan* : " . $catatan;
-                    $this->api_whatsapp->wa_notif($msg, $user->phone);
-                } else {
-                    $params = [
-                        'status_dirut' => $status,
-                        'catatan_dirut' => $catatan,
-                    ];
+    //                 $catatan = $catatan != "" || $catatan != null ? $catatan : "Tidak ada catatan";
+    //                 $msg = "*Notifikasi Cuti*\n\nCuti anda selesai di proses oleh *" . $dirut->nama . "* sebagai atasan/supervisi dan Direktur Utama, dengan status *" . $status . "*.\n\n*Catatan* : " . $catatan;
+    //                 $this->api_whatsapp->wa_notif($msg, $user->phone);
+    //             } else {
+    //                 $params = [
+    //                     'status_dirut' => $status,
+    //                     'catatan_dirut' => $catatan,
+    //                 ];
 
-                    $catatan = $catatan != "" || $catatan != null ? $catatan : "Tidak ada catatan";
-                    $msg = "*Notifikasi Cuti*\n\nCuti anda selesai di proses oleh *" . $dirut->nama . "* sebagai Direktur Utama, dengan status *" . $status . "*.\n\n*Catatan* : " . $catatan;
-                    $this->api_whatsapp->wa_notif($msg, $user->phone);
-                }
+    //                 $catatan = $catatan != "" || $catatan != null ? $catatan : "Tidak ada catatan";
+    //                 $msg = "*Notifikasi Cuti*\n\nCuti anda selesai di proses oleh *" . $dirut->nama . "* sebagai Direktur Utama, dengan status *" . $status . "*.\n\n*Catatan* : " . $catatan;
+    //                 $this->api_whatsapp->wa_notif($msg, $user->phone);
+    //             }
 
-                if ($status == "Disetujui") {
-                    $this->db->set(['cuti_panjang' => 1]);
-                    $this->db->where(['nip' => $cuti->nip]);
-                    $this->db->update('users');
-                }
-            }
+    //             if ($status == "Disetujui") {
+    //                 $this->db->set(['cuti_panjang' => 1]);
+    //                 $this->db->where(['nip' => $cuti->nip]);
+    //                 $this->db->update('users');
+    //             }
+    //         }
 
-            $this->M_cuti->approveDireksi($params, $where);
-            $data = [
-                'error' => false,
-                'msg' => 'Status cuti berhasil ' . $status . '!'
-            ];
-        } else {
-            $data = [
-                'error' => true,
-                'msg' => "Cuti gagal diupdate!",
-                'err_status' => form_error('status_cuti'),
-                'err_pengganti' => form_error('pengganti')
-            ];
-        }
+    //         $this->M_cuti->approveDireksi($params, $where);
+    //         $data = [
+    //             'error' => false,
+    //             'msg' => 'Status cuti berhasil ' . $status . '!'
+    //         ];
+    //     } else {
+    //         $data = [
+    //             'error' => true,
+    //             'msg' => "Cuti gagal diupdate!",
+    //             'err_status' => form_error('status_cuti'),
+    //             'err_pengganti' => form_error('pengganti')
+    //         ];
+    //     }
 
 
-        echo json_encode($data);
-    }
+    //     echo json_encode($data);
+    // }
 
 
     public function detailCuti($id)

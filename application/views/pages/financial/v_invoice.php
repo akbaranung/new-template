@@ -272,7 +272,7 @@
                         <a href="<?= base_url('financial/print_invoice/' . $i['Id']) ?>" class="btn btn-primary" target="_blank" style="vertical-align: top;">
                           Cetak
                         </a>
-                        <a href="#" class="btn btn-info" data-toggle="modal" data-target="#modalRiwayat<?= $i['Id'] ?>">Riwayat</a>
+                        <a href="#" class="btn btn-dark" data-toggle="modal" data-target="#modalRiwayat<?= $i['Id'] ?>">Riwayat</a>
 
                         <div class="modal fade" id="modalRiwayat<?= $i['Id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
                           <div class="modal-dialog modal-lg">
