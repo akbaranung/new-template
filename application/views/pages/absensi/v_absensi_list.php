@@ -36,7 +36,7 @@
           <p class="card-title"><strong>List Absensi</strong></p>
         </div>
         <div class="card-body">
-          <div class="row text-center mb-5">
+          <div class="row text-center">
             <div class="col-md-3">
               <button class="btn btn-primary btn-block" onclick="showUser()">User List</button>
             </div>

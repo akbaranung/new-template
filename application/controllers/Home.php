@@ -56,6 +56,55 @@ class Home extends CI_Controller
     $data['json_biaya'] = json_encode($laba_rugi['biaya']);
     $data['json_laba_rugi'] = json_encode($laba_rugi['laba_rugi']);
 
+    $this->db->from('memo');
+    $this->db->where('memo.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
+    $this->db->where('MONTH(memo.created_at)', date('m'));
+    $this->db->where('YEAR(memo.created_at)', date('Y'));
+    $total_memo = $this->db->get()->num_rows(); // Get the number of rows
+
+
+    $this->cb->from('invoice');
+    $this->cb->join('t_cabang', 't_cabang.uid = invoice.id_cabang');
+    $this->cb->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
+    $this->cb->where('MONTH(invoice.created_at)', date('m'));
+    $this->cb->where('YEAR(invoice.created_at)', date('Y'));
+    $total_invoice = $this->cb->get()->num_rows(); // Get the number of rows
+
+
+    $this->cb->from('t_pengajuan');
+    $this->cb->join('t_cabang', 't_cabang.uid = t_pengajuan.cabang');
+    $this->cb->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
+    $this->cb->where('MONTH(t_pengajuan.created_at)', date('m'));
+    $this->cb->where('YEAR(t_pengajuan.created_at)', date('Y'));
+    $total_pengajuan = $this->cb->get()->num_rows(); // Get the number of rows
+
+
+    $this->cb->from('t_cabang');
+    $this->cb->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
+    $total_cabang = $this->cb->get()->num_rows(); // Get the number of rows
+
+
+    $this->db->from('users');
+    $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
+    $this->db->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
+    $this->db->where('nama_jabatan !=', 'Super Admin');
+    $total_user = $this->db->get()->num_rows(); // Get the number of rows
+
+    $data['total_memo'] = $total_memo;
+    $data['total_invoice'] = $total_invoice;
+    $data['total_pengajuan'] = $total_pengajuan;
+    $data['total_cabang'] = $total_cabang;
+    $data['total_user'] = $total_user;
+
+
+    $this->db->from('utility');
+    $this->db->where('Id', $this->session->userdata('user_perusahaan_id'));
+    $perusahaan = $this->db->get()->row(); // Get the number of rows
+
+    $data['perusahaan'] = $perusahaan;
+
+
+
     $this->load->view('index', $data);
   }
 

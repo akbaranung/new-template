@@ -22,6 +22,44 @@
         </div>
       </div>
       <div class="mb-2 align-items-center">
+        <div class="row mt-1 align-items-center">
+          <div class="col-12 text-left pl-4">
+            <h5 class="mb-1">Kuota Penggunaan</h5>
+          </div>
+        </div>
+        <div class="row g-3 justify-content-center">
+          <div class="col-6 col-lg-4 ">
+            <div class="card shadow text-center p-3 h-100">
+              <label class="text-secondary font-weight-bold">Kuota Invoice</label>
+              <p class="h4 mt-2"><?= $total_invoice ?>/<?= $perusahaan->kuota_invoice ?></p>
+            </div>
+          </div>
+          <div class="col-6 col-lg-4">
+            <div class="card shadow text-center p-3 h-100">
+              <label class="text-secondary font-weight-bold">Kuota Memo</label>
+              <p class="h4 mt-2"><?= $total_memo ?>/<?= $perusahaan->kuota_memo ?></p>
+            </div>
+          </div>
+          <div class="col-6 col-lg-4">
+            <div class="card shadow text-center p-3 h-100">
+              <label class="text-secondary font-weight-bold">Kuota Pengajuan Biaya</label>
+              <p class="h4 mt-2"><?= $total_pengajuan ?>/<?= $perusahaan->kuota_pengajuan_biaya ?></p>
+            </div>
+          </div>
+          <div class="col-6 col-lg-4">
+            <div class="card shadow text-center p-3 h-100 mt-3">
+              <label class="text-secondary font-weight-bold">Kuota User</label>
+              <p class="h4 mt-2"><?= $total_user ?>/<?= $perusahaan->kuota_user ?></p>
+            </div>
+          </div>
+          <div class="col-6 col-lg-4">
+            <div class="card shadow text-center p-3 h-100 mt-3">
+              <label class="text-secondary font-weight-bold">Kuota Cabang</label>
+              <p class="h4 mt-2"><?= $total_cabang ?>/<?= $perusahaan->kuota_cabang ?></p>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="mb-2 align-items-center">
         <div class="card shadow mb-4">
           <div class="card-body">
             <div class="row mt-1 align-items-center">
@@ -32,8 +70,8 @@
             <div class="chartbox mr-4">
               <div id="areaChart"></div>
             </div>
-          </div> <!-- .card-body -->
-        </div> <!-- .card -->
+          </div>
+        </div> -->
       </div>
     </div> <!-- .col-12 -->
   </div> <!-- .row -->
