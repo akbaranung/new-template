@@ -98,15 +98,15 @@
 							<i class="fa fa-file-text-o" aria-hidden="true"></i> Form Cuti
 						</button>
 
-						<?php if ($user->level_jabatan == '2') { ?>
+						<!-- <?php if ($user->level_jabatan == '2') { ?>
 							<a href="<?= base_url('cuti/data_approve_supervisi_view') ?>" class="btn btn-pink"><i class="fa fa-list-ul" aria-hidden="true"></i> Approval Supervisi <span class="badge bg-primary"><?= $countSupervisi->total > 0 ? $countSupervisi->total : "" ?></span></a>
 						<?php } ?>
 						<?php if ($user->level_jabatan == '3') { ?>
 							<a href="<?= base_url('cuti/data_approve_hrd_view') ?>" class="btn btn-pink"><i class="fa fa-list-ul" aria-hidden="true"></i> Approval Hrd <span class="badge bg-primary"><?= $countHrd->total > 0 ? $countHrd->total : "" ?></span></a>
-						<?php } ?>
-						<!-- <?php if ($user->level_jabatan >= '3') { ?>
-							<a href="<?= base_url('cuti/data_approve_atasan_view') ?>" class="btn btn-pink"><i class="fa fa-list-ul" aria-hidden="true"></i> Approval Atasan <span class="badge bg-red"><?= $countAtasan->total > 0 ? $countAtasan->total : "" ?></span></a>
 						<?php } ?> -->
+						<?php if ($user->level_jabatan >= '3') { ?>
+							<a href="<?= base_url('cuti/data_approve_atasan_view') ?>" class="btn btn-pink"><i class="fa fa-list-ul" aria-hidden="true"></i> Approval Atasan <span class="badge bg-red"><?= $countAtasan->total > 0 ? $countAtasan->total : "" ?></span></a>
+						<?php } ?>
 						<?php if (($user->level_jabatan == '5' && $user->bagian == '11') || $user->level_jabatan == '6') { ?>
 							<a href="<?= base_url('cuti/data_approve_direksi_view') ?>" class="btn btn-pink"><i class="fa fa-list-ul" aria-hidden="true"></i> Approval Direksi <span class="badge bg-red"><?= $count > 0 ? $count : "" ?></span></a>
 						<?php } ?>
@@ -224,7 +224,7 @@
 						<input type="text" class="form-control" placeholder="Alasan Cuti" id="alasan" name="alasan">
 						<span id="err_alasan" class="text-danger"></span>
 					</div>
-					<div class="form-group" id="error_tujuan">
+					<!-- <div class="form-group" id="error_tujuan">
 						<label for="jenisCuti">Tujuan (Contoh Bagian : HRD) </label>
 						<select class="form-control select2" id="tujuanCuti" name="tujuanCuti" style="width:100%;">
 							<option value="">-- Pilih Jenis Cuti --</option>
@@ -233,7 +233,7 @@
 							<?php endforeach ?>
 						</select>
 						<span id="err_tujuan" class="text-danger"></span>
-					</div>
+					</div> -->
 					<div class="form-group">
 						<label for="sisaCuti">Sisa Cuti Reguler</label>
 						<?php $cuti = $this->db->get_where('users', ['nip' => $this->session->userdata('nip')])->row_array() ?>

@@ -111,84 +111,84 @@ class Cuti extends CI_Controller
         $this->load->view('index', $data);
     }
 
-    public function cuti_all_gm()
-    {
-        $nip = $this->session->userdata('nip');
-        $usergm = $this->db->get_where('users', ['nip' => $nip])->row();
-        $sql = "SELECT cuti.*, users.nama, users.nama_jabatan, jenis_cuti.nama_jenis, sub_jenis_cuti.nama_sub_jenis
-                FROM cuti 
-                JOIN users ON cuti.nip = users.nip
-                JOIN jenis_cuti ON cuti.jenis = jenis_cuti.Id
-                LEFT JOIN sub_jenis_cuti on cuti.detail_cuti = sub_jenis_cuti.Id
-                WHERE users.bagian = '$usergm->bagian'
-                ORDER BY cuti.id_cuti DESC";
-        $result = $this->db->query($sql)->result();
-        $i = 0;
-        $no = 1;
-        foreach ($result as $res) {
-            // Atasan 
-            $queryAtasan = "SELECT users.nama FROM users RIGHT JOIN cuti ON users.nip = '$res->atasan'";
-            $atasan = $this->db->query($queryAtasan)->result();
+    // public function cuti_all_gm()
+    // {
+    //     $nip = $this->session->userdata('nip');
+    //     $usergm = $this->db->get_where('users', ['nip' => $nip])->row();
+    //     $sql = "SELECT cuti.*, users.nama, users.nama_jabatan, jenis_cuti.nama_jenis, sub_jenis_cuti.nama_sub_jenis
+    //             FROM cuti 
+    //             JOIN users ON cuti.nip = users.nip
+    //             JOIN jenis_cuti ON cuti.jenis = jenis_cuti.Id
+    //             LEFT JOIN sub_jenis_cuti on cuti.detail_cuti = sub_jenis_cuti.Id
+    //             WHERE users.bagian = '$usergm->bagian'
+    //             ORDER BY cuti.id_cuti DESC";
+    //     $result = $this->db->query($sql)->result();
+    //     $i = 0;
+    //     $no = 1;
+    //     foreach ($result as $res) {
+    //         // Atasan 
+    //         $queryAtasan = "SELECT users.nama FROM users RIGHT JOIN cuti ON users.nip = '$res->atasan'";
+    //         $atasan = $this->db->query($queryAtasan)->result();
 
-            // HRD
-            $queryHrd = "SELECT users.nama FROM users RIGHT JOIN cuti ON users.nip = '$res->hrd'";
-            $hrd = $this->db->query($queryHrd)->result();
+    //         // HRD
+    //         $queryHrd = "SELECT users.nama FROM users RIGHT JOIN cuti ON users.nip = '$res->hrd'";
+    //         $hrd = $this->db->query($queryHrd)->result();
 
-            // Status HRD
-            if ($res->status_hrd == "Disetujui") {
-                $statusHrd = "<p class='badge badge-success'>" . $res->status_hrd . ": " . $hrd[$i]->nama . "</p>";
-            } else if ($res->status_hrd == "Ditolak") {
-                $statusHrd = "<p class='badge badge-danger'>" . $res->status_hrd . ": " . $hrd[$i]->nama . "</p>";
-            } else {
-                $statusHrd = "";
-            }
+    //         // Status HRD
+    //         if ($res->status_hrd == "Disetujui") {
+    //             $statusHrd = "<p class='badge badge-success'>" . $res->status_hrd . ": " . $hrd[$i]->nama . "</p>";
+    //         } else if ($res->status_hrd == "Ditolak") {
+    //             $statusHrd = "<p class='badge badge-danger'>" . $res->status_hrd . ": " . $hrd[$i]->nama . "</p>";
+    //         } else {
+    //             $statusHrd = "";
+    //         }
 
-            // Status atasn
-            if ($res->status_atasan == "Disetujui") {
-                $statusAtasan = "<p class='badge badge-success'>" . $res->status_atasan . ": " . $atasan[$i]->nama . "</p>";
-            } else if ($res->status_atasan == "Ditolak") {
-                $statusAtasan = "<p class='badge badge-danger'>" . $res->status_atasan . ": " . $atasan[$i]->nama . "</p>";
-            } else {
-                $statusAtasan = "";
-            }
+    //         // Status atasn
+    //         if ($res->status_atasan == "Disetujui") {
+    //             $statusAtasan = "<p class='badge badge-success'>" . $res->status_atasan . ": " . $atasan[$i]->nama . "</p>";
+    //         } else if ($res->status_atasan == "Ditolak") {
+    //             $statusAtasan = "<p class='badge badge-danger'>" . $res->status_atasan . ": " . $atasan[$i]->nama . "</p>";
+    //         } else {
+    //             $statusAtasan = "";
+    //         }
 
-            // Lihat dokumen yang diupload
-            $lihatDokumen = '
-                <span class="aksi badge badge-warning" onclick="detailCuti(' . $res->id_cuti . ')">
-                    <i class="fa fa-eye" aria-hidden="true"></i> Detail
-                </span>
-                ';
+    //         // Lihat dokumen yang diupload
+    //         $lihatDokumen = '
+    //             <span class="aksi badge badge-warning" onclick="detailCuti(' . $res->id_cuti . ')">
+    //                 <i class="fa fa-eye" aria-hidden="true"></i> Detail
+    //             </span>
+    //             ';
 
-            // History cuti karyawan
-            $history = '
-                <span class="aksi badge badge-secondary" onclick="historyCuti(' . $res->id_cuti . ')">
-                    <i class="fa fa-history" aria-hidden="true"></i> History
-                </span>
-                ';
+    //         // History cuti karyawan
+    //         $history = '
+    //             <span class="aksi badge badge-secondary" onclick="historyCuti(' . $res->id_cuti . ')">
+    //                 <i class="fa fa-history" aria-hidden="true"></i> History
+    //             </span>
+    //             ';
 
-            $aksi = '
-                <span class="aksi badge badge-success" onclick="update_cuti_atasan(' . $res->id_cuti . ')">
-                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Update
-                </span>
-                ';
+    //         $aksi = '
+    //             <span class="aksi badge badge-success" onclick="update_cuti_atasan(' . $res->id_cuti . ')">
+    //                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Update
+    //             </span>
+    //             ';
 
-            $aksi = $res->status_atasan == null ? $aksi : "";
+    //         $aksi = $res->status_atasan == null ? $aksi : "";
 
-            $row = array();
-            $row[] = $no++;
-            $row[] = $res->nama;
-            $row[] = $res->nama_jenis;
-            $row[] = $res->alasan;
-            $row[] = $statusHrd;
-            $row[] = $statusAtasan;
-            $row[] = $lihatDokumen . $history;
-            $data['data'][] = $row;
-            $i++;
-        }
+    //         $row = array();
+    //         $row[] = $no++;
+    //         $row[] = $res->nama;
+    //         $row[] = $res->nama_jenis;
+    //         $row[] = $res->alasan;
+    //         $row[] = $statusHrd;
+    //         $row[] = $statusAtasan;
+    //         $row[] = $lihatDokumen . $history;
+    //         $data['data'][] = $row;
+    //         $i++;
+    //     }
 
-        count($result) > 0 ? $data = $data : $data['data'] = [];
-        echo json_encode($data);
-    }
+    //     count($result) > 0 ? $data = $data : $data['data'] = [];
+    //     echo json_encode($data);
+    // }
 
     public function ambilDataCuti()
     {
@@ -209,28 +209,6 @@ class Cuti extends CI_Controller
             $queryAtasan = "SELECT users.nama FROM users RIGHT JOIN cuti ON users.nip = '$res->atasan'";
             $atasan = $this->db->query($queryAtasan)->result();
 
-            // HRD
-            $queryHrd = "SELECT users.nama FROM users RIGHT JOIN cuti ON users.nip = '$res->hrd'";
-            $hrd = $this->db->query($queryHrd)->result();
-
-            //Dirsdm
-            $queryDirsdm = "SELECT users.nama FROM users RIGHT JOIN cuti ON users.nip = '$res->dirsdm'";
-            $dirsdm = $this->db->query($queryDirsdm)->result();
-
-            // Dirut 
-            $queryDirut = "SELECT users.nama FROM users RIGHT JOIN cuti ON users.nip = '$res->dirut'";
-            $dirut = $this->db->query($queryDirut)->result();
-
-
-            // Status HRD
-            if ($res->status_hrd == "Disetujui") {
-                $statusHrd = "<p class='badge badge-success'>" . $res->status_hrd . ": " . $hrd[$i]->nama . "</p>";
-            } else if ($res->status_hrd == "Ditolak") {
-                $statusHrd = "<p class='badge badge-danger'>" . $res->status_hrd . ": " . $hrd[$i]->nama . "</p>";
-            } else {
-                $statusHrd = "";
-            }
-
             // Status atasn
             if ($res->status_atasan == "Disetujui") {
                 $statusAtasan = "<p class='badge badge-success'>" . $res->status_atasan . ": " . $atasan[$i]->nama . "</p>";
@@ -240,36 +218,14 @@ class Cuti extends CI_Controller
                 $statusAtasan = "";
             }
 
-            // Status Dirsdm
-            if ($res->status_dirsdm == "Disetujui") {
-                $statusDirsdm = "<p class='badge badge-success'>" . $res->status_dirsdm . ": " . $dirsdm[$i]->nama . "</p>";
-            } else if ($res->status_dirsdm == "Ditolak") {
-                $statusDirsdm = "<p class='badge badge-danger'>" . $res->status_dirsdm . ": " . $dirsdm[$i]->nama . "</p>";
-            } else {
-                $statusDirsdm = "";
-            }
-
-            // Status dirut
-            if ($res->status_dirut == "Disetujui") {
-                $statusDirut = "<p class='badge badge-success'>" . $res->status_dirut . ": " . $dirut[$i]->nama . "</p>";
-            } else if ($res->status_dirut == "Ditolak") {
-                $statusDirut = "<p class='badge badge-danger'>" . $res->status_dirut . ": " . $dirut[$i]->nama . "</p>";
-            } else {
-                $statusDirut = "";
-            }
-
             // Jika status masih kosong
-            $statusHrd = $res->status_hrd == null ? "<p class='badge'>Diajukan Kepada HRD</p>" : $statusHrd;
-            $statusAtasan = ($res->status_atasan == null && $res->status_hrd == "Disetujui") ? "<p class='badge'>Diajukan Kepada Atasan</p>" : $statusAtasan;
-            $statusDirsdm = ($res->status_dirsdm == null && $res->status_hrd == "Disetujui" && $res->status_atasan == "Disetujui") ? "<p class='badge'>Diajukan Kepada Direktur SDM</p>" : $statusDirsdm;
-            $statusDirut = ($res->status_dirut == null && $res->status_hrd == "Disetujui" && $res->status_atasan == "Disetujui" && $res->status_dirsdm == "Disetujui") ? "<p class='badge'>Diajukan Kepada Direktur Utama</p>" : $statusDirut;
+            // $statusHrd = $res->status_hrd == null ? "<p class='badge'>Diajukan Kepada HRD</p>" : $statusHrd;
+            $statusAtasan = ($res->status_atasan == null) ? "<p class='badge'>Diajukan Kepada Atasan</p>" : $statusAtasan;
+            // $statusDirsdm = ($res->status_dirsdm == null && $res->status_hrd == "Disetujui" && $res->status_atasan == "Disetujui") ? "<p class='badge'>Diajukan Kepada Direktur SDM</p>" : $statusDirsdm;
+            // $statusDirut = ($res->status_dirut == null && $res->status_hrd == "Disetujui" && $res->status_atasan == "Disetujui" && $res->status_dirsdm == "Disetujui") ? "<p class='badge'>Diajukan Kepada Direktur Utama</p>" : $statusDirut;
 
-            // Status Cuti
-            if ($res->jenis == 2) {
-                $status_cuti = $statusHrd . $statusAtasan . $statusDirsdm . $statusDirut;
-            } else {
-                $status_cuti = $statusHrd . $statusAtasan;
-            }
+
+            $status_cuti = $statusAtasan;
 
             // Detail cuti 
             $lihatDetail = '
@@ -284,11 +240,8 @@ class Cuti extends CI_Controller
                 <i class="fa fa-print" aria-hidden="true"></i> Cetak
             </span>';
 
-            if ($res->jenis != 2) {
-                $cetak = $res->status_atasan == "Disetujui" && $res->status_hrd == "Disetujui" ? $cetak : "";
-            } else {
-                $cetak = $res->status_dirut == "Disetujui" ? $cetak : "";
-            }
+            $cetak = $res->status_atasan == "Disetujui" ? $cetak : "";
+
 
 
             if ($res->jenis == 2) {
@@ -345,16 +298,24 @@ class Cuti extends CI_Controller
         $nip = $this->session->userdata('nip');
         $id_perusahaan = $this->session->userdata('user_perusahaan_id');
 
+        // $sql = "SELECT cuti.*, users.nama, users.nama_jabatan, jenis_cuti.nama_jenis, sub_jenis_cuti.nama_sub_jenis
+        //         FROM cuti 
+        //         JOIN users ON cuti.nip = users.nip
+        //         JOIN jenis_cuti ON cuti.jenis = jenis_cuti.Id
+        //         LEFT JOIN sub_jenis_cuti on cuti.detail_cuti = sub_jenis_cuti.Id
+        //         WHERE cuti.atasan = '$nip' AND cuti.id_perusahaan = '$id_perusahaan' AND 
+        //         CASE 
+        //             WHEN cuti.jenis = 2 THEN cuti.status_hrd = 'Disetujui' AND cuti.atasan != cuti.dirsdm AND cuti.atasan != cuti.dirut
+        //             ELSE cuti.status_hrd = 'Disetujui'
+        //         END
+        //         ORDER BY cuti.id_cuti DESC";
+
         $sql = "SELECT cuti.*, users.nama, users.nama_jabatan, jenis_cuti.nama_jenis, sub_jenis_cuti.nama_sub_jenis
                 FROM cuti 
                 JOIN users ON cuti.nip = users.nip
                 JOIN jenis_cuti ON cuti.jenis = jenis_cuti.Id
                 LEFT JOIN sub_jenis_cuti on cuti.detail_cuti = sub_jenis_cuti.Id
-                WHERE cuti.atasan = '$nip' AND cuti.id_perusahaan = '$id_perusahaan' AND 
-                CASE 
-                    WHEN cuti.jenis = 2 THEN cuti.status_hrd = 'Disetujui' AND cuti.atasan != cuti.dirsdm AND cuti.atasan != cuti.dirut
-                    ELSE cuti.status_hrd = 'Disetujui'
-                END
+                WHERE cuti.atasan = '$nip' AND cuti.id_perusahaan = '$id_perusahaan'
                 ORDER BY cuti.id_cuti DESC";
         $result = $this->db->query($sql)->result();
         $i = 0;
@@ -421,289 +382,289 @@ class Cuti extends CI_Controller
         echo json_encode($data);
     }
 
-    public function data_approve_hrd_view()
-    {
-        $nip = $this->session->userdata('nip');
-        $user = $this->db->get_where('users', ['nip' => $nip])->row();
-        if ($user->level_jabatan != '3') {
-            redirect('cuti/view');
-        }
+    // public function data_approve_hrd_view()
+    // {
+    //     $nip = $this->session->userdata('nip');
+    //     $user = $this->db->get_where('users', ['nip' => $nip])->row();
+    //     if ($user->level_jabatan != '3') {
+    //         redirect('cuti/view');
+    //     }
 
-        $nip = $this->session->userdata('nip');
+    //     $nip = $this->session->userdata('nip');
 
-        $data['jenis_cuti'] = $this->M_cuti->getJenisCuti();
-        $data['all_jenis'] = $this->M_cuti->get_all_jenis_cuti();
-        $data['karyawan'] = $this->M_cuti->getKaryawan();
+    //     $data['jenis_cuti'] = $this->M_cuti->getJenisCuti();
+    //     $data['all_jenis'] = $this->M_cuti->get_all_jenis_cuti();
+    //     $data['karyawan'] = $this->M_cuti->getKaryawan();
 
-        $data['title'] = 'Cuti All';
-        $data['utility'] = $this->db->get('utility')->row_array();
-        $data['user'] = $this->db->get_where('users', ['nip' => $nip])->row_array();
-        $data['pages_script'] = 'script/cuti/s_approve_hrd';
-        $data['pages'] = 'pages/cuti/v_approve_hrd';
-        $data['menus'] = $this->M_menu->get_accessible_menus($nip);
+    //     $data['title'] = 'Cuti All';
+    //     $data['utility'] = $this->db->get('utility')->row_array();
+    //     $data['user'] = $this->db->get_where('users', ['nip' => $nip])->row_array();
+    //     $data['pages_script'] = 'script/cuti/s_approve_hrd';
+    //     $data['pages'] = 'pages/cuti/v_approve_hrd';
+    //     $data['menus'] = $this->M_menu->get_accessible_menus($nip);
 
-        $this->load->view('index', $data);
-        // $this->load->view('approve_hrd', $data);
-    }
+    //     $this->load->view('index', $data);
+    //     // $this->load->view('approve_hrd', $data);
+    // }
 
-    public function data_approve_hrd()
-    {
-        $filter = $this->input->get('filter');
-        $nip = $this->session->userdata('nip');
-        $id_perusahaan = $this->session->userdata('user_perusahaan_id');
+    // public function data_approve_hrd()
+    // {
+    //     $filter = $this->input->get('filter');
+    //     $nip = $this->session->userdata('nip');
+    //     $id_perusahaan = $this->session->userdata('user_perusahaan_id');
 
-        $sql = "SELECT cuti.*, users.nama, users.nama_jabatan, jenis_cuti.nama_jenis, sub_jenis_cuti.nama_sub_jenis
-                FROM cuti 
-                JOIN users ON cuti.nip = users.nip
-                JOIN jenis_cuti ON cuti.jenis = jenis_cuti.Id
-                LEFT JOIN sub_jenis_cuti on cuti.detail_cuti = sub_jenis_cuti.Id
-                WHERE cuti.nip != '$nip' AND cuti.id_perusahaan = '$id_perusahaan' AND
-                cuti.status_atasan = 'Disetujui'
-                AND  (cuti.tgl_cuti LIKE '%$filter%' OR cuti.akhir_cuti LIKE '%$filter%')
-                ORDER BY cuti.id_cuti DESC";
-        $result = $this->db->query($sql)->result();
+    //     $sql = "SELECT cuti.*, users.nama, users.nama_jabatan, jenis_cuti.nama_jenis, sub_jenis_cuti.nama_sub_jenis
+    //             FROM cuti 
+    //             JOIN users ON cuti.nip = users.nip
+    //             JOIN jenis_cuti ON cuti.jenis = jenis_cuti.Id
+    //             LEFT JOIN sub_jenis_cuti on cuti.detail_cuti = sub_jenis_cuti.Id
+    //             WHERE cuti.nip != '$nip' AND cuti.id_perusahaan = '$id_perusahaan' AND
+    //             cuti.status_atasan = 'Disetujui'
+    //             AND  (cuti.tgl_cuti LIKE '%$filter%' OR cuti.akhir_cuti LIKE '%$filter%')
+    //             ORDER BY cuti.id_cuti DESC";
+    //     $result = $this->db->query($sql)->result();
 
-        $i = 0;
-        $no = 1;
-        foreach ($result as $res) {
-            if ($res->jenis == 2) {
-                $jumlah_cuti = "1 Bulan";
-            } else if ($res->jenis == 3) {
-                $jumlah_cuti = "3 Bulan";
-            } else {
-                $jumlah_cuti = $res->jumlah_cuti . " Hari";
-            }
-            // Atasan 
-            $queryAtasan = "SELECT users.nama FROM users RIGHT JOIN cuti ON users.nip = '$res->atasan'";
-            $atasan = $this->db->query($queryAtasan)->result();
+    //     $i = 0;
+    //     $no = 1;
+    //     foreach ($result as $res) {
+    //         if ($res->jenis == 2) {
+    //             $jumlah_cuti = "1 Bulan";
+    //         } else if ($res->jenis == 3) {
+    //             $jumlah_cuti = "3 Bulan";
+    //         } else {
+    //             $jumlah_cuti = $res->jumlah_cuti . " Hari";
+    //         }
+    //         // Atasan 
+    //         $queryAtasan = "SELECT users.nama FROM users RIGHT JOIN cuti ON users.nip = '$res->atasan'";
+    //         $atasan = $this->db->query($queryAtasan)->result();
 
-            // Status hrd
-            $statusHrd = $res->status_hrd == "Disetujui"
-                ? "<p class='badge badge-success'>" . $res->status_hrd . "</p>"
-                : "<p class='badge badge-danger'>" . $res->status_hrd . "</p>";
+    //         // Status hrd
+    //         $statusHrd = $res->status_hrd == "Disetujui"
+    //             ? "<p class='badge badge-success'>" . $res->status_hrd . "</p>"
+    //             : "<p class='badge badge-danger'>" . $res->status_hrd . "</p>";
 
-            // Jika status atasan atau status hrd masih kosong
-            $statusHrd = $res->status_hrd != null ? $statusHrd : "<p class='badge'>Belum Diproses</p>";
+    //         // Jika status atasan atau status hrd masih kosong
+    //         $statusHrd = $res->status_hrd != null ? $statusHrd : "<p class='badge'>Belum Diproses</p>";
 
-            // Lihat dokumen yang diupload
-            $lihatDokumen = '
-                <a class="aksi badge badge-warning" onclick="detailCuti(' . $res->id_cuti . ')">
-                    <i class="fa fa-eye" aria-hidden="true"></i> Detail
-                </a>
-                ';
+    //         // Lihat dokumen yang diupload
+    //         $lihatDokumen = '
+    //             <a class="aksi badge badge-warning" onclick="detailCuti(' . $res->id_cuti . ')">
+    //                 <i class="fa fa-eye" aria-hidden="true"></i> Detail
+    //             </a>
+    //             ';
 
-            // History cuti karyawan
-            $history = '
-                <a class="aksi badge badge-secondary" onclick="historyCuti(' . $res->id_cuti . ')">
-                    <i class="fa fa-history" aria-hidden="true"></i> History
-                </a>
-                ';
+    //         // History cuti karyawan
+    //         $history = '
+    //             <a class="aksi badge badge-secondary" onclick="historyCuti(' . $res->id_cuti . ')">
+    //                 <i class="fa fa-history" aria-hidden="true"></i> History
+    //             </a>
+    //             ';
 
-            $aksi = '
-                <a class="aksi badge badge-success" onclick="update_cuti_hrd(' . $res->id_cuti . ')">
-                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Update
-                </a>
-                ';
+    //         $aksi = '
+    //             <a class="aksi badge badge-success" onclick="update_cuti_hrd(' . $res->id_cuti . ')">
+    //                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Update
+    //             </a>
+    //             ';
 
-            $aksi = $res->status_hrd == null ? $aksi : "";
+    //         $aksi = $res->status_hrd == null ? $aksi : "";
 
-            $row = array();
-            $row[] = $no++;
-            $row[] = $res->nama;
-            $row[] = $res->nama_jenis;
-            $row[] = $res->alasan;
-            $row[] = date('d F Y', strtotime($res->date_created));
-            $row[] = $this->tgl_indo($res->tgl_cuti);
-            $row[] = $jumlah_cuti;
-            $row[] = $atasan[$i]->nama;
-            $row[] = $statusHrd;
-            $row[] = $aksi . $lihatDokumen . $history;
-            $data['data'][] = $row;
-            $i++;
-        }
-        count($result) > 0 ? $data = $data : $data['data'] = [];
-        echo json_encode($data);
-    }
+    //         $row = array();
+    //         $row[] = $no++;
+    //         $row[] = $res->nama;
+    //         $row[] = $res->nama_jenis;
+    //         $row[] = $res->alasan;
+    //         $row[] = date('d F Y', strtotime($res->date_created));
+    //         $row[] = $this->tgl_indo($res->tgl_cuti);
+    //         $row[] = $jumlah_cuti;
+    //         $row[] = $atasan[$i]->nama;
+    //         $row[] = $statusHrd;
+    //         $row[] = $aksi . $lihatDokumen . $history;
+    //         $data['data'][] = $row;
+    //         $i++;
+    //     }
+    //     count($result) > 0 ? $data = $data : $data['data'] = [];
+    //     echo json_encode($data);
+    // }
 
-    public function data_approve_supervisi_view()
-    {
-        $nip = $this->session->userdata('nip');
-        $user = $this->db->get_where('users', ['nip' => $nip])->row();
-        if ($user->level_jabatan != '2') {
-            redirect('cuti/view');
-        }
+    // public function data_approve_supervisi_view()
+    // {
+    //     $nip = $this->session->userdata('nip');
+    //     $user = $this->db->get_where('users', ['nip' => $nip])->row();
+    //     if ($user->level_jabatan != '2') {
+    //         redirect('cuti/view');
+    //     }
 
-        $nip = $this->session->userdata('nip');
+    //     $nip = $this->session->userdata('nip');
 
-        $data['jenis_cuti'] = $this->M_cuti->getJenisCuti();
-        $data['all_jenis'] = $this->M_cuti->get_all_jenis_cuti();
-        $data['karyawan'] = $this->M_cuti->getKaryawan();
+    //     $data['jenis_cuti'] = $this->M_cuti->getJenisCuti();
+    //     $data['all_jenis'] = $this->M_cuti->get_all_jenis_cuti();
+    //     $data['karyawan'] = $this->M_cuti->getKaryawan();
 
-        $data['title'] = 'Cuti All';
-        $data['utility'] = $this->db->get('utility')->row_array();
-        $data['user'] = $this->db->get_where('users', ['nip' => $nip])->row_array();
-        $data['pages_script'] = 'script/cuti/s_approve_supervisi';
-        $data['pages'] = 'pages/cuti/v_approve_supervisi';
-        $data['menus'] = $this->M_menu->get_accessible_menus($nip);
+    //     $data['title'] = 'Cuti All';
+    //     $data['utility'] = $this->db->get('utility')->row_array();
+    //     $data['user'] = $this->db->get_where('users', ['nip' => $nip])->row_array();
+    //     $data['pages_script'] = 'script/cuti/s_approve_supervisi';
+    //     $data['pages'] = 'pages/cuti/v_approve_supervisi';
+    //     $data['menus'] = $this->M_menu->get_accessible_menus($nip);
 
-        $this->load->view('index', $data);
-        // $this->load->view('approve_hrd', $data);
-    }
+    //     $this->load->view('index', $data);
+    //     // $this->load->view('approve_hrd', $data);
+    // }
 
-    public function data_approve_supervisisss()
-    {
-        $filter = $this->input->get('filter');
-        $nip = $this->session->userdata('nip');
-        $id_perusahaan = $this->session->userdata('user_perusahaan_id');
+    // public function data_approve_supervisisss()
+    // {
+    //     $filter = $this->input->get('filter');
+    //     $nip = $this->session->userdata('nip');
+    //     $id_perusahaan = $this->session->userdata('user_perusahaan_id');
 
-        $sql = "SELECT cuti.*, users.nama, users.nama_jabatan, jenis_cuti.nama_jenis, sub_jenis_cuti.nama_sub_jenis
-                FROM cuti 
-                JOIN users ON cuti.nip = users.nip
-                JOIN jenis_cuti ON cuti.jenis = jenis_cuti.Id
-                LEFT JOIN sub_jenis_cuti on cuti.detail_cuti = sub_jenis_cuti.Id
-                WHERE cuti.nip != '$nip' AND cuti.id_perusahaan = '$id_perusahaan' AND  (cuti.tgl_cuti LIKE '%$filter%' OR cuti.akhir_cuti LIKE '%$filter%')
-                ORDER BY cuti.id_cuti DESC";
-        $result = $this->db->query($sql)->result();
+    //     $sql = "SELECT cuti.*, users.nama, users.nama_jabatan, jenis_cuti.nama_jenis, sub_jenis_cuti.nama_sub_jenis
+    //             FROM cuti 
+    //             JOIN users ON cuti.nip = users.nip
+    //             JOIN jenis_cuti ON cuti.jenis = jenis_cuti.Id
+    //             LEFT JOIN sub_jenis_cuti on cuti.detail_cuti = sub_jenis_cuti.Id
+    //             WHERE cuti.nip != '$nip' AND cuti.id_perusahaan = '$id_perusahaan' AND  (cuti.tgl_cuti LIKE '%$filter%' OR cuti.akhir_cuti LIKE '%$filter%')
+    //             ORDER BY cuti.id_cuti DESC";
+    //     $result = $this->db->query($sql)->result();
 
-        $i = 0;
-        $no = 1;
-        foreach ($result as $res) {
-            if ($res->jenis == 2) {
-                $jumlah_cuti = "1 Bulan";
-            } else if ($res->jenis == 3) {
-                $jumlah_cuti = "3 Bulan";
-            } else {
-                $jumlah_cuti = $res->jumlah_cuti . " Hari";
-            }
-            // Atasan 
-            $queryAtasan = "SELECT users.nama FROM users RIGHT JOIN cuti ON users.nip = '$res->atasan'";
-            $atasan = $this->db->query($queryAtasan)->row();
+    //     $i = 0;
+    //     $no = 1;
+    //     foreach ($result as $res) {
+    //         if ($res->jenis == 2) {
+    //             $jumlah_cuti = "1 Bulan";
+    //         } else if ($res->jenis == 3) {
+    //             $jumlah_cuti = "3 Bulan";
+    //         } else {
+    //             $jumlah_cuti = $res->jumlah_cuti . " Hari";
+    //         }
+    //         // Atasan 
+    //         $queryAtasan = "SELECT users.nama FROM users RIGHT JOIN cuti ON users.nip = '$res->atasan'";
+    //         $atasan = $this->db->query($queryAtasan)->row();
 
-            // Status hrd
-            $statusHrd = $res->status_hrd == "Disetujui"
-                ? "<p class='badge badge-success'>" . $res->status_hrd . "</p>"
-                : "<p class='badge badge-danger'>" . $res->status_hrd . "</p>";
+    //         // Status hrd
+    //         $statusHrd = $res->status_hrd == "Disetujui"
+    //             ? "<p class='badge badge-success'>" . $res->status_hrd . "</p>"
+    //             : "<p class='badge badge-danger'>" . $res->status_hrd . "</p>";
 
-            // Jika status atasan atau status hrd masih kosong
-            $statusHrd = $res->status_hrd != null ? $statusHrd : "<p class='badge'>Belum Diproses</p>";
+    //         // Jika status atasan atau status hrd masih kosong
+    //         $statusHrd = $res->status_hrd != null ? $statusHrd : "<p class='badge'>Belum Diproses</p>";
 
-            // Lihat dokumen yang diupload
-            $lihatDokumen = '
-                <a class="aksi badge badge-warning" onclick="detailCuti(' . $res->id_cuti . ')">
-                    <i class="fa fa-eye" aria-hidden="true"></i> Detail
-                </a>
-                ';
+    //         // Lihat dokumen yang diupload
+    //         $lihatDokumen = '
+    //             <a class="aksi badge badge-warning" onclick="detailCuti(' . $res->id_cuti . ')">
+    //                 <i class="fa fa-eye" aria-hidden="true"></i> Detail
+    //             </a>
+    //             ';
 
-            // History cuti karyawan
-            $history = '
-                <a class="aksi badge badge-secondary" onclick="historyCuti(' . $res->id_cuti . ')">
-                    <i class="fa fa-history" aria-hidden="true"></i> History
-                </a>
-                ';
+    //         // History cuti karyawan
+    //         $history = '
+    //             <a class="aksi badge badge-secondary" onclick="historyCuti(' . $res->id_cuti . ')">
+    //                 <i class="fa fa-history" aria-hidden="true"></i> History
+    //             </a>
+    //             ';
 
-            $aksi = '
-                <a class="aksi badge badge-success" onclick="update_cuti_hrd(' . $res->id_cuti . ')">
-                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Update
-                </a>
-                ';
+    //         $aksi = '
+    //             <a class="aksi badge badge-success" onclick="update_cuti_hrd(' . $res->id_cuti . ')">
+    //                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Update
+    //             </a>
+    //             ';
 
-            $aksi = $res->status_hrd == null ? $aksi : "";
+    //         $aksi = $res->status_hrd == null ? $aksi : "";
 
-            $row = array();
-            $row[] = $no++;
-            $row[] = $res->nama;
-            $row[] = $res->nama_jenis;
-            $row[] = $res->alasan;
-            $row[] = date('d F Y', strtotime($res->date_created));
-            $row[] = $this->tgl_indo($res->tgl_cuti);
-            $row[] = $jumlah_cuti;
-            // $row[] = $atasan[$i]->nama;
-            $row[] = $atasan->nama;
-            $row[] = $statusHrd;
-            $row[] = $aksi . $lihatDokumen . $history;
-            $data['data'][] = $row;
-            $i++;
-        }
-        count($result) > 0 ? $data = $data : $data['data'] = [];
-        echo json_encode($data);
-    }
+    //         $row = array();
+    //         $row[] = $no++;
+    //         $row[] = $res->nama;
+    //         $row[] = $res->nama_jenis;
+    //         $row[] = $res->alasan;
+    //         $row[] = date('d F Y', strtotime($res->date_created));
+    //         $row[] = $this->tgl_indo($res->tgl_cuti);
+    //         $row[] = $jumlah_cuti;
+    //         // $row[] = $atasan[$i]->nama;
+    //         $row[] = $atasan->nama;
+    //         $row[] = $statusHrd;
+    //         $row[] = $aksi . $lihatDokumen . $history;
+    //         $data['data'][] = $row;
+    //         $i++;
+    //     }
+    //     count($result) > 0 ? $data = $data : $data['data'] = [];
+    //     echo json_encode($data);
+    // }
 
-    public function data_approve_supervisi()
-    {
-        $nip = $this->session->userdata('nip');
-        $id_perusahaan = $this->session->userdata('user_perusahaan_id');
+    // public function data_approve_supervisi()
+    // {
+    //     $nip = $this->session->userdata('nip');
+    //     $id_perusahaan = $this->session->userdata('user_perusahaan_id');
 
-        $sql = "SELECT cuti.*, users.nama, users.nama_jabatan, jenis_cuti.nama_jenis, sub_jenis_cuti.nama_sub_jenis
-                FROM cuti 
-                JOIN users ON cuti.nip = users.nip
-                JOIN jenis_cuti ON cuti.jenis = jenis_cuti.Id
-                LEFT JOIN sub_jenis_cuti on cuti.detail_cuti = sub_jenis_cuti.Id
-                WHERE cuti.atasan = '$nip' AND cuti.id_perusahaan = '$id_perusahaan'
-                ORDER BY cuti.id_cuti DESC";
-        $result = $this->db->query($sql)->result();
-        $i = 0;
-        $no = 1;
-        foreach ($result as $res) {
-            if ($res->jenis == 2) {
-                $jumlah_cuti = "1 Bulan";
-            } else if ($res->jenis == 3) {
-                $jumlah_cuti = "3 Bulan";
-            } else {
-                $jumlah_cuti = $res->jumlah_cuti . " Hari";
-            }
+    //     $sql = "SELECT cuti.*, users.nama, users.nama_jabatan, jenis_cuti.nama_jenis, sub_jenis_cuti.nama_sub_jenis
+    //             FROM cuti 
+    //             JOIN users ON cuti.nip = users.nip
+    //             JOIN jenis_cuti ON cuti.jenis = jenis_cuti.Id
+    //             LEFT JOIN sub_jenis_cuti on cuti.detail_cuti = sub_jenis_cuti.Id
+    //             WHERE cuti.atasan = '$nip' AND cuti.id_perusahaan = '$id_perusahaan'
+    //             ORDER BY cuti.id_cuti DESC";
+    //     $result = $this->db->query($sql)->result();
+    //     $i = 0;
+    //     $no = 1;
+    //     foreach ($result as $res) {
+    //         if ($res->jenis == 2) {
+    //             $jumlah_cuti = "1 Bulan";
+    //         } else if ($res->jenis == 3) {
+    //             $jumlah_cuti = "3 Bulan";
+    //         } else {
+    //             $jumlah_cuti = $res->jumlah_cuti . " Hari";
+    //         }
 
-            // Atasan 
-            $queryAtasan = "SELECT users.nama FROM users RIGHT JOIN cuti ON users.nip = cuti.atasan WHERE cuti.atasan = '$nip'";
-            $atasan = $this->db->query($queryAtasan)->result();
+    //         // Atasan 
+    //         $queryAtasan = "SELECT users.nama FROM users RIGHT JOIN cuti ON users.nip = cuti.atasan WHERE cuti.atasan = '$nip'";
+    //         $atasan = $this->db->query($queryAtasan)->result();
 
-            // Status atasan
-            $statusAtasan = $res->status_atasan == "Disetujui"
-                ? "<p class='badge badge-success'>" . $res->status_atasan . "</p>"
-                : "<p class='badge badge-danger'>" . $res->status_atasan . "</p>";
+    //         // Status atasan
+    //         $statusAtasan = $res->status_atasan == "Disetujui"
+    //             ? "<p class='badge badge-success'>" . $res->status_atasan . "</p>"
+    //             : "<p class='badge badge-danger'>" . $res->status_atasan . "</p>";
 
-            // Jika status atasan atau status hrd tidak kosong
-            $statusAtasan = $res->status_atasan != null ? $statusAtasan : "<p class='badge'>Belum diproses</p>";
+    //         // Jika status atasan atau status hrd tidak kosong
+    //         $statusAtasan = $res->status_atasan != null ? $statusAtasan : "<p class='badge'>Belum diproses</p>";
 
-            // Lihat dokumen yang diupload
-            $lihatDokumen = '
-                <a class="aksi badge badge-warning" onclick="detailCuti(' . $res->id_cuti . ')">
-                    <i class="fa fa-eye" aria-hidden="true"></i> Detail
-                </a>
-                ';
+    //         // Lihat dokumen yang diupload
+    //         $lihatDokumen = '
+    //             <a class="aksi badge badge-warning" onclick="detailCuti(' . $res->id_cuti . ')">
+    //                 <i class="fa fa-eye" aria-hidden="true"></i> Detail
+    //             </a>
+    //             ';
 
-            // History cuti karyawan
-            $history = '
-                <a class="aksi badge badge-secondary" onclick="historyCuti(' . $res->id_cuti . ')">
-                    <i class="fa fa-history" aria-hidden="true"></i> History
-                </a>
-                ';
+    //         // History cuti karyawan
+    //         $history = '
+    //             <a class="aksi badge badge-secondary" onclick="historyCuti(' . $res->id_cuti . ')">
+    //                 <i class="fa fa-history" aria-hidden="true"></i> History
+    //             </a>
+    //             ';
 
-            $aksi = '
-                <a class="aksi badge badge-success" onclick="update_cuti_hrd(' . $res->id_cuti . ')">
-                    <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Update
-                </a>
-                ';
+    //         $aksi = '
+    //             <a class="aksi badge badge-success" onclick="update_cuti_hrd(' . $res->id_cuti . ')">
+    //                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Update
+    //             </a>
+    //             ';
 
-            $aksi = $res->status_atasan == null ? $aksi : "";
+    //         $aksi = $res->status_atasan == null ? $aksi : "";
 
-            $row = array();
-            $row[] = $no++;
-            $row[] = $res->nama;
-            $row[] = $res->nama_jenis;
-            $row[] = $res->alasan;
-            $row[] = date('d F Y', strtotime($res->date_created));
-            $row[] = $this->tgl_indo($res->tgl_cuti);
-            $row[] = $jumlah_cuti;
-            $row[] = $atasan[$i]->nama;
-            $row[] = $statusAtasan;
-            $row[] = $aksi . $lihatDokumen . $history;
-            $data['data'][] = $row;
-            $i++;
-        }
+    //         $row = array();
+    //         $row[] = $no++;
+    //         $row[] = $res->nama;
+    //         $row[] = $res->nama_jenis;
+    //         $row[] = $res->alasan;
+    //         $row[] = date('d F Y', strtotime($res->date_created));
+    //         $row[] = $this->tgl_indo($res->tgl_cuti);
+    //         $row[] = $jumlah_cuti;
+    //         $row[] = $atasan[$i]->nama;
+    //         $row[] = $statusAtasan;
+    //         $row[] = $aksi . $lihatDokumen . $history;
+    //         $data['data'][] = $row;
+    //         $i++;
+    //     }
 
-        count($result) > 0 ? $data = $data : $data['data'] = [];
-        echo json_encode($data);
-    }
+    //     count($result) > 0 ? $data = $data : $data['data'] = [];
+    //     echo json_encode($data);
+    // }
 
     function ambilDataDetail()
     {
@@ -834,10 +795,10 @@ class Cuti extends CI_Controller
                             'jenis' => $jenisCuti,
                             'detail_cuti' => $detailCuti,
                             'atasan' => $nipAtasan,
-                            'dirsdm' => '2195903',
-                            'dirut' => '2146501',
-                            'hrd_bagian' => 4,
-                            'hrd_jabatan' => 2,
+                            // 'dirsdm' => '2195903',
+                            // 'dirut' => '2146501',
+                            // 'hrd_bagian' => 4,
+                            // 'hrd_jabatan' => 2,
                             'id_perusahaan' => $this->session->userdata('user_perusahaan_id')
                         ];
 
@@ -869,7 +830,7 @@ class Cuti extends CI_Controller
                         // 'dirsdm' => '2195903',
                         // 'dirut' => '2146501',
                         // 'hrd_bagian' => 4,
-                        'hrd_jabatan' => 3,
+                        // 'hrd_jabatan' => 3,
                         'id_perusahaan' => $this->session->userdata('user_perusahaan_id')
                     ];
                     // Mengecek jumlah cuti dengan sisa cuti
@@ -901,10 +862,11 @@ class Cuti extends CI_Controller
                 $nama_session = $this->session->userdata('nama');
                 $cuti_jenis = $this->db->get_where('jenis_cuti', ['Id' => $jenisCuti])->row();
                 $jenis_nama = $cuti_jenis->nama_jenis;
-                $msghrd = "*Pengajuan Cuti*\n\nFrom: *$nama_session*\nJenis Cuti: *$jenis_nama*\nMohon untuk segera diproses.";
+                $msgatasan = "*Pengajuan Cuti*\n\nFrom: *$nama_session*\nJenis Cuti: *$jenis_nama*\nMohon untuk segera diproses.";
                 // $hrd = $this->db->get_where('users', ['bagian' => 4, 'status' => 1])->result();
-                $hrd = $this->db->get_where('users', ['bagian' => $this->input->post('tujuanCuti'), 'status' => 1])->result();
-                if (!$hrd) {
+                // $hrd = $this->db->get_where('users', ['bagian' => $this->input->post('tujuanCuti'), 'status' => 1])->result();
+                $atasan = $this->db->get_where('users', ['nip' => $nipAtasan])->result();
+                if (!$atasan) {
                     $data = [
                         'sukses' => false,
                         'msg' => "User tidak dapat di hubungi dalam bagian Tujuan."
@@ -912,11 +874,11 @@ class Cuti extends CI_Controller
                     echo json_encode($data);
                     return;
                 }
-                foreach ($hrd as $row) {
-                    $phone_hrd[] = $row->phone;
+                foreach ($atasan as $row) {
+                    $phone_atasan[] = $row->phone;
                 }
-                $send_notif = implode(',', $phone_hrd);
-                $this->api_whatsapp->wa_notif($msghrd, $send_notif);
+                $send_notif = implode(',', $phone_atasan);
+                $this->api_whatsapp->wa_notif($msgatasan, $send_notif);
             }
             // Jika Form Validation Gagal Dijalankan 
         } else {
@@ -1014,49 +976,6 @@ class Cuti extends CI_Controller
                         $msg = "*Notifikasi Cuti*\n\nCuti anda selesai di proses oleh *" . $atasan->nama . "* sebagai atasan/supervisi, dengan status *" . $status . "*.\n\n*Catatan* : " . $catatan;
                         $this->api_whatsapp->wa_notif($msg, $user->phone);
                     }
-                } else if ($cuti->jenis == 4) { // jenis cuti perjalan spiritual
-                    $this->M_cuti->updateAtasan($params, $where);
-                    $this->db->set(['cuti_spiritual' => 1]);
-                    $this->db->where(['nip' => $cuti->nip]);
-                    $this->db->update('users');
-
-                    $data = [
-                        'error' => false,
-                        'msg' => 'Cuti berhasil ' . $status . '!'
-                    ];
-
-                    $catatan = $catatan != "" || $catatan != null ? $catatan : "Tidak ada catatan";
-                    $msg = "*Notifikasi Cuti*\n\nCuti anda selesai di proses oleh *" . $atasan->nama . "* sebagai atasan/supervisi, dengan status *" . $status . "*.\n\n*Catatan* : " . $catatan;
-                    $this->api_whatsapp->wa_notif($msg, $user->phone);
-                } else if ($cuti->jenis == 5) { // jenis cuti ibadah haji
-                    $this->M_cuti->updateAtasan($params, $where);
-                    $this->db->set(['cuti_haji' => 1]);
-                    $this->db->where(['nip' => $cuti->nip]);
-                    $this->db->update('users');
-
-                    $data = [
-                        'error' => false,
-                        'msg' => 'Cuti berhasil ' . $status . '!'
-                    ];
-
-                    $catatan = $catatan != "" || $catatan != null ? $catatan : "Tidak ada catatan";
-                    $msg = "*Notifikasi Cuti*\n\nCuti anda selesai di proses oleh *" . $atasan->nama . "* sebagai atasan/supervisi, dengan status *" . $status . "*.\n\n*Catatan* : " . $catatan;
-                    $this->api_whatsapp->wa_notif($msg, $user->phone);
-                } else if ($cuti->jenis == 2) { //Cuti Panjang
-                    $this->M_cuti->updateAtasan($params, $where);
-                    $cuti_jenis = $this->db->get_where('jenis_cuti', ['Id' => $cuti->jenis])->row();
-                    $jenis_nama = $cuti_jenis->nama_jenis;
-                    $msg = "*Pengajuan Cuti*\n\nFrom: *$user->nama*\nJenis Cuti: *$jenis_nama*\n\nSudah selesai diproses oleh *" . $atasan->nama . "*. Untuk selanjutnya diproses oleh Direksi.";
-                    $this->api_whatsapp->wa_notif($msg, $dirsdm->phone);
-
-                    $catatan = $catatan != "" || $catatan != null ? $catatan : "Tidak ada catatan";
-                    $msg = "*Notifikasi Cuti*\n\nCuti anda selesai di proses oleh *" . $atasan->nama . "* sebagai atasan/supervisi, dengan status *" . $status . "*.\n\n*Catatan* : " . $catatan;
-                    $this->api_whatsapp->wa_notif($msg, $user->phone);
-
-                    $data = [
-                        'error' => false,
-                        'msg' => 'Cuti berhasil ' . $status . '!'
-                    ];
                 } else {
                     $data = [
                         'error' => false,

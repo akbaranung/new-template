@@ -48,14 +48,14 @@ class M_cuti extends CI_Model
         if ($user->cuti_spiritual == 1) {
             $this->db->where('Id !=', 4);
         }
-        $this->db->where('id_perusahaan', $this->session->userdata('user_perusahaan_id'));
+        // $this->db->where('id_perusahaan', $this->session->userdata('user_perusahaan_id'));
 
         return $this->db->get('jenis_cuti')->result_array();
     }
 
     public function get_all_jenis_cuti()
     {
-        $this->db->where('id_perusahaan', $this->session->userdata('user_perusahaan_id'));
+        // $this->db->where('id_perusahaan',    $this->session->userdata('user_perusahaan_id'));
         return $this->db->get('jenis_cuti')->result_array();
     }
 
