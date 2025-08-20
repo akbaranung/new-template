@@ -24,12 +24,12 @@
                 targets: -1, // Adjust target index if 'Action' column is not always the 9th column (index 8)
                 orderable: false
             }],
-            layout: {
-                topStart: 'search',
-                topEnd: '',
-                bottomStart: 'info',
-                bottomEnd: 'paging'
-            }
+            // layout: {
+            //     topStart: 'search',
+            //     topEnd: '',
+            //     bottomStart: 'info',
+            //     bottomEnd: 'paging'
+            // }
         });
     });
 </script>

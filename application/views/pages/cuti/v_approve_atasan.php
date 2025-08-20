@@ -1,3 +1,38 @@
+<style>
+    .col-xs-3 {
+        width: 25%;
+        background-color: #004e81;
+    }
+
+    .row {
+        margin-left: 0px;
+    }
+
+    .container-fluid {
+        padding-right: 0px;
+        padding-left: 0px
+    }
+
+    .btn_footer_panel .tag_ {
+        padding-top: 37px;
+    }
+
+    tr>th {
+        /* background-color: #e91f62; */
+        background-color: #3e51b4;
+        color: white;
+    }
+
+    .col-centered {
+        float: none;
+        margin: 0 auto;
+    }
+
+    .dt-length label {
+        margin-left: 8px;
+        /* Adjust this value (e.g., 5px, 10px, 0.5em) as needed */
+    }
+</style>
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
@@ -12,7 +47,7 @@
                     <div class="table-responsive">
                         <table id="table-approve-atasan" class="table table-striped table-bordered" style="width:100%">
                             <thead>
-                                <tr class="headings">
+                                <tr>
                                     <th class="column-title">No.</th>
                                     <th class="column-title">Nama</th>
                                     <th class="column-title">Jenis Cuti</th>

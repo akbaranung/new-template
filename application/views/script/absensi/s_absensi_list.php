@@ -47,12 +47,12 @@
                 orderable: false
             }], // The 'dom' property has been replaced with the 'layout' option
             // to place the search bar at the top, and the info and pagination controls at the bottom.
-            layout: {
-                topStart: 'search',
-                topEnd: '',
-                bottomStart: 'info',
-                bottomEnd: 'paging'
-            }
+            // layout: {
+            //     topStart: 'search',
+            //     topEnd: '',
+            //     bottomStart: 'info',
+            //     bottomEnd: 'paging'
+            // }
         });
 
         $('#team-table').dataTable({
@@ -73,12 +73,12 @@
                 orderable: false
             }], // The 'dom' property has been replaced with the 'layout' option
             // to place the search bar at the top, and the info and pagination controls at the bottom.
-            layout: {
-                topStart: 'search',
-                topEnd: '',
-                bottomStart: 'info',
-                bottomEnd: 'paging'
-            }
+            // layout: {
+            //     topStart: 'search',
+            //     topEnd: '',
+            //     bottomStart: 'info',
+            //     bottomEnd: 'paging'
+            // }
         });
 
         $('#approval-table').dataTable({
@@ -99,12 +99,12 @@
                 orderable: false
             }], // The 'dom' property has been replaced with the 'layout' option
             // to place the search bar at the top, and the info and pagination controls at the bottom.
-            layout: {
-                topStart: 'search',
-                topEnd: '',
-                bottomStart: 'info',
-                bottomEnd: 'paging'
-            }
+            // layout: {
+            //     topStart: 'search',
+            //     topEnd: '',
+            //     bottomStart: 'info',
+            //     bottomEnd: 'paging'
+            // }
         });
 
     })

@@ -1,3 +1,21 @@
+<style>
+    tr>th {
+        /* background-color: #e91f62; */
+        background-color: #3e51b4;
+        color: white;
+    }
+
+    .col-centered {
+        float: none;
+        margin: 0 auto;
+    }
+
+    .dt-length label {
+        margin-left: 8px;
+        /* Adjust this value (e.g., 5px, 10px, 0.5em) as needed */
+    }
+</style>
+
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
@@ -11,7 +29,7 @@
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <!-- <p class="card-title"><strong>List Cuti</strong></p> -->
 
-                    <a href="<?= site_url('cuti/view') ?>" class="btn btn-warning"><i class="fa fa-chevron-left" aria-hidden="true"></i> Kembali</a>
+                    <a href="<?= site_url('cuti/data_approve_atasan_view') ?>" class="btn btn-warning"><i class="fa fa-chevron-left" aria-hidden="true"></i> Kembali</a>
                     <!-- <a href="#" id="addCabangBtn" class="btn btn-primary">
 						Add Cabang
 						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="16" height="16">

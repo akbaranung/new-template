@@ -351,28 +351,28 @@ class Cuti extends CI_Controller
 
             // Status atasan
             $statusAtasan = $res->status_atasan == "Disetujui"
-                ? "<p class='badge badge-success'>" . $res->status_atasan . "</p>"
-                : "<p class='badge badge-danger'>" . $res->status_atasan . "</p>";
+                ? "<p class='btn btn-success'>" . $res->status_atasan . "</p>"
+                : "<p class='btn btn-danger'>" . $res->status_atasan . "</p>";
 
             // Jika status atasan atau status hrd tidak kosong
-            $statusAtasan = $res->status_atasan != null ? $statusAtasan : "<p class='badge'>Belum diproses</p>";
+            $statusAtasan = $res->status_atasan != null ? $statusAtasan : "<p class='btn'>Belum diproses</p>";
 
             // Lihat dokumen yang diupload
             $lihatDokumen = '
-                <span class="aksi badge badge-warning" onclick="detailCuti(' . $res->id_cuti . ')">
+                <span class="aksi btn btn-primary" onclick="detailCuti(' . $res->id_cuti . ')">
                     <i class="fa fa-eye" aria-hidden="true"></i> Detail
                 </span>
                 ';
 
             // History cuti karyawan
             $history = '
-                <span class="aksi badge badge-secondary" onclick="historyCuti(' . $res->id_cuti . ')">
+                <span class="aksi btn btn-dark" onclick="historyCuti(' . $res->id_cuti . ')">
                     <i class="fa fa-history" aria-hidden="true"></i> History
                 </span>
                 ';
 
             $aksi = '
-                <span class="aksi badge badge-success" onclick="update_cuti_atasan(' . $res->id_cuti . ')">
+                <span class="aksi btn btn-pink" onclick="update_cuti_atasan(' . $res->id_cuti . ')">
                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i> Update
                 </span>
                 ';
@@ -389,7 +389,8 @@ class Cuti extends CI_Controller
             $row[] = $jumlah_cuti;
             $row[] = $atasan[$i]->nama;
             $row[] = $statusAtasan;
-            $row[] = $aksi . $lihatDokumen . $history;
+            $row[] = '<div style="display: flex; gap: 1px; align-items: center;">
+' . $aksi . $lihatDokumen . $history . '</div>';
             $data['data'][] = $row;
             $i++;
         }
