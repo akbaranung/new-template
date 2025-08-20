@@ -7,14 +7,6 @@
     background-color: #1b68ff;
   }
 
-  .row {
-    margin-left: 0px;
-  }
-
-  .container-fluid {
-    padding-right: 0px;
-    padding-left: 0px
-  }
 
   .btn_footer_panel .tag_ {
     padding-top: 37px;

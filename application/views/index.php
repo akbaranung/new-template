@@ -169,12 +169,28 @@
       });
     <?php endif; ?>
   </script>
-  <?php if ($this->session->flashdata('swal_message')): ?>
+  <!-- <?php if ($this->session->flashdata('swal_message_redirect')): ?>
     <script>
-      var swalData = <?= json_encode($this->session->flashdata('swal_message')); ?>;
+      var swalData = <?= json_encode($this->session->flashdata('swal_message_redirect')); ?>;
       Swal.fire(swalData).then((result) => {
         if (result.isConfirmed) {
           window.location.href = swalData.redirectUrl;
+        }
+      });
+    </script>
+  <?php endif; ?> -->
+
+  <?php if ($this->session->flashdata('swal_message')) : ?>
+    <script>
+      const swalConfig = <?php echo json_encode($this->session->flashdata('swal_message')); ?>;
+
+      // Remove the redirectUrl from swalConfig as it's handled separately
+      const redirectUrl = swalConfig.redirectUrl || null;
+      delete swalConfig.redirectUrl; // Clean up the config
+
+      Swal.fire(swalConfig).then((result) => {
+        if (result.isConfirmed && redirectUrl) {
+          window.location.href = redirectUrl;
         }
       });
     </script>
