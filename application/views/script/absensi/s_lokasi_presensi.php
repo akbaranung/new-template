@@ -14,9 +14,21 @@
             order: [],
             iDisplayLength: 10,
             columnDefs: [{
-                targets: -1, // Adjust target index if 'Action' column is not always the 9th column (index 8)
-                orderable: false
-            }],
+                    targets: -1,
+                    orderable: false
+                },
+                // {
+                //     targets: 2, // Target the second column (index 1)
+                //     width: "1000px", // A fixed width is a good idea
+                //     responsivePriority: 1 // Keep this column from shrinking
+                // }
+            ],
+            // createdRow: function(row, data, dataIndex) {
+            //     // Find the index of the status cell
+            //     const statusCell = $('td', row).eq(3); // The status is in the 9th column (index 8)
+
+            //     statusCell.css('min-width', '100px'); // Change '100px' to your desired width
+            // },
             // layout: {
             //     topStart: 'search',
             //     topEnd: '',

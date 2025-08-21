@@ -20,9 +20,28 @@
             order: [],
             iDisplayLength: 10,
             columnDefs: [{
-                targets: -1, // Adjust target index if 'Action' column is not always the 9th column (index 8)
+                targets: -1, // Adjust target index to match the "Action" column
                 orderable: false
-            }]
+            }, {
+                targets: 10, // The index of the new hidden status column
+                visible: false,
+                searchable: false
+            }],
+            createdRow: function(row, data, dataIndex) {
+                // Find the index of the status cell
+                const statusCell = $('td', row).eq(8); // The status is in the 9th column (index 8)
+
+                // Get the value from our new hidden column (index 10)
+                const statusValue = data[10];
+
+                if (statusValue === 'Disetujui') {
+                    statusCell.addClass('bg-primary text-white');
+                } else if (statusValue === 'Ditolak') {
+                    statusCell.addClass('bg-pink text-white');
+                } else {
+                    statusCell.addClass('bg-pink text-white');
+                }
+            },
         });
     });
 </script>

@@ -28,6 +28,7 @@ class Cuti extends CI_Controller
         $this->load->library('pagination');
         $this->load->database();
         $this->load->helper('url', 'form', 'download');
+        $this->cb = $this->load->database('corebank', TRUE);
 
         if (!$this->session->userdata('nip')) {
             redirect('auth');
@@ -227,16 +228,18 @@ class Cuti extends CI_Controller
 
             // Status atasn
             if ($res->status_atasan == "Disetujui") {
-                $statusAtasan = "<p class='badge badge-success'>" . $res->status_atasan . ": " . $atasan[$i]->nama . "</p>";
+                // $statusAtasan = "<div class='bg-primary text-white'>" . $res->status_atasan . ": " . $atasan[$i]->nama . "</div>";
+                $statusAtasan =  $res->status_atasan . ": " . $atasan[$i]->nama;
             } else if ($res->status_atasan == "Ditolak") {
-                $statusAtasan = "<p class='badge badge-danger'>" . $res->status_atasan . ": " . $atasan[$i]->nama . "</p>";
+                // $statusAtasan = "<div class='bg-pink text-white'>" . $res->status_atasan . ": " . $atasan[$i]->nama . "</div>";
+                $statusAtasan =  $res->status_atasan . ": " . $atasan[$i]->nama;
             } else {
                 $statusAtasan = "";
             }
 
             // Jika status masih kosong
             // $statusHrd = $res->status_hrd == null ? "<p class='badge'>Diajukan Kepada HRD</p>" : $statusHrd;
-            $statusAtasan = ($res->status_atasan == null) ? "<p class='badge'>Diajukan Kepada Atasan</p>" : $statusAtasan;
+            $statusAtasan = ($res->status_atasan == null) ? "<div class='badge'>Diajukan Kepada Atasan</p>" : $statusAtasan;
             // $statusDirsdm = ($res->status_dirsdm == null && $res->status_hrd == "Disetujui" && $res->status_atasan == "Disetujui") ? "<p class='badge'>Diajukan Kepada Direktur SDM</p>" : $statusDirsdm;
             // $statusDirut = ($res->status_dirut == null && $res->status_hrd == "Disetujui" && $res->status_atasan == "Disetujui" && $res->status_dirsdm == "Disetujui") ? "<p class='badge'>Diajukan Kepada Direktur Utama</p>" : $statusDirut;
 
@@ -245,14 +248,14 @@ class Cuti extends CI_Controller
 
             // Detail cuti 
             $lihatDetail = '
-            <span class="aksi badge badge-warning" onclick="detailCuti(' . $res->id_cuti . ')">
+            <span class="aksi btn btn-primary" onclick="detailCuti(' . $res->id_cuti . ')">
                 <i class="fa fa-eye" aria-hidden="true"></i> Detail
             </span>
             ';
 
             // Cetak form cuti
             $cetak = '
-            <span class="aksi badge badge-success" onclick="cetak(' . $res->id_cuti . ')" style="margin-top:2px">
+            <span class="aksi btn btn-pink" onclick="cetak(' . $res->id_cuti . ')" style="margin-top:2px">
                 <i class="fa fa-print" aria-hidden="true"></i> Cetak
             </span>';
 
@@ -278,7 +281,11 @@ class Cuti extends CI_Controller
             $row[] = $jumlah_cuti;
             $row[] = $atasan[$i]->nama;
             $row[] = $status_cuti;
-            $row[] = $lihatDetail . $cetak;
+
+            $row[] = '<div style="display: flex; gap: 1px; align-items: center;">
+' . $lihatDetail . $cetak . '</div>';
+            // $row[] = $lihatDetail . $cetak;
+            $row[] = $res->status_atasan; // THIS IS THE NEW HIDDEN COLUMN (index 10)
             $data['data'][] = $row;
             $i++;
         }
@@ -350,12 +357,22 @@ class Cuti extends CI_Controller
             $atasan = $this->db->query($queryAtasan)->result();
 
             // Status atasan
-            $statusAtasan = $res->status_atasan == "Disetujui"
-                ? "<p class='badge badge-primary'>" . $res->status_atasan . "</p>"
-                : "<p class='badge badge-pink'>" . $res->status_atasan . "</p>";
+            // Status atasn
+            if ($res->status_atasan == "Disetujui") {
+                // $statusAtasan = "<div class='bg-primary text-white'>" . $res->status_atasan . ": " . $atasan[$i]->nama . "</div>";
+                $statusAtasan =  $res->status_atasan . ": " . $atasan[$i]->nama;
+            } else if ($res->status_atasan == "Ditolak") {
+                // $statusAtasan = "<div class='bg-pink text-white'>" . $res->status_atasan . ": " . $atasan[$i]->nama . "</div>";
+                $statusAtasan =  $res->status_atasan . ": " . $atasan[$i]->nama;
+            } else {
+                $statusAtasan = "";
+            }
+            // $statusAtasan = $res->status_atasan == "Disetujui"
+            //     ? "<p class='badge badge-primary'>" . $res->status_atasan . "</p>"
+            //     : "<p class='badge badge-pink'>" . $res->status_atasan . "</p>";
 
             // Jika status atasan atau status hrd tidak kosong
-            $statusAtasan = $res->status_atasan != null ? $statusAtasan : "<p class='btn'>Belum diproses</p>";
+            $statusAtasan = $res->status_atasan != null ? $statusAtasan : "<p class=''>Belum diproses</p>";
 
             // Lihat dokumen yang diupload
             $lihatDokumen = '
@@ -391,6 +408,7 @@ class Cuti extends CI_Controller
             $row[] = $statusAtasan;
             $row[] = '<div style="display: flex; gap: 1px; align-items: center;">
 ' . $aksi . $lihatDokumen . $history . '</div>';
+            $row[] = $res->status_atasan;
             $data['data'][] = $row;
             $i++;
         }
@@ -1475,7 +1493,7 @@ class Cuti extends CI_Controller
 
     public function resetCuti()
     {
-        $nipSession = $this->session->userdata('nip');
+        $nipSession = $this->input->post('nip');
         $this->db->set(['cuti' => 12]);
         $this->db->where(['nip' => $nipSession]);
         $this->db->update('users');
@@ -1484,6 +1502,45 @@ class Cuti extends CI_Controller
         //     'msg' => "Reset berhasil!",
         //     'err' => false
         // ];
+        $data = [
+            'status' => "success",
+            'message' => "Reset berhasil!"
+        ];
+        echo json_encode($data);
+    }
+
+    public function resetCutiAll()
+    {
+        // $id_perusahaan = $this->session->userdata('user_perusahaan_id');
+        // $this->db->set(['cuti' => 12]);
+        // $this->db->where(['id_perusahaan' => $id_perusahaan]);
+        // $this->db->update('users');
+        // $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
+
+        // $data = [
+        //     'msg' => "Reset berhasil!",
+        //     'err' => false
+        // ];
+
+        $id_perusahaan = $this->session->userdata('user_perusahaan_id');
+
+        $this->db->select('users.id'); // Select the user ID
+        $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
+        $this->db->where('t_cabang.id_perusahaan', $id_perusahaan);
+        $user_ids_to_update = $this->db->get('users')->result_array();
+
+        // Check if any users were found
+        if (!empty($user_ids_to_update)) {
+            // Step 2: Use the user IDs in the UPDATE statement
+            // First, convert the array of objects into a simple array of IDs
+            $ids = array_column($user_ids_to_update, 'id');
+
+            // Perform the batch update
+            $this->db->set('cuti', 12);
+            $this->db->where_in('id', $ids); // Use where_in to update multiple IDs
+            $this->db->update('users');
+        }
+
         $data = [
             'status' => "success",
             'message' => "Reset berhasil!"

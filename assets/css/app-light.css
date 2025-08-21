@@ -4792,6 +4792,14 @@ a.close.disabled {
 .align-text-top {
   vertical-align: text-top !important; }
 
+.bg-pink {
+  background-color: #e81f63 !important; }
+
+a.bg-pink:hover, a.bg-pink:focus,
+button.bg-pink:hover,
+button.bg-pink:focus {
+  background-color: #004ee7 !important; }
+  
 .bg-primary {
   background-color: #1b68ff !important; }
 
