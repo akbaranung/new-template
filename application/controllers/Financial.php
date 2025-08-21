@@ -2367,48 +2367,48 @@ class Financial extends CI_Controller
     // return $this->cb->where('id_cabang', $kode_cabang);
 
     // Saldo awal periode sebelumnya
-    $last_periode = new DateTime($from);
-    $last_periode->modify('-1 month');
-    $last_periode = $last_periode->format('Y-m');
-    $coaBefore = $this->cb->where('id_cabang', $kode_cabang)
-      ->where('periode', $last_periode)
-      ->get('saldo_awal')
-      ->row_array();
+    // $last_periode = new DateTime($from);
+    // $last_periode->modify('-1 month');
+    // $last_periode = $last_periode->format('Y-m');
+    // $coaBefore = $this->cb->where('id_cabang', $kode_cabang)
+    //   ->where('periode', $last_periode)
+    //   ->get('saldo_awal')
+    //   ->row_array();
 
-    $coaBefore = $coaBefore['coa'] ?? 0; // Pastikan tidak error jika NULL
+    // $coaBefore = $coaBefore['coa'] ?? 0; // Pastikan tidak error jika NULL
 
-    $coa = json_decode($coaBefore);
-    $saldo_awal = null;
+    // $coa = json_decode($coaBefore);
+    // $saldo_awal = null;
 
     // echo '<pre>';
     // print_r($coa);
     // echo '</pre>';
     // exit;
     // Iterasi untuk mencari saldo awal
-    if ($coa) {
-      foreach ($coa as $item) {
-        if ($item->no_sbb == $no_coa) {
-          $saldo_awal = $item->saldo_awal;
-          break;
-        }
-      }
-    }
+    // if ($coa) {
+    //   foreach ($coa as $item) {
+    //     if ($item->no_sbb == $no_coa) {
+    //       $saldo_awal = $item->saldo_awal;
+    //       break;
+    //     }
+    //   }
+    // }
 
     // Hitung transaksi dari 1-14 November
-    $mid_start = (new DateTime($from))->modify('first day of this month')->format('Y-m-d');
-    $mid_end = (new DateTime($from))->modify('-1 day')->format('Y-m-d');
+    // $mid_start = (new DateTime($from))->modify('first day of this month')->format('Y-m-d');
+    // $mid_end = (new DateTime($from))->modify('-1 day')->format('Y-m-d');
 
-    $transactions_before = $this->M_coa->getCoaReport($no_coa, $mid_start, $mid_end);
-    foreach ($transactions_before as $trans) {
-      if ($trans->akun_debit == $no_coa) {
-        $saldo_awal += $trans->jumlah_debit;
-      } else {
-        $saldo_awal -= $trans->jumlah_kredit;
-      }
-    }
+    // $transactions_before = $this->M_coa->getCoaReport($no_coa, $mid_start, $mid_end);
+    // foreach ($transactions_before as $trans) {
+    //   if ($trans->akun_debit == $no_coa) {
+    //     $saldo_awal += $trans->jumlah_debit;
+    //   } else {
+    //     $saldo_awal -= $trans->jumlah_kredit;
+    //   }
+    // }
 
     // Set saldo awal untuk 15 November
-    $data['saldo_awal'] = ($saldo_awal) ? $saldo_awal : 0;
+    // $data['saldo_awal'] = ($saldo_awal) ? $saldo_awal : 0;
     // print_r($saldo_awal);
     // exit;
 

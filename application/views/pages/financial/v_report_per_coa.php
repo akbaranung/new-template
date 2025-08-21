@@ -51,7 +51,7 @@
                       <th class="text-center">Tanggal</th>
                       <th class="text-center">Debit</th>
                       <th class="text-center">Kredit</th>
-                      <th class="text-center">Saldo Akhir</th>
+                      <!-- <th class="text-center">Saldo Akhir</th> -->
                       <th class="text-center">Keterangan</th>
                     </tr>
                   </thead>
@@ -70,7 +70,7 @@
                           <!-- <td class="text-right"><?= ($a->akun_debit == $detail_coa['no_sbb']) ? (($a->saldo_debit) ? number_format($a->saldo_debit) : '0') : '0' ?></td> -->
                           <td class="text-right"><?= ($a->akun_kredit == $detail_coa['no_sbb']) ? (($a->jumlah_kredit) ? number_format($a->jumlah_kredit) : '0') : '0' ?></td>
                           <!-- <td class="text-right"><?= ($a->akun_kredit == $detail_coa['no_sbb']) ? (($a->saldo_kredit) ? number_format($a->saldo_kredit) : '0') : '0' ?></td> -->
-                          <td class="text-right"><?= ($a->akun_kredit == $detail_coa['no_sbb']) ? (($a->saldo_kredit) ? number_format($a->saldo_kredit) :  '0') : (($a->saldo_debit) ? number_format($a->saldo_debit) : '0') ?></td>
+                          <!-- <td class="text-right"><?= ($a->akun_kredit == $detail_coa['no_sbb']) ? (($a->saldo_kredit) ? number_format($a->saldo_kredit) :  '0') : (($a->saldo_debit) ? number_format($a->saldo_debit) : '0') ?></td> -->
                           <td><?= $a->keterangan ?></td>
                         </tr>
                       <?php
