@@ -103,6 +103,24 @@ class Home extends CI_Controller
 
     $data['perusahaan'] = $perusahaan;
 
+    $hasFinancialMenu = false;
+
+    $menus = $this->M_menu->get_accessible_menus($nip);
+
+    foreach ($menus as $item) {
+      if (isset($item->menu_name) && $item->menu_name === "Financial") {
+        $hasFinancialMenu = true;
+        break; // Exit the loop once a match is found
+      }
+    }
+
+    $data['hasFinancialMenu'] = $hasFinancialMenu;
+
+    // if ($hasFinancialMenu) {
+    //   echo "The 'Financial' menu exists.";
+    // } else {
+    //   echo "The 'Financial' menu does not exist.";
+    // }
 
 
     $this->load->view('index', $data);

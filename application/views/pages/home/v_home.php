@@ -29,107 +29,119 @@
         </div>
         <div class="row g-3 justify-content-center">
           <div class="col-6 col-lg-4 ">
-            <div class="card shadow text-center p-3 h-100">
-              <label class="text-secondary font-weight-bold">Kuota Invoice</label>
-              <p class="h4 mt-2"><?= $total_invoice ?>/<?= $perusahaan->kuota_invoice ?></p>
+            <div class="card shadow text-center p-3 h-100 bg-pink">
+              <label class="text-white font-weight-bold">Kuota Invoice</label>
+              <p class="h4 mt-2 text-white"><?= $total_invoice ?>/<?= $perusahaan->kuota_invoice ?></p>
             </div>
           </div>
           <div class="col-6 col-lg-4">
-            <div class="card shadow text-center p-3 h-100">
-              <label class="text-secondary font-weight-bold">Kuota Memo</label>
-              <p class="h4 mt-2"><?= $total_memo ?>/<?= $perusahaan->kuota_memo ?></p>
+            <div class="card shadow text-center p-3 h-100" style="background-color: #c01a52;">
+              <label class="text-white font-weight-bold">Kuota Memo</label>
+              <p class="h4 mt-2 text-white"><?= $total_memo ?>/<?= $perusahaan->kuota_memo ?></p>
             </div>
           </div>
           <div class="col-6 col-lg-4">
-            <div class="card shadow text-center p-3 h-100">
-              <label class="text-secondary font-weight-bold">Kuota Pengajuan Biaya</label>
-              <p class="h4 mt-2"><?= $total_pengajuan ?>/<?= $perusahaan->kuota_pengajuan_biaya ?></p>
+            <div class="card shadow text-center p-3 h-100" style="background-color: #9a1442;">
+              <label class="text-white font-weight-bold">Kuota Pengajuan Biaya</label>
+              <p class="h4 mt-2 text-white"><?= $total_pengajuan ?>/<?= $perusahaan->kuota_pengajuan_biaya ?></p>
             </div>
           </div>
-          <div class="col-6 col-lg-4">
-            <div class="card shadow text-center p-3 h-100 mt-3">
-              <label class="text-secondary font-weight-bold">Kuota User</label>
-              <p class="h4 mt-2"><?= $total_user ?>/<?= $perusahaan->kuota_user ?></p>
+          <div class="col-6 col-lg-4 ">
+            <div class="card shadow text-center p-3 h-100" style="background-color: #6272c7;">
+              <label class="text-white font-weight-bold">Kuota User</label>
+              <p class="h4 mt-2 text-white"><?= $total_user ?>/<?= $perusahaan->kuota_user ?></p>
             </div>
           </div>
-          <div class="col-6 col-lg-4">
-            <div class="card shadow text-center p-3 h-100 mt-3">
-              <label class="text-secondary font-weight-bold">Kuota Cabang</label>
-              <p class="h4 mt-2"><?= $total_cabang ?>/<?= $perusahaan->kuota_cabang ?></p>
+          <div class="col-6 col-lg-4 ">
+            <div class="card shadow text-center p-3 h-100 bg-primary">
+              <label class="text-white font-weight-bold">Kuota Cabang</label>
+              <p class="h4 mt-2 text-white"><?= $total_cabang ?>/<?= $perusahaan->kuota_cabang ?></p>
+            </div>
+          </div>
+          <div class="col-6 col-lg-4 ">
+            <div class="card shadow text-center p-3 h-100" style="background-color: #24326f;">
+              <label class="text-white font-weight-bold">Premium Expired</label>
+              <p class="h4 mt-2 text-white"><?= tgl_indo(date('Y-m-d', strtotime($perusahaan->expired_day))) ?></p>
             </div>
           </div>
         </div>
-        <!-- <div class="mb-2 align-items-center">
-        <div class="card shadow mb-4">
-          <div class="card-body">
-            <div class="row mt-1 align-items-center">
-              <div class="col-12 text-left pl-4">
-                <p class="mb-1 small text-muted">Performance 6 bulan terakhir</p>
+        <?php
+        if ($hasFinancialMenu) {
+        ?>
+          <div class="mb-2 align-items-center mt-2">
+            <div class="card shadow mb-4">
+              <div class="card-body">
+                <div class="row mt-1 align-items-center">
+                  <div class="col-12 text-left pl-4">
+                    <p class="mb-1 small text-muted">Performance 6 bulan terakhir</p>
+                  </div>
+                </div>
+                <div class="chartbox mr-4">
+                  <div id="areaChart"></div>
+                </div>
               </div>
             </div>
-            <div class="chartbox mr-4">
-              <div id="areaChart"></div>
-            </div>
+          <?php
+        }
+          ?>
           </div>
-        </div> -->
-      </div>
-    </div> <!-- .col-12 -->
-  </div> <!-- .row -->
-</div> <!-- .container-fluid -->
+      </div> <!-- .col-12 -->
+    </div> <!-- .row -->
+  </div> <!-- .container-fluid -->
 
-<div class="modal fade modal-shortcut modal-slide" tabindex="-1" role="dialog" aria-labelledby="defaultModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="defaultModalLabel">Shortcuts</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body px-5">
-        <div class="row align-items-center">
-          <div class="col-6 text-center">
-            <div class="squircle bg-success justify-content-center">
-              <i class="fe fe-cpu fe-32 align-self-center text-white"></i>
-            </div>
-            <p>Control area</p>
-          </div>
-          <div class="col-6 text-center">
-            <div class="squircle bg-primary justify-content-center">
-              <i class="fe fe-activity fe-32 align-self-center text-white"></i>
-            </div>
-            <p>Activity</p>
-          </div>
+  <div class="modal fade modal-shortcut modal-slide" tabindex="-1" role="dialog" aria-labelledby="defaultModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="defaultModalLabel">Shortcuts</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
-        <div class="row align-items-center">
-          <div class="col-6 text-center">
-            <div class="squircle bg-primary justify-content-center">
-              <i class="fe fe-droplet fe-32 align-self-center text-white"></i>
+        <div class="modal-body px-5">
+          <div class="row align-items-center">
+            <div class="col-6 text-center">
+              <div class="squircle bg-success justify-content-center">
+                <i class="fe fe-cpu fe-32 align-self-center text-white"></i>
+              </div>
+              <p>Control area</p>
             </div>
-            <p>Droplet</p>
+            <div class="col-6 text-center">
+              <div class="squircle bg-primary justify-content-center">
+                <i class="fe fe-activity fe-32 align-self-center text-white"></i>
+              </div>
+              <p>Activity</p>
+            </div>
           </div>
-          <div class="col-6 text-center">
-            <div class="squircle bg-primary justify-content-center">
-              <i class="fe fe-upload-cloud fe-32 align-self-center text-white"></i>
+          <div class="row align-items-center">
+            <div class="col-6 text-center">
+              <div class="squircle bg-primary justify-content-center">
+                <i class="fe fe-droplet fe-32 align-self-center text-white"></i>
+              </div>
+              <p>Droplet</p>
             </div>
-            <p>Upload</p>
+            <div class="col-6 text-center">
+              <div class="squircle bg-primary justify-content-center">
+                <i class="fe fe-upload-cloud fe-32 align-self-center text-white"></i>
+              </div>
+              <p>Upload</p>
+            </div>
           </div>
-        </div>
-        <div class="row align-items-center">
-          <div class="col-6 text-center">
-            <div class="squircle bg-primary justify-content-center">
-              <i class="fe fe-users fe-32 align-self-center text-white"></i>
+          <div class="row align-items-center">
+            <div class="col-6 text-center">
+              <div class="squircle bg-primary justify-content-center">
+                <i class="fe fe-users fe-32 align-self-center text-white"></i>
+              </div>
+              <p>Users</p>
             </div>
-            <p>Users</p>
-          </div>
-          <div class="col-6 text-center">
-            <div class="squircle bg-primary justify-content-center">
-              <i class="fe fe-settings fe-32 align-self-center text-white"></i>
+            <div class="col-6 text-center">
+              <div class="squircle bg-primary justify-content-center">
+                <i class="fe fe-settings fe-32 align-self-center text-white"></i>
+              </div>
+              <p>Settings</p>
             </div>
-            <p>Settings</p>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>

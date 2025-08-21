@@ -4678,14 +4678,24 @@ a.bg-pink:hover, a.bg-pink:focus,
 button.bg-pink:hover,
 button.bg-pink:focus {
   background-color: #004ee7 !important; }
-
+  
 .bg-primary {
+  background-color: #3f51b5 !important;
+}
+
+a.bg-primary:hover,
+a.bg-primary:focus,
+button.bg-primary:hover,
+button.bg-primary:focus {
+  background-color: #32418a !important;
+}
+/* .bg-primary {
   background-color: #c01a52 !important; }
 
 a.bg-primary:hover, a.bg-primary:focus,
 button.bg-primary:hover,
 button.bg-primary:focus {
-  background-color: #32418a !important; }
+  background-color: #32418a !important; } */
 
 .bg-secondary {
   background-color: #6c757d !important; }

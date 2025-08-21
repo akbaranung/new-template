@@ -4801,13 +4801,15 @@ button.bg-pink:focus {
   background-color: #004ee7 !important; }
   
 .bg-primary {
-  background-color: #1b68ff !important; }
+  background-color: #3f51b5 !important;
+}
 
-a.bg-primary:hover, a.bg-primary:focus,
+a.bg-primary:hover,
+a.bg-primary:focus,
 button.bg-primary:hover,
 button.bg-primary:focus {
-  background-color: #004ee7 !important; }
-
+  background-color: #32418a !important;
+}
 .bg-secondary {
   background-color: #6c757d !important; }
 
