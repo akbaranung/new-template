@@ -6,7 +6,7 @@
           <h2 class="h3 page-title"><?= ($this->session->userdata('is_premium') == '1') ? 'Premium' : '' ?></h2>
           <h2 class="h5 page-title">Selamat Datang!, <?= $this->session->userdata('nama') ?></h2>
         </div>
-        <div class="col-auto">
+        <!-- <div class="col-auto">
           <form class="form-inline">
             <div class="form-group d-none d-lg-inline">
               <label for="reportrange" class="sr-only">Date Ranges</label>
@@ -19,7 +19,7 @@
               <button type="button" class="btn btn-sm mr-2"><span class="fe fe-filter fe-16 text-muted"></span></button>
             </div>
           </form>
-        </div>
+        </div> -->
       </div>
       <div class="mb-2 align-items-center">
         <div class="row mt-1 align-items-center">
