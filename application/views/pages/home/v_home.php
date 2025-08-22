@@ -36,7 +36,7 @@
                     <p class="small mb-0">Invoice</p>
                     <!-- <h4 class="mb-0"><?= ($total_invoice / $perusahaan->kuota_invoice) * 100 ?>%</h4>
                     <span class="small text-mute"><?= $total_invoice ?>/<?= $perusahaan->kuota_invoice ?></span> -->
-                    <h5 class="mb-0"><?= $total_invoice ?>/<?= $perusahaan->kuota_invoice ?></h5>
+                    <h5 class="mb-0 text-primary"><?= $total_invoice ?>/<?= $perusahaan->kuota_invoice ?></h5>
                   </div>
                   <div class="col-5">
                     <div id="gauge1" class="gauge-container"></div>
@@ -53,7 +53,7 @@
                     <p class="small mb-0">Memo</p>
                     <!-- <h4 class="mb-0"><?= ($total_memo / $perusahaan->kuota_memo) * 100 ?>%</h4>
                     <span class="small text-mute"><?= $total_memo ?>/<?= $perusahaan->kuota_memo ?></span> -->
-                    <h5 class="mb-0"><?= $total_memo ?>/<?= $perusahaan->kuota_memo ?></h5>
+                    <h5 class="mb-0 text-primary"><?= $total_memo ?>/<?= $perusahaan->kuota_memo ?></h5>
                   </div>
                   <div class="col-5">
                     <div id="gauge2" class="gauge-container"></div>
@@ -70,7 +70,7 @@
                     <p class="small text-muted mb-0">Pengajuan Biaya</p>
                     <!-- <h4 class="mb-0"><?= ($total_pengajuan / $perusahaan->kuota_pengajuan_biaya) * 100 ?>%</h4>
                     <span class="small text-mute"><?= $total_pengajuan ?>/<?= $perusahaan->kuota_pengajuan_biaya ?></span> -->
-                    <h5 class="mb-0"><?= $total_pengajuan ?>/<?= $perusahaan->kuota_pengajuan_biaya ?></h5>
+                    <h5 class="mb-0 text-primary"><?= $total_pengajuan ?>/<?= $perusahaan->kuota_pengajuan_biaya ?></h5>
                   </div>
                   <div class="col-5">
                     <div id="gauge3" class="gauge-container"></div>
@@ -87,7 +87,7 @@
                     <p class="small text-muted mb-0">User</p>
                     <!-- <h4 class="mb-0"><?= ($total_user / $perusahaan->kuota_user) * 100 ?>%</h4>
                     <span class="small text-mute"><?= $total_user ?>/<?= $perusahaan->kuota_user ?></span> -->
-                    <h5 class="mb-0"><?= $total_user ?>/<?= $perusahaan->kuota_user ?></h5>
+                    <h5 class="mb-0 text-pink"><?= $total_user ?>/<?= $perusahaan->kuota_user ?></h5>
                   </div>
                   <div class="col-5">
                     <div id="gauge4" class="gauge-container"></div>
@@ -104,7 +104,7 @@
                     <p class="small text-muted mb-0">Cabang</p>
                     <!-- <h4 class="mb-0"><?= ($total_cabang / $perusahaan->kuota_cabang) * 100 ?>%</h4>
                     <span class="small text-mute"><?= $total_cabang ?>/<?= $perusahaan->kuota_cabang ?></span> -->
-                    <h5 class="mb-0"><?= $total_cabang ?>/<?= $perusahaan->kuota_cabang ?></h5>
+                    <h5 class="mb-0 text-pink"><?= $total_cabang ?>/<?= $perusahaan->kuota_cabang ?></h5>
                   </div>
                   <div class="col-5">
                     <div id="gauge5" class="gauge-container"></div>
@@ -122,7 +122,7 @@
                   <div class="row align-items-center">
                     <div class="col">
                       <p class="small mb-0">Premium Expired</p>
-                      <h6 class="mb-0" id="premiumStatusText"></h6> <!-- Displays "Expires on: Date" or "Expired!" -->
+                      <h6 class="mb-0 text-pink" id="premiumStatusText"></h6> <!-- Displays "Expires on: Date" or "Expired!" -->
                       <span class="small text-mute" id="premiumDaysRemainingText"></span> <!-- Displays "X days remaining" -->
                     </div>
                     <div class="col-5">

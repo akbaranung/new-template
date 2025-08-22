@@ -4798,7 +4798,7 @@ a.close.disabled {
 a.bg-pink:hover, a.bg-pink:focus,
 button.bg-pink:hover,
 button.bg-pink:focus {
-  background-color: #004ee7 !important; }
+  background-color: #a31647 !important; }
   
 .bg-primary {
   background-color: #3f51b5 !important;
@@ -7138,11 +7138,17 @@ button.bg-dark:focus {
 .text-white {
   color: #ffffff !important; }
 
+.text-pink {
+  color: #e81f63 !important; }
+
+a.text-pink:hover, a.text-pink:focus {
+  color: #a31647 !important; }
+
 .text-primary {
-  color: #1b68ff !important; }
+  color: #3f51b5 !important; }
 
 a.text-primary:hover, a.text-primary:focus {
-  color: #0045ce !important; }
+  color: #32418a !important; }
 
 .text-secondary {
   color: #6c757d !important; }
