@@ -86,7 +86,8 @@
 
                   <?php
                   $no = 1;
-                  $saldo = $saldo_awal;
+                  // $saldo = $saldo_awal;
+                  $saldo = 0;
                   if ($coa) {
                     foreach ($coa as $a) {
                       $posisi = $detail_coa["posisi"];
