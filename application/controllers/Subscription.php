@@ -290,8 +290,15 @@ Mohon untuk memproses pembayaran segera.";
         ];
         $this->db->where('id', $id);
         if ($this->db->update('premium_confirmation', $edit_data)) {
-
             $confirmation_detail = $this->db->from('premium_confirmation')->where('Id', $id)->get()->row();
+            $total_bulan = $confirmation_detail->total_bulan;
+
+            // Set the start date to the current date and time
+            $start_date = date('Y-m-d H:i:s');
+
+            // Calculate the expired date by adding $total_bulan to the start date
+            $expired_date = date('Y-m-d H:i:s', strtotime("+$total_bulan months"));
+
             $this->db->select('users.*'); // Select all from users, and specific columns from t_cabang
             $this->db->from('users');
             $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
@@ -329,7 +336,10 @@ Mohon untuk memproses pembayaran segera.";
                     "kuota_user" => $kuota_user,
                     "kuota_cabang" => $kuota_cabang,
                     "is_premium" => 1,
-                    "expired_day" => $confirmation_detail->tanggal_selesai,
+                    "start_day" => $start_date,
+                    "expired_day" => $expired_date,
+                    // "start_date" => $confirmation_detail->tanggal_selesai,
+                    // "expired_day" => $confirmation_detail->tanggal_selesai,
                 ];
                 $this->db->where('Id', $confirmation_detail->id_perusahaan);
                 // $this->db->update('utility', $edit_data_perusahaan);

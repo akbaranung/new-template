@@ -46,6 +46,7 @@ class Home extends CI_Controller
     $data['utility'] = $this->db->get('utility')->row_array();
     $data['user'] = $this->db->get_where('users', ['nip' => $nip])->row_array();
     $data['pages'] = 'pages/home/v_home';
+    $data['pages_script'] = 'script/home/s_home';
     $data['menus'] = $this->M_menu->get_accessible_menus($nip);
 
     // Ambil data laba rugi modular dari model
