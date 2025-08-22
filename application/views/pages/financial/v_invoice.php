@@ -15,7 +15,7 @@
 
               <span style="float:right; ">
                 <b>
-                  (Kuota Memo Tersisa <?= $limit_invoice - $total_invoice ?>)
+                  (Kuota Invoice Tersisa <?= $limit_invoice - $total_invoice ?>)
                   <?=
                   $total_invoice . '/' . $limit_invoice;
                   ?>
