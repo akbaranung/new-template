@@ -77,11 +77,20 @@
                   }
 
                   if ($data->activity == '1' and $activity == 1) {
-                    $status = "<p class='badge badge-pill badge-success'>Open</p>";
+                    // $status = "<p class='badge badge-pill badge-success'>Open</p>";
+                    $status = "Open";
+
+                    $background_class = "bg-primary text-white";
                   } else if ($data->activity == '3') {
-                    $status = "<p class='badge badge-pill badge-secondary'>Closed</p>";
+                    // $status = "<p class='badge badge-pill badge-secondary'>Closed</p>";
+                    $status = "Closed";
+
+                    $background_class = "bg-secondary text-white";
                   } else {
-                    $status = "<p class='badge badge-pill badge-danger'>Over Due</p>";
+                    // $status = "<p class='badge badge-pill badge-danger'>Over Due</p>";
+                    $status = "Over Due";
+
+                    $background_class = "bg-pink text-white";
                   }
 
                 ?>
@@ -89,7 +98,7 @@
                     <td onclick="openTask(<?= $data->Id ?>)" class="open-memo"><?= ++$page; ?></td>
                     <td style="max-width: 150px;" onclick="openTask(<?= $data->Id ?>)" class="open-memo"><?= $data->name ?></td>
                     <td onclick="openTask(<?= $data->Id ?>)" class="open-memo"><?= $data->nama; ?></td>
-                    <td onclick="openTask(<?= $data->Id ?>)" class="open-memo"><?= $status; ?></td>
+                    <td onclick="openTask(<?= $data->Id ?>)" class="open-memo <?= $background_class ?>"><?= $status; ?></td>
                     <td onclick="openTask(<?= $data->Id ?>)" class="open-memo"><?= date('d/m/y | H:i:s', strtotime($data->date_created)) ?></td>
                     <td>
                       <?php if ($data->pic == $this->session->userdata('nip')) { ?>
