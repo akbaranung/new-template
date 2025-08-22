@@ -143,7 +143,7 @@
                     if (value < (0.10 * gaugeMax)) { // Less than 10% of max
                         return base.primaryColor;
                     } else if (value < (0.40 * gaugeMax)) { // Less than 40% of max
-                        return base.successColor;
+                        return base.primaryColor;
                     } else if (value < (0.60 * gaugeMax)) { // Less than 60% of max
                         return base.warningColor;
                     } else { // 60% or more of max
@@ -242,13 +242,13 @@
                 daysRemaining = 0; // Set to 0 for display purposes if negative
                 percentageRemaining = 0; // 0% remaining
                 premiumStatusText.innerHTML = '<span class="text-danger">Premium Telah Berakhir!</span>';
-                premiumDaysRemainingText.textContent = `Berakhir pada <?= tgl_indo(date('Y-m-d', strtotime($perusahaan->expired_day))) ?>`;
+                premiumDaysRemainingText.textContent = `<?= tgl_indo(date('Y-m-d', strtotime($perusahaan->expired_day))) ?>`;
 
             } else {
                 // Calculate percentage remaining relative to total duration
                 percentageRemaining = (daysRemaining / totalDurationDays) * 100;
                 // premiumStatusText.textContent = `Expires on: ${endDate.toLocaleDateString()}`;
-                premiumStatusText.textContent = `Berakhir pada: <?= tgl_indo(date('Y-m-d', strtotime($perusahaan->expired_day))) ?>`;
+                premiumStatusText.textContent = `<?= tgl_indo(date('Y-m-d', strtotime($perusahaan->expired_day))) ?>`;
                 // Use Math.ceil to round up days remaining, as even a fraction of a day means it's still "today"
                 premiumDaysRemainingText.textContent = `${Math.ceil(daysRemaining)} hari tersisa`;
             }
@@ -274,7 +274,7 @@
                     } else if (value < 50) { // Less than 50% remaining
                         return base.warningColor; // Yellow for warning
                     } else { // 50% or more remaining
-                        return base.successColor; // Green for healthy status
+                        return base.primaryColor; // Green for healthy status
                     }
                 }
             });
