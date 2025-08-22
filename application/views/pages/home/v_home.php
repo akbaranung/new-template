@@ -122,7 +122,7 @@
                   <div class="row align-items-center">
                     <div class="col">
                       <p class="small mb-0">Premium Expired</p>
-                      <h5 class="mb-0" id="premiumStatusText"></h5> <!-- Displays "Expires on: Date" or "Expired!" -->
+                      <h6 class="mb-0" id="premiumStatusText"></h6> <!-- Displays "Expires on: Date" or "Expired!" -->
                       <span class="small text-mute" id="premiumDaysRemainingText"></span> <!-- Displays "X days remaining" -->
                     </div>
                     <div class="col-5">
