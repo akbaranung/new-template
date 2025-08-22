@@ -148,7 +148,7 @@
                     </td>
                     <td style="text-align:right">
                       <form action="<?php echo base_url() . "app/memo_pdf/" . $memo->Id; ?>" method="post" target="_blank">
-                        <button type="submit" class="btn btn-success">PDF</button>
+                        <button type="submit" class="btn btn-pink">PDF</button>
                       </form>
                     </td>
                     <!-- <td style="text-align:right"><a href="<?= base_url('app/memo_pdf/' . $memo->Id) ?>" class="btn btn-success" target="_blank">PDF</a></td> -->

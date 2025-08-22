@@ -17,7 +17,7 @@
       <div class="card shadow mb-4">
         <div class="card-header text-center">
           <!-- <p class="card-title"><strong>Card List</strong></p> -->
-          <p class="btn btn-success" style="width: fit-content;"><?= $task->name ?></p>
+          <p class="btn btn-primary" style="width: fit-content;"><?= $task->name ?></p>
           <p><?= $task->comment ?></p>
           <p>
             Member Name :
@@ -48,6 +48,7 @@
                 <th style="color: white;">Due Date</th>
                 <th style="color: white;">Activity</th>
                 <th style="color: white;">Action</th>
+                <th style="color: white;"></th>
               </tr>
             </thead>
             <tbody>
@@ -61,11 +62,17 @@
                 foreach ($task_detail as $data) {
                   $user_read = $this->db->select('id_detail')->from('task_detail')->where('id_detail', $data->id_detail)->like('read', $nip, 'both')->get()->num_rows();
                   if ($data->activity == '1') {
-                    $activity = "<p class='badge badge-pill badge-success'>Open</p>";;
+                    // $activity = "<p class='badge badge-pill badge-success'>Open</p>";;
+                    $activity = "Open";
+                    $background_class = "bg-primary text-white";
                   } else if ($data->activity == '2') {
-                    $activity = "<p class='badge badge-pill badge-warning'>Pendig</p>";
+                    // $activity = "<p class='badge badge-pill badge-warning'>Pending</p>";
+                    $activity = "Pending";
+                    $background_class = "bg-warning text-white";
                   } else {
-                    $activity = "<p class='badge badge-pill badge-secondary'>Closed</p>";
+                    // $activity = "<p class='badge badge-pill badge-secondary'>Closed</p>";
+                    $activity = "Closed";
+                    $background_class = "bg-secondary text-white";
                   }
                 ?>
                   <tr>
@@ -73,7 +80,7 @@
                     <td style="max-width: 150px;" class="open-task-detail" onclick="openCard(<?= $data->id_detail ?>)"><?= $data->nama ?></td>
                     <td class="open-task-detail" onclick="openCard(<?= $data->id_detail ?>)"><?= $data->start_date; ?></td>
                     <td class="open-task-detail" onclick="openCard(<?= $data->id_detail ?>)"><?= $data->due_date; ?></td>
-                    <td class="open-task-detail" onclick="openCard(<?= $data->id_detail ?>)"><?= $activity ?></td>
+                    <td class="open-task-detail <?= $background_class ?>" onclick="openCard(<?= $data->id_detail ?>)"><?= $activity ?></td>
                     <td>
                       <a href="<?= site_url('task/card_edit/') . $data->id_task . '/' . $data->id_detail ?>" class="btn btn-outline-success"><span class="fe fe-edit-3"></span></a>
                       <?php if (empty($user_read)) { ?>
