@@ -1081,8 +1081,8 @@
           // If the user is premium, trigger the download programmatically
           // Create a temporary link element to trigger the download
           const link = document.createElement('a');
-          link.href = '<?= base_url('src/format/format_data.xlsx') ?>';
-          link.download = 'format_data.xlsx';
+          link.href = '<?= base_url('src/format/format_data.xls') ?>';
+          link.download = 'format_data.xls';
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
