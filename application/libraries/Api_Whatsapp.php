@@ -11,13 +11,13 @@ class Api_Whatsapp
     // $phone = $phonee;
     // $msg = $msgg;
 
-    $token = "53C92CE6A40AC365CD9D1FF128EB1B8E";
+    $token = "api_key";
     // $phone= "62812xxxxxx"; //untuk group pakai groupid contoh: 62812xxxxxx-xxxxx
     // $message = "Testing by API ruangwa";
 
     $curl = curl_init();
     curl_setopt_array($curl, array(
-      CURLOPT_URL => 'https://app.fastwa.com/api/v1/C9E3ED48A460F61F60384815FB4C0B83/send_text',
+      CURLOPT_URL => 'https://app.fastwa.com/api/v1/device_session/send_text',
       CURLOPT_RETURNTRANSFER => true,
       CURLOPT_ENCODING => '',
       CURLOPT_MAXREDIRS => 10,
