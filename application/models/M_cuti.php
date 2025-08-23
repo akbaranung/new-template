@@ -147,7 +147,7 @@ class M_cuti extends CI_Model
     public function historyCutiById($id)
     {
         $cuti = $this->db->get_where('cuti', ['id_cuti' => $id])->row();
-        $sql = "SELECT * FROM cuti WHERE nip = '$cuti->nip' AND IF(cuti.jenis = 2, (status_hrd = 'Disetujui' AND status_atasan = 'Disetujui' AND status_dirsdm = 'Disetujui' AND status_dirut = 'Disetujui'),(status_hrd = 'Disetujui' AND status_atasan = 'Disetujui')) ORDER BY id_cuti DESC";
+        $sql = "SELECT * FROM cuti WHERE nip = '$cuti->nip' AND status_atasan = 'Disetujui' ORDER BY id_cuti DESC";
         $data = $this->db->query($sql);
         return $data->result_array();
     }

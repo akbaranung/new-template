@@ -51,9 +51,6 @@
                                     <th>Mulai Cuti</th>
                                     <th>Jumlah Cuti</th>
                                     <th>Status Atasan</th>
-                                    <th>Status Hrd</th>
-                                    <th>Status Dirsdm</th>
-                                    <th>Status Dirut</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -81,9 +78,6 @@
                                         <td><?= date('d F Y', strtotime($hs['tgl_cuti'])) ?></td>
                                         <td><?= $hs['jumlah_cuti'] . " hari" ?></td>
                                         <td><?= $hs['status_atasan'] == null ? "Menunggu Proses" : $hs['status_atasan'] ?></td>
-                                        <td><?= $hs['status_hrd'] == null ? "Menunggu Proses" : $hs['status_atasan'] ?></td>
-                                        <td><?= $hs['status_dirsdm'] == null ? "-" : $hs['status_dirsdm'] ?></td>
-                                        <td><?= $hs['status_dirut'] == null ? "-" : $hs['status_dirut'] ?></td>
                                     </tr>
                                 <?php
                                     $i++;
