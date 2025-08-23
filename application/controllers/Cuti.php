@@ -900,21 +900,18 @@ class Cuti extends CI_Controller
                 $msgatasan = "*Pengajuan Cuti*\n\nFrom: *$nama_session*\nJenis Cuti: *$jenis_nama*\nMohon untuk segera diproses.";
                 // $hrd = $this->db->get_where('users', ['bagian' => 4, 'status' => 1])->result();
                 // $hrd = $this->db->get_where('users', ['bagian' => $this->input->post('tujuanCuti'), 'status' => 1])->result();
-                $atasan = $this->db->get_where('users', ['nip' => $nipAtasan])->result();
+                $atasan = $this->db->get_where('users', ['nip' => $nipAtasan])->row();
                 if (!$atasan) {
                     $data = [
                         'sukses' => false,
-                        'msg' => "User tidak dapat di hubungi dalam bagian Tujuan."
+                        'msg' => "User atasan tidak ditemukan!"
                     ];
                     echo json_encode($data);
                     return;
                 }
-                foreach ($atasan as $row) {
-                    $phone_atasan[] = $row->phone;
-                }
-                $send_notif = implode(',', $phone_atasan);
+
                 if ($this->session->userdata('is_premium')) {
-                    $this->api_whatsapp->wa_notif($msgatasan, $send_notif);
+                    $this->api_whatsapp->wa_notif($msgatasan, $atasan->phone);
                 }
             }
             // Jika Form Validation Gagal Dijalankan 

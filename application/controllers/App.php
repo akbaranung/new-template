@@ -267,8 +267,12 @@ class App extends CI_Controller
             $phone_user = $phone;
           }
 
-          $send_wa = implode(',', $phone_user);
-          // $this->api_whatsapp->wa_notif($msg, $send_wa);
+          foreach ($phone_user as $p) {
+            if ($this->session->userdata('is_premium')) {
+              $this->api_whatsapp->wa_notif($msg, $p);
+            }
+          }
+
 
           $response = [
             'success' => true,

@@ -169,8 +169,11 @@ class Task extends CI_Controller
       $nama_session = $this->session->userdata('nama');
       $msg = "There's a new task\nTask Name : *$task_name*\n\nCreated By :  *$nama_session*";
 
-      $send_wa = implode(',', $phone_member);
-      // $this->api_whatsapp->wa_notif($msg, $send_wa);
+      foreach ($phone_member as $p) {
+        if ($this->session->userdata('is_premium')) {
+          $this->api_whatsapp->wa_notif($msg, $p);
+        }
+      }
     }
 
     echo json_encode($response);
@@ -372,7 +375,9 @@ class Task extends CI_Controller
           $user = $this->db->select('phone')->from('users')->where('nip', $responsible)->get()->row_array();
           $msg = "There's a new card\nTask Name:*$task[name]*\nCard Name : *$card_name*\n\nCreated By :  *$nama_session*";
 
-          // $this->api_whatsapp->wa_notif($msg, $user['phone']);
+          if ($this->session->userdata('is_premium')) {
+            $this->api_whatsapp->wa_notif($msg, $user['phone']);
+          }
 
           $response = [
             'success' => true,
@@ -397,8 +402,9 @@ class Task extends CI_Controller
         $nama_session = $this->session->userdata('nama');
         $user = $this->db->select('phone')->from('users')->where('nip', $responsible)->get()->row_array();
         $msg = "There's a new card\nTask Name:*$task[name]*\nCard Name : *$card_name*\n\nCreated By :  *$nama_session*";
-
-        // $this->api_whatsapp->wa_notif($msg, $user['phone']);
+        if ($this->session->userdata('is_premium')) {
+          $this->api_whatsapp->wa_notif($msg, $user['phone']);
+        }
 
         $response = [
           'success' => true,
@@ -644,12 +650,14 @@ class Task extends CI_Controller
           $this->db->where('id', $task->id);
           $this->db->update('task');
 
-          // //Send notif wa
+          // // //Send notif wa
           // $nama_session = $this->session->userdata('nama');
           // $user = $this->db->select('phone')->from('users')->where('nip', $responsible)->get()->row_array();
           // $msg = "There's a new card\nTask Name:*$task[name]*\nCard Name : *$card_name*\n\nCreated By :  *$nama_session*";
 
-          // $this->api_whatsapp->wa_notif($msg, $user['phone']);
+          // if ($this->session->userdata('is_premium')) {
+          //   $this->api_whatsapp->wa_notif($msg, $user['phone']);
+          // }
 
           $response = [
             'success' => true,
@@ -682,6 +690,22 @@ class Task extends CI_Controller
           'success' => true,
           'msg' => 'Success add activity!'
         ];
+      }
+
+      $id_detail = $this->input->post('id_detail');
+      $get_task_detail = $this->db->query("SELECT * FROM task as a left join task_detail as b on(a.id=b.id_task) where b.id_detail='$id_detail'")->row_array();
+      $phone_x = explode(';', $get_task_detail['member']);
+      foreach ($phone_x as $k) { //member card kirim ke wa
+        $get_user = $this->db->get_where('users', ['nip' => $k])->row_array();
+        if ($get_user) {
+          $task_name = $get_task_detail['task_name'];
+          $comment = $this->input->post("commentt");
+          $nama_session = $this->session->userdata('nama');
+          $msg = "There's a new comment\nCard Name : *$task_name*\nComment : *$comment*\n\nComment from :  *$nama_session*";
+          if ($this->session->userdata('is_premium')) {
+            $this->api_whatsapp->wa_notif($msg, $get_user['phone']);
+          }
+        }
       }
     }
 
