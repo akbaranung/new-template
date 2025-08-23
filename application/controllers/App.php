@@ -195,7 +195,7 @@ class App extends CI_Controller
           $_FILES['file']['error']    = $_FILES['attach']['error'][$i];
           $_FILES['file']['size']     = $_FILES['attach']['size'][$i];
 
-          $config['upload_path']   = './uploads/att_memo';
+          $config['upload_path']   = './upload/att_memo';
           $config['allowed_types'] = '*';
           $config['max_size']      = 2048;
           // $config['encrypt_name']  = TRUE;

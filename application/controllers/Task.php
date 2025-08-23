@@ -316,7 +316,7 @@ class Task extends CI_Controller
           $_FILES['file']['error']    = $_FILES['attach']['error'][$i];
           $_FILES['file']['size']     = $_FILES['attach']['size'][$i];
 
-          $config['upload_path']   = './uploads/task_comment';
+          $config['upload_path']   = './upload/task_comment';
           $config['allowed_types'] = '*';
           $config['max_size']      = 2048;
           // $config['encrypt_name']  = TRUE;
@@ -583,7 +583,7 @@ class Task extends CI_Controller
           $_FILES['file_temp']['error']    = $_FILES['file']['error'][$i];
           $_FILES['file_temp']['size']     = $_FILES['file']['size'][$i];
 
-          $config['upload_path']   = './uploads/task_comment';
+          $config['upload_path']   = './upload/task_comment';
           $config['allowed_types'] = '*';
           $config['max_size']      = 2048;
           // $config['encrypt_name']  = TRUE;

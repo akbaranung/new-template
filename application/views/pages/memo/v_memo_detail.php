@@ -112,7 +112,7 @@
 
                       foreach (array_combine($attch1, $attch2) as $attch1 => $attch2) {
                         if (!empty($attch1)) {
-                          $attach_ .= "<a href='" . base_url() . "uploads/att_memo/" . $attch1 . "' target='_blank'>" . $no . '. ' . $attch2 . "</a></br>\n";
+                          $attach_ .= "<a href='" . base_url() . "upload/att_memo/" . $attch1 . "' target='_blank'>" . $no . '. ' . $attch2 . "</a></br>\n";
                           $no++;
                         }
                       }

@@ -65,7 +65,7 @@ class Pengajuan extends CI_Controller
     } else {
       if ($this->session->userdata('is_premium')) {
         // Upload file
-        $config['upload_path'] = './uploads/pengajuan';
+        $config['upload_path'] = './upload/pengajuan';
         $config['allowed_types'] = 'jpg|jpeg|png|pdf';
         // $config['encrypt_name'] = TRUE;
         $file_extension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
@@ -307,7 +307,7 @@ class Pengajuan extends CI_Controller
 
       if (isset($_FILES['file']) && $_FILES['file']['name']) {
         // Upload File
-        $config['upload_path'] = './uploads/pengajuan';
+        $config['upload_path'] = './upload/pengajuan';
         $config['allowed_types'] = 'jpg|jpeg|png|pdf';
         // $config['encrypt_name'] = TRUE;
         $file_extension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
@@ -790,7 +790,7 @@ class Pengajuan extends CI_Controller
         'msg' => array_values($this->form_validation->error_array())[0]
       ];
     } else {
-      $config['upload_path']          = './uploads/pengajuan';
+      $config['upload_path']          = './upload/pengajuan';
       $config['allowed_types']        = 'jpg|jpeg|png|pdf';
       // $config['encrypt_name']         = TRUE;
 

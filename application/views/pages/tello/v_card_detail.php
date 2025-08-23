@@ -80,7 +80,7 @@
                     $attach = explode(';', $detail_task['attachment']);
                     echo "<ol>";
                     foreach ($attach as $att) {
-                      $url = site_url('uploads/task_comment/' . $att);
+                      $url = site_url('upload/task_comment/' . $att);
                       echo "<li><a href='" . $url . "'>" . $att . "</a></li>"
                   ?>
                   <?php }
@@ -144,7 +144,7 @@
                       Attachment :
                       <b>
                         <?php foreach (explode(';', $x->attachment_name) as $key => $xx) { ?>
-                          <a style="color: white;" href="<?= base_url('uploads/task_comment/' . $attach[$key]) ?>" download>
+                          <a style="color: white;" href="<?= base_url('upload/task_comment/' . $attach[$key]) ?>" download>
                             <?= $xx . " || " ?>
                           </a>
                       <?php }
@@ -175,7 +175,7 @@
                       <hr>
                       Attachment :
                       <b> <?php foreach (explode(';', $x->attachment_name) as $key => $xx) { ?>
-                          <a style="color: white;" href="<?= base_url('uploads/task_comment/' . $attach[$key]) ?>" download>
+                          <a style="color: white;" href="<?= base_url('upload/task_comment/' . $attach[$key]) ?>" download>
                             <?= $xx . " || " ?>
                           </a>
                       <?php }

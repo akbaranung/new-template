@@ -197,7 +197,7 @@
                     ?>
                       <tr>
                         <td colspan="2">Lampiran</td>
-                        <td colspan="4"><a href="<?= base_url('uploads/pengajuan/') . $pengajuan->bukti_pengajuan ?>" class="btn btn-success btn-sm" target="_blank"><i class="fe fe-download fe-12"> Lampiran</i></a></td>
+                        <td colspan="4"><a href="<?= base_url('upload/pengajuan/') . $pengajuan->bukti_pengajuan ?>" class="btn btn-success btn-sm" target="_blank"><i class="fe fe-download fe-12"> Lampiran</i></a></td>
                       </tr>
                     <?php
                     }
@@ -206,7 +206,7 @@
                       <td colspan="2">Bukti Bayar</td>
                       <td colspan="4">
                         <?php if ($pengajuan->bukti_bayar) { ?>
-                          <a href="<?= base_url('uploads/pengajuan/') . $pengajuan->bukti_bayar ?>" class="btn btn-success btn-sm" target="_blank"><i class="fe fe-download fe-12"> Bukti Bayar</i></a>
+                          <a href="<?= base_url('upload/pengajuan/') . $pengajuan->bukti_bayar ?>" class="btn btn-success btn-sm" target="_blank"><i class="fe fe-download fe-12"> Bukti Bayar</i></a>
                         <?php } else {
                           echo "-";
                         } ?>
@@ -392,7 +392,7 @@
                       ?>
                         <tr>
                           <td colspan="2">Lampiran</td>
-                          <td colspan="3"><a href="<?= base_url('uploads/pengajuan/') . $pengajuan->bukti_pengajuan ?>" class="btn btn-success btn-sm" target="_blank"><i class="fe fe-download fe-12"> Lampiran</i></a></td>
+                          <td colspan="3"><a href="<?= base_url('upload/pengajuan/') . $pengajuan->bukti_pengajuan ?>" class="btn btn-success btn-sm" target="_blank"><i class="fe fe-download fe-12"> Lampiran</i></a></td>
                         </tr>
 
                       <?php
@@ -402,7 +402,7 @@
                         <td colspan="2">Bukti Bayar</td>
                         <td colspan="3">
                           <?php if ($pengajuan->bukti_bayar) { ?>
-                            <a href="<?= base_url('uploads/pengajuan/') . $pengajuan->bukti_bayar ?>" class="btn btn-success btn-sm" target="_blank"><i class="fe fe-download fe-12"> Bukti Bayar</i></a>
+                            <a href="<?= base_url('upload/pengajuan/') . $pengajuan->bukti_bayar ?>" class="btn btn-success btn-sm" target="_blank"><i class="fe fe-download fe-12"> Bukti Bayar</i></a>
                           <?php } else {
                             echo "-";
                           } ?>

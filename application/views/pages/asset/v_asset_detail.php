@@ -23,7 +23,7 @@
                   <td>:</td>
                   <td>
                     <div class="shadow">
-                      <img src="<?= base_url('uploads/asset/' . $data_asset->pic) ?>" alt="" style="width: 100%;">
+                      <img src="<?= base_url('upload/asset/' . $data_asset->pic) ?>" alt="" style="width: 100%;">
                     </div>
                   </td>
                 </tr>
@@ -156,7 +156,7 @@
           <div class="form-group row">
             <div class="col-12 mt-2">
               <label for="foto" class="form-label">Foto View</label>
-              <img src="<?= base_url('uploads/asset/' . $data_asset->pic) ?>" alt="foto aset" width="100%">
+              <img src="<?= base_url('upload/asset/' . $data_asset->pic) ?>" alt="foto aset" width="100%">
             </div>
           </div>
           <div class="form-group row">

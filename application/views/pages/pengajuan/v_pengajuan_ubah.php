@@ -35,7 +35,7 @@
                 <div class="form-group">
                   <label for="file" class="form-label">File Pengajuan</label>
                   <input type="file" class="form-control-file" name="file" id="file">
-                  <span>File : <a href="<?= base_url('uploads/pengajuan/') . $pengajuan->bukti_pengajuan ?>"><?= $pengajuan->bukti_pengajuan ?></a></span>
+                  <span>File : <a href="<?= base_url('upload/pengajuan/') . $pengajuan->bukti_pengajuan ?>"><?= $pengajuan->bukti_pengajuan ?></a></span>
                 </div>
               </div>
               <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

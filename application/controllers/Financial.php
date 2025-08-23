@@ -1262,7 +1262,7 @@ class Financial extends CI_Controller
 
 
     // Configure upload settings
-    $config['upload_path'] = FCPATH . 'uploads/financial_entry';
+    $config['upload_path'] = FCPATH . 'upload/financial_entry';
     $config['allowed_types'] = 'xls|xlsx|csv'; // Allowed file types
     $this->upload->initialize($config);
 

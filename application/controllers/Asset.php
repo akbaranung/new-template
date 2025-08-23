@@ -372,7 +372,7 @@ class Asset extends CI_Controller
 
       if ($this->session->userdata('is_premium')) {
         if ($file_name) {
-          $config['upload_path']          = './uploads/asset';
+          $config['upload_path']          = './upload/asset';
           $config['allowed_types']        = 'jpg|png|jpeg';
           $config['max_size']             = 1024;
           // $config['max_width']            = 1024;
@@ -381,9 +381,9 @@ class Asset extends CI_Controller
           $this->upload->initialize($config);
 
           // Periksa apakah folder sudah ada
-          if (!is_dir('./uploads/asset')) {
+          if (!is_dir('./upload/asset')) {
             // Jika tidak ada, buat folder dengan hak akses 0777
-            mkdir('./uploads/asset', 0777, TRUE);
+            mkdir('./upload/asset', 0777, TRUE);
           }
 
           if (!$this->upload->do_upload('foto')) {
@@ -517,7 +517,7 @@ class Asset extends CI_Controller
 
       if ($this->session->userdata('is_premium')) {
         if ($file_name) {
-          $config['upload_path']          = './uploads/asset';
+          $config['upload_path']          = './upload/asset';
           $config['allowed_types']        = 'jpg|png|jpeg';
           $config['max_size']             = 1024;
           // $config['max_width']            = 1024;
@@ -525,9 +525,9 @@ class Asset extends CI_Controller
           $config['encrypt_name']          = TRUE;
           $this->upload->initialize($config);
 
-          if (file_exists('./uploads/asset/' . $asset->pic) and !empty($asset->pic)) {
+          if (file_exists('./upload/asset/' . $asset->pic) and !empty($asset->pic)) {
             // Hapus file lama
-            unlink('./uploads/asset/' . $asset->pic);
+            unlink('./upload/asset/' . $asset->pic);
           }
 
           if (!$this->upload->do_upload('foto')) {

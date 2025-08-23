@@ -13,7 +13,7 @@ tests/mocks/database/ci_test.sqlite
 
 ci_sessions/
 /application/config/database.php
-uploads/
+upload/
 .htaccess
 
 user_guide_src/build/*
