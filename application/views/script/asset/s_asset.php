@@ -1,6 +1,6 @@
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const isPremium = false;
+    const isPremium = <?= $this->session->userdata('is_premium') ?>;
     const upgradeUrl = '<?= base_url('subscription/upgrade') ?>'; // Adjust this URL as needed
 
     function showPremiumDeniedSwal() {
