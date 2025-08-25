@@ -77,6 +77,16 @@
                   </td>
                 </tr>
                 <tr>
+                  <td>Nilai Buku (Harga Perolehan)</td>
+                  <td>:</td>
+                  <td>Rp.<?= number_format($data_asset->harga) ?></td>
+                </tr>
+                <tr>
+                  <td>Nilai Buku (Sekarang)</td>
+                  <td>:</td>
+                  <td>Rp.<?= number_format($data_asset->nilai_buku) ?></td>
+                </tr>
+                <tr>
                   <th colspan="3"><button class="btn btn-success" data-toggle="modal" data-target="#updateAset">Update</button></th>
                 </tr>
               </table>
