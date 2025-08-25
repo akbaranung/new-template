@@ -1,4 +1,30 @@
 <script>
+  const fileInput = document.getElementById('foto');
+  const previewImage = document.getElementById('preview-image');
+  const imagePreview = document.getElementById('image-preview');
+
+  fileInput.addEventListener('change', function(event) {
+    const file = event.target.files[0]; // Get the first file from the input
+
+    if (file) {
+      const reader = new FileReader(); // Create a new FileReader object
+
+      reader.onload = function(e) {
+        // When the file is loaded, set the source of the image element
+        previewImage.src = e.target.result;
+        previewImage.style.display = 'block'; // Make the image visible
+        imagePreview.classList.remove('d-none'); // Corrected line
+      }
+
+      reader.readAsDataURL(file); // Read the file as a data URL
+    } else {
+      // If no file is selected, hide the image and reset its source
+      previewImage.src = '#';
+      previewImage.style.display = 'none';
+      imagePreview.classList.add('d-none'); // Hide the entire preview container
+    }
+  });
+
   document.addEventListener('DOMContentLoaded', function() {
     const isPremium = <?= $this->session->userdata('is_premium') ?>;
     const upgradeUrl = '<?= base_url('subscription/upgrade') ?>'; // Adjust this URL as needed
