@@ -959,7 +959,7 @@ class Asset extends CI_Controller
         'coa_aset' => $val->coa_asset,
         'coa_beban' => $val->coa_beban,
         'coa_penyusutan' => $val->coa_penyusutan,
-        'penyusutan_perbulan' => $val->penyusutan_per_bulan,
+        'penyusutan_perbulan' => number_format($val->penyusutan_per_bulan),
         'total_penyusutan' => number_format($val->total_penyusutan),
         'nilai_buku' => number_format($val->nilai_buku),
         'sisa_umur' => number_format($val->sisa_umur)
