@@ -90,14 +90,14 @@
             </div>
 
             <div class="form-group row">
-              <label for="tujuan" class="col-sm-3 col-form-label">Harga <strong>(*)</strong></label>
+              <label for="tujuan" class="col-sm-3 col-form-label">Nilai Bukau <strong>(*)</strong></label>
               <div class="col-sm-6">
                 <input type="text" class="form-control uang" name="harga" id="harga">
               </div>
             </div>
 
             <div class="form-group row">
-              <label for="tujuan" class="col-sm-3 col-form-label">Umur (Bulan) <strong>(*)</strong></label>
+              <label for="tujuan" class="col-sm-3 col-form-label">Sisa Umur (Bulan) <strong>(*)</strong></label>
               <div class="col-sm-6">
                 <input type="text" class="form-control" name="umur" id="umur">
               </div>
@@ -108,7 +108,7 @@
               <div class="col-sm-6">
                 <select name="coa_aset" id="coa_aset" class="form-control select2">
                   <option value="">Pilih Coa Aset</option>
-                  <?php foreach ($coa as $c) : ?>
+                  <?php foreach ($coa_asset as $c) : ?>
                     <option value="<?= $c->no_sbb ?>"><?= $c->nama_perkiraan ?></option>
                   <?php endforeach ?>
                 </select>
@@ -120,7 +120,7 @@
               <div class="col-sm-6">
                 <select name="coa_beban" id="coa_beban" class="form-control select2">
                   <option value="">Pilih Coa Beban</option>
-                  <?php foreach ($coa as $c) : ?>
+                  <?php foreach ($coa_beban as $c) : ?>
                     <option value="<?= $c->no_sbb ?>"><?= $c->nama_perkiraan ?></option>
                   <?php endforeach ?>
                 </select>
@@ -132,7 +132,7 @@
               <div class="col-sm-6">
                 <select name="coa_kas" id="coa_kas" class="form-control select2">
                   <option value="">Pilih Coa Kas</option>
-                  <?php foreach ($coa as $c) : ?>
+                  <?php foreach ($coa_kas as $c) : ?>
                     <option value="<?= $c->no_sbb ?>"><?= $c->nama_perkiraan ?></option>
                   <?php endforeach ?>
                 </select>
@@ -143,9 +143,20 @@
               <div class="col-sm-6">
                 <select name="coa_penyusutan" id="coa_penyusutan" class="form-control select2">
                   <option value="">Pilih Coa Penyusutan</option>
-                  <?php foreach ($coa as $c) : ?>
+                  <?php foreach ($coa_penyusutan as $c) : ?>
                     <option value="<?= $c->no_sbb ?>"><?= $c->nama_perkiraan ?></option>
                   <?php endforeach ?>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group row">
+              <label for="tujuan" class="col-sm-3 col-form-label">Penjurnalan <strong>(*)</strong></label>
+              <div class="col-sm-6">
+                <select name="penjurnalan" id="penjurnalan" class="form-control select2">
+                  <option value="">Pilih Penjurnalan</option>
+                  <option value="1">YA</option>
+                  <option value="0">TIDAK</option>
                 </select>
               </div>
             </div>

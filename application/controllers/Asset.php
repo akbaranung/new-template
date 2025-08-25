@@ -102,7 +102,12 @@ class Asset extends CI_Controller
     $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
     $data['jenis_aset'] = $this->db->get_where('asset_jenis', ['cabang' => $this->session->userdata('kode_cabang')])->result();
     $data['ruangan'] = $this->db->get_where('asset_ruang', ['cabang' => $this->session->userdata('kode_cabang')])->result();
-    $data['coa'] = $this->cb->get_where('v_coa_all', ['id_cabang' => $this->session->userdata('kode_cabang')])->result();
+    // $data['coa_asset'] = $this->cb->get_where('v_coa_all', ['id_cabang' => $this->session->userdata('kode_cabang')])->result();
+
+    $data['coa_asset'] = $this->cb->select('no_sbb,nama_perkiraan')->from('v_coa_all')->group_start()->like('no_sbb', '1', 'after')->group_end()->where('id_cabang', $this->session->userdata('kode_cabang'))->get()->result();
+    $data['coa_beban'] = $this->cb->select('no_sbb,nama_perkiraan')->from('v_coa_all')->group_start()->like('no_sbb', '5', 'after')->or_like('no_sbb', '6', 'after')->or_like('no_sbb', '7', 'after')->or_like('no_sbb', '9', 'after')->group_end()->where('id_cabang', $this->session->userdata('kode_cabang'))->get()->result();
+    $data['coa_kas'] = $this->cb->select('no_sbb,nama_perkiraan')->from('v_coa_all')->group_start()->like('no_sbb', '1', 'after')->group_end()->where('id_cabang', $this->session->userdata('kode_cabang'))->get()->result();
+    $data['coa_penyusutan'] = $this->cb->select('no_sbb,nama_perkiraan')->from('v_coa_all')->group_start()->like('no_sbb', '1', 'after')->group_end()->where('id_cabang', $this->session->userdata('kode_cabang'))->get()->result();
 
     $this->load->view('index', $data);
   }
@@ -313,6 +318,7 @@ class Asset extends CI_Controller
     $coa_beban = $this->input->post('coa_beban');
     $coa_kas = $this->input->post('coa_kas');
     $coa_penyusutan = $this->input->post('coa_penyusutan');
+    $penjurnalan = $this->input->post('penjurnalan');
 
     $file_name = $_FILES['foto']['name'];
 
@@ -356,6 +362,10 @@ class Asset extends CI_Controller
       'required' => '%s harus dipilih!'
     ]);
     $this->form_validation->set_rules('coa_penyusutan', 'COA penyusutan', 'required|trim', [
+      'required' => '%s harus dipilih!'
+    ]);
+
+    $this->form_validation->set_rules('penjurnalan', 'Pilihan penjurnalan', 'required|trim', [
       'required' => '%s harus dipilih!'
     ]);
 
@@ -440,28 +450,31 @@ class Asset extends CI_Controller
       $this->db->insert('asset_list', $insert_assetList);
       $this->db->insert('asset_history', $insert_history);
 
-      // Debit 
-      $this->update_saldo_coa($coa_aset, $penyusutanBulan, 'debit');
-      // Kredit
-      $this->update_saldo_coa($coa_kas, $penyusutanBulan, 'kredit');
+      if ($penjurnalan == 1) {
 
-      $saldo_debit = $this->get_saldo_coa($coa_aset);
-      $saldo_kredit = $this->get_saldo_coa($coa_kas);
+        // Debit 
+        $this->update_saldo_coa($coa_aset, $penyusutanBulan, 'debit');
+        // Kredit
+        $this->update_saldo_coa($coa_kas, $penyusutanBulan, 'kredit');
 
-      $jurnal = [
-        'tanggal' => date('Y-m-d'),
-        'akun_debit' => $coa_aset,
-        'jumlah_debit' => $penyusutanBulan,
-        'akun_kredit' => $coa_kas,
-        'jumlah_kredit' => $penyusutanBulan,
-        'saldo_debit' => $saldo_debit,
-        'saldo_kredit' => $saldo_kredit,
-        'created_by' => $this->session->userdata('nip'),
-        'keterangan' => 'Nilai penyusutan perbulan asset ' . $nama . ' (' . $kode . ')',
-        'id_cabang' => $this->session->userdata('kode_cabang')
-      ];
+        $saldo_debit = $this->get_saldo_coa($coa_aset);
+        $saldo_kredit = $this->get_saldo_coa($coa_kas);
 
-      $this->cb->insert('jurnal_neraca', $jurnal);
+        $jurnal = [
+          'tanggal' => date('Y-m-d'),
+          'akun_debit' => $coa_aset,
+          'jumlah_debit' => $penyusutanBulan,
+          'akun_kredit' => $coa_kas,
+          'jumlah_kredit' => $penyusutanBulan,
+          'saldo_debit' => $saldo_debit,
+          'saldo_kredit' => $saldo_kredit,
+          'created_by' => $this->session->userdata('nip'),
+          'keterangan' => 'Nilai penyusutan perbulan asset ' . $nama . ' (' . $kode . ')',
+          'id_cabang' => $this->session->userdata('kode_cabang')
+        ];
+
+        $this->cb->insert('jurnal_neraca', $jurnal);
+      }
 
       $this->db->trans_complete();
       $this->cb->trans_complete();
