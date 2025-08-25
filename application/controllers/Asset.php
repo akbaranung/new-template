@@ -6,7 +6,7 @@ class Asset extends CI_Controller
   public function __construct()
   {
     parent::__construct();
-    $this->load->model(['M_asset']);
+    $this->load->model(['M_asset', 'M_login']);
     if ($this->session->userdata('isLogin') == FALSE) {
       redirect('home');
     }
@@ -663,168 +663,177 @@ class Asset extends CI_Controller
 
   public function proses_penyusutan()
   {
-    $filterUmur = $this->db->get_where('asset_list', ['sisa_umur > ' => 0, 'penyusutan' => 1, 'cabang' => $this->session->userdata('kode_cabang')]);
-    if ($filterUmur->num_rows() > 0) {
+    $password = $this->input->post('password');
+    $this->form_validation->set_rules('password', 'password', 'required');
 
-      // $month = $this->input->post('periode');
-      // if (!empty($month)) {
-      //   $periode = $month;
-      // } else {
-      //   $periode = date('Y-m');
-      // }
-
-      $periode = date('Y-m');
-
-      $data_penyusutan = $this->cb->select('periode')->from('t_penyusutan')->where('periode', $periode)->where('cabang', $this->session->userdata('kode_cabang'))->get();
-
-      if ($data_penyusutan->num_rows() > 0) {
-        $response = [
-          'success' => false,
-          'msg' => 'Penyusutan pada bulan ini sudah dilakukan!'
-        ];
-
-        echo json_encode($response);
-        return false;
-      }
-
-      $this->cb->trans_start();
-      $this->db->trans_start();
-      $jurnal = [];
-      foreach ($filterUmur->result_array() as $key => $fu) {
-        // Coa Akumulasi Penyusutan
-        $coaAkmPenyusutan[] = $this->cb->select('nominal,posisi')->from('v_coa_all')->where('no_sbb', $fu['coa_penyusutan'])->where('id_cabang', $this->session->userdata('kode_cabang'))->get()->row_array();
-        if (!$coaAkmPenyusutan[$key]) {
-          $this->cb->trans_rollback();
-          $this->db->trans_rollback();
-          $response = [
-            'success' => false,
-            'msg' => 'Penyusutan gagal!'
-          ];
-
-          echo json_encode($response);
-          return false;
-        }
-
-        // Coa Beban
-        $coaBeban[] = $this->cb->select('nominal,posisi')->from('v_coa_all')->where('no_sbb', $fu['coa_beban'])->where('id_cabang', $this->session->userdata('kode_cabang'))->get()->row_array();
-
-        if (!$coaBeban[$key]) {
-          $this->cb->trans_rollback();
-          $this->db->trans_rollback();
-          $response = [
-            'success' => false,
-            'msg' => 'Penyusutan gagal!'
-          ];
-
-          echo json_encode($response);
-          return false;
-        }
-
-        $nilaiPenyusutan[] = $fu['penyusutan_bulan'];
-        $totalPenyusutan[] = $fu['t_penyusutan'] + $nilaiPenyusutan[$key];
-        $hargaPerolehan[] = $fu['harga'];
-        $nilaiBuku[] = $fu['nilai_buku'] - $nilaiPenyusutan[$key];
-
-        // Kredit 
-        $this->update_saldo_coa($fu['coa_penyusutan'], $fu['penyusutan_bulan'], 'kredit');
-
-        // Debit
-        $this->update_saldo_coa($fu['coa_beban'], $fu['penyusutan_bulan'], 'debit');
-
-        $saldo_kredit = $this->get_saldo_coa($fu['coa_penyusutan']);
-        $saldo_debit = $this->get_saldo_coa($fu['coa_beban']);
-
-        // create jurnal
-        $jurnal = [
-          'tanggal' => date('Y-m-d'),
-          'akun_debit' => $fu['coa_beban'],
-          'jumlah_debit' => $fu['penyusutan_bulan'],
-          'akun_kredit' => $fu['coa_penyusutan'],
-          'jumlah_kredit' => $fu['penyusutan_bulan'],
-          'saldo_debit' => $saldo_debit,
-          'saldo_kredit' => $saldo_kredit,
-          'created_by' => $this->session->userdata('nip'),
-          'id_cabang' => $this->session->userdata('kode_cabang'),
-          'keterangan' => 'Nilai penyusutan perbulan asset ' . $fu['nama_asset'] . ' (' . $fu['kode'] . ')'
-        ];
-
-        $insertJurnal = $this->cb->insert('jurnal_neraca', $jurnal);
-
-        // Update total penyusutan, nilai buku, sisa umur
-        $this->db->where('Id', $fu['Id']);
-        $this->db->where('cabang', $this->session->userdata('kode_cabang'));
-        $updateAsset = $this->db->update('asset_list', [
-          't_penyusutan' => $totalPenyusutan[$key],
-          'nilai_buku' => $nilaiBuku[$key],
-          'sisa_umur' => $fu['sisa_umur'] - 1
-        ]);
-
-        if ($this->cb->trans_status() === false or $this->db->trans_status() === false) {
-          $this->cb->trans_rollback();
-          $this->db->trans_rollback();
-          $response = [
-            'success' => false,
-            'msg' => 'Penyusutan gagal!'
-          ];
-
-          echo json_encode($response);
-          return false;
-        }
-
-        $data[] = [
-          'Id' => $fu['Id'],
-          'harga_perolehan' => $fu['harga'],
-          'umur' => $fu['umur'],
-          'coa_asset' => $fu['coa_asset'],
-          'coa_beban' => $fu['coa_beban'],
-          'coa_penyusutan' => $fu['coa_penyusutan'],
-          'penyusutan_per_bulan' => $fu['penyusutan_bulan'],
-          'total_penyusutan' => $totalPenyusutan[$key],
-          'nilai_buku' => $nilaiBuku[$key],
-          'sisa_umur' => $fu['sisa_umur'] - 1,
-          'cabang' => $this->session->userdata('kode_cabang')
-        ];
-      }
-      $insertPenyusutan = $this->cb->insert('t_penyusutan', [
-        'periode' => $periode,
-        'user' => $this->session->userdata('nip'),
-        'detail' => json_encode($data),
-        'cabang' => $this->session->userdata('kode_cabang')
-      ]);
-
-      if (!$insertPenyusutan) {
-        $this->cb->trans_rollback();
-        $this->db->trans_rollback();
-        $response = [
-          'success' => false,
-          'msg' => 'Penyusutan gagal!'
-        ];
-
-        echo json_encode($response);
-        return false;
-      }
-
-      $this->db->trans_complete();
-      $this->cb->trans_complete();
-
-      if ($this->cb->trans_status() === false or $this->db->trans_status() === false) {
-        $this->cb->trans_rollback();
-        $this->db->trans_rollback();
-      } else {
-        $this->db->trans_commit();
-        $this->cb->trans_commit();
-        $response = [
-          'success' => true,
-          'msg' => 'Penyusutan bulan ' . date('m', strtotime($periode)) . '-' . date('Y', strtotime($periode)) . ' sukses!'
-        ];
-      }
-    } else {
+    if ($this->form_validation->run() == FALSE) {
       $response = [
         'success' => false,
-        'msg' => 'Data asset tidak ditemukan!'
+        'msg' => array_values($this->form_validation->error_array())[0]
       ];
-    }
+    } else {
+      $data = $this->M_login->datapengguna($this->session->userdata('username'));
+      if (password_verify($password, $data->password)) {
+        $filterUmur = $this->db->get_where('asset_list', ['sisa_umur > ' => 0, 'penyusutan' => 1, 'cabang' => $this->session->userdata('kode_cabang')]);
+        if ($filterUmur->num_rows() > 0) {
+          $periode = date('Y-m');
 
+          $data_penyusutan = $this->cb->select('periode')->from('t_penyusutan')->where('periode', $periode)->where('cabang', $this->session->userdata('kode_cabang'))->get();
+
+          if ($data_penyusutan->num_rows() > 0) {
+            $response = [
+              'success' => false,
+              'msg' => 'Penyusutan pada bulan ini sudah dilakukan!'
+            ];
+
+            echo json_encode($response);
+            return false;
+          }
+
+          $this->cb->trans_start();
+          $this->db->trans_start();
+          $jurnal = [];
+          foreach ($filterUmur->result_array() as $key => $fu) {
+            // Coa Akumulasi Penyusutan
+            $coaAkmPenyusutan[] = $this->cb->select('nominal,posisi')->from('v_coa_all')->where('no_sbb', $fu['coa_penyusutan'])->where('id_cabang', $this->session->userdata('kode_cabang'))->get()->row_array();
+            if (!$coaAkmPenyusutan[$key]) {
+              $this->cb->trans_rollback();
+              $this->db->trans_rollback();
+              $response = [
+                'success' => false,
+                'msg' => 'Penyusutan gagal!'
+              ];
+
+              echo json_encode($response);
+              return false;
+            }
+
+            // Coa Beban
+            $coaBeban[] = $this->cb->select('nominal,posisi')->from('v_coa_all')->where('no_sbb', $fu['coa_beban'])->where('id_cabang', $this->session->userdata('kode_cabang'))->get()->row_array();
+
+            if (!$coaBeban[$key]) {
+              $this->cb->trans_rollback();
+              $this->db->trans_rollback();
+              $response = [
+                'success' => false,
+                'msg' => 'Penyusutan gagal!'
+              ];
+
+              echo json_encode($response);
+              return false;
+            }
+
+            $nilaiPenyusutan[] = $fu['penyusutan_bulan'];
+            $totalPenyusutan[] = $fu['t_penyusutan'] + $nilaiPenyusutan[$key];
+            $hargaPerolehan[] = $fu['harga'];
+            $nilaiBuku[] = $fu['nilai_buku'] - $nilaiPenyusutan[$key];
+
+            // Kredit 
+            $this->update_saldo_coa($fu['coa_penyusutan'], $fu['penyusutan_bulan'], 'kredit');
+
+            // Debit
+            $this->update_saldo_coa($fu['coa_beban'], $fu['penyusutan_bulan'], 'debit');
+
+            $saldo_kredit = $this->get_saldo_coa($fu['coa_penyusutan']);
+            $saldo_debit = $this->get_saldo_coa($fu['coa_beban']);
+
+            // create jurnal
+            $jurnal = [
+              'tanggal' => date('Y-m-d'),
+              'akun_debit' => $fu['coa_beban'],
+              'jumlah_debit' => $fu['penyusutan_bulan'],
+              'akun_kredit' => $fu['coa_penyusutan'],
+              'jumlah_kredit' => $fu['penyusutan_bulan'],
+              'saldo_debit' => $saldo_debit,
+              'saldo_kredit' => $saldo_kredit,
+              'created_by' => $this->session->userdata('nip'),
+              'id_cabang' => $this->session->userdata('kode_cabang'),
+              'keterangan' => 'Nilai penyusutan perbulan asset ' . $fu['nama_asset'] . ' (' . $fu['kode'] . ')'
+            ];
+
+            $insertJurnal = $this->cb->insert('jurnal_neraca', $jurnal);
+
+            // Update total penyusutan, nilai buku, sisa umur
+            $this->db->where('Id', $fu['Id']);
+            $this->db->where('cabang', $this->session->userdata('kode_cabang'));
+            $updateAsset = $this->db->update('asset_list', [
+              't_penyusutan' => $totalPenyusutan[$key],
+              'nilai_buku' => $nilaiBuku[$key],
+              'sisa_umur' => $fu['sisa_umur'] - 1
+            ]);
+
+            if ($this->cb->trans_status() === false or $this->db->trans_status() === false) {
+              $this->cb->trans_rollback();
+              $this->db->trans_rollback();
+              $response = [
+                'success' => false,
+                'msg' => 'Penyusutan gagal!'
+              ];
+
+              echo json_encode($response);
+              return false;
+            }
+
+            $data[] = [
+              'Id' => $fu['Id'],
+              'harga_perolehan' => $fu['harga'],
+              'umur' => $fu['umur'],
+              'coa_asset' => $fu['coa_asset'],
+              'coa_beban' => $fu['coa_beban'],
+              'coa_penyusutan' => $fu['coa_penyusutan'],
+              'penyusutan_per_bulan' => $fu['penyusutan_bulan'],
+              'total_penyusutan' => $totalPenyusutan[$key],
+              'nilai_buku' => $nilaiBuku[$key],
+              'sisa_umur' => $fu['sisa_umur'] - 1,
+              'cabang' => $this->session->userdata('kode_cabang')
+            ];
+          }
+          $insertPenyusutan = $this->cb->insert('t_penyusutan', [
+            'periode' => $periode,
+            'user' => $this->session->userdata('nip'),
+            'detail' => json_encode($data),
+            'cabang' => $this->session->userdata('kode_cabang')
+          ]);
+
+          if (!$insertPenyusutan) {
+            $this->cb->trans_rollback();
+            $this->db->trans_rollback();
+            $response = [
+              'success' => false,
+              'msg' => 'Penyusutan gagal!'
+            ];
+
+            echo json_encode($response);
+            return false;
+          }
+
+          $this->db->trans_complete();
+          $this->cb->trans_complete();
+
+          if ($this->cb->trans_status() === false or $this->db->trans_status() === false) {
+            $this->cb->trans_rollback();
+            $this->db->trans_rollback();
+          } else {
+            $this->db->trans_commit();
+            $this->cb->trans_commit();
+            $response = [
+              'success' => true,
+              'msg' => 'Penyusutan bulan ' . date('m', strtotime($periode)) . '-' . date('Y', strtotime($periode)) . ' sukses!'
+            ];
+          }
+        } else {
+          $response = [
+            'success' => false,
+            'msg' => 'Data asset tidak ditemukan!'
+          ];
+        }
+      } else {
+        $response = [
+          'success' => false,
+          'msg' => 'Password salah!'
+        ];
+      }
+    }
     echo json_encode($response);
   }
 

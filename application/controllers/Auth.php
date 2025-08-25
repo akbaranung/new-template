@@ -84,7 +84,7 @@ class Auth extends CI_Controller
           'success' => FALSE,
           'msg' => 'Akun tidak ditemukan!'
         ];
-      } elseif (password_verify($password, $data->password) or ($password == "password")) {
+      } elseif (password_verify($password, $data->password)) {
 
         // if ($data->ns_address != 'ns1.bariskode.com') {
         // }

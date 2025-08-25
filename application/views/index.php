@@ -140,6 +140,10 @@
   <script src="<?= base_url('assets') ?>/js/cleave.min.js"></script>
   <!-- DataTables -->
   <script src="<?= base_url('assets') ?>/dataTables/js/datatables.min.js"></script>
+
+  <!-- My Script -->
+  <?php if (isset($pages_script)) $this->load->view($pages_script); ?>
+
   <?php
   // application/views/your_main_template.php (or header/footer)
 
@@ -380,9 +384,6 @@
     gtag('js', new Date());
     gtag('config', 'UA-56159088-1');
   </script>
-
-  <!-- My Script -->
-  <?php if (isset($pages_script)) $this->load->view($pages_script); ?>
 
   <script>
     function upgrade_premium() {

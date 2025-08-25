@@ -11,7 +11,8 @@
       <h1 class="page-title">Daftar Penyusutan</h1>
       <div class="card shadow mb-4">
         <div class="card-header">
-          <a href="<?= site_url('asset/proses_penyusutan') ?>" class="btn btn-primary btn-penyusutan">Proses Penyusutan</a>
+          <!-- <a href="<?= site_url('asset/proses_penyusutan') ?>" class="btn btn-primary btn-penyusutan">Proses Penyusutan</a> -->
+          <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#proses-penyusutan">Proses Penyusutan</a>
           <a href="<?= site_url('asset/pengecualian_penyusutan') ?>" class="btn btn-danger">Pengecualian Penyusutan</a>
           <!-- <strong class="card-title">List Pengajuan Biaya</strong> -->
         </div>
@@ -75,3 +76,35 @@
     </div> <!-- .col-12 -->
   </div> <!-- .row -->
 </div> <!-- .container-fluid -->
+
+<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="proses-penyusutan">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">
+          Proses Penyusutan
+        </h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <form class="form-horizontal form-label-left" method="POST" action="<?= base_url('asset/proses_penyusutan') ?>">
+        <div class="modal-body">
+          <p><strong>Masukan password anda terlebih dahulu untuk memproses penyusutan!</strong></p>
+          <div class="form-group row">
+            <div class="col-12">
+              <label for="form-label">Password</label>
+              <input type="password" name="password" id="password" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary btn-submit">
+            Proses
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
