@@ -2,7 +2,7 @@
 include "src/phpqrcode/qrlib.php";
 
 $param = "core.bdlwarehouse.com/app/asset_detail/" . $asset_list->Id; // remember to sanitize that - it is user input!
-
+$param = $cek->ns_address . '/asset/asset_detail/' . $asset_list->Id;
 // we need to be sure ours script does not output anything!!!
 // otherwise it will break up PNG binary!
 

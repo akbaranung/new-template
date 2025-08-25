@@ -89,6 +89,7 @@ class Asset extends CI_Controller
 
   public function qrcode_view($id)
   {
+    $data['cek_user'] = $this->M_login->cekPengguna($this->session->userdata('username'), 1);
     $data['data_asset'] = $this->M_asset->ambil_data_asset($id, $this->session->userdata('kode_cabang'));
     $this->load->view('pages/asset/qr-code', $data);
   }
