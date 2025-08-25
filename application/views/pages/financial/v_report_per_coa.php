@@ -41,9 +41,9 @@
                 <table id="datatable" class="table table-sm table-bordered" style="width:100%">
                   <thead class="thead-dark">
                     <tr>
-                      <th class="text-right" colspan="2">Total:</th>
-                      <th class="text-right"><?= number_format($sum_debit, 2) ?></th>
-                      <th class="text-right"><?= number_format($sum_kredit, 2) ?></th>
+                      <th class="text-right" colspan="2" style="background-color: #e91e63; font-weight: bolder;">Total:</th>
+                      <th class="text-right" style="background-color: #e91e63; font-weight: bolder;"><?= number_format($sum_debit, 2) ?></th>
+                      <th class="text-right" style="background-color: #e91e63; font-weight: bolder;"><?= number_format($sum_kredit, 2) ?></th>
                       <!-- <th class="text-right" colspan="2">Saldo Awal: <?= number_format($saldo_awal, 2) ?></th> -->
                     </tr>
                     <tr>
@@ -59,7 +59,6 @@
                     <?php
                     $no = 1;
                     if ($coa) {
-
                       foreach ($coa as $a) :
                     ?>
                         <tr>

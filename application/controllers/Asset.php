@@ -453,9 +453,9 @@ class Asset extends CI_Controller
       if ($penjurnalan == 1) {
 
         // Debit 
-        $this->update_saldo_coa($coa_aset, $penyusutanBulan, 'debit');
+        $this->update_saldo_coa($coa_aset, $this->_parse_rupiah($harga), 'debit');
         // Kredit
-        $this->update_saldo_coa($coa_kas, $penyusutanBulan, 'kredit');
+        $this->update_saldo_coa($coa_kas, $this->_parse_rupiah($harga), 'kredit');
 
         $saldo_debit = $this->get_saldo_coa($coa_aset);
         $saldo_kredit = $this->get_saldo_coa($coa_kas);
@@ -463,13 +463,13 @@ class Asset extends CI_Controller
         $jurnal = [
           'tanggal' => date('Y-m-d'),
           'akun_debit' => $coa_aset,
-          'jumlah_debit' => $penyusutanBulan,
+          'jumlah_debit' => $this->_parse_rupiah($harga),
           'akun_kredit' => $coa_kas,
-          'jumlah_kredit' => $penyusutanBulan,
+          'jumlah_kredit' => $this->_parse_rupiah($harga),
           'saldo_debit' => $saldo_debit,
           'saldo_kredit' => $saldo_kredit,
           'created_by' => $this->session->userdata('nip'),
-          'keterangan' => 'Nilai penyusutan perbulan asset ' . $nama . ' (' . $kode . ')',
+          'keterangan' => 'Nilai pembukuan asset ' . $nama . ' (' . $kode . ')',
           'id_cabang' => $this->session->userdata('kode_cabang')
         ];
 
