@@ -7,7 +7,8 @@
           <p class="card-title"><strong>Closing / Saldo Awal</strong></p>
         </div> -->
         <div class="card-body">
-          <form class="form-horizontal form-label-left" method="POST" action="<?= base_url('financial/save_saldo_awal') ?>">
+          <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#proses-closing">Closing EoM</a>
+          <!-- <form class="form-horizontal form-label-left" method="POST" action="<?= base_url('financial/save_saldo_awal') ?>">
             <div class="row mb-4">
               <div class="col-md-3 col-xs-12">
                 <input type="month" class="form-control" name="periode" value="<?= $this->input->post('periode') ?>">
@@ -16,8 +17,8 @@
                 <button type="submit" class="btn btn-primary">Closing EoM</button>
               </div>
             </div>
-          </form>
-          <div class="table-responsive">
+          </form> -->
+          <div class="table-responsive mt-3">
             <table id="datatable" class="table table-sm table-stripped" style="width:100%">
               <thead class="thead-dark">
                 <tr>
@@ -54,3 +55,42 @@
     </div> <!-- .col-12 -->
   </div> <!-- .row -->
 </div> <!-- .container-fluid -->
+
+
+<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="proses-closing">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">
+          Proses Closing EoM
+        </h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <form class="form-horizontal form-label-left" method="POST" action="<?= base_url('financial/save_saldo_awal') ?>">
+        <div class="modal-body">
+          <p><strong>Masukan periode dan password anda terlebih dahulu untuk memproses closing EoM</strong></p>
+          <div class="form-group row">
+            <div class="col-12">
+              <label for="form-label">Periode</label>
+              <input type="month" class="form-control" name="periode" value="<?= date('Y-m') ?>">
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-12">
+              <label for="form-label">Password</label>
+              <input type="password" name="password" id="password" class="form-control">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary btn-submit">
+            Proses
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

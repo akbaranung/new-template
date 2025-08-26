@@ -8,7 +8,7 @@ class Financial extends CI_Controller
   {
 
     parent::__construct();
-    $this->load->model(['M_coa', 'M_customer', 'M_invoice']);
+    $this->load->model(['M_coa', 'M_customer', 'M_invoice', 'M_login']);
     $this->load->helper(['number']);
     $this->load->library(['pdfgenerator']);
 
@@ -1390,68 +1390,94 @@ class Financial extends CI_Controller
   public function save_saldo_awal()
   {
     $periode = $this->input->post('periode');
+    $password = $this->input->post('password');
+    $this->form_validation->set_rules('periode', 'periode', 'required');
+    $this->form_validation->set_rules('password', 'password', 'required');
 
-    $cek = $this->M_coa->cek_saldo_awal($periode);
-
-    $date = new DateTime($periode);
-
-    $bulan = $date->format('m');
-    $tahun = $date->format('Y');
-
-    $last_periode = new DateTime($periode);
-    $last_periode = $last_periode->modify('-1 month');
-    $last_periode = $last_periode->format('Y-m');
-
-    $getLastPeriod = $this->M_coa->cek_saldo_awal($last_periode);
-
-    if (empty($getLastPeriod)) {
-      $updated_saldo_awal = $this->M_coa->calculate_saldo_awal($bulan, $tahun);
+    if ($this->form_validation->run() == FALSE) {
+      $response = [
+        'success' => false,
+        'msg' => array_values($this->form_validation->error_array())[0]
+      ];
     } else {
-      $coaLastPeriod = json_decode($getLastPeriod['coa']);
-      $saldo_bulan_ini = $this->M_coa->calculate_saldo_awal($bulan, $tahun);
+      $data = $this->M_login->datapengguna($this->session->userdata('username'));
+      if (password_verify($password, $data->password)) {
+        $cek = $this->M_coa->cek_saldo_awal($periode);
 
-      $saldo_awal_map = [];
-      foreach ($coaLastPeriod as $saldo_awal) {
-        $saldo_awal_map[$saldo_awal->no_sbb] = $saldo_awal;
-      }
+        $date = new DateTime($periode);
 
-      foreach ($saldo_bulan_ini as $saldo_baru) {
-        if (isset($saldo_awal_map[$saldo_baru->no_sbb])) {
-          $saldo_awal_map[$saldo_baru->no_sbb]->saldo_awal += (float) $saldo_baru->saldo_awal;
+        $bulan = $date->format('m');
+        $tahun = $date->format('Y');
+
+        $last_periode = new DateTime($periode);
+        $last_periode = $last_periode->modify('-1 month');
+        $last_periode = $last_periode->format('Y-m');
+
+        $getLastPeriod = $this->M_coa->cek_saldo_awal($last_periode);
+
+        if (empty($getLastPeriod)) {
+          $updated_saldo_awal = $this->M_coa->calculate_saldo_awal($bulan, $tahun);
         } else {
-          $saldo_awal_map[$saldo_baru->no_sbb] = (object) [
-            'no_sbb' => $saldo_baru->no_sbb,
-            'saldo_awal' => (float) $saldo_baru->saldo_awal,
-            'posisi' => $saldo_baru->posisi,
-            'table_source' => $saldo_baru->table_source,
+          $coaLastPeriod = json_decode($getLastPeriod['coa']);
+          $saldo_bulan_ini = $this->M_coa->calculate_saldo_awal($bulan, $tahun);
+
+          $saldo_awal_map = [];
+          foreach ($coaLastPeriod as $saldo_awal) {
+            $saldo_awal_map[$saldo_awal->no_sbb] = $saldo_awal;
+          }
+
+          foreach ($saldo_bulan_ini as $saldo_baru) {
+            if (isset($saldo_awal_map[$saldo_baru->no_sbb])) {
+              $saldo_awal_map[$saldo_baru->no_sbb]->saldo_awal += (float) $saldo_baru->saldo_awal;
+            } else {
+              $saldo_awal_map[$saldo_baru->no_sbb] = (object) [
+                'no_sbb' => $saldo_baru->no_sbb,
+                'saldo_awal' => (float) $saldo_baru->saldo_awal,
+                'posisi' => $saldo_baru->posisi,
+                'table_source' => $saldo_baru->table_source,
+              ];
+            }
+          }
+          $updated_saldo_awal = array_values($saldo_awal_map);
+        }
+
+        $nextMonth = ($date->modify('+1 month'));
+        $nextMonth = $date->format('Y-m');
+
+        $data = [
+          'periode' => $periode,
+          'created_by' => $this->session->userdata('nip'),
+          'created_at' => date('Y-m-d H:i:s'),
+          'slug' => 'saldo-awal-' . $nextMonth,
+          'coa' => json_encode($updated_saldo_awal),
+          'keterangan' => 'Saldo awal ' . format_indo($nextMonth),
+          'id_cabang' => $this->session->userdata('kode_cabang')
+        ];
+
+        if (!$cek) {
+          $this->M_coa->insert_saldo_awal($data);
+          $response = [
+            'success' => true,
+            'msg' => 'Closing bulan ' . format_indo($periode) . 'Saldo awal periode ' . format_indo($nextMonth) . ' berhasil ditetapkan',
+            'reload' => site_url('financial/closing')
+          ];
+        } else {
+          $this->M_coa->update_saldo_awal($periode, $data);
+          $response = [
+            'success' => true,
+            'msg' => 'Closing bulan ' . format_indo($periode) . ' sudah diperbarui',
+            'reload' => site_url('financial/closing')
           ];
         }
+      } else {
+        $response = [
+          'success' => false,
+          'msg' => 'Password salah!'
+        ];
       }
-      $updated_saldo_awal = array_values($saldo_awal_map);
     }
 
-    $nextMonth = ($date->modify('+1 month'));
-    $nextMonth = $date->format('Y-m');
-
-    $data = [
-      'periode' => $periode,
-      'created_by' => $this->session->userdata('nip'),
-      'created_at' => date('Y-m-d H:i:s'),
-      'slug' => 'saldo-awal-' . $nextMonth,
-      'coa' => json_encode($updated_saldo_awal),
-      'keterangan' => 'Saldo awal ' . format_indo($nextMonth),
-      'id_cabang' => $this->session->userdata('kode_cabang')
-    ];
-
-    if (!$cek) {
-      $this->M_coa->insert_saldo_awal($data);
-      $this->session->set_flashdata('message_name', 'Closing bulan ' . format_indo($periode) . 'Saldo awal periode ' . format_indo($nextMonth) . ' berhasil ditetapkan');
-    } else {
-      $this->M_coa->update_saldo_awal($periode, $data);
-      $this->session->set_flashdata('message_name', 'Closing bulan ' . format_indo($periode) . ' sudah diperbarui');
-    }
-
-    redirect($_SERVER['HTTP_REFERER']);
+    echo json_encode($response);
   }
 
   public function coa_report()

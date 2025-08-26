@@ -1,7 +1,8 @@
 <style>
-  .open-memo {
-    cursor: pointer;
+  .dt-length label {
+    margin-left: 5px !important;
   }
+</style>
 </style>
 
 
@@ -11,6 +12,7 @@
       <h1 class="page-title">Detail Penyusutan</h1>
       <div class="card shadow mb-4">
         <div class="card-body">
+          <a href="<?= site_url('asset/list_penyusutan') ?>" class="btn btn-warning">Kembali</a>
           <div class="table-responsive">
             <div style="min-width: 951px;">
               <table class="table table-sm table-hover" style="width: 100% !important;" id="detail_penyusutan">

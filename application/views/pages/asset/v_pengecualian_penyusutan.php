@@ -11,6 +11,7 @@
       <h1 class="page-title">List Pengecualian Penyusutan</h1>
       <div class="card shadow mb-4">
         <div class="card-header">
+          <a href="<?= site_url('asset/list_penyusutan') ?>" class="btn btn-warning">Kembali</a>
           <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#tambahPengecualian">Tambah Pengecualian</a>
           <!-- <strong class="card-title">List Pengajuan Biaya</strong> -->
         </div>

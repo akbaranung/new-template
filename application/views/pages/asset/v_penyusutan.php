@@ -1,10 +1,3 @@
-<style>
-  .open-memo {
-    cursor: pointer;
-  }
-</style>
-
-
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-12">
@@ -55,7 +48,7 @@
                         <td><?= ++$page; ?></td>
                         <td><?= $data->periode ?></td>
                         <td>
-                          <a href="<?= site_url('asset/detail_penyusutan/') . $data->Id ?>" class="btn btn-success btn-sm">Detail</a>
+                          <a href="<?= site_url('asset/detail_penyusutan/') . $data->Id ?>" class="btn btn-primary btn-sm">Detail</a>
                         </td>
                       </tr>
                   <?php }
