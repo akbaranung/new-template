@@ -1,3 +1,35 @@
+<style>
+  @media (max-width: 767px) {
+    .text-kuota {
+      /* display: none !important; */
+    }
+  }
+
+  .gauge-div {
+    /* Default alignment for mobile */
+    justify-content: center;
+    display: flex;
+  }
+
+  @media (min-width: 768px) {
+    .gauge-div {
+      /* Alignment for desktops */
+      justify-content: flex-end;
+    }
+  }
+
+  .gauge-text-div {
+    /* Default alignment for mobile */
+    text-align: center;
+  }
+
+  @media (min-width: 768px) {
+    .gauge-text-div {
+      /* Alignment for desktops */
+      text-align: left;
+    }
+  }
+</style>
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-12">
@@ -28,85 +60,85 @@
           </div>
         </div>
         <div class="row justify-content-center">
-          <div class="col-md-4 mb-4">
+          <div class="col-md-4 col-6 mb-4">
             <div class="card shadow">
               <div class="card-body">
                 <div class="row align-items-center">
-                  <div class="col">
+                  <div class="col-md-6 col-12 gauge-text-div">
                     <p class="small mb-0 text-primary"><b>Invoice</b></p>
                     <!-- <h4 class="mb-0"><?= ($total_invoice / $perusahaan->kuota_invoice) * 100 ?>%</h4>
                     <span class="small text-mute"><?= $total_invoice ?>/<?= $perusahaan->kuota_invoice ?></span> -->
-                    <h5 class="mb-0 text-pink"><?= $total_invoice ?>/<?= $perusahaan->kuota_invoice ?></h5>
+                    <h5 class="mb-0 text-pink text-kuota"><?= $total_invoice ?>/<?= $perusahaan->kuota_invoice ?></h5>
                   </div>
-                  <div class="col-5">
+                  <div class="col-md-6 gauge-div">
                     <div id="gauge1" class="gauge-container"></div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="col-md-4 mb-4">
+          <div class="col-md-4 col-6 mb-4">
             <div class="card shadow">
               <div class="card-body">
                 <div class="row align-items-center">
-                  <div class="col">
+                  <div class="col-md-6 col-12 gauge-text-div">
                     <p class="small mb-0 text-primary"><b>Memo</b></p>
                     <!-- <h4 class="mb-0"><?= ($total_memo / $perusahaan->kuota_memo) * 100 ?>%</h4>
                     <span class="small text-mute"><?= $total_memo ?>/<?= $perusahaan->kuota_memo ?></span> -->
-                    <h5 class="mb-0 text-pink"><?= $total_memo ?>/<?= $perusahaan->kuota_memo ?></h5>
+                    <h5 class="mb-0 text-pink text-kuota"><?= $total_memo ?>/<?= $perusahaan->kuota_memo ?></h5>
                   </div>
-                  <div class="col-5">
+                  <div class="col-md-6 gauge-div">
                     <div id="gauge2" class="gauge-container"></div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="col-md-4 mb-4">
+          <div class="col-md-4 col-6 mb-4">
             <div class="card shadow">
               <div class="card-body">
                 <div class="row align-items-center">
-                  <div class="col">
+                  <div class="col-md-6 col-12 gauge-text-div">
                     <p class="small mb-0 text-primary"><b>Pengajuan Biaya</b></p>
                     <!-- <h4 class="mb-0"><?= ($total_pengajuan / $perusahaan->kuota_pengajuan_biaya) * 100 ?>%</h4>
                     <span class="small text-mute"><?= $total_pengajuan ?>/<?= $perusahaan->kuota_pengajuan_biaya ?></span> -->
-                    <h5 class="mb-0 text-pink"><?= $total_pengajuan ?>/<?= $perusahaan->kuota_pengajuan_biaya ?></h5>
+                    <h5 class="mb-0 text-pink text-kuota"><?= $total_pengajuan ?>/<?= $perusahaan->kuota_pengajuan_biaya ?></h5>
                   </div>
-                  <div class="col-5">
+                  <div class="col-md-6 gauge-div">
                     <div id="gauge3" class="gauge-container"></div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="col-md-4 mb-4">
+          <div class="col-md-4 col-6 mb-4">
             <div class="card shadow">
               <div class="card-body">
                 <div class="row align-items-center">
-                  <div class="col">
+                  <div class="col-md-6 col-12 gauge-text-div">
                     <p class="small mb-0 text-primary"><b>User</b></p>
                     <!-- <h4 class="mb-0"><?= ($total_user / $perusahaan->kuota_user) * 100 ?>%</h4>
                     <span class="small text-mute"><?= $total_user ?>/<?= $perusahaan->kuota_user ?></span> -->
-                    <h5 class="mb-0 text-pink"><?= $total_user ?>/<?= $perusahaan->kuota_user ?></h5>
+                    <h5 class="mb-0 text-pink text-kuota"><?= $total_user ?>/<?= $perusahaan->kuota_user ?></h5>
                   </div>
-                  <div class="col-5">
+                  <div class="col-md-6 gauge-div">
                     <div id="gauge4" class="gauge-container"></div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="col-md-4 mb-4">
+          <div class="col-md-4 col-6 mb-4">
             <div class="card shadow">
               <div class="card-body">
                 <div class="row align-items-center">
-                  <div class="col">
+                  <div class="col-md-6 col-12 gauge-text-div">
                     <p class="small mb-0 text-primary"><b>Cabang</b></p>
                     <!-- <h4 class="mb-0"><?= ($total_cabang / $perusahaan->kuota_cabang) * 100 ?>%</h4>
                     <span class="small text-mute"><?= $total_cabang ?>/<?= $perusahaan->kuota_cabang ?></span> -->
-                    <h5 class="mb-0 text-pink"><?= $total_cabang ?>/<?= $perusahaan->kuota_cabang ?></h5>
+                    <h5 class="mb-0 text-pink text-kuota"><?= $total_cabang ?>/<?= $perusahaan->kuota_cabang ?></h5>
                   </div>
-                  <div class="col-5">
+                  <div class="col-md-6 gauge-div">
                     <div id="gauge5" class="gauge-container"></div>
                   </div>
                 </div>
@@ -116,16 +148,16 @@
           <?php
           if ($this->session->userdata('is_premium')) {
           ?>
-            <div class="col-md-4 mb-4">
+            <div class="col-md-4 col-6 mb-4">
               <div class="card shadow">
                 <div class="card-body">
                   <div class="row align-items-center">
-                    <div class="col">
+                    <div class="col-md-6 col-12 gauge-text-div">
                       <p class="small mb-0 text-primary"><b>Premium Expired</b></p>
-                      <h6 class="mb-0 text-pink" id="premiumStatusText"></h6> <!-- Displays "Expires on: Date" or "Expired!" -->
+                      <h6 class="mb-0 text-pink text-kuota" id="premiumStatusText"></h6> <!-- Displays "Expires on: Date" or "Expired!" -->
                       <span class="small text-mute" id="premiumDaysRemainingText"></span> <!-- Displays "X days remaining" -->
                     </div>
-                    <div class="col-5">
+                    <div class="col-md-6 gauge-div">
                       <div id="premiumGauge" class="gauge-container"></div>
                     </div>
                   </div>
