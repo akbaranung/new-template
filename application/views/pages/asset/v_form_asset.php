@@ -90,7 +90,7 @@
             </div>
 
             <div class="form-group row">
-              <label for="tujuan" class="col-sm-3 col-form-label">Nilai Bukau <strong>(*)</strong></label>
+              <label for="tujuan" class="col-sm-3 col-form-label">Nilai Buku <strong>(*)</strong></label>
               <div class="col-sm-6">
                 <input type="text" class="form-control uang" name="harga" id="harga">
               </div>

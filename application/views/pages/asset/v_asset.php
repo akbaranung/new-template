@@ -64,8 +64,8 @@
                         <td><?= $lokasi->nama_cabang ?></td>
                         <td><?= $data->nama_jenis ?></td>
                         <td>
-
                           <a href="<?= site_url('asset/detail/') . $data->Id ?>" class="btn btn-sm" style="background-color: #3498db; color:white;"><i class="fe fe-eye fe-12"></i> Detail</a>
+                          <a href="<?= site_url('asset/hapus_buku/') . $data->Id ?>" class="btn btn-sm btn-danger btn-hapus-buku"><i class="fe fe-trash fe-12"></i> Hapus Buku</a>
                         </td>
                       </tr>
                   <?php }

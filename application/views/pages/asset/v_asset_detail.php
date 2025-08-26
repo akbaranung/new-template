@@ -77,12 +77,12 @@
                   </td>
                 </tr>
                 <tr>
-                  <td>Nilai Buku (Harga Perolehan)</td>
+                  <th>Nilai Buku (Harga Perolehan)</th>
                   <td>:</td>
                   <td>Rp.<?= number_format($data_asset->harga) ?></td>
                 </tr>
                 <tr>
-                  <td>Nilai Buku (Sekarang)</td>
+                  <th>Nilai Buku (Sekarang)</th>
                   <td>:</td>
                   <td>Rp.<?= number_format($data_asset->nilai_buku) ?></td>
                 </tr>
@@ -192,6 +192,74 @@
                 <option value="1" <?= $data_asset->kondisi == 1 ? 'selected' : '' ?>>Baik</option>
                 <option value="2" <?= $data_asset->kondisi == 2 ? 'selected' : '' ?>>Rusak</option>
                 <option value="3" <?= $data_asset->kondisi == 3 ? 'selected' : '' ?>>Dalam Perbaikan</option>
+              </select>
+            </div>
+          </div>
+          <?php
+          if ($data_asset->t_penyusutan > 0) {
+            $disabled = 'disabled';
+          } else {
+            $disabled = '';
+          }
+          ?>
+
+          <div class="form-group row">
+            <div class="col-12">
+              <label for="tujuan" class="form-label">Nilai Buku <strong>(*)</strong></label>
+              <input type="text" class="form-control uang" name="harga" id="harga" value="<?= $data_asset->harga ?>" <?= $disabled ?>>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-12">
+              <label for="tujuan" class="form-label">Sisa Umur (Bulan) <strong>(*)</strong></label>
+              <input type="text" class="form-control" name="umur" id="umur" value="<?= $data_asset->umur ?>" <?= $disabled ?>>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-12">
+              <label for="tujuan" class="form-label">COA Aset <strong>(*)</strong></label>
+              <select name="coa_aset" id="coa_aset" class="form-control select2" <?= $disabled ?>>
+                <option value="">Pilih Coa Aset</option>
+                <?php foreach ($coa_asset as $c) : ?>
+                  <option value="<?= $c->no_sbb ?>" <?= $data_asset->coa_asset == $c->no_sbb ? 'selected' : '' ?>><?= $c->nama_perkiraan ?></option>
+                <?php endforeach ?>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-12">
+              <label for="tujuan" class="form-label">COA Beban <strong>(*)</strong></label>
+              <select name="coa_beban" id="coa_beban" class="form-control select2" <?= $disabled ?>>
+                <option value="">Pilih Coa Beban</option>
+                <?php foreach ($coa_beban as $c) : ?>
+                  <option value="<?= $c->no_sbb ?>" <?= $data_asset->coa_beban == $c->no_sbb ? 'selected' : '' ?>><?= $c->nama_perkiraan ?></option>
+                <?php endforeach ?>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-12">
+              <label for="tujuan" class="form-label">COA Kas <strong>(*)</strong></label>
+              <select name="coa_kas" id="coa_kas" class="form-control select2" <?= $disabled ?>>
+                <option value="">Pilih Coa Kas</option>
+                <?php foreach ($coa_kas as $c) : ?>
+                  <option value="<?= $c->no_sbb ?>" <?= $data_asset->coa_kas == $c->no_sbb ? 'selected' : '' ?>><?= $c->nama_perkiraan ?></option>
+                <?php endforeach ?>
+              </select>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-12">
+              <label for="tujuan" class="form-label">COA Penyusutan <strong>(*)</strong></label>
+              <select name="coa_penyusutan" id="coa_penyusutan" class="form-control select2" <?= $disabled ?>>
+                <option value="">Pilih Coa Penyusutan</option>
+                <?php foreach ($coa_penyusutan as $c) : ?>
+                  <option value="<?= $c->no_sbb ?>" <?= $data_asset->coa_penyusutan == $c->no_sbb ? 'selected' : '' ?>><?= $c->nama_perkiraan ?></option>
+                <?php endforeach ?>
               </select>
             </div>
           </div>
