@@ -31,68 +31,68 @@
             </div>
           </div>
           <div class="table-responsive">
-            <div style="min-width: 951px;">
-              <table class="table table-sm table-hover" style="width: 100% !important;">
-                <thead style="background-color:#3498db;">
+            <!-- <div style="min-width: 951px;"> -->
+            <table class="table table-sm table-hover" style="display: table;">
+              <thead style="background-color:#3498db;">
+                <tr>
+                  <th style="color: white;">No</th>
+                  <th style="color: white;">Nama Ruangan</th>
+                  <th style="color: white;">#</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php
+                if (empty($ruangan)) { ?>
                   <tr>
-                    <th style="color: white;">No</th>
-                    <th style="color: white;">Nama Ruangan</th>
-                    <th style="color: white;">#</th>
+                    <td colspan="3" class="text-center">Data tidak ditemukan</td>
                   </tr>
-                </thead>
-                <tbody>
-                  <?php
-                  if (empty($ruangan)) { ?>
+                  <?php } else {
+                  $nip = $this->session->userdata('nip');
+                  foreach ($ruangan as $data) {
+                  ?>
                     <tr>
-                      <td colspan="3" class="text-center">Data tidak ditemukan</td>
-                    </tr>
-                    <?php } else {
-                    $nip = $this->session->userdata('nip');
-                    foreach ($ruangan as $data) {
-                    ?>
-                      <tr>
-                        <td><?= ++$page; ?></td>
-                        <td><?= $data->keterangan ?></td>
-                        <td>
-                          <a href="#" class="btn btn-success btn-sm" data-toggle="modal" data-target="#ubahjenis<?= $data->Id ?>"><i class="fe fe-edit"></i> Ubah</a>
-                          <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="ubahjenis<?= $data->Id ?>">
-                            <div class="modal-dialog">
-                              <div class="modal-content">
-                                <div class="modal-header">
-                                  <h4 class="modal-title" id="myModalLabel">
-                                    Ubah Nama Ruangan Aset
-                                  </h4>
-                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                  </button>
-                                </div>
-                                <form class="form-horizontal form-label-left" method="POST" action="<?= site_url('asset/store_ruangan') ?>">
-                                  <input type="hidden" name="id_ruangan" value="<?= $data->Id ?>">
-                                  <div class="modal-body">
-                                    <div class="form-group row">
-                                      <div class="col-12 mt-3">
-                                        <label for="ruangan" class="form-label">Nama Jenis</label>
-                                        <input type="text" name="ruangan" id="ruangan" class="form-control" value="<?= $data->keterangan ?>">
-                                      </div>
+                      <td><?= ++$page; ?></td>
+                      <td><?= $data->keterangan ?></td>
+                      <td>
+                        <a href="#" class="btn btn-success btn-sm" data-toggle="modal" data-target="#ubahjenis<?= $data->Id ?>"><i class="fe fe-edit"></i> Ubah</a>
+                        <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="ubahjenis<?= $data->Id ?>">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h4 class="modal-title" id="myModalLabel">
+                                  Ubah Nama Ruangan Aset
+                                </h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">×</span>
+                                </button>
+                              </div>
+                              <form class="form-horizontal form-label-left" method="POST" action="<?= site_url('asset/store_ruangan') ?>">
+                                <input type="hidden" name="id_ruangan" value="<?= $data->Id ?>">
+                                <div class="modal-body">
+                                  <div class="form-group row">
+                                    <div class="col-12 mt-3">
+                                      <label for="ruangan" class="form-label">Nama Jenis</label>
+                                      <input type="text" name="ruangan" id="ruangan" class="form-control" value="<?= $data->keterangan ?>">
                                     </div>
                                   </div>
-                                  <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary btn-submit">
-                                      Simpan
-                                    </button>
-                                  </div>
-                                </form>
-                              </div>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                  <button type="submit" class="btn btn-primary btn-submit">
+                                    Simpan
+                                  </button>
+                                </div>
+                              </form>
                             </div>
                           </div>
-                        </td>
-                      </tr>
-                  <?php }
-                  } ?>
-                </tbody>
-              </table>
-            </div>
+                        </div>
+                      </td>
+                    </tr>
+                <?php }
+                } ?>
+              </tbody>
+            </table>
+            <!-- </div> -->
           </div>
 
 

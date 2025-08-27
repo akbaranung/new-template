@@ -14,26 +14,26 @@
         <div class="card-body">
           <a href="<?= site_url('asset/list_penyusutan') ?>" class="btn btn-warning">Kembali</a>
           <div class="table-responsive">
-            <div style="min-width: 951px;">
-              <table class="table table-sm table-hover" style="width: 100% !important;" id="detail_penyusutan">
-                <thead style="background-color:#3498db;">
-                  <tr>
-                    <th style="color: white;">Kode</th>
-                    <th style="color: white;">Nama</th>
-                    <th style="color: white;">Spesifikasi</th>
-                    <th style="color: white;">Harga Perolehan</th>
-                    <th style="color: white;">Umur</th>
-                    <th style="color: white;">Penyusutan / Bulan</th>
-                    <th style="color: white;">Total Penyusutan</th>
-                    <th style="color: white;">Nilai Buku</th>
-                    <th style="color: white;">Sisa Umur</th>
-                  </tr>
-                </thead>
-                <tbody>
+            <!-- <div style="min-width: 951px;"> -->
+            <table class="table table-sm table-hover" style="display: table;" id="detail_penyusutan">
+              <thead style="background-color:#3498db;">
+                <tr>
+                  <th style="color: white;">Kode</th>
+                  <th style="color: white;">Nama</th>
+                  <th style="color: white;">Spesifikasi</th>
+                  <th style="color: white;">Harga Perolehan</th>
+                  <th style="color: white;">Umur</th>
+                  <th style="color: white;">Penyusutan / Bulan</th>
+                  <th style="color: white;">Total Penyusutan</th>
+                  <th style="color: white;">Nilai Buku</th>
+                  <th style="color: white;">Sisa Umur</th>
+                </tr>
+              </thead>
+              <tbody>
 
-                </tbody>
-              </table>
-            </div>
+              </tbody>
+            </table>
+            <!-- </div> -->
           </div>
 
         </div>

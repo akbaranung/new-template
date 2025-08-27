@@ -31,48 +31,48 @@
             </div>
           </div>
           <div class="table-responsive">
-            <div style="min-width: 951px;">
-              <table class="table table-sm table-hover" style="width: 100% !important;">
-                <thead style="background-color:#3498db;">
+            <!-- <div style="min-width: 951px;"> -->
+            <table class="table table-sm table-hover" style="display: table;">
+              <thead style="background-color:#3498db;">
+                <tr>
+                  <th style="color: white;">No</th>
+                  <th style="color: white;">Kode</th>
+                  <th style="color: white;">Nama</th>
+                  <th style="color: white;">Spesifikasi</th>
+                  <th style="color: white;">Ruang</th>
+                  <th style="color: white;">Lokasi</th>
+                  <th style="color: white;">Jenis</th>
+                  <th style="color: white;">Detail</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php
+                if (empty($data_asset)) { ?>
                   <tr>
-                    <th style="color: white;">No</th>
-                    <th style="color: white;">Kode</th>
-                    <th style="color: white;">Nama</th>
-                    <th style="color: white;">Spesifikasi</th>
-                    <th style="color: white;">Ruang</th>
-                    <th style="color: white;">Lokasi</th>
-                    <th style="color: white;">Jenis</th>
-                    <th style="color: white;">Detail</th>
+                    <td colspan="8" class="text-center">Data tidak ditemukan</td>
                   </tr>
-                </thead>
-                <tbody>
-                  <?php
-                  if (empty($data_asset)) { ?>
+                  <?php } else {
+                  foreach ($data_asset as $data) {
+                    $lokasi = $this->cb->select('nama_cabang')->from('t_cabang')->where('uid', $data->lokasi)->get()->row();
+                  ?>
                     <tr>
-                      <td colspan="8" class="text-center">Data tidak ditemukan</td>
+                      <td><?= ++$page; ?></td>
+                      <td><?= $data->kode ?></td>
+                      <td><?= $data->nama_asset ?></td>
+                      <td><?= $data->spesifikasi ?></td>
+                      <td><?= $data->nama_ruangan ?></td>
+                      <td><?= $lokasi->nama_cabang ?></td>
+                      <td><?= $data->nama_jenis ?></td>
+                      <td>
+                        <a href="<?= site_url('asset/detail/') . $data->Id ?>" class="btn btn-sm" style="background-color: #3498db; color:white;"><i class="fe fe-eye fe-12"></i> Detail</a>
+                        <a href="<?= site_url('asset/hapus_buku/') . $data->Id ?>" class="btn btn-sm btn-danger btn-hapus-buku"><i class="fe fe-trash fe-12"></i> Hapus Buku</a>
+                      </td>
                     </tr>
-                    <?php } else {
-                    foreach ($data_asset as $data) {
-                      $lokasi = $this->cb->select('nama_cabang')->from('t_cabang')->where('uid', $data->lokasi)->get()->row();
-                    ?>
-                      <tr>
-                        <td><?= ++$page; ?></td>
-                        <td><?= $data->kode ?></td>
-                        <td><?= $data->nama_asset ?></td>
-                        <td><?= $data->spesifikasi ?></td>
-                        <td><?= $data->nama_ruangan ?></td>
-                        <td><?= $lokasi->nama_cabang ?></td>
-                        <td><?= $data->nama_jenis ?></td>
-                        <td>
-                          <a href="<?= site_url('asset/detail/') . $data->Id ?>" class="btn btn-sm" style="background-color: #3498db; color:white;"><i class="fe fe-eye fe-12"></i> Detail</a>
-                          <a href="<?= site_url('asset/hapus_buku/') . $data->Id ?>" class="btn btn-sm btn-danger btn-hapus-buku"><i class="fe fe-trash fe-12"></i> Hapus Buku</a>
-                        </td>
-                      </tr>
-                  <?php }
-                  } ?>
-                </tbody>
-              </table>
-            </div>
+                <?php }
+                } ?>
+              </tbody>
+            </table>
+            <!-- </div> -->
           </div>
 
 

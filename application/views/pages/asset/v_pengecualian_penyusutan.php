@@ -17,22 +17,22 @@
         </div>
         <div class="card-body">
           <div class="table-responsive">
-            <div style="min-width: 951px;">
-              <table class="table table-sm table-hover" style="width: 100% !important;" id="tablePenyusutanPengecualian">
-                <thead style="background-color:#3498db;">
-                  <tr>
-                    <th style="color: white;">No.</th>
-                    <th style="color: white;">Nama Asset</th>
-                    <th style="color: white;">Kode Asset</th>
-                    <th style="color: white;">Spesifikasi</th>
-                    <th style="color: white;">#</th>
-                  </tr>
-                </thead>
-                <tbody>
+            <!-- <div style="min-width: 951px;"> -->
+            <table class="table table-sm table-hover" style="width: 100% !important;" id="tablePenyusutanPengecualian">
+              <thead style="background-color:#3498db;">
+                <tr>
+                  <th style="color: white;">No.</th>
+                  <th style="color: white;">Nama Asset</th>
+                  <th style="color: white;">Kode Asset</th>
+                  <th style="color: white;">Spesifikasi</th>
+                  <th style="color: white;">#</th>
+                </tr>
+              </thead>
+              <tbody>
 
-                </tbody>
-              </table>
-            </div>
+              </tbody>
+            </table>
+            <!-- </div> -->
           </div>
 
         </div>

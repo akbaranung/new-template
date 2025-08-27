@@ -26,36 +26,36 @@
             </div>
           </div>
           <div class="table-responsive">
-            <div style="min-width: 951px;">
-              <table class="table table-sm table-hover" style="width: 100% !important;">
-                <thead style="background-color:#3498db;">
+            <!-- <div style="min-width: 951px;"> -->
+            <table class="table table-sm table-hover" style="display: table;">
+              <thead style="background-color:#3498db;">
+                <tr>
+                  <th style="color: white;">No</th>
+                  <th style="color: white;">Periode</th>
+                  <th style="color: white;">#</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php
+                if (empty($penyusutan)) { ?>
                   <tr>
-                    <th style="color: white;">No</th>
-                    <th style="color: white;">Periode</th>
-                    <th style="color: white;">#</th>
+                    <td colspan="3" class="text-center">Data tidak ditemukan</td>
                   </tr>
-                </thead>
-                <tbody>
-                  <?php
-                  if (empty($penyusutan)) { ?>
+                  <?php } else {
+                  foreach ($penyusutan as $data) {
+                  ?>
                     <tr>
-                      <td colspan="3" class="text-center">Data tidak ditemukan</td>
+                      <td><?= ++$page; ?></td>
+                      <td><?= $data->periode ?></td>
+                      <td>
+                        <a href="<?= site_url('asset/detail_penyusutan/') . $data->Id ?>" class="btn btn-primary btn-sm">Detail</a>
+                      </td>
                     </tr>
-                    <?php } else {
-                    foreach ($penyusutan as $data) {
-                    ?>
-                      <tr>
-                        <td><?= ++$page; ?></td>
-                        <td><?= $data->periode ?></td>
-                        <td>
-                          <a href="<?= site_url('asset/detail_penyusutan/') . $data->Id ?>" class="btn btn-primary btn-sm">Detail</a>
-                        </td>
-                      </tr>
-                  <?php }
-                  } ?>
-                </tbody>
-              </table>
-            </div>
+                <?php }
+                } ?>
+              </tbody>
+            </table>
+            <!-- </div> -->
           </div>
 
 
