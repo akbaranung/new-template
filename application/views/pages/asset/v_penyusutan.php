@@ -5,8 +5,8 @@
       <div class="card shadow mb-4">
         <div class="card-header">
           <!-- <a href="<?= site_url('asset/proses_penyusutan') ?>" class="btn btn-primary btn-penyusutan">Proses Penyusutan</a> -->
-          <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#proses-penyusutan">Proses Penyusutan</a>
-          <a href="<?= site_url('asset/pengecualian_penyusutan') ?>" class="btn btn-danger">Pengecualian Penyusutan</a>
+          <a href="#" class="btn btn-primary  mt-1" data-toggle="modal" data-target="#proses-penyusutan">Proses Penyusutan</a>
+          <a href="<?= site_url('asset/pengecualian_penyusutan') ?>" class="btn btn-danger mt-1">Pengecualian Penyusutan</a>
           <!-- <strong class="card-title">List Pengajuan Biaya</strong> -->
         </div>
         <div class="card-body">
