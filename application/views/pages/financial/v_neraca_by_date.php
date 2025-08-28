@@ -11,7 +11,7 @@
             <div class="row">
               <div class="col-md-4 col-xs-12">
                 <h5>
-                  Selisih : <strong>Rp <?= (isset($neraca)) ? number_format($neraca, 2) : 0 ?></strong>
+                  Selisih : <strong><?= (isset($neraca)) ? rupiah($neraca) : 0 ?></strong>
                 </h5>
               </div>
               <div class="col-md-2 col-xs-12">
@@ -41,7 +41,7 @@
           <div class="row">
             <div class="col-lg-6 col-md-6 col-xs-12">
               <h2 class="text-center">Activa</h2>
-              <p class="text-right">Total: <strong><?= (isset($sum_activa)) ? number_format($sum_activa, 2) : 0 ?></strong></p>
+              <p class="text-right">Total: <strong><?= (isset($sum_activa)) ? rupiah($sum_activa) : 0 ?></strong></p>
               <div class="table-responsive">
                 <table class="table table-sm" style="width:100%">
                   <thead class="thead-dark">
@@ -61,7 +61,7 @@
                           <tr>
                             <td><button class="btn btn-primary arus_kas btn-sm" data-id="<?= $a->no_sbb ?>"><?= $a->no_sbb ?></button></td>
                             <td><?= $coa['nama_perkiraan'] ?></td>
-                            <td class="text-right"><?= number_format($a->saldo_awal, 2) ?></td>
+                            <td class="text-right"><?= rupiah($a->saldo_awal) ?></td>
                           </tr>
                       <?php
                         endif;
@@ -78,7 +78,7 @@
             </div>
             <div class="col-md-6 col-xs-12">
               <h2 class="text-center">Pasiva</h2>
-              <p class="text-right">Total: <strong><?= (isset($sum_pasiva)) ? number_format($sum_pasiva, 2) : 0 ?></strong></p>
+              <p class="text-right">Total: <strong><?= (isset($sum_pasiva)) ? rupiah($sum_pasiva) : 0 ?></strong></p>
               <div class="table-responsive">
                 <table class="table table-sm" style="width:100%">
                   <thead class="thead-dark">
@@ -98,7 +98,7 @@
                           <tr style="height: 35px;">
                             <td><button class="btn btn-primary arus_kas btn-sm" data-id="<?= $a->no_sbb ?>"><?= $a->no_sbb ?></td>
                             <td><?= $coa['nama_perkiraan'] ?></td>
-                            <td class="text-right"><?= number_format($a->saldo_awal, 2) ?></td>
+                            <td class="text-right"><?= rupiah($a->saldo_awal) ?></td>
                           </tr>
                       <?php
                         endif;
@@ -110,7 +110,7 @@
                         <tr>
                           <td>31030</td>
                           <td>LABA TAHUN BERJALAN</td>
-                          <td class="text-right"><?= number_format($laba, 2) ?></td>
+                          <td class="text-right"><?= rupiah($laba) ?></td>
                         </tr>
                       <?php
                       }
@@ -118,7 +118,7 @@
                       <!-- <tr>
                         <td>31030</td>
                         <td>LABA TAHUN BERJALAN</td>
-                        <td class="text-right"><?= number_format($laba, 2) ?></td>
+                        <td class="text-right"><?= rupiah($laba) ?></td>
                       </tr> -->
                     <?php
                     else : ?>

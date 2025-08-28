@@ -41,12 +41,12 @@
                     <tr>
                       <td><?= $no++ ?></td>
                       <td><?= $i['nama_customer'] ?></td>
-                      <td class="text-right"><?= number_format($i['current']) ?></td>
-                      <td class="text-right"><?= number_format($i['out1']) ?></td>
-                      <td class="text-right"><?= number_format($i['out2']) ?></td>
-                      <td class="text-right"><?= number_format($i['out3']) ?></td>
-                      <td class="text-right"><?= number_format($i['out4']) ?></td>
-                      <td class="text-right"><?= number_format($i['total']) ?></td>
+                      <td class="text-right"><?= rupiah($i['current']) ?></td>
+                      <td class="text-right"><?= rupiah($i['out1']) ?></td>
+                      <td class="text-right"><?= rupiah($i['out2']) ?></td>
+                      <td class="text-right"><?= rupiah($i['out3']) ?></td>
+                      <td class="text-right"><?= rupiah($i['out4']) ?></td>
+                      <td class="text-right"><?= rupiah($i['total']) ?></td>
                       <td>
                         <form class="form-horizontal form-label-left" method="POST" action="<?= base_url('financial/invoice') ?>">
                           <input type="hidden" value="<?= $i['id_customer'] ?>" name="customer_id">
@@ -66,15 +66,15 @@
                   $total_outstanding = $total_out1 + $total_out2 + $total_out3 + $total_out4 + $total_out5; ?>
                   <tr>
                     <td colspan="2" class="text-center" rowspan="2"><strong>Total</strong></td>
-                    <td class="text-right" rowspan="2"><strong><?= number_format($total_current) ?></strong></td>
-                    <td class="text-right"><strong><?= number_format($total_out1) ?></strong></td>
-                    <td class="text-right"><strong><?= number_format($total_out2) ?></strong></td>
-                    <td class="text-right"><strong><?= number_format($total_out3) ?></strong></td>
-                    <td class="text-right"><strong><?= number_format($total_out4) ?></strong></td>
-                    <td class="text-right" rowspan="2"><strong><?= number_format($total) ?></strong></td>
+                    <td class="text-right" rowspan="2"><strong><?= rupiah($total_current) ?></strong></td>
+                    <td class="text-right"><strong><?= rupiah($total_out1) ?></strong></td>
+                    <td class="text-right"><strong><?= rupiah($total_out2) ?></strong></td>
+                    <td class="text-right"><strong><?= rupiah($total_out3) ?></strong></td>
+                    <td class="text-right"><strong><?= rupiah($total_out4) ?></strong></td>
+                    <td class="text-right" rowspan="2"><strong><?= rupiah($total) ?></strong></td>
                   </tr>
                   <tr>
-                    <td colspan="4" class="text-center"><strong><?= number_format($total_outstanding) ?></td>
+                    <td colspan="4" class="text-center"><strong><?= rupiah($total_outstanding) ?></td>
                   </tr>
                 <?php
 

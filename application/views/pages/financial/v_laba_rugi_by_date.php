@@ -11,7 +11,7 @@
             <div class="row">
               <div class="col-md-4 col-xs-12">
                 <h5>
-                  Laba berjalan: <strong>Rp <?= number_format($total_pendapatan, 2) ?></strong>
+                  Laba berjalan: <strong><?= rupiah($total_pendapatan) ?></strong>
                 </h5>
               </div>
               <div class="col-md-2 col-xs-12">
@@ -41,7 +41,7 @@
           <div class="row">
             <div class="col-md-6 col-xs-12">
               <h2 class="text-center">Biaya</h2>
-              <p class="text-right">Total: <strong><?= number_format($sum_biaya, 2) ?></strong></p>
+              <p class="text-right">Total: <strong><?= rupiah($sum_biaya) ?></strong></p>
               <div class="table-responsive">
                 <table id="" class="table table-sm" style="width:100%">
                   <thead class="thead-dark">
@@ -60,7 +60,7 @@
                         <tr>
                           <td><button class="btn btn-primary arus_kas" data-id="<?= $a->no_sbb ?>"><?= $a->no_sbb ?></td>
                           <td><?= $coa['nama_perkiraan'] ?></td>
-                          <td class="text-right"><?= number_format($a->saldo_awal, 2) ?></td>
+                          <td class="text-right"><?= rupiah($a->saldo_awal) ?></td>
                         </tr>
                     <?php
                       }
@@ -71,7 +71,7 @@
             </div>
             <div class="col-md-6 col-xs-12">
               <h2 class="text-center">Pendapatan</h2>
-              <p class="text-right">Total: <strong><?= number_format($sum_pendapatan, 2) ?></strong></p>
+              <p class="text-right">Total: <strong><?= rupiah($sum_pendapatan) ?></strong></p>
               <div class="table-responsive">
                 <table id="" class="table table-sm" style="width:100%;">
                   <thead class="thead-dark">
@@ -95,7 +95,7 @@
                         <tr>
                           <td><button class="btn btn-primary arus_kas" data-id="<?= $a->no_sbb ?>"><?= $a->no_sbb ?></td>
                           <td><?= $coa['nama_perkiraan'] ?></td>
-                          <td class="text-right"><?= number_format($a->saldo_awal, 2) ?></td>
+                          <td class="text-right"><?= rupiah($a->saldo_awal) ?></td>
                         </tr>
                     <?php
                       }

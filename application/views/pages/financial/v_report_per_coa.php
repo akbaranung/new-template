@@ -70,9 +70,9 @@
                             <td><?= $no++ ?></td>
                             <td><?= format_indo($a->tanggal) ?></td>
                             <td><?= $a->akun_debit ?> - <?= $nama_debit ?></td>
-                            <td class="text-right"><?= number_format($a->jumlah_debit, 2) ?></td>
+                            <td class="text-right"><?= rupiah($a->jumlah_debit) ?></td>
                             <td class="text-right"><?= '0' ?></td>
-                            <!-- <td class="text-right"><?= number_format($a->saldo_debit) ?></td> -->
+                            <!-- <td class="text-right"><?= rupiah($a->saldo_debit) ?></td> -->
                             <td style="white-space: pre-line;"><?= $a->keterangan ?></td>
                           </tr>
                           <tr>
@@ -80,8 +80,8 @@
                             <td><?= format_indo($a->tanggal) ?></td>
                             <td><?= $a->akun_kredit ?> - <?= $nama_kredit ?></td>
                             <td class="text-right"><?= '0' ?></td>
-                            <td class="text-right"><?= number_format($a->jumlah_kredit, 2) ?></td>
-                            <!-- <td class="text-right"><?= number_format($a->saldo_kredit) ?></td> -->
+                            <td class="text-right"><?= rupiah($a->jumlah_kredit) ?></td>
+                            <!-- <td class="text-right"><?= rupiah($a->saldo_kredit) ?></td> -->
                             <td style="white-space: pre-line;"><?= $a->keterangan ?></td>
                           </tr>
                         <?php
@@ -102,9 +102,9 @@
                     <thead class="thead-dark">
                       <tr>
                         <th class="text-right" colspan="2" style="background-color: #e91e63; font-weight: bolder;">Total:</th>
-                        <th class="text-right" style="background-color: #e91e63; font-weight: bolder;"><?= number_format($sum_debit, 2) ?></th>
-                        <th class="text-right" style="background-color: #e91e63; font-weight: bolder;"><?= number_format($sum_kredit, 2) ?></th>
-                        <!-- <th class="text-right" colspan="2">Saldo Awal: <?= number_format($saldo_awal, 2) ?></th> -->
+                        <th class="text-right" style="background-color: #e91e63; font-weight: bolder;"><?= rupiah($sum_debit) ?></th>
+                        <th class="text-right" style="background-color: #e91e63; font-weight: bolder;"><?= rupiah($sum_kredit) ?></th>
+                        <!-- <th class="text-right" colspan="2">Saldo Awal: <?= rupiah($saldo_awal) ?></th> -->
                       </tr>
                       <tr>
                         <th class="text-center">#</th>
@@ -126,11 +126,11 @@
                             <td><?= $no++ ?></td>
                             <td><?= format_indo($a->tanggal) ?></td>
                             <!-- <td><?= ($a->akun_debit == $detail_coa['no_sbb']) ? $a->akun_debit : $a->akun_kredit ?></td> -->
-                            <td class="text-right"><?= ($a->akun_debit == $detail_coa['no_sbb']) ? (($a->jumlah_debit) ? number_format($a->jumlah_debit) : '0') : '0' ?></td>
-                            <!-- <td class="text-right"><?= ($a->akun_debit == $detail_coa['no_sbb']) ? (($a->saldo_debit) ? number_format($a->saldo_debit) : '0') : '0' ?></td> -->
-                            <td class="text-right"><?= ($a->akun_kredit == $detail_coa['no_sbb']) ? (($a->jumlah_kredit) ? number_format($a->jumlah_kredit) : '0') : '0' ?></td>
-                            <!-- <td class="text-right"><?= ($a->akun_kredit == $detail_coa['no_sbb']) ? (($a->saldo_kredit) ? number_format($a->saldo_kredit) : '0') : '0' ?></td> -->
-                            <!-- <td class="text-right"><?= ($a->akun_kredit == $detail_coa['no_sbb']) ? (($a->saldo_kredit) ? number_format($a->saldo_kredit) :  '0') : (($a->saldo_debit) ? number_format($a->saldo_debit) : '0') ?></td> -->
+                            <td class="text-right"><?= ($a->akun_debit == $detail_coa['no_sbb']) ? (($a->jumlah_debit) ? rupiah($a->jumlah_debit) : '0') : '0' ?></td>
+                            <!-- <td class="text-right"><?= ($a->akun_debit == $detail_coa['no_sbb']) ? (($a->saldo_debit) ? rupiah($a->saldo_debit) : '0') : '0' ?></td> -->
+                            <td class="text-right"><?= ($a->akun_kredit == $detail_coa['no_sbb']) ? (($a->jumlah_kredit) ? rupiah($a->jumlah_kredit) : '0') : '0' ?></td>
+                            <!-- <td class="text-right"><?= ($a->akun_kredit == $detail_coa['no_sbb']) ? (($a->saldo_kredit) ? rupiah($a->saldo_kredit) : '0') : '0' ?></td> -->
+                            <!-- <td class="text-right"><?= ($a->akun_kredit == $detail_coa['no_sbb']) ? (($a->saldo_kredit) ? rupiah($a->saldo_kredit) :  '0') : (($a->saldo_debit) ? rupiah($a->saldo_debit) : '0') ?></td> -->
                             <td><?= $a->keterangan ?></td>
                           </tr>
                         <?php

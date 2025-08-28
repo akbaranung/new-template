@@ -87,7 +87,7 @@
                   <th>Sub BB</th>
                   <th>Nama Perkiraan</th>
                   <!-- <th class="text-center">Nominal</th> -->
-                  <th class="text-center">Saldo Awal</th>
+                  <!-- <th class="text-center">Saldo Awal</th> -->
                   <?php
                   if ($is_sawal == 0 && $cabang_now == $this->session->userdata('kode_cabang')) {
                   ?>
@@ -108,7 +108,7 @@
                       <td><?= $i['no_bb'] ?></td>
                       <td><?= $i['no_sbb'] ?></td>
                       <td><?= ($i['nama_perkiraan']) ?></td>
-                      <td class="text-right"><?= $i['nominal'] != null ? number_format($i['nominal']) : 0 ?></td>
+                      <!-- <td class="text-right"><?= $i['nominal'] != null ? number_format($i['nominal']) : 0 ?></td> -->
                       <?php
                       if ($is_sawal == 0 && $cabang_now == $this->session->userdata('kode_cabang')) {
                       ?>

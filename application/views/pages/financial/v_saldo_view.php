@@ -9,23 +9,23 @@
         <div class="card-body">
           <?php
           if ($this->uri->segment(3)) { ?>
-            <form class="form-horizontal form-label-left" method="POST" action="<?= base_url('financial/saldo/') ?>">
+            <form class="form-horizontal form-label-left" method="POST" action="<?= base_url('financial/closing/' . $this->input->post('periode')) ?>">
               <div class="row">
-                <div class="col-md-3 col-xs-12">
+                <!-- <div class="col-md-3 col-xs-12">
                   <label for="tgl_invoice" class="form-label">Tanggal</label>
                   <input type="month" class="form-control" name="periode" value="<?= $this->uri->segment(3) ?>">
-                </div>
+                </div> -->
                 <div class="col-md-3 col-xs-12">
-                  <button type="submit" class="btn btn-primary" style="margin-top: 28px;">Lihat</button>
-                  <a type="button" href="<?= base_url('financial/closing/') ?>" class="btn btn-warning" style="margin-top: 28px;">Kembali</a>
+                  <!-- <button type="submit" class="btn btn-primary" style="margin-top: 28px;">Lihat</button> -->
+                  <a type="button" href="<?= base_url('financial/closing/') ?>" class="btn btn-warning text-white" style="margin-top: 28px;">Kembali</a>
                 </div>
               </div>
             </form>
             <div class="row" style="margin-top: 10px;">
               <div class="col-md-12 col-xs-12">
 
-                <table id="datatable" class="table table-stripped" style="width:100%">
-                  <thead>
+                <table id="" class="table table-stripped" style="width:100%">
+                  <thead class="thead-dark">
                     <tr>
                       <th class="text-center">No. CoA</th>
                       <th class="text-center">Nama</th>
@@ -42,7 +42,7 @@
                         <tr>
                           <td class="text-right"><?= htmlspecialchars($c->no_sbb) ?></td>
                           <td><?= htmlspecialchars($coa->nama_perkiraan) ?></td>
-                          <td class="text-right"><?= number_format($c->saldo_awal) ?></td>
+                          <td class="text-right"><?= rupiah($c->saldo_awal) ?></td>
                         </tr>
                       <?php
                       endforeach;

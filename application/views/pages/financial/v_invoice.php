@@ -73,9 +73,9 @@
                       <td><?= $i['no_invoice'] ?></td>
                       <td><?= format_indo($i['tanggal_invoice']) ?></td>
                       <td><?= $i['nama_customer'] ?></td>
-                      <td class="text-right"><?= number_format($i['total_nonpph'], 0) ?></td>
-                      <!-- <td class="text-right"><?= number_format($i['total_termin'], 0) ?></td> -->
-                      <td class="text-right"><?= number_format($i['total_nonpph'] - $i['total_termin'], 0) ?></td>
+                      <td class="text-right"><?= rupiah($i['total_nonpph'], 0) ?></td>
+                      <!-- <td class="text-right"><?= rupiah($i['total_termin'], 0) ?></td> -->
+                      <td class="text-right"><?= rupiah($i['total_nonpph'] - $i['total_termin'], 0) ?></td>
                       <td><?= isset($i['created_by_name']) ? $i['created_by_name'] : 'N/A' ?></td>
                       <?php
                       if ($i['status_void'] == "1") {
@@ -133,7 +133,7 @@
                                               <tr>
                                                 <td><?= $no++; ?></td>
                                                 <td><?= format_indo($l->created_at) ?></td>
-                                                <td><?= number_format($l->nominal_bayar) ?></td>
+                                                <td><?= rupiah($l->nominal_bayar) ?></td>
                                                 <td><?= $l->keterangan ?></td>
                                               </tr>
                                             <?php
@@ -154,19 +154,19 @@
                                       <div class="col-sm-6 col-xs-12">
                                         <div class="form-group">
                                           <label for="nominal_invoice" class="form-label">Nominal Invoice</label>
-                                          <input type="text" name="nominal_invoice" id="nominal_invoice<?= $i['Id'] ?>" class="form-control" value="<?= number_format($i['total_denganpph']) ?>" readonly>
+                                          <input type="text" name="nominal_invoice" id="nominal_invoice<?= $i['Id'] ?>" class="form-control" value="<?= rupiah($i['total_denganpph']) ?>" readonly>
                                         </div>
                                       </div>
                                       <div class="col-sm-6 col-xs-12">
                                         <div class="form-group">
                                           <label for="piutang" class="form-label">Belum bayar</label>
-                                          <input type="text" name="piutang" id="piutang<?= $i['Id'] ?>" class="form-control" value="<?= number_format($piutang) ?>" readonly>
+                                          <input type="text" name="piutang" id="piutang<?= $i['Id'] ?>" class="form-control" value="<?= rupiah($piutang) ?>" readonly>
                                         </div>
                                       </div>
                                       <div class="col-sm-6 col-xs-12">
                                         <div class="form-group">
                                           <label for="nominal_bayar" class="form-label">Nominal bayar</label>
-                                          <input type="text" name="nominal_bayar" id="nominal_bayar<?= $i['Id'] ?>" class="form-control" value="<?= number_format(($i['opsi_termin'] == 0) ? $piutang : '0', 0, ',', '.') ?>" <?= ($i['opsi_termin'] == 0) ? 'readonly' : '' ?> required>
+                                          <input type="text" name="nominal_bayar" id="nominal_bayar<?= $i['Id'] ?>" class="form-control" value="<?= rupiah(($i['opsi_termin'] == 0) ? $piutang : '0', 0, ',', '.') ?>" <?= ($i['opsi_termin'] == 0) ? 'readonly' : '' ?> required>
                                         </div>
                                       </div>
                                       <div class="col-sm-6 col-xs-12">
@@ -305,7 +305,7 @@
                                             <tr>
                                               <td><?= $no++; ?></td>
                                               <td><?= format_indo($l->created_at) ?></td>
-                                              <td><?= number_format($l->nominal_bayar) ?></td>
+                                              <td><?= rupiah($l->nominal_bayar) ?></td>
                                               <td><?= $l->keterangan ?></td>
                                             </tr>
                                           <?php
