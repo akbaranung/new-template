@@ -2410,6 +2410,7 @@ class Financial extends CI_Controller
   {
     $from = $this->input->post('tgl_dari');
     $to = $this->input->post('tgl_sampai');
+    $keyword = $this->input->post('keyword');
     $kode_cabang = $this->session->userdata('kode_cabang');
     // return $this->cb->where('id_cabang', $kode_cabang);
 
@@ -2460,7 +2461,7 @@ class Financial extends CI_Controller
     // exit;
 
     // Hitung transaksi dari 15 November - 31 Desember
-    $data['coa'] = $this->M_coa->getCoaReport($no_coa, $from, $to);
+    $data['coa'] = $this->M_coa->getCoaReport($no_coa, $from, $to, $keyword);
 
     $data['sum_debit'] = array_sum(array_map(function ($sum) use ($no_coa) {
       return $sum->akun_debit == $no_coa ? $sum->jumlah_debit : 0;

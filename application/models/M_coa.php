@@ -80,17 +80,31 @@ class M_coa extends CI_Model
         return $pasiva;
     }
 
-    public function getCoaReport($no_coa, $from, $to)
+    public function getCoaReport($no_coa, $from, $to, $keyword = null)
     {
         $this->cb->select('*');
         $this->cb->from('jurnal_neraca');
-        $this->cb->where('tanggal >=', $from);
-        $this->cb->where('tanggal <=', $to);
+
+        if ($from) {
+            $this->cb->where('tanggal >=', $from);
+            $this->cb->where('tanggal <=', $to);
+        }
+
         $this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
+
         if ($no_coa != 'ALL') {
             $this->cb->group_start();
             $this->cb->where('akun_debit', $no_coa);
             $this->cb->or_where('akun_kredit', $no_coa);
+            $this->cb->group_end();
+        }
+
+        if ($keyword) {
+            $this->cb->group_start();
+            $this->cb->like('akun_debit', $keyword);
+            $this->cb->or_like('akun_kredit', $keyword);
+            $this->cb->or_like('jumlah_debit', $keyword);
+            $this->cb->or_like('keterangan', $keyword);
             $this->cb->group_end();
         }
         // $this->cb->order_by('tanggal', 'ASC');

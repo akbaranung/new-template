@@ -41,7 +41,7 @@
               </div>
               <div class="col-md-5 col-xs-12">
                 <div class="form-group">
-                  <input type="text" name="keyword" id="keyword" class="form-control" placeholder="Masukkan nomor invoice" value="<?= $this->input->post('keyword') ?>">
+                  <input type="text" name="keyword" id="keyword" class="form-control" placeholder="Masukkan kata kunci" value="<?= $this->input->post('keyword') ?>">
                 </div>
               </div>
               <div class="col-md-2 col-xs-12">

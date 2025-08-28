@@ -11,7 +11,7 @@
           if ($this->input->post('no_coa')) { ?>
             <form class="form-horizontal form-label-left" method="POST" action="<?= base_url('financial/coa_report') ?>">
               <div class="row">
-                <div class="col-md-5 col-xs-12">
+                <div class="col-md-3 col-xs-12">
                   <label for="" class="form-label">No. CoA</label>
                   <select name="no_coa" id="no_coa" class="form-control select2">
                     <option value="">:: Pilih nomor coa</option>
@@ -24,16 +24,21 @@
                     } ?>
                   </select>
                 </div>
-                <div class="col-md-3 col-xs-12">
+                <div class="col-md-2 col-xs-12">
                   <label for="tgl_dari" class="form-label">Dari</label>
                   <input type="date" class="form-control" name="tgl_dari" value="<?= $this->input->post('tgl_dari') ?>">
                 </div>
-                <div class="col-md-3 col-xs-12">
+                <div class="col-md-2 col-xs-12">
                   <label for="tgl_sampai" class="form-label">Sampai</label>
                   <input type="date" class="form-control" name="tgl_sampai" value="<?= $this->input->post('tgl_sampai') ?>">
                 </div>
-                <div class="col-md-1 col-xs-12">
-                  <button type="submit" class="btn btn-primary" style="margin-top: 24px;">Lihat</button>
+                <div class="col-md-3 col-xs-12">
+                  <label for="keyword" class="form-label">Keyword</label>
+                  <input type="text" name="keyword" id="keyword" class="form-control" placeholder="nomor coa/nominal/keterangan" value="<?= $this->input->post('keyword') ?>">
+                </div>
+                <div class="col-md-2 col-xs-12">
+                  <button type="submit" class="btn btn-primary btn-sm" style="margin-top: 30px;">Lihat</button>
+                  <a href="<?= base_url('financial/coa_report') ?>" class="btn btn-warning text-white btn-sm" style="margin-top: 30px;">Reset</a>
                 </div>
               </div>
             </form>
@@ -42,7 +47,7 @@
                 <?php
                 if ($this->input->post('no_coa') == "ALL") {
                 ?>
-                  <table id="datatable" class="table table-sm table-bordered" style="width:100%">
+                  <table id="" class="table table-sm table-bordered" style="width:100%">
                     <thead class="thead-dark">
                       <tr>
                         <th class="text-center">#</th>
@@ -65,7 +70,7 @@
                             <td><?= $no++ ?></td>
                             <td><?= format_indo($a->tanggal) ?></td>
                             <td><?= $a->akun_debit ?> - <?= $nama_debit ?></td>
-                            <td class="text-right"><?= number_format($a->jumlah_debit) ?></td>
+                            <td class="text-right"><?= number_format($a->jumlah_debit, 2) ?></td>
                             <td class="text-right"><?= '0' ?></td>
                             <!-- <td class="text-right"><?= number_format($a->saldo_debit) ?></td> -->
                             <td style="white-space: pre-line;"><?= $a->keterangan ?></td>
@@ -75,7 +80,7 @@
                             <td><?= format_indo($a->tanggal) ?></td>
                             <td><?= $a->akun_kredit ?> - <?= $nama_kredit ?></td>
                             <td class="text-right"><?= '0' ?></td>
-                            <td class="text-right"><?= number_format($a->jumlah_kredit) ?></td>
+                            <td class="text-right"><?= number_format($a->jumlah_kredit, 2) ?></td>
                             <!-- <td class="text-right"><?= number_format($a->saldo_kredit) ?></td> -->
                             <td style="white-space: pre-line;"><?= $a->keterangan ?></td>
                           </tr>
@@ -93,7 +98,7 @@
                 <?php
                 } else {
                 ?>
-                  <table id="datatable" class="table table-sm table-bordered" style="width:100%">
+                  <table id="" class="table table-sm table-bordered" style="width:100%">
                     <thead class="thead-dark">
                       <tr>
                         <th class="text-right" colspan="2" style="background-color: #e91e63; font-weight: bolder;">Total:</th>
@@ -179,7 +184,7 @@
           ?>
             <form class="form-horizontal form-label-left" method="POST" action="<?= base_url('financial/coa_report') ?>">
               <div class="row">
-                <div class="col-md-5 col-xs-12">
+                <div class="col-md-3 col-xs-12">
                   <label for="" class="form-label">No. CoA </label>
                   <select name="no_coa" id="no_coa" class="form-control select2">
                     <option value="">:: Pilih nomor coa</option>
@@ -192,13 +197,17 @@
                     } ?>
                   </select>
                 </div>
-                <div class="col-md-3 col-xs-12">
+                <div class="col-md-2 col-xs-12">
                   <label for="tgl_invoice" class="form-label">Dari</label>
                   <input type="date" class="form-control" name="tgl_dari" value="">
                 </div>
-                <div class="col-md-3 col-xs-12">
+                <div class="col-md-2 col-xs-12">
                   <label for="tgl_invoice" class="form-label">Sampai</label>
                   <input type="date" class="form-control" name="tgl_sampai" value="<?= date('Y-m-d') ?>">
+                </div>
+                <div class="col-md-4 col-xs-12">
+                  <label for="keyword" class="form-label">Keyword</label>
+                  <input type="text" name="keyword" id="keyword" class="form-control" placeholder="Masukkan nomor coa/nominal/keterangan" value="<?= $this->input->post('keyword') ?>">
                 </div>
                 <div class="col-md-1 col-xs-12">
                   <button type="submit" class="btn btn-primary" style="margin-top: 24px;">Lihat</button>
