@@ -64,15 +64,17 @@
                   <td><?= tgl_indo($data_asset->last_update) ?></td>
                 </tr>
                 <tr>
-                  <th width="20%">Kondisi</th>
+                  <th width="20%">Status</th>
                   <td width="5px"> : </td>
                   <td>
                     <?php if ($data_asset->kondisi == 1) {
                       echo 'Baik';
                     } else if ($data_asset->kondisi == 2) {
                       echo 'Rusak';
-                    } else {
+                    } else if ($data_asset->kondisi == 3) {
                       echo "Dalam Perbaikan";
+                    } else {
+                      echo "Hapus Buku";
                     } ?>
                   </td>
                 </tr>
@@ -206,14 +208,14 @@
           <div class="form-group row">
             <div class="col-12">
               <label for="tujuan" class="form-label">Nilai Buku <strong>(*)</strong></label>
-              <input type="text" class="form-control uang" name="harga" id="harga" value="<?= $data_asset->harga ?>" <?= $disabled ?>>
+              <input type="text" class="form-control uang" name="harga" id="harga" value="<?= $data_asset->nilai_buku ?>" <?= $disabled ?>>
             </div>
           </div>
 
           <div class="form-group row">
             <div class="col-12">
               <label for="tujuan" class="form-label">Sisa Umur (Bulan) <strong>(*)</strong></label>
-              <input type="text" class="form-control" name="umur" id="umur" value="<?= $data_asset->umur ?>" <?= $disabled ?>>
+              <input type="text" class="form-control" name="umur" id="umur" value="<?= $data_asset->sisa_umur ?>" <?= $disabled ?>>
             </div>
           </div>
 
