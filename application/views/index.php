@@ -141,6 +141,29 @@
   <!-- DataTables -->
   <script src="<?= base_url('assets') ?>/dataTables/js/datatables.min.js"></script>
 
+
+
+  <script>
+    $(document).ready(function() {
+      var table = $('#datatable').DataTable({
+        paging: false, // matikan pagination
+        // searching: false, // sembunyikan search bar default (yang di atas kanan)
+        ordering: false,
+      });
+
+      // Apply search di tiap input header
+      $('#datatable thead tr:eq(1) th').each(function(i) {
+        $('input', this).on('keyup change', function() {
+          if (table.column(i).search() !== this.value) {
+            table
+              .column(i)
+              .search(this.value)
+              .draw();
+          }
+        });
+      });
+    });
+  </script>
   <!-- My Script -->
   <?php if (isset($pages_script)) $this->load->view($pages_script); ?>
 
@@ -164,7 +187,7 @@
 
   <!-- Your SweetAlert2 JS check (as provided previously) -->
   <script>
-    <?php if ($this->session->flashdata('swal_type')): ?>
+    <?php if ($this->session->flashdata('swal_type')) : ?>
       Swal.fire({
         icon: '<?php echo $this->session->flashdata('swal_type'); ?>',
         title: '<?php echo $this->session->flashdata('swal_title'); ?>',
@@ -173,7 +196,7 @@
       });
     <?php endif; ?>
   </script>
-  <!-- <?php if ($this->session->flashdata('swal_message_redirect')): ?>
+  <!-- <?php if ($this->session->flashdata('swal_message_redirect')) : ?>
     <script>
       var swalData = <?= json_encode($this->session->flashdata('swal_message_redirect')); ?>;
       Swal.fire(swalData).then((result) => {

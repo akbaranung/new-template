@@ -86,12 +86,15 @@ class M_coa extends CI_Model
         $this->cb->from('jurnal_neraca');
         $this->cb->where('tanggal >=', $from);
         $this->cb->where('tanggal <=', $to);
-        $this->cb->group_start();
         $this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
-        $this->cb->where('akun_debit', $no_coa);
-        $this->cb->or_where('akun_kredit', $no_coa);
-        $this->cb->group_end();
+        if ($no_coa != 'ALL') {
+            $this->cb->group_start();
+            $this->cb->where('akun_debit', $no_coa);
+            $this->cb->or_where('akun_kredit', $no_coa);
+            $this->cb->group_end();
+        }
         // $this->cb->order_by('tanggal', 'ASC');
+        $this->cb->order_by('tanggal', 'DESC');
         $this->cb->order_by('Id', 'DESC');
         $query = $this->cb->get();
 
