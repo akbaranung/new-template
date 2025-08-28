@@ -1,5 +1,31 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
 
+<style>
+  .bagian-th {
+    /* Default alignment for mobile */
+    display: none;
+  }
+
+  @media (min-width: 768px) {
+    .bagian-th {
+      /* Alignment for desktops */
+      display: block;
+    }
+  }
+
+  .bagian-td {
+    /* Default alignment for mobile */
+    /* margin-left: -120px; */
+  }
+
+  @media (min-width: 768px) {
+    .bagian-td {
+      /* Alignment for desktops */
+      margin-left: 0px;
+    }
+  }
+</style>
+
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
@@ -153,10 +179,8 @@
                   <tr>
                     <th>Bagian</th>
                     <td>
-
                       <div class="row">
-                        <div class="col-10">
-
+                        <div class="col-md-10 col-7">
                           <?php
                           if ($this->session->userdata('is_premium')) {
                           ?>
@@ -201,7 +225,7 @@
                           }
                           ?>
                         </div>
-                        <div class="col-2 ">
+                        <div class="col-md-2 col-5">
                           <!-- <button type="button" id="addOptionBtn" class="btn btn-primary btn-block">Tambahkan Bagian <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="16" height="16">
                               <path fill="#FFD43B" d="M309 106c11.4-7 19-19.7 19-34c0-22.1-17.9-40-40-40s-40 17.9-40 40c0 14.4 7.6 27 19 34L209.7 220.6c-9.1 18.2-32.7 23.4-48.6 10.7L72 160c5-6.7 8-15 8-24c0-22.1-17.9-40-40-40S0 113.9 0 136s17.9 40 40 40c.2 0 .5 0 .7 0L86.4 427.4c5.5 30.4 32 52.6 63 52.6l277.2 0c30.9 0 57.4-22.1 63-52.6L535.3 176c.2 0 .5 0 .7 0c22.1 0 40-17.9 40-40s-17.9-40-40-40s-40 17.9-40 40c0 9 3 17.3 8 24l-89.1 71.3c-15.9 12.7-39.5 7.5-48.6-10.7L309 106z" />
                             </svg></button> -->
@@ -214,7 +238,7 @@
                   </tr>
                   <tr id="add-bagian-tr" style="display: none;">
                     <th></th>
-                    <td>
+                    <td class="bagian-td">
                       <form id="form-add-bagian">
                         <div class="row">
                           <input type="hidden" class="form-control" id="input_id_prsh" name="input_id_prsh" value="<?= $this->session->userdata('user_perusahaan_id') ?>">
@@ -223,19 +247,19 @@
                               <input type="text" class="form-control" id="input_kode" name="input_kode" placeholder="Enter Kode">
                             </div>
                           </div> -->
-                          <div class="col-3">
+                          <div class="col-md-4 col-6">
                             <div class="form-group">
                               <!-- <label for="input_kode_nama">Kode Nama</label> -->
                               <input type="text" class="form-control" id="input_kode_nama" name="input_kode_nama" placeholder="Enter Kode">
                             </div>
                           </div>
-                          <div class="col-5">
+                          <div class="col-md-5 col-6">
                             <div class="form-group">
                               <!-- <label for="input_nama">Nama</label> -->
                               <input type="text" class="form-control" id="input_nama" name="input_nama" placeholder="Enter Nama">
                             </div>
                           </div>
-                          <div class="col-4">
+                          <div class="col-md-3 d-flex justify-content-end">
                             <div class="form-group">
                               <button type="button" id="submitNewBagianBtn" class="btn btn-primary">Submit</button>
                               <button type="button" id="cancelNewBagianBtn" class="btn btn-danger">Cancel</button>
@@ -565,7 +589,7 @@
                         <?php } ?>
                       </select> -->
                       <div class="row">
-                        <div class="col-10">
+                        <div class="col-md-10 col-8">
 
                           <?php
                           if ($this->session->userdata('is_premium')) {
@@ -599,7 +623,7 @@
                           }
                           ?>
                         </div>
-                        <div class="col-2">
+                        <div class="col-md-2 col-4">
                           <!-- <button type="button" id="addOptionBtn" class="btn btn-primary btn-block">Tambahkan Bagian <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="16" height="16">
                               <path fill="#FFD43B" d="M309 106c11.4-7 19-19.7 19-34c0-22.1-17.9-40-40-40s-40 17.9-40 40c0 14.4 7.6 27 19 34L209.7 220.6c-9.1 18.2-32.7 23.4-48.6 10.7L72 160c5-6.7 8-15 8-24c0-22.1-17.9-40-40-40S0 113.9 0 136s17.9 40 40 40c.2 0 .5 0 .7 0L86.4 427.4c5.5 30.4 32 52.6 63 52.6l277.2 0c30.9 0 57.4-22.1 63-52.6L535.3 176c.2 0 .5 0 .7 0c22.1 0 40-17.9 40-40s-17.9-40-40-40s-40 17.9-40 40c0 9 3 17.3 8 24l-89.1 71.3c-15.9 12.7-39.5 7.5-48.6-10.7L309 106z" />
                             </svg></button> -->
@@ -616,19 +640,19 @@
                               <input type="text" class="form-control" id="input_kode" name="input_kode" placeholder="Enter Kode">
                             </div>
                           </div> -->
-                              <div class="col-3">
+                              <div class="col-md-3 col-6">
                                 <div class="form-group">
                                   <!-- <label for="input_kode_nama">Kode Nama</label> -->
                                   <input type="text" class="form-control" id="input_kode_nama" name="input_kode_nama" placeholder="Kode Nama">
                                 </div>
                               </div>
-                              <div class="col-5">
+                              <div class="col-md-5 col-6">
                                 <div class="form-group">
                                   <!-- <label for="input_nama">Nama</label> -->
                                   <input type="text" class="form-control" id="input_nama" name="input_nama" placeholder="Enter Nama">
                                 </div>
                               </div>
-                              <div class="col-4">
+                              <div class="col-md-4 d-flex justify-content-end">
                                 <div class="form-group">
                                   <button type="button" id="submitNewBagianBtn" class="btn btn-primary">Submit</button>
                                   <button type="button" id="cancelNewBagianBtn" class="btn btn-danger">Cancel</button>

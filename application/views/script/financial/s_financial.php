@@ -820,10 +820,10 @@
       if (debit && kredit) {
         if (debit == kredit) {
           console.log('sama');
-          $('.btn-success').prop('disabled', true);
+          $('.btn-primary').prop('disabled', true);
         } else {
           console.log('tidak sama');
-          $('.btn-success').prop('disabled', false);
+          $('.btn-primary').prop('disabled', false);
         }
       }
     }
@@ -884,7 +884,7 @@
       const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
           InputEvent: 'form-control',
-          confirmButton: 'btn btn-success',
+          confirmButton: 'btn btn-primary',
           cancelButton: 'btn btn-danger'
         },
         buttonsStyling: false
@@ -954,29 +954,51 @@
                 // Attempt to parse the final response
                 var finalResponse = JSON.parse(accumulatedResponse.trim().split('\n').pop()); // Get the last line which should be the status
                 console.log("Response data:", finalResponse); // Log final response to see its structure
-                if (!finalResponse.status) swal.fire('Gagal menyimpan data', 'error');
-                else {
+                if (finalResponse.status) {
+                  const noDebitRows = finalResponse.no_debit_rows ? finalResponse.no_debit_rows.join(', ') : 'Tidak ada';
+                  const noKreditRows = finalResponse.no_kredit_rows ? finalResponse.no_kredit_rows.join(', ') : 'Tidak ada';
 
                   // document.getElementById('rumahadat').reset();
                   // $('#add_modal').modal('hide');
                   (JSON.stringify(data));
                   // alert(data)
-                  swal.fire({
-                    customClass: 'slow-animation',
-                    icon: 'success',
-                    showConfirmButton: false,
-                    title: 'Berhasil Menambahkan Data',
-                    timer: 3000
-                  });
-                  document.getElementById('upload_file_fe').reset(); // Reset the form
-                  $('#upload_modal').modal('hide'); // Hide the modal
+                  // swal.fire({
+                  //   customClass: 'slow-animation',
+                  //   icon: 'success',
+                  //   showConfirmButton: false,
+                  //   title: 'Berhasil Menambahkan Data',
+                  //   timer: 3000
+                  // });
+                  // document.getElementById('upload_file_fe').reset(); // Reset the form
+                  // $('#upload_modal').modal('hide'); // Hide the modal
                   // location.reload();
+                  Swal.fire({
+                    icon: 'success',
+                    title: 'Proses Selesai',
+                    html: `
+                                        <b>Berhasil:</b> ${finalResponse.success_count || 0} Data<br>
+                                        <b>COA Debit Tidak Ditemukan:</b> ${finalResponse.no_debit_rows.length || 0} Data<br>
+                                        (Baris: ${noDebitRows})<br><br>
+                                        <b>COA Kredit Tidak Ditemukan:</b> ${finalResponse.no_kredit_rows.length || 0} Data<br>
+                                        (Baris: ${noKreditRows})
+                                    `,
+                    showConfirmButton: true,
+                    allowOutsideClick: true
+                  }).then(() => {
+                    document.getElementById('upload_file_fe').reset();
+                    $('#upload_modal').modal('hide');
+                    // location.reload();
+                  });
 
+                } else {
+
+                  swal.fire('Gagal menyimpan data', 'error');
                 }
               } catch (error) {
                 // If parsing fails, log the error
                 console.error("Error parsing final response:", error);
-                swal.fire('Gagal menyimpan data', 'error');
+                // swal.fire('Gagal menyimpan data', 'error');
+                swal.fire('Gagal menyimpan data', 'Terjadi kesalahan pada respons server.', 'error');
               }
             },
             error: function(jqXHR, textStatus, errorThrown) {
@@ -1310,7 +1332,7 @@
         success: function(response) {
           if (response.status === 'success') {
             // Update UI: e.g., change button to "Saved" or disable the row
-            $button.removeClass('btn-primary').addClass('btn-success').text('Saved!');
+            $button.removeClass('btn-primary').addClass('btn-primary').text('Saved!');
             // Optionally disable the saldo_awal input as well
             $row.find('.saldo-awal-input').prop('disabled', true);
             // table.ajax.reload(null, false); // If you want to refresh the table without resetting pagination
@@ -1358,7 +1380,7 @@
         },
         complete: function() {
           // Re-enable the button if it's not permanently disabled by success/fail
-          if (!$button.hasClass('btn-success') && !$button.hasClass('btn-danger')) {
+          if (!$button.hasClass('btn-primary') && !$button.hasClass('btn-danger')) {
             $button.prop('disabled', false).text('Buat');
           }
         }

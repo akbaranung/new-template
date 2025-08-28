@@ -1287,6 +1287,11 @@ class Financial extends CI_Controller
       $totalRows -= 2; // Adjust for headers
       $insertedRows = 0;
 
+      // --- Initialize counters ---  
+      $no_debit_rows = [];
+      $no_kredit_rows = [];
+      $success_count = 0;
+
       // Process rows
       foreach ($worksheet->getRowIterator() as $rowIndex => $row) {
         // Skip header rows
@@ -1307,7 +1312,7 @@ class Financial extends CI_Controller
         $tanggal = isset($data[3]) ? $this->processDate($data[3]) : null;
         $keterangan = isset($data[4]) ? $data[4] : null;
 
-        $this->posting(
+        $posting = $this->posting(
           $coa_debit,
           $coa_kredit,
           $keterangan,
@@ -1315,6 +1320,15 @@ class Financial extends CI_Controller
           $tanggal,
           $jenis_fe = 'single'
         );
+
+        // --- Store row index if an error occurs ---
+        if ($posting == "No Debit") {
+          $no_debit_rows[] = $rowIndex;
+        } else if ($posting == "No Kredit") {
+          $no_kredit_rows[] = $rowIndex;
+        } else {
+          $success_count++;
+        }
 
         $insertedRows++;
         $progress = round(($insertedRows / $totalRows) * 100);
@@ -1329,7 +1343,14 @@ class Financial extends CI_Controller
         echo json_encode(['status' => false, 'message' => 'Database error']);
       } else {
         $this->cb->trans_commit();
-        echo json_encode(['status' => true, 'message' => 'File processed successfully']);
+        // echo json_encode(['status' => true, 'message' => 'File processed successfully']);
+        echo json_encode([
+          'status' => true,
+          'message' => 'File processed successfully',
+          'success_count' => $success_count,
+          'no_debit_rows' => $no_debit_rows,
+          'no_kredit_rows' => $no_kredit_rows
+        ]);
       }
     } catch (Exception $e) {
       // Handle exceptions
@@ -2475,42 +2496,51 @@ class Financial extends CI_Controller
   private function posting($coa_debit, $coa_kredit, $keterangan, $nominal, $tanggal, $id_invoice = NULL)
   {
     // Update coa debit 
-    $this->update_saldo_coa($coa_debit, $nominal, 'debit');
+    $update_saldo_debit = $this->update_saldo_coa($coa_debit, $nominal, 'debit');
     // Update coa kredit
-    $this->update_saldo_coa($coa_kredit, $nominal, 'kredit');
+    $update_saldo_kredit = $this->update_saldo_coa($coa_kredit, $nominal, 'kredit');
 
-    // Ambil saldo debit
-    $saldo_debit = $this->get_saldo_coa($coa_debit);
-    // Ambil saldo kredit
-    $saldo_kredit = $this->get_saldo_coa($coa_kredit);
+    if (!$update_saldo_debit) {
+      return "No Debit";
+    } else if (!$update_saldo_kredit) {
+      return "No Kredit";
+    } else {
 
-    $dt_jurnal = [
-      'tanggal' => $tanggal,
-      'akun_debit' => $coa_debit,
-      'jumlah_debit' => $nominal,
-      'akun_kredit' => $coa_kredit,
-      'jumlah_kredit' => $nominal,
-      'saldo_debit' => $saldo_debit,
-      'saldo_kredit' => $saldo_kredit,
-      'keterangan' => $keterangan,
-      'created_by' => $this->session->userdata('nip'),
-      'id_invoice' => ($id_invoice) ? $id_invoice : '',
-      'id_cabang' => $this->session->userdata('kode_cabang')
-    ];
+      // Ambil saldo debit
+      $saldo_debit = $this->get_saldo_coa($coa_debit);
+      // Ambil saldo kredit
+      $saldo_kredit = $this->get_saldo_coa($coa_kredit);
 
-    $this->M_coa->addJurnal($dt_jurnal);
+      $dt_jurnal = [
+        'tanggal' => $tanggal,
+        'akun_debit' => $coa_debit,
+        'jumlah_debit' => $nominal,
+        'akun_kredit' => $coa_kredit,
+        'jumlah_kredit' => $nominal,
+        'saldo_debit' => $saldo_debit,
+        'saldo_kredit' => $saldo_kredit,
+        'keterangan' => $keterangan,
+        'created_by' => $this->session->userdata('nip'),
+        'id_invoice' => ($id_invoice) ? $id_invoice : '',
+        'id_cabang' => $this->session->userdata('kode_cabang')
+      ];
 
-    $data_transaksi = [
-      'user_id' => $this->session->userdata('nip'),
-      'tgl_trs' => date('Y-m-d H:i:s'),
-      'nominal' => $nominal,
-      'debet' => $coa_debit,
-      'kredit' => $coa_kredit,
-      'keterangan' => trim($keterangan),
-      'id_cabang' => $this->session->userdata('kode_cabang')
-    ];
+      $this->M_coa->addJurnal($dt_jurnal);
 
-    $this->M_coa->add_transaksi($data_transaksi);
+      $data_transaksi = [
+        'user_id' => $this->session->userdata('nip'),
+        'tgl_trs' => date('Y-m-d H:i:s'),
+        'nominal' => $nominal,
+        'debet' => $coa_debit,
+        'kredit' => $coa_kredit,
+        'keterangan' => trim($keterangan),
+        'id_cabang' => $this->session->userdata('kode_cabang')
+      ];
+
+      $this->M_coa->add_transaksi($data_transaksi);
+
+      return "Success";
+    }
   }
 
 
@@ -2611,7 +2641,7 @@ class Financial extends CI_Controller
     );
 
     $row = $query->row();
-    if (!$row) return;
+    if (!$row) return FALSE;
 
     $posisi = $row->posisi;
     $nominal = $row->nominal;
