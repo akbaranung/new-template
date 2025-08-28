@@ -174,6 +174,7 @@
                         }
                         ?>
                       </select>
+                      <input type="hidden" name="role_name" value="<?= $this->uri->segment(4) ?>">
                     </td>
                   </tr>
                   <tr>

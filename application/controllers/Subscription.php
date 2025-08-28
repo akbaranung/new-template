@@ -311,21 +311,21 @@ Mohon untuk memproses pembayaran segera.";
                 // $confirmation_detail = $this->db->from('premium_confirmation')->where('Id', $id)->get()->row();
                 // $perusahaan_detail = $this->db->from('premium_confirmation')->where('Id', $id)->get()->row();
                 if ($confirmation_detail->paket == "Bangsawan Muda") {
-                    $kuota_invoice = 5000;
-                    $kuota_memo = 5000;
-                    $kuota_pengajuan_biaya = 5000;
+                    $kuota_invoice = 3000;
+                    $kuota_memo = 3000;
+                    $kuota_pengajuan_biaya = 3000;
                     $kuota_user = 15;
                     $kuota_cabang = 3;
                 } else if ($confirmation_detail->paket == "Kesatria Sejati") {
-                    $kuota_invoice = 10000;
-                    $kuota_memo = 10000;
-                    $kuota_pengajuan_biaya = 10000;
+                    $kuota_invoice = 5000;
+                    $kuota_memo = 5000;
+                    $kuota_pengajuan_biaya = 5000;
                     $kuota_user = 30;
                     $kuota_cabang = 5;
                 } else if ($confirmation_detail->paket == "Raja Sultan") {
-                    $kuota_invoice = 25000;
-                    $kuota_memo = 25000;
-                    $kuota_pengajuan_biaya = 25000;
+                    $kuota_invoice = 10000;
+                    $kuota_memo = 10000;
+                    $kuota_pengajuan_biaya = 10000;
                     $kuota_user = 50;
                     $kuota_cabang = 10;
                 }

@@ -1,16 +1,22 @@
   <?php
 
-  $this->db->select('level_jabatan, COUNT(id) as user_count');
+  // $this->db->select('level_jabatan, COUNT(id) as user_count');
+  // $this->db->from('users');
+  // $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
+  // $this->db->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
+  // // $this->db->where('id_prsh', $this->session->userdata('user_perusahaan_id'));
+  // $this->db->group_by('level_jabatan');
+  // $query = $this->db->get();
+
+  $this->db->select('level_jabatan, role_name, COUNT(id) as user_count');
   $this->db->from('users');
   $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
   $this->db->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
-  // $this->db->where('id_prsh', $this->session->userdata('user_perusahaan_id'));
-  $this->db->group_by('level_jabatan');
+  $this->db->group_by('level_jabatan, role_name'); // Group by both columns
   $query = $this->db->get();
-
   $user_counts = [];
   foreach ($query->result() as $row) {
-    $user_counts[$row->level_jabatan] = (int)$row->user_count;
+    $user_counts[$row->role_name] = (int)$row->user_count;
   }
 
 
@@ -93,7 +99,8 @@
       <!-- <p class="card-title mb-0"><strong>Tambahkan 4 User Role (Staff, Manager, Keuangan, Direktur) untuk Memulai Hidup Baru! (<?= $total_user . '/' . $max_users_for_100_percent ?>)</strong></p> -->
       <?php
       foreach ($roles as $value => $label) {
-        if (isset($user_counts[$value]) && $user_counts[$value] >= 1) {
+        // if (isset($user_counts[$value]) && $user_counts[$value] >= 1) {
+        if (isset($user_counts[$label]) && $user_counts[$label] >= 1) {
           continue;
         }
         if ($active_p == 0) {
@@ -118,7 +125,7 @@
           $i = 1;
           $active_href = 0;
           foreach ($roles as $value => $label) {
-            if (isset($user_counts[$value]) && $user_counts[$value] >= 1) {
+            if (isset($user_counts[$label]) && $user_counts[$label] >= 1) {
               // $active_fishbone = 'active';
           ?>
               <a href="#">

@@ -360,6 +360,7 @@ class Perusahaan extends CI_Controller
       // "nip" => $this->input->post('nip'),
       "nip" => $this->input->post('username'),
       "level_jabatan" => $this->input->post('level_jabatan'),
+      "role_name" => $this->input->post('role_name'),
       "bagian" => $this->input->post('bagian'),
       "nama_jabatan" => $this->input->post('nama_jabatan'),
       "supervisi" => $this->input->post('supervisi'),
