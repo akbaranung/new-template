@@ -12,7 +12,7 @@
 
     tr>th {
         /* background-color: #e91f62; */
-        background-color: #3e51b4;
+        background-color: #3498db;
         color: white;
     }
 
