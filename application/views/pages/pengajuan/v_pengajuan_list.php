@@ -40,57 +40,55 @@
             </div>
           </div>
           <div class="table-responsive">
-            <div style="min-width: 951px;">
-              <table class="table table-sm table-hover" style="width: 100% !important;">
-                <thead style="background-color:#3498db;">
+            <table class="table table-sm table-hover" style="width: 100% !important;">
+              <thead style="background-color:#3498db;">
+                <tr>
+                  <th style="color: white;">No</th>
+                  <th style="color: white;">No Rekening</th>
+                  <th style="color: white;">Tanggal</th>
+                  <th style="color: white;">Total</th>
+                  <th style="color: white;">Posisi</th>
+                  <th style="color: white;">#</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php
+                if (empty($data_pengajuan)) { ?>
                   <tr>
-                    <th style="color: white;">No</th>
-                    <th style="color: white;">No Rekening</th>
-                    <th style="color: white;">Tanggal</th>
-                    <th style="color: white;">Total</th>
-                    <th style="color: white;">Posisi</th>
-                    <th style="color: white;">#</th>
+                    <td colspan="6" class="text-center">Data tidak ditemukan</td>
                   </tr>
-                </thead>
-                <tbody>
-                  <?php
-                  if (empty($data_pengajuan)) { ?>
+                  <?php } else {
+                  $nip = $this->session->userdata('nip');
+                  foreach ($data_pengajuan as $data) {
+                    if ($data->status == 0) {
+                      $color = '#e91e63';
+                    } else if ($data->status > 0 and $data->status < 4) {
+                      $color = '#3f51b5';
+                    } else if ($data->status == 4) {
+                      $color = '#34495e';
+                    } else if ($data->status == 5) {
+                      $color = '#95a5a6';
+                    } else {
+                      $color = '';
+                    }
+                  ?>
                     <tr>
-                      <td colspan="6" class="text-center">Data tidak ditemukan</td>
+                      <td><?= $data->kode; ?></td>
+                      <td><?= $data->no_rekening ?></td>
+                      <td><?= date('d/m/y', strtotime($data->tanggal)) ?></td>
+                      <td><?= rupiah($data->total); ?></td>
+                      <td style="background-color: <?= $color ?>; color:white"><?= $data->posisi; ?></td>
+                      <td>
+                        <?php if ($data->status == 0) { ?>
+                          <a href="<?= site_url('pengajuan/ubah/') . $data->kode ?>" class="btn btn-sm" style="background-color: #3498db; color:white;"><i class="fe fe-edit-3 fe-12"></i> Update</a>
+                        <?php } ?>
+                        <a href="<?= site_url('pengajuan/detail/') . $data->kode ?>" class="btn btn-sm" style="background-color: #3498db; color:white;"><i class="fe fe-eye fe-12"></i> Detail</a>
+                      </td>
                     </tr>
-                    <?php } else {
-                    $nip = $this->session->userdata('nip');
-                    foreach ($data_pengajuan as $data) {
-                      if ($data->status == 0) {
-                        $color = '#e91e63';
-                      } else if ($data->status > 0 and $data->status < 4) {
-                        $color = '#3f51b5';
-                      } else if ($data->status == 4) {
-                        $color = '#34495e';
-                      } else if ($data->status == 5) {
-                        $color = '#95a5a6';
-                      } else {
-                        $color = '';
-                      }
-                    ?>
-                      <tr>
-                        <td><?= $data->kode; ?></td>
-                        <td><?= $data->no_rekening ?></td>
-                        <td><?= date('d/m/y', strtotime($data->tanggal)) ?></td>
-                        <td><?= rupiah($data->total); ?></td>
-                        <td style="background-color: <?= $color ?>; color:white"><?= $data->posisi; ?></td>
-                        <td>
-                          <?php if ($data->status == 0) { ?>
-                            <a href="<?= site_url('pengajuan/ubah/') . $data->kode ?>" class="btn btn-sm" style="background-color: #3498db; color:white;"><i class="fe fe-edit-3 fe-12"></i> Update</a>
-                          <?php } ?>
-                          <a href="<?= site_url('pengajuan/detail/') . $data->kode ?>" class="btn btn-sm" style="background-color: #3498db; color:white;"><i class="fe fe-eye fe-12"></i> Detail</a>
-                        </td>
-                      </tr>
-                  <?php }
-                  } ?>
-                </tbody>
-              </table>
-            </div>
+                <?php }
+                } ?>
+              </tbody>
+            </table>
           </div>
 
 
