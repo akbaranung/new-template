@@ -23,7 +23,7 @@ class Cuti extends CI_Controller
         parent::__construct();
 
         //$this->load->model('m_login');
-        $this->load->model('M_cuti');
+        $this->load->model(['M_cuti', 'M_login']);
         $this->load->library(array('form_validation', 'session', 'user_agent', 'Api_Whatsapp', 'pdfgenerator'));
         $this->load->library('pagination');
         $this->load->database();
@@ -1508,41 +1508,50 @@ class Cuti extends CI_Controller
 
     public function resetCutiAll()
     {
-        // $id_perusahaan = $this->session->userdata('user_perusahaan_id');
-        // $this->db->set(['cuti' => 12]);
-        // $this->db->where(['id_perusahaan' => $id_perusahaan]);
-        // $this->db->update('users');
-        // $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
+        $password = $this->input->post('password');
+        $this->form_validation->set_rules('password', 'password', 'required');
 
-        // $data = [
-        //     'msg' => "Reset berhasil!",
-        //     'err' => false
-        // ];
+        if ($this->form_validation->run() == FALSE) {
+            $response = [
+                'success' => false,
+                'msg' => array_values($this->form_validation->error_array())[0]
+            ];
+        } else {
+            $data = $this->M_login->datapengguna($this->session->userdata('username'));
+            if (password_verify($password, $data->password)) {
+                $id_perusahaan = $this->session->userdata('user_perusahaan_id');
 
-        $id_perusahaan = $this->session->userdata('user_perusahaan_id');
+                $this->db->select('users.id'); // Select the user ID
+                $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
+                $this->db->where('t_cabang.id_perusahaan', $id_perusahaan);
+                $user_ids_to_update = $this->db->get('users')->result_array();
 
-        $this->db->select('users.id'); // Select the user ID
-        $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
-        $this->db->where('t_cabang.id_perusahaan', $id_perusahaan);
-        $user_ids_to_update = $this->db->get('users')->result_array();
+                // Check if any users were found
+                if (!empty($user_ids_to_update)) {
+                    // Step 2: Use the user IDs in the UPDATE statement
+                    // First, convert the array of objects into a simple array of IDs
+                    $ids = array_column($user_ids_to_update, 'id');
 
-        // Check if any users were found
-        if (!empty($user_ids_to_update)) {
-            // Step 2: Use the user IDs in the UPDATE statement
-            // First, convert the array of objects into a simple array of IDs
-            $ids = array_column($user_ids_to_update, 'id');
+                    // Perform the batch update
+                    $this->db->set('cuti', 12);
+                    $this->db->where_in('id', $ids); // Use where_in to update multiple IDs
+                    $this->db->update('users');
+                }
 
-            // Perform the batch update
-            $this->db->set('cuti', 12);
-            $this->db->where_in('id', $ids); // Use where_in to update multiple IDs
-            $this->db->update('users');
+                $response = [
+                    'success' => true,
+                    'msg' => "Reset berhasil!",
+                    'reload' => base_url('perusahaan/user')
+                ];
+            } else {
+                $response = [
+                    'success' => false,
+                    'msg' => 'Password salah!'
+                ];
+            }
         }
 
-        $data = [
-            'status' => "success",
-            'message' => "Reset berhasil!"
-        ];
-        echo json_encode($data);
+        echo json_encode($response);
     }
 
     public function export_cuti($filter = null)
