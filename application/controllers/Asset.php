@@ -607,7 +607,7 @@ class Asset extends CI_Controller
           'saldo_debit' => $saldo_debit,
           'saldo_kredit' => $saldo_kredit,
           'created_by' => $this->session->userdata('nip'),
-          'keterangan' => 'Jurnal balik nilai pembukuan asset ' . $nama . ' (' . $asset->kode . ')',
+          'keterangan' => 'Koreksi nilai pembukuan asset ' . $nama . ' (' . $asset->kode . ')',
           'id_cabang' => $this->session->userdata('kode_cabang')
         ];
 
@@ -705,69 +705,237 @@ class Asset extends CI_Controller
 
   public function hapus_buku($id)
   {
-    $asset = $this->M_asset->ambil_data_asset($id, $this->session->userdata('kode_cabang'));
 
-    if ($asset->sisa_umur < 1) {
+    $password = $this->input->post('password');
+    $keterangan = $this->input->post('keterangan');
+
+    $this->form_validation->set_rules('keterangan', 'keterangan', 'required');
+    $this->form_validation->set_rules('password', 'password', 'required');
+
+    if ($this->form_validation->run() == FALSE) {
       $response = [
         'success' => false,
-        'msg' => 'Sisa umur asset ini sudah 0'
+        'msg' => array_values($this->form_validation->error_array())[0]
       ];
 
       echo json_encode($response);
       return false;
     }
 
-    $totalPenyusutan = $asset->t_penyusutan + $asset->nilai_buku;
+    $asset = $this->M_asset->ambil_data_asset($id, $this->session->userdata('kode_cabang'));
+    $data = $this->M_login->datapengguna($this->session->userdata('username'));
 
-    $this->db->trans_start();
-    $this->cb->trans_start();
-    // Kredit 
-    $this->update_saldo_coa($asset->coa_penyusutan, $asset->nilai_buku, 'kredit');
+    if (password_verify($password, $data->password)) {
+      if ($asset->sisa_umur < 1) {
+        $response = [
+          'success' => false,
+          'msg' => 'Sisa umur asset ini sudah 0'
+        ];
 
-    // Debit
-    $this->update_saldo_coa($asset->coa_beban, $asset->nilai_buku, 'debit');
+        echo json_encode($response);
+        return false;
+      }
 
-    $saldo_kredit = $this->get_saldo_coa($asset->coa_penyusutan);
-    $saldo_debit = $this->get_saldo_coa($asset->coa_beban);
+      $totalPenyusutan = $asset->t_penyusutan + $asset->nilai_buku;
 
-    // create jurnal
-    $jurnal = [
-      'tanggal' => date('Y-m-d'),
-      'akun_debit' => $asset->coa_beban,
-      'jumlah_debit' => $asset->nilai_buku,
-      'akun_kredit' => $asset->coa_penyusutan,
-      'jumlah_kredit' => $asset->nilai_buku,
-      'saldo_debit' => $saldo_debit,
-      'saldo_kredit' => $saldo_kredit,
-      'created_by' => $this->session->userdata('nip'),
-      'id_cabang' => $this->session->userdata('kode_cabang'),
-      'keterangan' => 'Hapus nilai buku asset ' . $asset->nama_asset . ' (' . $asset->kode . ')'
-    ];
+      $this->db->trans_start();
+      $this->cb->trans_start();
 
-    $this->cb->insert('jurnal_neraca', $jurnal);
+      // Kredit 
+      $this->update_saldo_coa($asset->coa_penyusutan, $asset->nilai_buku, 'kredit');
 
-    // Upadate asset
-    $update = [
-      'nilai_buku' => 0,
-      't_penyusutan' => $totalPenyusutan,
-      'sisa_umur' => 0
-    ];
+      // Debit
+      $this->update_saldo_coa($asset->coa_beban, $asset->nilai_buku, 'debit');
 
-    $this->db->where('Id', $id);
-    $this->db->update('asset_list', $update);
+      $saldo_kredit = $this->get_saldo_coa($asset->coa_penyusutan);
+      $saldo_debit = $this->get_saldo_coa($asset->coa_beban);
 
-    $this->db->trans_complete();
-    $this->cb->trans_complete();
+      // create jurnal
+      $jurnal = [
+        'tanggal' => date('Y-m-d'),
+        'akun_debit' => $asset->coa_beban,
+        'jumlah_debit' => $asset->nilai_buku,
+        'akun_kredit' => $asset->coa_penyusutan,
+        'jumlah_kredit' => $asset->nilai_buku,
+        'saldo_debit' => $saldo_debit,
+        'saldo_kredit' => $saldo_kredit,
+        'created_by' => $this->session->userdata('nip'),
+        'id_cabang' => $this->session->userdata('kode_cabang'),
+        'keterangan' => 'Hapus nilai buku asset ' . $asset->nama_asset . ' (' . $asset->kode . ')'
+      ];
 
-    if ($this->cb->trans_status() === false or $this->db->trans_status() === false) {
-      $this->cb->trans_rollback();
-      $this->db->trans_rollback();
+      $this->cb->insert('jurnal_neraca', $jurnal);
+
+      // Upadate asset
+      $update = [
+        'nilai_buku' => 0,
+        't_penyusutan' => $totalPenyusutan,
+        'sisa_umur' => 0,
+        'kondisi' => 4
+      ];
+
+      $this->db->where('Id', $id);
+      $this->db->update('asset_list', $update);
+
+      //Tambah history Asset
+      $insert_history = [
+        'kode'    => $asset->kode,
+        'ruangan'  => $asset->ruangan,
+        'lokasi'  => $this->session->userdata('kode_cabang'),
+        'tanggal'  => date('Y-m-d'),
+        'remark'  => 'Hapus buku - ' . $keterangan,
+      ];
+
+      $this->db->insert('asset_history', $insert_history);
+
+
+
+      $this->db->trans_complete();
+      $this->cb->trans_complete();
+
+      if ($this->cb->trans_status() === false or $this->db->trans_status() === false) {
+        $this->cb->trans_rollback();
+        $this->db->trans_rollback();
+      } else {
+        $this->db->trans_commit();
+        $this->cb->trans_commit();
+        $response = [
+          'success' => true,
+          'msg' => 'Nilai buku asset ' . $asset->nama_asset . ' (' . $asset->kode . ') berhasil dihapus!'
+        ];
+      }
     } else {
-      $this->db->trans_commit();
-      $this->cb->trans_commit();
       $response = [
-        'success' => true,
-        'msg' => 'Nilai buku asset ' . $asset->nama_asset . ' (' . $asset->kode . ') berhasil dihapus!'
+        'success' => false,
+        'msg' => 'Password salah!'
+      ];
+    }
+    echo json_encode($response);
+  }
+
+  public function delete_asset($id)
+  {
+    $password = $this->input->post('password');
+
+    $this->form_validation->set_rules('password', 'password', 'required');
+
+    if ($this->form_validation->run() == FALSE) {
+      $response = [
+        'success' => false,
+        'msg' => array_values($this->form_validation->error_array())[0]
+      ];
+
+      echo json_encode($response);
+      return false;
+    }
+
+
+    $asset = $this->M_asset->ambil_data_asset($id, $this->session->userdata('kode_cabang'));
+    $data = $this->M_login->datapengguna($this->session->userdata('username'));
+
+    if (password_verify($password, $data->password)) {
+      $this->db->trans_start();
+      $this->cb->trans_start();
+
+
+      if ($asset->t_penyusutan > 0) {
+        // Debit
+        $this->update_saldo_coa($asset->coa_penyusutan, $asset->t_penyusutan, 'debit');
+
+        // kredit
+        $this->update_saldo_coa($asset->coa_beban, $asset->t_penyusutan, 'kredit');
+
+        $saldo_kredit = $this->get_saldo_coa($asset->coa_beban);
+        $saldo_debit = $this->get_saldo_coa($asset->coa_penyusutan);
+
+        // create jurnal
+        $jurnal = [
+          'tanggal' => date('Y-m-d'),
+          'akun_debit' => $asset->coa_penyusutan,
+          'jumlah_debit' => $asset->t_penyusutan,
+          'akun_kredit' => $asset->coa_beban,
+          'jumlah_kredit' => $asset->t_penyusutan,
+          'saldo_debit' => $saldo_debit,
+          'saldo_kredit' => $saldo_kredit,
+          'created_by' => $this->session->userdata('nip'),
+          'id_cabang' => $this->session->userdata('kode_cabang'),
+          'keterangan' => 'Pengembalian nilai penyusutan hapus asset ' . $asset->nama_asset . ' (' . $asset->kode . ')'
+        ];
+
+        $this->cb->insert('jurnal_neraca', $jurnal);
+
+        // Debit
+        $this->update_saldo_coa($asset->coa_kas, $asset->nilai_buku, 'debit');
+
+        // kredit
+        $this->update_saldo_coa($asset->coa_asset, $asset->nilai_buku, 'kredit');
+
+        $saldo_kredit = $this->get_saldo_coa($asset->coa_asset);
+        $saldo_debit = $this->get_saldo_coa($asset->coa_kas);
+
+        // create jurnal
+        $jurnal = [
+          'tanggal' => date('Y-m-d'),
+          'akun_debit' => $asset->coa_kas,
+          'jumlah_debit' => $asset->nilai_buku,
+          'akun_kredit' => $asset->coa_asset,
+          'jumlah_kredit' => $asset->nilai_buku,
+          'saldo_debit' => $saldo_debit,
+          'saldo_kredit' => $saldo_kredit,
+          'created_by' => $this->session->userdata('nip'),
+          'id_cabang' => $this->session->userdata('kode_cabang'),
+          'keterangan' => 'Pengembalian nilai buku hapus asset ' . $asset->nama_asset . ' (' . $asset->kode . ')'
+        ];
+
+        $this->cb->insert('jurnal_neraca', $jurnal);
+      } else {
+        // Debit
+        $this->update_saldo_coa($asset->coa_kas, $asset->harga, 'debit');
+
+        // kredit
+        $this->update_saldo_coa($asset->coa_asset, $asset->harga, 'kredit');
+
+        $saldo_kredit = $this->get_saldo_coa($asset->coa_asset);
+        $saldo_debit = $this->get_saldo_coa($asset->coa_kas);
+
+        // create jurnal
+        $jurnal = [
+          'tanggal' => date('Y-m-d'),
+          'akun_debit' => $asset->coa_kas,
+          'jumlah_debit' => $asset->harga,
+          'akun_kredit' => $asset->coa_asset,
+          'jumlah_kredit' => $asset->harga,
+          'saldo_debit' => $saldo_debit,
+          'saldo_kredit' => $saldo_kredit,
+          'created_by' => $this->session->userdata('nip'),
+          'id_cabang' => $this->session->userdata('kode_cabang'),
+          'keterangan' => 'Pengembalian harga perolehan hapus asset ' . $asset->nama_asset . ' (' . $asset->kode . ')'
+        ];
+
+        $this->cb->insert('jurnal_neraca', $jurnal);
+      }
+
+      $this->db->where('Id', $id);
+      $this->db->delete('asset_list');
+
+      $this->db->trans_complete();
+      $this->cb->trans_complete();
+
+      if ($this->cb->trans_status() === false or $this->db->trans_status() === false) {
+        $this->cb->trans_rollback();
+        $this->db->trans_rollback();
+      } else {
+        $this->db->trans_commit();
+        $this->cb->trans_commit();
+        $response = [
+          'success' => true,
+          'msg' => 'Asset ' . $asset->nama_asset . ' (' . $asset->kode . ') berhasil dihapus!'
+        ];
+      }
+    } else {
+      $response = [
+        'success' => false,
+        'msg' => 'Password salah!'
       ];
     }
 
@@ -898,11 +1066,19 @@ class Asset extends CI_Controller
             $hargaPerolehan[] = $fu['harga'];
             $nilaiBuku[] = $fu['nilai_buku'] - $nilaiPenyusutan[$key];
 
+            if ($fu['sisa_umur'] == 1) {
+              $nominal = $fu['nilai_buku'] - 1;
+              $nilai_buku = 1;
+            } else {
+              $nominal = $fu['penyusutan_bulan'];
+              $nilai_buku = $nilaiBuku[$key];
+            }
+
             // Kredit 
-            $this->update_saldo_coa($fu['coa_penyusutan'], $fu['penyusutan_bulan'], 'kredit');
+            $this->update_saldo_coa($fu['coa_penyusutan'], $nominal, 'kredit');
 
             // Debit
-            $this->update_saldo_coa($fu['coa_beban'], $fu['penyusutan_bulan'], 'debit');
+            $this->update_saldo_coa($fu['coa_beban'], $nominal, 'debit');
 
             $saldo_kredit = $this->get_saldo_coa($fu['coa_penyusutan']);
             $saldo_debit = $this->get_saldo_coa($fu['coa_beban']);
@@ -911,9 +1087,9 @@ class Asset extends CI_Controller
             $jurnal = [
               'tanggal' => date('Y-m-d'),
               'akun_debit' => $fu['coa_beban'],
-              'jumlah_debit' => $fu['penyusutan_bulan'],
+              'jumlah_debit' => $nominal,
               'akun_kredit' => $fu['coa_penyusutan'],
-              'jumlah_kredit' => $fu['penyusutan_bulan'],
+              'jumlah_kredit' => $nominal,
               'saldo_debit' => $saldo_debit,
               'saldo_kredit' => $saldo_kredit,
               'created_by' => $this->session->userdata('nip'),
@@ -928,7 +1104,7 @@ class Asset extends CI_Controller
             $this->db->where('cabang', $this->session->userdata('kode_cabang'));
             $updateAsset = $this->db->update('asset_list', [
               't_penyusutan' => $totalPenyusutan[$key],
-              'nilai_buku' => $nilaiBuku[$key],
+              'nilai_buku' => $nilai_buku,
               'sisa_umur' => $fu['sisa_umur'] - 1
             ]);
 
@@ -953,7 +1129,7 @@ class Asset extends CI_Controller
               'coa_penyusutan' => $fu['coa_penyusutan'],
               'penyusutan_per_bulan' => $fu['penyusutan_bulan'],
               'total_penyusutan' => $totalPenyusutan[$key],
-              'nilai_buku' => $nilaiBuku[$key],
+              'nilai_buku' => $nilai_buku,
               'sisa_umur' => $fu['sisa_umur'] - 1,
               'cabang' => $this->session->userdata('kode_cabang')
             ];

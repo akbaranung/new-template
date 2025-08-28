@@ -64,8 +64,104 @@
                       <td><?= $lokasi->nama_cabang ?></td>
                       <td><?= $data->nama_jenis ?></td>
                       <td>
-                        <a href="<?= site_url('asset/detail/') . $data->Id ?>" class="btn btn-sm" style="background-color: #3498db; color:white;"><i class="fe fe-eye fe-12"></i> Detail</a>
-                        <a href="<?= site_url('asset/hapus_buku/') . $data->Id ?>" class="btn btn-sm btn-danger btn-hapus-buku"><i class="fe fe-trash fe-12"></i> Hapus Buku</a>
+                        <a href="<?= site_url('asset/detail/') . $data->Id ?>" class="btn btn-sm btn-primary"><i class="fe fe-eye fe-12"></i> Detail</a>
+                        <a href="#" class="btn btn-sm" data-toggle="modal" data-target="#hapusBuku<?= $data->Id ?>" style="background-color: #e91e63;color:white;"><i class="fe fe-trash fe-12"></i> Hapus Buku</a>
+                        <a href="#" class="btn btn-sm" data-toggle="modal" data-target="#hapusAset<?= $data->Id ?>" style="background-color: #34495e;color:white;"><i class="fe fe-trash fe-12"></i> Hapus Aset</a>
+                        <!-- Modal Hapus Buku -->
+                        <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="hapusBuku<?= $data->Id ?>">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h4 class="modal-title" id="myModalLabel">
+                                  Hapus Buku
+                                </h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">×</span>
+                                </button>
+                              </div>
+                              <form class="form-horizontal form-label-left" method="POST" action="<?= base_url('asset/hapus_buku/') . $data->Id ?>">
+                                <div class="modal-body">
+                                  <p><strong>Masukan keterangan atau asalan hapus buku dan password anda terlebih dahulu untuk memproses hapus buku!</strong></p>
+                                  <div class="form-group row">
+                                    <div class="col-12">
+                                      <label for="form-label">Kode Aset</label>
+                                      <input type="text" name="kode" id="kode" class="form-control" value="<?= $data->kode ?>" readonly>
+                                    </div>
+                                  </div>
+                                  <div class="form-group row">
+                                    <div class="col-12">
+                                      <label for="form-label">Nama Aset</label>
+                                      <input type="text" name="nama" id="nama" class="form-control" value="<?= $data->nama_asset ?>" readonly>
+                                    </div>
+                                  </div>
+
+                                  <div class="form-group row">
+                                    <div class="col-12">
+                                      <label for="form-label">Keterangan</label>
+                                      <input type="text" name="keterangan" id="keterangan" class="form-control">
+                                    </div>
+                                  </div>
+                                  <div class="form-group row">
+                                    <div class="col-12">
+                                      <label for="form-label">Password</label>
+                                      <input type="password" name="password" id="password" class="form-control">
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                  <button type="submit" class="btn btn-primary btn-submit">
+                                    Proses
+                                  </button>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- Modal Hapus asset -->
+                        <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="hapusAset<?= $data->Id ?>">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h4 class="modal-title" id="myModalLabel">
+                                  Hapus Aset
+                                </h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                  <span aria-hidden="true">×</span>
+                                </button>
+                              </div>
+                              <form class="form-horizontal form-label-left" method="POST" action="<?= base_url('asset/delete_asset/') . $data->Id ?>">
+                                <div class="modal-body">
+                                  <p><strong>Masukan password anda terlebih dahulu untuk memproses hapus asset!</strong></p>
+                                  <div class="form-group row">
+                                    <div class="col-12">
+                                      <label for="form-label">Kode Aset</label>
+                                      <input type="text" name="kode" id="kode" class="form-control" value="<?= $data->kode ?>" readonly>
+                                    </div>
+                                  </div>
+                                  <div class="form-group row">
+                                    <div class="col-12">
+                                      <label for="form-label">Nama Aset</label>
+                                      <input type="text" name="nama" id="nama" class="form-control" value="<?= $data->nama_asset ?>" readonly>
+                                    </div>
+                                  </div>
+                                  <div class="form-group row">
+                                    <div class="col-12">
+                                      <label for="form-label">Password</label>
+                                      <input type="password" name="password" id="password" class="form-control">
+                                    </div>
+                                  </div>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                  <button type="submit" class="btn btn-primary btn-submit">
+                                    Proses
+                                  </button>
+                                </div>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
                       </td>
                     </tr>
                 <?php }
