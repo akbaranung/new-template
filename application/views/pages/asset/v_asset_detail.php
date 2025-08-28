@@ -89,7 +89,7 @@
                   <td>Rp.<?= number_format($data_asset->nilai_buku) ?></td>
                 </tr>
                 <tr>
-                  <th colspan="3"><button class="btn btn-success" data-toggle="modal" data-target="#updateAset">Update</button></th>
+                  <th colspan="3"><button class="btn" data-toggle="modal" data-target="#updateAset" style="background-color: #e91e63;color:white;">Update</button></th>
                 </tr>
               </table>
             </div>
