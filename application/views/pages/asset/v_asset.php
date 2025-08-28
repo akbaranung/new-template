@@ -64,9 +64,9 @@
                       <td><?= $lokasi->nama_cabang ?></td>
                       <td><?= $data->nama_jenis ?></td>
                       <td>
-                        <a href="<?= site_url('asset/detail/') . $data->Id ?>" class="btn btn-sm" style="background-color: #3498db; color:white;"><i class="fe fe-eye fe-12"></i> Detail</a>
-                        <a href="#" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#hapusBuku<?= $data->Id ?>"><i class="fe fe-trash fe-12"></i> Hapus Buku</a>
-                        <a href="#" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#hapusAset<?= $data->Id ?>"><i class="fe fe-trash fe-12"></i> Hapus Aset</a>
+                        <a href="<?= site_url('asset/detail/') . $data->Id ?>" class="btn btn-sm btn-primary"><i class="fe fe-eye fe-12"></i> Detail</a>
+                        <a href="#" class="btn btn-sm" data-toggle="modal" data-target="#hapusBuku<?= $data->Id ?>" style="background-color: #e91e63;color:white;"><i class="fe fe-trash fe-12"></i> Hapus Buku</a>
+                        <a href="#" class="btn btn-sm" data-toggle="modal" data-target="#hapusAset<?= $data->Id ?>" style="background-color: #34495e;color:white;"><i class="fe fe-trash fe-12"></i> Hapus Aset</a>
                         <!-- Modal Hapus Buku -->
                         <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="hapusBuku<?= $data->Id ?>">
                           <div class="modal-dialog">
