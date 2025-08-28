@@ -27,6 +27,7 @@ class M_invoice extends CI_Model
 
         if ($keyword) {
             $this->cb->like('no_invoice', $keyword);
+            $this->cb->or_like('total_nonpph', $keyword);
         }
 
         if ($customer_id) {
@@ -52,6 +53,7 @@ class M_invoice extends CI_Model
     {
         if ($keyword) {
             $this->cb->like('no_invoice', $keyword);
+            $this->cb->or_like('total_nonpph', $keyword);
         }
 
         if ($customer_id) {

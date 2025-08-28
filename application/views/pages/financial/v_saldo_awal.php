@@ -19,7 +19,7 @@
             </div>
           </form> -->
           <div class="table-responsive mt-3">
-            <table id="datatable" class="table table-sm table-stripped" style="width:100%">
+            <table id="" class="table table-sm table-stripped" style="width:100%">
               <thead class="thead-dark">
                 <tr>
                   <th class="text-center">No.</th>

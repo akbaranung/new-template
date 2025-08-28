@@ -41,18 +41,18 @@
               </div>
               <div class="col-md-5 col-xs-12">
                 <div class="form-group">
-                  <input type="text" name="keyword" id="keyword" class="form-control" placeholder="Masukkan nomor invoice">
+                  <input type="text" name="keyword" id="keyword" class="form-control" placeholder="Masukkan nomor invoice" value="<?= $this->input->post('keyword') ?>">
                 </div>
               </div>
               <div class="col-md-2 col-xs-12">
                 <button type="submit" class="btn btn-primary">Cari</button>
-                <a href="<?= base_url('financial/invoice') ?>" class="btn btn-warning">Reset</a>
+                <a href="<?= base_url('financial/invoice') ?>" class="btn btn-warning text-white">Reset</a>
               </div>
             </div>
           </form>
           <div class="col-md-1"></div>
           <div class="table-responsive">
-            <table id="datatable" class="table table-sm table-striped table-bordered" style="width:100%">
+            <table id="" class="table table-sm table-striped table-bordered" style="width:100%">
               <thead class="thead-dark">
                 <tr>
                   <th>No.</th>
