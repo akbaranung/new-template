@@ -785,17 +785,17 @@
       var color = state.element.dataset.posisi == "AKTIVA" ? colorAktiva : colorPasiva;
       var sign = state.element.dataset.posisi == "AKTIVA" ? signAktiva : signPasiva;
 
-      var $state = $('<span style="background-color: ' + color + ';"><strong>' + state.text + ' ' + sign + '</strong></span>');
+      var $state = $('<span style="background-color: ' + color + ';"><strong style="color: #fff;">' + state.text + ' ' + sign + '</strong></span>');
 
       return $state;
     };
 
     function formatStateDebit(state) {
-      return formatState(state, '#2ecc71', '#ff7675', '(+)', '(-)');
+      return formatState(state, '#3f51b5', '#e81f63', '(+)', '(-)');
     }
 
     function formatStateKredit(state) {
-      return formatState(state, '#ff7675', '#2ecc71', '(-)', '(+)');
+      return formatState(state, '#e81f63', '#3f51b5', '(-)', '(+)');
     }
 
     $('#neraca_debit').select2({
