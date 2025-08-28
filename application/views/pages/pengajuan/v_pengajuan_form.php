@@ -59,7 +59,7 @@
             <div class="row">
               <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="table-responsive">
-                  <table class="table table-sm" style="min-width: 952px;">
+                  <table class="table table-sm">
                     <thead class="thead-dark">
                       <tr>
                         <th>Uraian</th>
@@ -76,8 +76,8 @@
                         <td><input type="text" class="form-control price" name="price[]" id="price"></td>
                         <td><input type="text" class="form-control subtotal" name="subtotal[]" id="subtotal" readonly></td>
                         <td>
-                          <span class="btn btn-success add-row btn-sm"><i class="fe fe-plus-square fe-12"></i></span>
-                          <span class="btn btn-danger hapus-row btn-sm"><i class="fe fe-trash-2 fe-12"></i></span>
+                          <span class="btn btn-primary add-row btn-sm"><i class="fe fe-plus-square fe-12"></i></span>
+                          <span class="btn btn-pink hapus-row btn-sm"><i class="fe fe-trash-2 fe-12"></i></span>
                         </td>
                       </tr>
                     </tbody>
