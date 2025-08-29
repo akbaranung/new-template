@@ -88,16 +88,7 @@ class Auth extends CI_Controller
 
         // if ($data->ns_address != 'ns1.bariskode.com') {
         // }
-        $kode_nama = $data->bagian;
-        if (!empty($kode_nama)) {
-          $sql = "select kode_nama FROM bagian WHERE Id = $kode_nama";
-          $query = $this->db->query($sql);
-          $res2 = $query->result_array();
-          $result = $res2[0]['kode_nama'];
-          $kod = $result;
-        } else {
-          $kod = '';
-        }
+
 
 
         $this->session->set_userdata('isLogin', TRUE);
@@ -109,7 +100,6 @@ class Auth extends CI_Controller
         $this->session->set_userdata('kd_agent', $data->kd_agent);
         $this->session->set_userdata('level_jabatan', $data->level_jabatan);
         $this->session->set_userdata('bagian', $data->bagian);
-        $this->session->set_userdata('kode_nama', $kod);
         $this->session->set_userdata('kode_cabang', $data->id_cabang);
         $this->session->set_userdata('is_token', $data->token);
 
@@ -126,6 +116,18 @@ class Auth extends CI_Controller
             'reload' => base_url('auth/register_perusahaan')
           ];
         } else {
+          $kode_nama = $data->bagian;
+          if (!empty($kode_nama)) {
+            $sql = "select kode_nama FROM bagian WHERE Id = $kode_nama";
+            $query = $this->db->query($sql);
+            $res2 = $query->result_array();
+            $result = $res2[0]['kode_nama'];
+            $kod = $result;
+          } else {
+            $kod = '';
+          }
+
+          $this->session->set_userdata('kode_nama', $kod);
           $this->session->set_userdata('user_perusahaan_id', $setting->Id);
           $this->session->set_userdata('icon', $setting->logo);
           $this->session->set_userdata('nama_singkat', $setting->nama_singkat);
