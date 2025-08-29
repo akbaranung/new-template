@@ -13,10 +13,10 @@
     }
   }
 
-  .bagian-td {
-    /* Default alignment for mobile */
-    /* margin-left: -120px; */
-  }
+  /* .bagian-td { */
+  /* Default alignment for mobile */
+  /* margin-left: -120px; */
+  /* } */
 
   @media (min-width: 768px) {
     .bagian-td {

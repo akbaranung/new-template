@@ -2266,6 +2266,22 @@ class Financial extends CI_Controller
     $this->load->view('index', $data);
   }
 
+  public function search_coa_bb()
+  {
+    $search_term = $this->input->get('q'); // Get the search term from Select2
+
+    $this->cb->select('no_bb as id, CONCAT(no_bb, " - ", nama_perkiraan) as text');
+    $this->cb->from('v_coabb_all');
+    if (!empty($search_term)) {
+      $this->cb->like('no_bb', $search_term); // Search by no_bb
+      $this->cb->or_like('nama_perkiraan', $search_term); // Or by nama_coa_bb
+    }
+    $query = $this->cb->get();
+
+    $results = $query->result_array(); // Get results as an array of associative arrays
+
+    echo json_encode($results); // Encode results as JSON and output
+  }
 
   public function reset_coa()
   {
