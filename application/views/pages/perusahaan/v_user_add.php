@@ -400,7 +400,11 @@
                                             if ($this->uri->segment(4) == "Direktur") {
                                               echo "Checked";
                                             }
-                                          } else if ($parent_menu->menu_name == "Menu Admin" || $parent_menu->menu_name == "Menu Perusahaan") {
+                                          } else if ($child_menu->menu_name == "Neraca Konsolidasi") {
+                                            if ($this->uri->segment(4) == "Direktur") {
+                                              echo "Checked";
+                                            }
+                                          } else if ($parent_menu->menu_name == "Menu Admin" || $parent_menu->menu_name == "Menu Perusahaan" || $parent_menu->menu_name == "Settings") {
                                           } else if ($this->uri->segment(4) == "Manager" && $parent_menu->menu_name == "Financial") {
                                           } else if ($this->uri->segment(4) == "Staff" && $parent_menu->menu_name == "Financial") {
                                           } else if ($this->session->userdata('is_premium') && $parent_menu->premium == 1) {
