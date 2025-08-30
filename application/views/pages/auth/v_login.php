@@ -208,8 +208,8 @@
             // loginForm.setAttribute('action', 'https://' + response.ns_address + '/auth/login');
             // loginForm.setAttribute('action', url + '/auth/login');
             // loginForm.setAttribute('action', 'http://localhost/new-template/auth/login');
-            // window.location.href = 'https://' + response.ns_address + '/auth/login_continue/' + username;
-            window.location.href = '<?= base_url('/auth/login_continue/') ?>' + username; // Adjust this URL as needed
+            window.location.href = 'https://' + response.ns_address + '/auth/login_continue/' + username;
+            // window.location.href = '<?= base_url('/auth/login_continue/') ?>' + username; // Adjust this URL as needed
             // loginForm.setAttribute('action', );
 
 

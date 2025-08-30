@@ -155,9 +155,15 @@
       <form class="form-horizontal form-label-left" method="POST" action="<?= base_url('financial/tambahCoa') ?>">
         <div class="modal-body">
           <div class="form-group row">
-            <div class="col-12">
+            <!-- <div class="col-12">
               <label for="no_bb" class="form-label">No. BB</label>
               <input type="text" name="no_bb" id="no_bb" class="form-control">
+            </div> -->
+            <div class="col-12">
+              <label for="no_bb" class="form-label">No. BB</label>
+              <select name="no_bb" id="no_bb" class="form-control-select">
+                <!-- Options will be loaded dynamically by Select2 -->
+              </select>
             </div>
             <div class="col-12 mt-3">
               <label for="no_sbb" class="form-label">No. SBB</label>
