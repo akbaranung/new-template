@@ -590,8 +590,8 @@ class Financial extends CI_Controller
     $data['title'] = 'Laba rugi per tanggal ' . format_indo($tanggal);
     $data['utility'] = $this->db->get('utility')->row_array();
     $data['pages_script'] = 'script/financial/s_financial';
-    $data['pages'] = 'pages/financial/v_laba_rugi_by_date';
     $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
+    $data['pages'] = 'pages/financial/v_laba_rugi_by_date';
 
     if ($button_sbm == "excel") {
       require_once(APPPATH . 'libraries/PHPExcel/IOFactory.php');
@@ -855,8 +855,11 @@ class Financial extends CI_Controller
       // $this->session->set_flashdata('message_error', 'Closing bulan ' . format_indo($periode) . ' tidak ditemukan');
       $this->session->set_flashdata('message_error', 'Saldo Awal bulan ' . format_indo($periode) . ' belum terbentuk');
     }
-    $data['title'] = 'Neraca per tanggal ' . format_indo($tanggal);
     $data['pages'] = 'pages/financial/v_neraca_bb_by_date';
+    $data['title'] = 'Neraca Buku Besar' . format_indo($tanggal);
+    $data['utility'] = $this->db->get('utility')->row_array();
+    $data['pages_script'] = 'script/financial/s_financial';
+    $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
 
     if ($button_sbm == "excel") {
       require_once(APPPATH . 'libraries/PHPExcel/IOFactory.php');
@@ -936,7 +939,7 @@ class Financial extends CI_Controller
       $objWriter->save('php://output');
       exit;
     } else {
-      $this->load->view('neraca_bb_by_date', $data);
+      $this->load->view('index', $data);
     }
   }
 
@@ -1058,6 +1061,9 @@ class Financial extends CI_Controller
 
     $data['title'] = 'Laba rugi BB per tanggal ' . format_indo($tanggal);
     $data['pages'] = 'pages/financial/v_labarugi_bb_by_date';
+    $data['utility'] = $this->db->get('utility')->row_array();
+    $data['pages_script'] = 'script/financial/s_financial';
+    $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
 
     if ($button_sbm == "excel") {
       require_once(APPPATH . 'libraries/PHPExcel/IOFactory.php');
@@ -1134,7 +1140,7 @@ class Financial extends CI_Controller
       $objWriter->save('php://output');
       exit;
     } else {
-      $this->load->view('labarugi_bb_by_date', $data);
+      $this->load->view('index', $data);
     }
   }
 
