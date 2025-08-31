@@ -1,25 +1,19 @@
 <script>
+  const allCoaBb = <?= json_encode($all_coa_bb) ?>;
+
   $(document).ready(function() {
     $('#no_bb').select2({
       placeholder: 'Cari Kode BB...',
-      minimumInputLength: 2, // Minimum characters to type before searching
-      allowClear: true, // Allow clearing the selected value
-      ajax: {
-        url: '<?= base_url("financial/search_coa_bb") ?>', // **IMPORTANT: Replace with your actual PHP endpoint**
-        dataType: 'json',
-        delay: 250, // Delay in milliseconds before the request is sent
-        data: function(params) {
-          return {
-            q: params.term // Search term
-          };
-        },
-        processResults: function(data) {
-          // `data` should be an array of objects like {id: 'kode_bb', text: 'kode_bb - nama_coa_bb'}
-          return {
-            results: data
-          };
-        },
-        cache: true
+      minimumInputLength: 0, // Set to 0 to show all options initially
+      allowClear: true,
+      data: allCoaBb, // Use the pre-loaded data
+      templateResult: function(option) {
+        // Return the text directly for normal display
+        return option.text;
+      },
+      templateSelection: function(option) {
+        // Return the text directly for selected display
+        return option.text;
       }
     });
   });

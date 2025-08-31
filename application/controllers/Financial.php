@@ -2248,6 +2248,13 @@ class Financial extends CI_Controller
     $beban = $this->M_coa->get_sum_coa_activa_coalr_by_cabang();
 
     $laba = $pendapatan->nominal - $beban->nominal;
+
+
+    $this->cb->select('no_bb as id, CONCAT(no_bb, " - ", nama_perkiraan) as text');
+    $this->cb->from('v_coabb_all');
+    $query = $this->cb->get();
+    $all_coa_bb = $query->result_array();
+
     $data = [
       'activa' => $activa,
       'pasiva' => $pasiva,
@@ -2263,6 +2270,7 @@ class Financial extends CI_Controller
       'count_inbox2' => $result2,
       'keyword' => $keyword,
       'title' => "List CoA",
+      'all_coa_bb' => $all_coa_bb,
     ];
 
     $data['pages'] = "pages/financial/v_list_coa";
