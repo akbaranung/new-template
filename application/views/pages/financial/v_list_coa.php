@@ -69,7 +69,7 @@
                     <?php
                     if ($is_sawal == 0 && $cabang_now == $this->session->userdata('kode_cabang')) {
                     ?>
-                      <button class="btn btn-primary text-white" data-toggle="modal" data-target="#saldoAwal" type="button" style="color: white;">Buat Saldo Awal</button>
+                      <button class="btn btn-pink text-white" data-toggle="modal" data-target="#saldoAwal" type="button" style="color: white;">Buat Saldo Awal</button>
                     <?php
                     }
                     ?>
