@@ -65,7 +65,13 @@
                     <button class="btn btn-secondary" type="submit">Go!</button>
                     <a href="<?= base_url('financial/reset_coa') ?>" class="btn btn-warning" style="color:white;">Reset</a>
                     <button class="btn btn-primary text-white" data-toggle="modal" data-target="#tambahCoa" type="button" style="color: white;">Buat CoA</button>
-                    <button class="btn btn-primary text-white" data-toggle="modal" data-target="#TemplateCoa" type="button" style="color: white;">Ambil CoA</button>
+                    <?php
+                    if ($is_semua_coa == 0 && $cabang_now == $this->session->userdata('kode_cabang')) {
+                    ?>
+                      <button class="btn btn-primary text-white" data-toggle="modal" data-target="#TemplateCoa" type="button" style="color: white;">Ambil CoA</button>
+                    <?php
+                    }
+                    ?>
                     <?php
                     if ($is_sawal == 0 && $cabang_now == $this->session->userdata('kode_cabang')) {
                     ?>
