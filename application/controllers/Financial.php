@@ -1783,7 +1783,7 @@ class Financial extends CI_Controller
       'opsi_termin' => isset($opsi_termin) ? $opsi_termin : '0',
       'status_pendapatan' => '1',
       'slug' => $slug,
-      'id_cabang' => $this->session->userdata('kode_cabang'),,
+      'id_cabang' => $this->session->userdata('kode_cabang'),
       'id_company' => $this->session->userdata('user_perusahaan_id')
     ];
 
@@ -1818,7 +1818,7 @@ class Financial extends CI_Controller
           'qty' => $jumlah,
           'total_amount' => $total_amount,
           'created_by' => $id_user,
-          'id_cabang' => $this->session->userdata('kode_cabang'),,
+          'id_cabang' => $this->session->userdata('kode_cabang'),
           'id_company' => $this->session->userdata('user_perusahaan_id')
         ];
       }
@@ -2811,7 +2811,7 @@ class Financial extends CI_Controller
           'nama_perkiraan' => $nama_coa,
           'posisi' => $posisi,
           'nominal' => $this->_parse_rupiah($saldo_awal),
-          'id_cabang' => $this->session->userdata('kode_cabang'),,
+          'id_cabang' => $this->session->userdata('kode_cabang'),
           'id_company' => $this->session->userdata('user_perusahaan_id')
         ];
       } else if ($substr_coa == "4" || $substr_coa == "5" || $substr_coa == "6" || $substr_coa == "7" || $substr_coa == "8" || $substr_coa == "9") {
@@ -2822,7 +2822,7 @@ class Financial extends CI_Controller
           'nama_perkiraan' => $nama_coa,
           'posisi' => $posisi,
           'nominal' => $this->_parse_rupiah($saldo_awal),
-          'id_cabang' => $this->session->userdata('kode_cabang'),,
+          'id_cabang' => $this->session->userdata('kode_cabang'),
           'id_company' => $this->session->userdata('user_perusahaan_id')
         ];
       } else {
