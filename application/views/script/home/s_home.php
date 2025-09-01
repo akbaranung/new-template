@@ -242,13 +242,15 @@
                 daysRemaining = 0; // Set to 0 for display purposes if negative
                 percentageRemaining = 0; // 0% remaining
                 premiumStatusText.innerHTML = '<span class="text-danger">Premium Telah Berakhir!</span>';
-                premiumDaysRemainingText.textContent = `<?= tgl_indo(date('Y-m-d', strtotime($perusahaan->expired_day))) ?>`;
+
+                premiumDaysRemainingText.textContent = `<?= tgl_indo(date('Y-m-d', strtotime($perusahaan->expired_day ?? 0))) ?>`;
+
 
             } else {
                 // Calculate percentage remaining relative to total duration
                 percentageRemaining = (daysRemaining / totalDurationDays) * 100;
                 // premiumStatusText.textContent = `Expires on: ${endDate.toLocaleDateString()}`;
-                premiumStatusText.textContent = `<?= tgl_indo(date('Y-m-d', strtotime($perusahaan->expired_day))) ?>`;
+                premiumStatusText.textContent = `<?= tgl_indo(date('Y-m-d', strtotime($perusahaan->expired_day ?? 0))) ?>`;
                 // Use Math.ceil to round up days remaining, as even a fraction of a day means it's still "today"
                 premiumDaysRemainingText.textContent = `${Math.ceil(daysRemaining)} hari tersisa`;
             }

@@ -15,23 +15,27 @@
     <div class="col-12">
       <h1 class="page-title">TELLO CARD LIST</h1>
       <div class="card shadow mb-4">
-        <div class="card-header text-center">
-          <!-- <p class="card-title"><strong>Card List</strong></p> -->
-          <p class="btn btn-primary" style="width: fit-content;"><?= $task->name ?></p>
-          <p><?= $task->comment ?></p>
-          <p>
-            Member Name :
-            <?php
-            $data_nip = explode(';', $task->member);
-            foreach ($data_nip as $x) {
-              if ($x != '') {
-                $this->db->where('nip', $x);
-                $get = $this->db->get('users')->row_array();
-                echo $get['nama'] . ', ';
+        <div class="card-header d-flex flex-column justify-content-center align-items-center text-center">
+          <div class="alert alert-primary rounded shadow w-100 d-inline-block">
+            <!-- <p class="card-title"><strong>Card List</strong></p> -->
+            <p><?= $task->name ?></p>
+            <p class="mb-0"><?= $task->comment ?></p>
+          </div>
+          <div class="alert alert-pink rounded shadow w-100 d-inline-block">
+            <p>
+              Member Name :
+              <?php
+              $data_nip = explode(';', $task->member);
+              foreach ($data_nip as $x) {
+                if ($x != '') {
+                  $this->db->where('nip', $x);
+                  $get = $this->db->get('users')->row_array();
+                  echo $get['nama'] . ', ';
+                }
               }
-            }
-            ?>
-          </p>
+              ?>
+            </p>
+          </div>
         </div>
         <div class="card-body">
           <div class="row">
@@ -60,7 +64,12 @@
                 <?php } else {
                 $nip = $this->session->userdata('nip');
                 foreach ($task_detail as $data) {
-                  $user_read = $this->db->select('id_detail')->from('task_detail')->where('id_detail', $data->id_detail)->like('read', $nip, 'both')->get()->num_rows();
+                  $user_read = $this->db->select('id_detail')->from('task_detail')
+                    ->where('id_detail', $data->id_detail)
+                    // ->like('read', $nip, 'both')
+                    // ->like('CONCAT(";", read, ";")', ';' . $nip . ';', 'both')
+                    ->where("CONCAT(' ', `read`, ' ') LIKE '% " . $nip . " %'")
+                    ->get()->num_rows();
                   if ($data->activity == '1') {
                     // $activity = "<p class='badge badge-pill badge-success'>Open</p>";;
                     $activity = "Open";
@@ -82,7 +91,7 @@
                     <td class="open-task-detail" onclick="openCard(<?= $data->id_detail ?>)"><?= $data->due_date; ?></td>
                     <td class="open-task-detail <?= $background_class ?>" onclick="openCard(<?= $data->id_detail ?>)"><?= $activity ?></td>
                     <td>
-                      <a href="<?= site_url('task/card_edit/') . $data->id_task . '/' . $data->id_detail ?>" class="btn btn-outline-success"><span class="fe fe-edit-3"></span></a>
+                      <a href="<?= site_url('task/card_edit/') . $data->id_task . '/' . $data->id_detail ?>" class="btn btn-outline-pink"><span class="fe fe-edit-3"></span></a>
                       <?php if (empty($user_read)) { ?>
                         <span class="badge badge-pill badge-danger">New</span>
                       <?php } ?>

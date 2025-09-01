@@ -119,7 +119,7 @@ class M_coa extends CI_Model
 
     public function getCoa($no_coa)
     {
-        return $this->cb->where('no_sbb', $no_coa)->get('v_coa_all')->row_array();
+        return $this->cb->where('no_sbb', $no_coa)->where('id_cabang', $this->session->userdata('kode_cabang'))->get('v_coa_all')->row_array();
     }
 
     public function getCoaBB($no_coa)

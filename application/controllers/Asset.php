@@ -476,7 +476,8 @@ class Asset extends CI_Controller
           'saldo_kredit' => $saldo_kredit,
           'created_by' => $this->session->userdata('nip'),
           'keterangan' => 'Nilai pembukuan asset ' . $nama . ' (' . $kode . ')',
-          'id_cabang' => $this->session->userdata('kode_cabang')
+          'id_cabang' => $this->session->userdata('kode_cabang'),
+          'id_company' => $this->session->userdata('user_perusahan_id')
         ];
 
         $this->cb->insert('jurnal_neraca', $jurnal);
@@ -608,7 +609,8 @@ class Asset extends CI_Controller
           'saldo_kredit' => $saldo_kredit,
           'created_by' => $this->session->userdata('nip'),
           'keterangan' => 'Koreksi nilai pembukuan asset ' . $nama . ' (' . $asset->kode . ')',
-          'id_cabang' => $this->session->userdata('kode_cabang')
+          'id_cabang' => $this->session->userdata('kode_cabang'),
+          'id_company' => $this->session->userdata('user_perusahan_id')
         ];
 
         $this->cb->insert('jurnal_neraca', $jurnal);
@@ -632,7 +634,8 @@ class Asset extends CI_Controller
           'saldo_kredit' => $saldo_kredit,
           'created_by' => $this->session->userdata('nip'),
           'keterangan' => 'Nilai pembukuan asset ' . $nama . ' (' . $asset->kode . ')',
-          'id_cabang' => $this->session->userdata('kode_cabang')
+          'id_cabang' => $this->session->userdata('kode_cabang'),
+          'id_company' => $this->session->userdata('user_perusahan_id')
         ];
 
         $this->cb->insert('jurnal_neraca', $jurnal);
@@ -761,7 +764,8 @@ class Asset extends CI_Controller
         'saldo_kredit' => $saldo_kredit,
         'created_by' => $this->session->userdata('nip'),
         'id_cabang' => $this->session->userdata('kode_cabang'),
-        'keterangan' => 'Hapus nilai buku asset ' . $asset->nama_asset . ' (' . $asset->kode . ')'
+        'keterangan' => 'Hapus nilai buku asset ' . $asset->nama_asset . ' (' . $asset->kode . ')',
+        'id_company' => $this->session->userdata('user_perusahan_id')
       ];
 
       $this->cb->insert('jurnal_neraca', $jurnal);
@@ -859,7 +863,8 @@ class Asset extends CI_Controller
           'saldo_kredit' => $saldo_kredit,
           'created_by' => $this->session->userdata('nip'),
           'id_cabang' => $this->session->userdata('kode_cabang'),
-          'keterangan' => 'Pengembalian nilai penyusutan hapus asset ' . $asset->nama_asset . ' (' . $asset->kode . ')'
+          'keterangan' => 'Pengembalian nilai penyusutan hapus asset ' . $asset->nama_asset . ' (' . $asset->kode . ')',
+          'id_company' => $this->session->userdata('user_perusahan_id')
         ];
 
         $this->cb->insert('jurnal_neraca', $jurnal);
@@ -884,7 +889,8 @@ class Asset extends CI_Controller
           'saldo_kredit' => $saldo_kredit,
           'created_by' => $this->session->userdata('nip'),
           'id_cabang' => $this->session->userdata('kode_cabang'),
-          'keterangan' => 'Pengembalian nilai buku hapus asset ' . $asset->nama_asset . ' (' . $asset->kode . ')'
+          'keterangan' => 'Pengembalian nilai buku hapus asset ' . $asset->nama_asset . ' (' . $asset->kode . ')',
+          'id_company' => $this->session->userdata('user_perusahan_id')
         ];
 
         $this->cb->insert('jurnal_neraca', $jurnal);
@@ -909,7 +915,8 @@ class Asset extends CI_Controller
           'saldo_kredit' => $saldo_kredit,
           'created_by' => $this->session->userdata('nip'),
           'id_cabang' => $this->session->userdata('kode_cabang'),
-          'keterangan' => 'Pengembalian harga perolehan hapus asset ' . $asset->nama_asset . ' (' . $asset->kode . ')'
+          'keterangan' => 'Pengembalian harga perolehan hapus asset ' . $asset->nama_asset . ' (' . $asset->kode . ')',
+          'id_company' => $this->session->userdata('user_perusahan_id')
         ];
 
         $this->cb->insert('jurnal_neraca', $jurnal);
@@ -1094,7 +1101,8 @@ class Asset extends CI_Controller
               'saldo_kredit' => $saldo_kredit,
               'created_by' => $this->session->userdata('nip'),
               'id_cabang' => $this->session->userdata('kode_cabang'),
-              'keterangan' => 'Nilai penyusutan perbulan asset ' . $fu['nama_asset'] . ' (' . $fu['kode'] . ')'
+              'keterangan' => 'Nilai penyusutan perbulan asset ' . $fu['nama_asset'] . ' (' . $fu['kode'] . ')',
+              'id_company' => $this->session->userdata('user_perusahan_id')
             ];
 
             $insertJurnal = $this->cb->insert('jurnal_neraca', $jurnal);

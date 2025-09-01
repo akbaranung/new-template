@@ -15,17 +15,20 @@ class M_task extends CI_Model
     $this->db->select('nip, nama');
     $this->db->from('users');
 
+    $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
+
     if (!empty($keyword)) {
       $this->db->like('nama', $keyword);
     }
-    if ($this->session->userdata('level_jabatan') >= '3') {
-      $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
-      // $this->db->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
-      $this->db->where('id_cabang', $this->session->userdata('kode_cabang'));
-    } else {
-      $this->db->where('id_cabang', $this->session->userdata('kode_cabang'));
-      $this->db->where('users.bagian', $this->session->userdata('bagian'));
-    }
+    // if ($this->session->userdata('level_jabatan') >= '3') {
+    //   $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
+    //   // $this->db->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
+    //   $this->db->where('id_cabang', $this->session->userdata('kode_cabang'));
+    // } else {
+    //   $this->db->where('id_cabang', $this->session->userdata('kode_cabang'));
+    //   $this->db->where('users.bagian', $this->session->userdata('bagian'));
+    // }
+    $this->db->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
     $this->db->where('nip !=', $this->session->userdata('nip'));
     $this->db->limit($limit, $offset);
     $query = $this->db->get();
@@ -37,8 +40,11 @@ class M_task extends CI_Model
   {
     $this->db->select('Id')->from('task')
       ->group_start()
-      ->like('member', $nip, 'both')
-      ->or_like('pic', $nip, 'both')
+      // ->like('member', $nip, 'both')
+      // ->or_like('pic', $nip, 'both')
+      ->like('CONCAT(";", member, ";")', ';' . $nip . ';', 'both')
+      ->or_like('CONCAT(";", pic, ";")', ';' . $nip . ';', 'both')
+
       ->group_end();
     if ($keyword) {
       $this->db->like('name', $keyword, 'both');
@@ -50,8 +56,10 @@ class M_task extends CI_Model
   {
     $this->db->select('a.Id, a.name, a.read, a.pic, a.activity, a.date_created, b.nama')->from('task a')->join('users b', 'b.nip = a.pic')
       ->group_start()
-      ->like('member', $nip, 'both')
-      ->or_like('pic', $nip, 'both')
+      // ->like('member', $nip, 'both')
+      // ->or_like('pic', $nip, 'both')
+      ->like('CONCAT(";", member, ";")', ';' . $nip . ';', 'both')
+      ->or_like('CONCAT(";", pic, ";")', ';' . $nip . ';', 'both')
       ->group_end();
     if ($keyword) {
       $this->db->like('name', $keyword, 'both');

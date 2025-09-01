@@ -65,11 +65,17 @@
                     <button class="btn btn-secondary" type="submit">Go!</button>
                     <a href="<?= base_url('financial/reset_coa') ?>" class="btn btn-warning" style="color:white;">Reset</a>
                     <button class="btn btn-primary text-white" data-toggle="modal" data-target="#tambahCoa" type="button" style="color: white;">Buat CoA</button>
-                    <button class="btn btn-primary text-white" data-toggle="modal" data-target="#TemplateCoa" type="button" style="color: white;">Ambil CoA</button>
+                    <?php
+                    if ($is_semua_coa == 0 && $cabang_now == $this->session->userdata('kode_cabang')) {
+                    ?>
+                      <button class="btn btn-primary text-white" data-toggle="modal" data-target="#TemplateCoa" type="button" style="color: white;">Ambil CoA</button>
+                    <?php
+                    }
+                    ?>
                     <?php
                     if ($is_sawal == 0 && $cabang_now == $this->session->userdata('kode_cabang')) {
                     ?>
-                      <button class="btn btn-primary text-white" data-toggle="modal" data-target="#saldoAwal" type="button" style="color: white;">Buat Saldo Awal</button>
+                      <button class="btn btn-pink text-white" data-toggle="modal" data-target="#saldoAwal" type="button" style="color: white;">Buat Saldo Awal</button>
                     <?php
                     }
                     ?>
@@ -86,7 +92,7 @@
                   <th>BB</th>
                   <th>Sub BB</th>
                   <th>Nama Perkiraan</th>
-                  <!-- <th class="text-center">Nominal</th> -->
+                  <th class="text-center">Nominal</th>
                   <!-- <th class="text-center">Saldo Awal</th> -->
                   <?php
                   if ($is_sawal == 0 && $cabang_now == $this->session->userdata('kode_cabang')) {
@@ -108,7 +114,7 @@
                       <td><?= $i['no_bb'] ?></td>
                       <td><?= $i['no_sbb'] ?></td>
                       <td><?= ($i['nama_perkiraan']) ?></td>
-                      <!-- <td class="text-right"><?= $i['nominal'] != null ? number_format($i['nominal']) : 0 ?></td> -->
+                      <td class="text-right"><?= $i['nominal'] != null ? number_format($i['nominal']) : 0 ?></td>
                       <?php
                       if ($is_sawal == 0 && $cabang_now == $this->session->userdata('kode_cabang')) {
                       ?>
@@ -155,9 +161,15 @@
       <form class="form-horizontal form-label-left" method="POST" action="<?= base_url('financial/tambahCoa') ?>">
         <div class="modal-body">
           <div class="form-group row">
-            <div class="col-12">
+            <!-- <div class="col-12">
               <label for="no_bb" class="form-label">No. BB</label>
               <input type="text" name="no_bb" id="no_bb" class="form-control">
+            </div> -->
+            <div class="col-12">
+              <label for="no_bb" class="form-label">No. BB</label>
+              <select name="no_bb" id="no_bb" class="form-control-select">
+                <!-- Options will be loaded dynamically by Select2 -->
+              </select>
             </div>
             <div class="col-12 mt-3">
               <label for="no_sbb" class="form-label">No. SBB</label>

@@ -36,7 +36,7 @@
       <div class="card shadow mb-4">
         <div class="card-header text-center">
           <p class="card-title"><strong>Card Detail</strong></p>
-          <p class="btn btn-success" style="width: fit-content;"><?= $detail_task['task_name'] ?></p>
+          <p class="alert alert-primary w-100" style="display: inline-block;"><?= $detail_task['task_name'] ?></p>
         </div>
         <div class="card-body">
           <div class="row">

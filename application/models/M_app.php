@@ -55,8 +55,11 @@ class M_app extends CI_Model
     $this->db->select('Id')->from('memo')
       // ->where('id_perusahaan', $this->session->userdata('user_perusahaan_id'))
       ->group_start()
-      ->like('nip_kpd', $nip, 'both')
-      ->or_like('nip_cc', $nip, 'both')
+      // ->like('nip_kpd', $nip, 'both')
+      // ->or_like('nip_cc', $nip, 'both')
+
+      ->like('CONCAT(";", nip_kpd, ";")', ';' . $nip . ';', 'both')
+      ->or_like('CONCAT(";", nip_cc, ";")', ';' . $nip . ';', 'both')
       ->group_end();
     if ($keyword) {
       $this->db->like('judul', $keyword, 'both');
@@ -69,8 +72,11 @@ class M_app extends CI_Model
     $this->db->select('a.Id, a.nomor_memo, a.nip_kpd, a.judul, a.tanggal, a.read, a.nip_dari, b.nama')->from('memo a')->join('users b', 'a.nip_dari = b.username', 'left')
       // ->where('id_perusahaan', $this->session->userdata('user_perusahaan_id'))
       ->group_start()
-      ->like('nip_kpd', $nip, 'both')
-      ->or_like('nip_cc', $nip, 'both')
+      // ->like('nip_kpd', $nip, 'both')
+      // ->or_like('nip_cc', $nip, 'both')
+
+      ->like('CONCAT(";", nip_kpd, ";")', ';' . $nip . ';', 'both')
+      ->or_like('CONCAT(";", nip_cc, ";")', ';' . $nip . ';', 'both')
       ->group_end();
     if ($keyword) {
       $this->db->like('judul', $keyword, 'both');
@@ -96,7 +102,15 @@ class M_app extends CI_Model
 
     $nip = $this->session->userdata('username');
 
-    $query = $this->db->select('a.*,b.nama_jabatan,b.nama,b.supervisi,c.kode_nama,b.level_jabatan')->from('memo a')->join('users b', 'b.username = a.nip_dari', 'LEFT')->join('bagian c', 'b.bagian = c.kode_nama', 'left')->where('a.Id', $id)->group_start()->like('a.nip_dari', $nip, 'both')->or_like('a.nip_kpd', $nip, 'both')->or_like('a.nip_cc', $nip, 'both')->group_end()->get();
+    $query = $this->db->select('a.*,b.nama_jabatan,b.nama,b.supervisi,c.kode_nama,b.level_jabatan')->from('memo a')->join('users b', 'b.username = a.nip_dari', 'LEFT')->join('bagian c', 'b.bagian = c.kode_nama', 'left')->where('a.Id', $id)->group_start()
+      // ->like('a.nip_dari', $nip, 'both')
+      // ->or_like('a.nip_kpd', $nip, 'both')
+      // ->or_like('a.nip_cc', $nip, 'both')
+      ->like('CONCAT(";", a.nip_dari, ";")', ';' . $nip . ';', 'both')
+      ->or_like('CONCAT(";", a.nip_kpd, ";")', ';' . $nip . ';', 'both')
+      ->or_like('CONCAT(";", a.nip_cc, ";")', ';' . $nip . ';', 'both')
+
+      ->group_end()->get();
     return $query->row();
   }
 
@@ -105,7 +119,8 @@ class M_app extends CI_Model
     $this->db->select('Id')->from('memo')
       // ->where('id_perusahaan', $this->session->userdata('user_perusahaan_id'))
       ->group_start()
-      ->like('nip_dari', $nip, 'both')
+      // ->like('nip_dari', $nip, 'both')
+      ->like('CONCAT(";", nip_dari, ";")', ';' . $nip . ';', 'both')
       ->group_end();
     if ($keyword) {
       $this->db->like('judul', $keyword, 'both');
@@ -119,7 +134,9 @@ class M_app extends CI_Model
       // ->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang')
       // ->where('id_perusahaan', $this->session->userdata('user_perusahaan_id'))
       ->group_start()
-      ->like('nip_dari', $nip, 'both')
+      // ->like('nip_dari', $nip, 'both')
+
+      ->like('CONCAT(";", nip_dari, ";")', ';' . $nip . ';', 'both')
       ->group_end();
     if ($keyword) {
       $this->db->like('judul', $keyword, 'both');

@@ -311,11 +311,11 @@
                             Jurnal Arus Kas</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
                             Manajemen Penugasan (Tello)</p>
-                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>5000</b>
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>3000</b>
                             Invoice / Bulan</p>
-                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>5000</b>
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>3000</b>
                             Digital Memorandum / Bulan</p>
-                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>5000</b>
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>3000</b>
                             Pengajuan Multi Layer Approval / Bulan</p>
                         <!-- <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>5000</b>
                             Nota Penjualan / Bulan</p> -->
@@ -361,11 +361,11 @@
                             Jurnal Arus Kas</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
                             Manajemen Penugasan (Tello)</p>
-                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>10000</b>
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>5000</b>
                             Invoice / Bulan</p>
-                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>10000</b>
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>5000</b>
                             Digital Memorandum / Bulan</p>
-                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>10000</b>
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>5000</b>
                             Pengajuan Multi Layer Approval / Bulan</p>
                         <!-- <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>10000</b>
                             Nota Penjualan / Bulan</p> -->
@@ -410,11 +410,11 @@
                             Jurnal Arus Kas</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
                             Manajemen Penugasan (Tello)</p>
-                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>25000</b>
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>10000</b>
                             Invoice / Bulan</p>
-                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>25000</b>
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>10000</b>
                             Digital Memorandum / Bulan</p>
-                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>25000</b>
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>10000</b>
                             Pengajuan Multi Layer Approval / Bulan</p>
                         <!-- <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>25000</b>
                             Nota Penjualan / Bulan</p> -->

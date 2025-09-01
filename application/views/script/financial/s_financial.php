@@ -1,4 +1,24 @@
 <script>
+  const allCoaBb = <?= json_encode($all_coa_bb) ?>;
+
+  $(document).ready(function() {
+    $('#no_bb').select2({
+      placeholder: 'Cari Kode BB...',
+      minimumInputLength: 0, // Set to 0 to show all options initially
+      allowClear: true,
+      data: allCoaBb, // Use the pre-loaded data
+      templateResult: function(option) {
+        // Return the text directly for normal display
+        return option.text;
+      },
+      templateSelection: function(option) {
+        // Return the text directly for selected display
+        return option.text;
+      }
+    });
+  });
+</script>
+<script>
   $(document).ready(function() {
 
     $(".btn-submit").click(function(e) {
@@ -1431,6 +1451,47 @@
     });
   }
 
+  function terbilang(angka) {
+    if (typeof angka !== 'number') {
+      angka = parseFloat(angka);
+    }
+
+    const bilangan = [
+      '',
+      'Satu',
+      'Dua',
+      'Tiga',
+      'Empat',
+      'Lima',
+      'Enam',
+      'Tujuh',
+      'Delapan',
+      'Sembilan',
+      'Sepuluh',
+      'Sebelas'
+    ];
+
+    if (angka < 12) {
+      return bilangan[angka];
+    } else if (angka < 20) {
+      return bilangan[angka - 10] + ' Belas';
+    } else if (angka < 100) {
+      return bilangan[Math.floor(angka / 10)] + ' Puluh ' + bilangan[angka % 10];
+    } else if (angka < 200) {
+      return 'Seratus ' + terbilang(angka - 100);
+    } else if (angka < 1000) {
+      return bilangan[Math.floor(angka / 100)] + ' Ratus ' + terbilang(angka % 100);
+    } else if (angka < 2000) {
+      return 'Seribu ' + terbilang(angka - 1000);
+    } else if (angka < 1000000) {
+      return terbilang(Math.floor(angka / 1000)) + ' Ribu ' + terbilang(angka % 1000);
+    } else if (angka < 1000000000) {
+      return terbilang(Math.floor(angka / 1000000)) + ' Juta ' + terbilang(angka % 1000000);
+    } else {
+      return 'Angka terlalu besar';
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('saldoawalForm');
     const totalAktivaStrong = document.getElementById('total_aktiva');
@@ -1469,10 +1530,21 @@
           balanceResultDiv2.classList.add('balanced');
 
         } else {
-          balanceResultDiv.textContent = `Saldo Tidak Seimbang: ${difference.toFixed(2)}`; // Display difference with 2 decimal places
+          // balanceResultDiv.textContent = `Saldo Tidak Seimbang: ${difference.toFixed(2)}`; // Display difference with 2 decimal places
+          // balanceResultDiv.classList.add('unbalanced');
+
+          // balanceResultDiv2.textContent = `Saldo Tidak Seimbang: ${difference.toFixed(2)}`; // Display difference with 2 decimal places
+          // balanceResultDiv2.classList.add('unbalanced');
+
+          const formattedDifference = difference.toLocaleString('id-ID', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          });
+
+          balanceResultDiv.textContent = `Saldo Tidak Seimbang: ${formattedDifference} (${terbilang(difference)})`;
           balanceResultDiv.classList.add('unbalanced');
 
-          balanceResultDiv2.textContent = `Saldo Tidak Seimbang: ${difference.toFixed(2)}`; // Display difference with 2 decimal places
+          balanceResultDiv2.textContent = `Saldo Tidak Seimbang: ${formattedDifference} (${terbilang(difference)})`;
           balanceResultDiv2.classList.add('unbalanced');
 
         }
