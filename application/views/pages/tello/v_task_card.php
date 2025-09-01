@@ -15,23 +15,27 @@
     <div class="col-12">
       <h1 class="page-title">TELLO CARD LIST</h1>
       <div class="card shadow mb-4">
-        <div class="card-header text-center">
-          <!-- <p class="card-title"><strong>Card List</strong></p> -->
-          <p class="btn btn-primary" style="width: fit-content;"><?= $task->name ?></p>
-          <p><?= $task->comment ?></p>
-          <p>
-            Member Name :
-            <?php
-            $data_nip = explode(';', $task->member);
-            foreach ($data_nip as $x) {
-              if ($x != '') {
-                $this->db->where('nip', $x);
-                $get = $this->db->get('users')->row_array();
-                echo $get['nama'] . ', ';
+        <div class="card-header d-flex flex-column justify-content-center align-items-center text-center">
+          <div class="alert alert-primary rounded shadow border d-inline-block">
+            <!-- <p class="card-title"><strong>Card List</strong></p> -->
+            <p><?= $task->name ?></p>
+            <p class="mb-0"><?= $task->comment ?></p>
+          </div>
+          <div class="alert alert-pink rounded shadow border d-inline-block">
+            <p>
+              Member Name :
+              <?php
+              $data_nip = explode(';', $task->member);
+              foreach ($data_nip as $x) {
+                if ($x != '') {
+                  $this->db->where('nip', $x);
+                  $get = $this->db->get('users')->row_array();
+                  echo $get['nama'] . ', ';
+                }
               }
-            }
-            ?>
-          </p>
+              ?>
+            </p>
+          </div>
         </div>
         <div class="card-body">
           <div class="row">

@@ -3818,14 +3818,51 @@ input[type="button"].btn-block {
     padding: 0.75rem 1.25rem;
     color: inherit; }
 
-.alert-primary {
+/* .alert-pink {
+  color: #0e3685;
+  background-color: #d1e1ff;
+  border-color: #bfd5ff; }
+  .alert-pink hr {
+    border-top-color: #a6c4ff; }
+  .alert-pink .alert-link {
+    color: #092357; } */
+
+/* .alert-primary {
   color: #0e3685;
   background-color: #d1e1ff;
   border-color: #bfd5ff; }
   .alert-primary hr {
     border-top-color: #a6c4ff; }
   .alert-primary .alert-link {
-    color: #092357; }
+    color: #092357; } */
+
+.alert-primary {
+  color: #2c387e; /* Darker text for contrast */
+  background-color: #e8eaf6; /* Lightened background */
+  border-color: #c5cae9; /* Border color */
+}
+
+.alert-primary hr {
+  border-top-color: #a0a7e0; /* Horizontal rule color */
+}
+
+.alert-primary .alert-link {
+  color: #1e285a; /* Darker link color */
+}
+
+.alert-pink {
+  color: #93133e; /* Darker text for contrast */
+  background-color: #fde7ec; /* Lightened background */
+  border-color: #f9c4d2; /* Border color */
+}
+
+.alert-pink hr {
+  border-top-color: #f08ba7; /* Horizontal rule color */
+}
+
+.alert-pink .alert-link {
+  color: #6a0e2d; /* Darker link color */
+}
 
 .alert-secondary {
   color: #383d41;
