@@ -64,7 +64,12 @@
                 <?php } else {
                 $nip = $this->session->userdata('nip');
                 foreach ($task_detail as $data) {
-                  $user_read = $this->db->select('id_detail')->from('task_detail')->where('id_detail', $data->id_detail)->like('read', $nip, 'both')->get()->num_rows();
+                  $user_read = $this->db->select('id_detail')->from('task_detail')
+                    ->where('id_detail', $data->id_detail)
+                    // ->like('read', $nip, 'both')
+                    // ->like('CONCAT(";", read, ";")', ';' . $nip . ';', 'both')
+                    ->where("CONCAT(' ', `read`, ' ') LIKE '% " . $nip . " %'")
+                    ->get()->num_rows();
                   if ($data->activity == '1') {
                     // $activity = "<p class='badge badge-pill badge-success'>Open</p>";;
                     $activity = "Open";
@@ -86,7 +91,7 @@
                     <td class="open-task-detail" onclick="openCard(<?= $data->id_detail ?>)"><?= $data->due_date; ?></td>
                     <td class="open-task-detail <?= $background_class ?>" onclick="openCard(<?= $data->id_detail ?>)"><?= $activity ?></td>
                     <td>
-                      <a href="<?= site_url('task/card_edit/') . $data->id_task . '/' . $data->id_detail ?>" class="btn btn-outline-success"><span class="fe fe-edit-3"></span></a>
+                      <a href="<?= site_url('task/card_edit/') . $data->id_task . '/' . $data->id_detail ?>" class="btn btn-outline-pink"><span class="fe fe-edit-3"></span></a>
                       <?php if (empty($user_read)) { ?>
                         <span class="badge badge-pill badge-danger">New</span>
                       <?php } ?>

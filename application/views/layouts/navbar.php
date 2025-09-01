@@ -85,13 +85,15 @@
       $nip = $this->session->userdata('nip');
 
       // Count unread memos
-      $sql = "SELECT COUNT(Id) FROM memo WHERE (nip_kpd LIKE '%$nip%' OR nip_cc LIKE '%$nip%') AND (`read` NOT LIKE '%$nip%');";
+      // $sql = "SELECT COUNT(Id) FROM memo WHERE (nip_kpd LIKE '%$nip%' OR nip_cc LIKE '%$nip%') AND (`read` NOT LIKE '%$nip%');";
+      $sql = "SELECT COUNT(Id) FROM memo WHERE (CONCAT(';', nip_kpd, ';') LIKE '%;$nip;%' OR CONCAT(';', nip_cc, ';') LIKE '%;$nip;%') AND (CONCAT(';', `read`, ';') NOT LIKE '%;$nip;%');";
       $query = $this->db->query($sql);
       $res2 = $query->result_array();
       $jumlah_notifikasi_memo = $res2[0]['COUNT(Id)'];
 
       // Count unread tasks
-      $sql4 = "SELECT COUNT(id) FROM task WHERE (`member` LIKE '%$nip%' or `pic` like '%$nip%') and activity='1'";
+      // $sql4 = "SELECT COUNT(id) FROM task WHERE (`member` LIKE '%$nip%' or `pic` like '%$nip%') and activity='1'";
+      $sql4 = "SELECT COUNT(id) FROM task WHERE (CONCAT(';', `member`, ';') LIKE '%;$nip;%' OR CONCAT(';', `pic`, ';') LIKE '%;$nip%') and activity='1'";
       $query4 = $this->db->query($sql4);
       $res4 = $query4->result_array();
       $jumlah_notifikasi_tello = $res4[0]['COUNT(id)'];

@@ -55,9 +55,14 @@
                 <?php } else {
                 $nip = $this->session->userdata('nip');
                 foreach ($data_task as $data) {
-                  $user_read = $this->db->select('Id')->from('task')->where('Id', $data->Id)->like('read', $nip, 'both')->get()->num_rows();
+                  $user_read = $this->db->select('Id')->from('task')->where('Id', $data->Id)
+                    // ->like('read', $nip, 'both')
+                    ->where("CONCAT(' ', `read`, ' ') LIKE '% " . $nip . " %'")
+                    // ->where("CONCAT(';', `read`, ';') LIKE '%;$nip;%'")
+                    ->get()->num_rows();
                   $task_cek = $this->db->get_where('task_detail', ['id_task' => $data->Id]);
 
+                  var_dump($user_read);
                   if ($user_read) {
                     $font_weight = 'normal';
                   } else {
@@ -102,7 +107,7 @@
                     <td onclick="openTask(<?= $data->Id ?>)" class="open-memo"><?= date('d/m/y | H:i:s', strtotime($data->date_created)) ?></td>
                     <td>
                       <?php if ($data->pic == $this->session->userdata('nip')) { ?>
-                        <a href="<?= site_url('task/edit_task/' . $data->Id) ?>" class="btn btn-outline-success"><span class="fe fe-edit-3"></span></a>
+                        <a href="<?= site_url('task/edit_task/' . $data->Id) ?>" class="btn btn-outline-pink"><span class="fe fe-edit-3"></span></a>
                       <?php } ?>
 
                       <?php if (empty($user_read)) { ?>

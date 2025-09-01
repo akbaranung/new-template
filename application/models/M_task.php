@@ -40,8 +40,11 @@ class M_task extends CI_Model
   {
     $this->db->select('Id')->from('task')
       ->group_start()
-      ->like('member', $nip, 'both')
-      ->or_like('pic', $nip, 'both')
+      // ->like('member', $nip, 'both')
+      // ->or_like('pic', $nip, 'both')
+      ->like('CONCAT(";", member, ";")', ';' . $nip . ';', 'both')
+      ->or_like('CONCAT(";", pic, ";")', ';' . $nip . ';', 'both')
+
       ->group_end();
     if ($keyword) {
       $this->db->like('name', $keyword, 'both');
@@ -53,8 +56,10 @@ class M_task extends CI_Model
   {
     $this->db->select('a.Id, a.name, a.read, a.pic, a.activity, a.date_created, b.nama')->from('task a')->join('users b', 'b.nip = a.pic')
       ->group_start()
-      ->like('member', $nip, 'both')
-      ->or_like('pic', $nip, 'both')
+      // ->like('member', $nip, 'both')
+      // ->or_like('pic', $nip, 'both')
+      ->like('CONCAT(";", member, ";")', ';' . $nip . ';', 'both')
+      ->or_like('CONCAT(";", pic, ";")', ';' . $nip . ';', 'both')
       ->group_end();
     if ($keyword) {
       $this->db->like('name', $keyword, 'both');
