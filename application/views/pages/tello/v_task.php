@@ -62,7 +62,7 @@
                     ->get()->num_rows();
                   $task_cek = $this->db->get_where('task_detail', ['id_task' => $data->Id]);
 
-                  var_dump($user_read);
+                  // var_dump($user_read);
                   if ($user_read) {
                     $font_weight = 'normal';
                   } else {
