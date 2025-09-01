@@ -247,8 +247,8 @@ class Financial extends CI_Controller
       $excel = new PHPExcel();
       $sheet = $excel->getActiveSheet();
 
-      $excel->getProperties()->setCreator('SLS')
-        ->setLastModifiedBy('SLS')
+      $excel->getProperties()->setCreator('Bariskode')
+        ->setLastModifiedBy('Bariskode')
         ->setTitle("Neraca SBB")
         ->setSubject("Neraca SBB")
         ->setDescription("Neraca SBB per tanggal " . format_indo($tanggal))
@@ -426,8 +426,8 @@ class Financial extends CI_Controller
       $excel = new PHPExcel();
       $sheet = $excel->getActiveSheet();
 
-      $excel->getProperties()->setCreator('SLS')
-        ->setLastModifiedBy('SLS')
+      $excel->getProperties()->setCreator('Bariskode')
+        ->setLastModifiedBy('Bariskode')
         ->setTitle("Laba rugi SBB")
         ->setSubject("Laba rugi SBB")
         ->setDescription("Laba rugi SBB per tanggal " . format_indo($tanggal))
@@ -599,8 +599,8 @@ class Financial extends CI_Controller
       $excel = new PHPExcel();
       $sheet = $excel->getActiveSheet();
 
-      $excel->getProperties()->setCreator('SLS')
-        ->setLastModifiedBy('SLS')
+      $excel->getProperties()->setCreator('Bariskode')
+        ->setLastModifiedBy('Bariskode')
         ->setTitle("Laba rugi SBB")
         ->setSubject("Laba rugi SBB")
         ->setDescription("Laba rugi SBB per tanggal " . format_indo($tanggal))
@@ -867,8 +867,8 @@ class Financial extends CI_Controller
       $excel = new PHPExcel();
       $sheet = $excel->getActiveSheet();
 
-      $excel->getProperties()->setCreator('SLS')
-        ->setLastModifiedBy('SLS')
+      $excel->getProperties()->setCreator('Bariskode')
+        ->setLastModifiedBy('Bariskode')
         ->setTitle("Neraca BB")
         ->setSubject("Neraca BB")
         ->setDescription("Neraca BB per tanggal " . format_indo($tanggal))
@@ -1071,8 +1071,8 @@ class Financial extends CI_Controller
       $excel = new PHPExcel();
       $sheet = $excel->getActiveSheet();
 
-      $excel->getProperties()->setCreator('SLS')
-        ->setLastModifiedBy('SLS')
+      $excel->getProperties()->setCreator('Bariskode')
+        ->setLastModifiedBy('Bariskode')
         ->setTitle("Neraca SBB")
         ->setSubject("Neraca SBB")
         ->setDescription("Neraca SBB per tanggal " . format_indo($tanggal))
@@ -1478,7 +1478,8 @@ class Financial extends CI_Controller
           'slug' => 'saldo-awal-' . $nextMonth,
           'coa' => json_encode($updated_saldo_awal),
           'keterangan' => 'Saldo awal ' . format_indo($nextMonth),
-          'id_cabang' => $this->session->userdata('kode_cabang')
+          'id_cabang' => $this->session->userdata('kode_cabang'),
+          'id_company' => $this->session->userdata('user_perusahaan_id')
         ];
 
         if (!$cek) {
@@ -1783,6 +1784,7 @@ class Financial extends CI_Controller
       'status_pendapatan' => '1',
       'slug' => $slug,
       'id_cabang' => $this->session->userdata('kode_cabang'),
+      'id_company' => $this->session->userdata('user_perusahaan_id')
     ];
 
     $this->cb->trans_begin();
@@ -1817,6 +1819,7 @@ class Financial extends CI_Controller
           'total_amount' => $total_amount,
           'created_by' => $id_user,
           'id_cabang' => $this->session->userdata('kode_cabang'),
+          'id_company' => $this->session->userdata('user_perusahaan_id')
         ];
       }
 
@@ -2171,14 +2174,6 @@ class Financial extends CI_Controller
       show_error('Forbidden Access: You do not have permission to view this page.', 403, '403 Forbidden');
     }
 
-    $this->cb->from('t_coa_bb');
-    $this->cb->where('id_company', $this->session->userdata('user_perusahaan_id'));
-    $cek_coa_bb = $this->cb->get()->num_rows();
-
-    $this->cb->from('t_coalr_bb');
-    $this->cb->where('id_company', $this->session->userdata('user_perusahaan_id'));
-    $cek_coalr_bb = $this->cb->get()->num_rows();
-
     $keyword_sbb = ($this->input->post('keyword_sbb')) ? trim($this->input->post('keyword_sbb')) : (($this->session->userdata('search_sbb')) ? $this->session->userdata('search_sbb') : '');
     $keyword_bb = ($this->input->post('keyword_bb')) ? trim($this->input->post('keyword_bb')) : (($this->session->userdata('search_bb')) ? $this->session->userdata('search_bb') : '');
 
@@ -2293,7 +2288,6 @@ class Financial extends CI_Controller
     $this->cb->from('t_cabang');
     $this->cb->where('id_perusahaan', $this->session->userdata('user_perusahaan_id'));
     $cabangs = $this->cb->get()->result();
-    $show_card2 = ($cek_coa_bb == 0 && $cek_coalr_bb == 0);
 
     $this->cb->from('t_cabang');
     $this->cb->where('uid', $this->session->userdata('kode_cabang'));
@@ -2302,6 +2296,13 @@ class Financial extends CI_Controller
     $this->db->from('utility');
     $this->db->where('Id', $this->session->userdata('user_perusahaan_id'));
     $perusahaansss = $this->db->get()->row();
+
+    $this->cb->select('no_bb as id, CONCAT(no_bb, " - ", nama_perkiraan) as text');
+    $this->cb->from('v_coabb_all');
+    $this->cb->where('id_company', $this->session->userdata('user_perusahaan_id'));
+    $query = $this->cb->get();
+    $all_coa_bb = $query->result_array();
+
 
     $data = [
       'page' => $page,
@@ -2317,7 +2318,7 @@ class Financial extends CI_Controller
       'keyword_sbb' => $keyword_sbb,
       'keyword_bb' => $keyword_bb,
       'title' => "List CoA",
-      'show_card2' => $show_card2,
+      'all_coa_bb' => $all_coa_bb,
       // 'cek_coa_bb' => $cek_coa_bb,
       // 'cek_coalr_bb' => $cek_coalr_bb,
 
@@ -2328,35 +2329,6 @@ class Financial extends CI_Controller
     $data['pages_script'] = 'script/financial/s_financial';
     $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
     $this->load->view('index', $data);
-  }
-  public function ajax_template_coa_bb_list()
-  {
-    $list = $this->M_coa->get_datatables1_bb();
-    $data = array();
-    $no = $_POST['start'];
-
-    foreach ($list as $cat) {
-      $no++;
-      $row = array();
-      $row[] = $no;
-
-      // Store data in data attributes for easy retrieval with JavaScript
-      $row[] = '<span data-no_bb="' . $cat->no_bb . '">' . $cat->no_bb . '</span>';
-      $row[] = '<span data-nama_coa="' . $cat->nama_perkiraan . '">' . $cat->nama_perkiraan . '</span>';
-
-      // Action button with a specific class for event delegation
-      $row[] = '<button class="btn btn-primary submit-coa-bb-btn" type="button">Buat</button>'; // type="button" to prevent default form submission if any parent form exists
-
-      $data[] = $row;
-    }
-
-    $output = array(
-      "draw" => $_POST['draw'],
-      "recordsTotal" => $this->M_coa->count_all1_bb(),
-      "recordsFiltered" => $this->M_coa->count_filtered1_bb(),
-      "data" => $data,
-    );
-    echo json_encode($output);
   }
 
   public function search_coa_bb()
@@ -2646,7 +2618,8 @@ class Financial extends CI_Controller
         'keterangan' => $keterangan,
         'created_by' => $this->session->userdata('nip'),
         'id_invoice' => ($id_invoice) ? $id_invoice : '',
-        'id_cabang' => $this->session->userdata('kode_cabang')
+        'id_cabang' => $this->session->userdata('kode_cabang'),
+        'id_company' => $this->session->userdata('user_perusahaan_id')
       ];
 
       $this->M_coa->addJurnal($dt_jurnal);
@@ -2658,7 +2631,8 @@ class Financial extends CI_Controller
         'debet' => $coa_debit,
         'kredit' => $coa_kredit,
         'keterangan' => trim($keterangan),
-        'id_cabang' => $this->session->userdata('kode_cabang')
+        'id_cabang' => $this->session->userdata('kode_cabang'),
+        'id_company' => $this->session->userdata('user_perusahaan_id')
       ];
 
       $this->M_coa->add_transaksi($data_transaksi);
@@ -2849,6 +2823,36 @@ class Financial extends CI_Controller
     );
     echo json_encode($output);
   }
+  public function ajax_template_coa_bb_list()
+  {
+    $list = $this->M_coa->get_datatables1_bb();
+    $data = array();
+    $no = $_POST['start'];
+
+    foreach ($list as $cat) {
+      $no++;
+      $row = array();
+      $row[] = $no;
+
+      // Store data in data attributes for easy retrieval with JavaScript
+      $row[] = '<span data-no_bb="' . $cat->no_bb . '">' . $cat->no_bb . '</span>';
+      $row[] = '<span data-nama_coa="' . $cat->nama_perkiraan . '">' . $cat->nama_perkiraan . '</span>';
+
+      // Action button with a specific class for event delegation
+      $row[] = '<button class="btn btn-primary submit-coa-bb-btn" type="button">Buat</button>'; // type="button" to prevent default form submission if any parent form exists
+
+      $data[] = $row;
+    }
+
+    $output = array(
+      "draw" => $_POST['draw'],
+      "recordsTotal" => $this->M_coa->count_all1_bb(),
+      "recordsFiltered" => $this->M_coa->count_filtered1_bb(),
+      "data" => $data,
+    );
+    echo json_encode($output);
+  }
+
   public function tambahCoaAjax()
   {
     $no_bb = $this->input->post('no_bb');
@@ -3045,7 +3049,6 @@ class Financial extends CI_Controller
     }
     echo json_encode($response);
   }
-
   public function ambil_semua_coa()
   {
     $this->load->view('loading');
@@ -3120,11 +3123,11 @@ class Financial extends CI_Controller
 
             if ($query) {
               $this->cb->trans_commit();
-              // $this->session->set_flashdata('message_name', 'CoA ' . $no_sbb . ' berhasil ditambahkan.');
+              $this->session->set_flashdata('message_name', 'CoA ' . $no_sbb . ' berhasil ditambahkan.');
               // redirect($_SERVER['HTTP_REFERER']);
             } else {
               $this->cb->trans_rollback();
-              // $this->session->set_flashdata('message_error', 'CoA ' . $no_sbb . ' gagal disimpan. Ket:' . $this->cb->error());
+              $this->session->set_flashdata('message_error', 'CoA ' . $no_sbb . ' gagal disimpan. Ket:' . $this->cb->error());
             }
           }
         } else {
@@ -3146,6 +3149,7 @@ class Financial extends CI_Controller
       // Assuming 'users' table is in the default database
       $this->cb->where('uid', $this->session->userdata('kode_cabang')); // Assuming 'id' is the primary key for users table
       $this->cb->update('t_cabang', $cabang_data);
+      $this->session->set_flashdata('message_name', 'Semua COA berhasil ditambahkan.');
     }
     redirect($_SERVER['HTTP_REFERER']);
   }
@@ -3368,7 +3372,8 @@ class Financial extends CI_Controller
           'slug' => 'saldo-awal-' . $nextMonth,
           'coa' => json_encode($updated_saldo_awal),
           'keterangan' => 'Saldo awal ' . format_indo($nextMonth),
-          'id_cabang' => $this->session->userdata('kode_cabang')
+          'id_cabang' => $this->session->userdata('kode_cabang'),
+          'id_company' => $this->session->userdata('user_perusahaan_id')
         ];
 
         $this->M_coa->insert_saldo_awal($data);
@@ -3561,6 +3566,7 @@ class Financial extends CI_Controller
       // 'status_customer' => $this->input->post('status_customer'),
       'slug' => $slug,
       'id_cabang' => $this->session->userdata('kode_cabang'),
+      'id_company' => $this->session->userdata('user_perusahaan_id')
     ];
 
     $old_slug = $this->uri->segment(3);
@@ -3587,5 +3593,532 @@ class Financial extends CI_Controller
   {
     $this->session->unset_userdata('search');
     redirect('customer');
+  }
+
+  public function consolidation()
+  {
+    $has_access = $this->M_menu->has_access();
+
+    if (!$has_access) {
+      show_error('Forbidden Access: You do not have permission to view this page.', 403, '403 Forbidden');
+    }
+
+    $button_sbm = $this->input->post('button_sbm');
+    $nip = $this->session->userdata('nip');
+
+    // Fetch counts
+    $result = $this->db->query("SELECT COUNT(Id) FROM memo WHERE (nip_kpd LIKE '%$nip%' OR nip_cc LIKE '%$nip%') AND (`read` NOT LIKE '%$nip%');")->row()->{'COUNT(Id)'};
+    $result2 = $this->db->query("SELECT COUNT(id) FROM task WHERE (`member` LIKE '%$nip%' or `pic` LIKE '%$nip%') AND activity='1'")->row()->{'COUNT(id)'};
+
+    $per_tanggal = ($this->input->post('per_tanggal') ? $this->input->post('per_tanggal') : date('Y-m-d'));
+
+    $data = [
+      'count_inbox' => $result,
+      'count_inbox2' => $result2,
+      'per_tanggal' => $per_tanggal
+    ];
+
+    $jenis_laporan = $this->input->post('jenis_laporan');
+
+    // print_r($jenis_laporan);
+    // exit;
+    if ($jenis_laporan) {
+      if ($jenis_laporan == "neraca") {
+        $this->prepareNeracaConsoleReportByDate($data, $per_tanggal, $button_sbm);
+      } else if ($jenis_laporan == "laba_rugi") {
+        $this->prepareLabaRugiConsoleReportByDate($data, $per_tanggal, $button_sbm);
+      }
+      // else if ($jenis_laporan == "laba_rugi_tanpa_sawal") {
+      //   $this->prepareLabaRugiConsoleReportByDateNoSawal($data, $per_tanggal, $button_sbm);
+      // } else if ($jenis_laporan == "neraca_bb") {
+      //   $this->prepareNeracaBbConsoleReportByDate($data, $per_tanggal, $button_sbm);
+      // } else if ($jenis_laporan == "lr_bb") {
+      //   $this->prepareLrBbConsoleReportByDate($data, $per_tanggal, $button_sbm);
+      // }
+    } else {
+      $this->prepareNeracaConsoleReportByDate($data, $per_tanggal);
+    }
+  }
+
+  private function prepareNeracaConsoleReportByDate($data, $tanggal, $button_sbm = null)
+  {
+    $date = new DateTime($tanggal);
+    $date->modify('first day of previous month');
+    $periode = $date->format('Y-m');
+
+    // Step 1: get id perusahaan berdasarkan akun user
+    $id_company = $this->session->userdata('user_perusahaan_id');
+
+    // Step 2: get saldo awal berdasarkan id_company dan periode
+    $coas = $this->cb->select('coa')->where(['id_company' => $id_company, 'periode' => $periode])->get('saldo_awal')->result();
+
+    // Step 3: Gabungkan dan jumlahkan saldo_awal untuk no_sbb yang sama
+    $mergedCoa = [];
+
+    foreach ($coas as $coa) {
+      // Decode JSON dari setiap record
+      $coaArray = json_decode($coa->coa, true);
+
+      // Loop setiap item dalam array coa
+      foreach ($coaArray as $item) {
+        $no_sbb = $item['no_sbb'];
+
+        if (isset($mergedCoa[$no_sbb])) {
+          // Kalau no_sbb sudah ada, jumlahkan saldo_awal
+          $mergedCoa[$no_sbb]['saldo_awal'] += $item['saldo_awal'];
+        } else {
+          // Kalau belum ada, masukkan item baru
+          $mergedCoa[$no_sbb] = $item;
+        }
+      }
+    }
+
+    // Convert ke indexed array (opsional, kalau mau tetap associative skip ini)
+    $coaLastPeriod = array_values($mergedCoa);
+
+    // part activa
+    $filteredCoaAktiva = array_filter($coaLastPeriod, function ($item) {
+      return $item['posisi'] === 'AKTIVA' && $item['table_source'] === 't_coa_sbb';
+    });
+
+    $activa = $this->M_coa->getNeracaConsolByDate('t_coa_sbb', 'AKTIVA', $tanggal, $periode, $id_company);
+    $combinedActiva = [];
+
+    foreach ($activa as $item) {
+      if (!isset($combinedActiva[$item['no_sbb']])) {
+        $combinedActiva[$item['no_sbb']] = (object) [
+          'no_sbb' => $item['no_sbb'],
+          'saldo_awal' => $item['saldo_awal'],
+        ];
+      } else {
+        $combinedActiva[$item['no_sbb']]['saldo_awal'] += $item['saldo_awal'];
+      }
+    }
+
+    foreach ($filteredCoaAktiva as $item) {
+      if (!isset($combinedActiva[$item['no_sbb']])) {
+        $combinedActiva[$item['no_sbb']] = (object) [
+          'no_sbb' => $item['no_sbb'],
+          'saldo_awal' => $item['saldo_awal'],
+        ];
+      } else {
+        $combinedActiva[$item['no_sbb']]['saldo_awal'] += $item['saldo_awal'];
+      }
+    }
+
+    usort($combinedActiva, function ($a, $b) {
+      return strcmp($a->no_sbb, $b->no_sbb);
+    });
+    $total_activa = array_sum(array_column($combinedActiva, 'saldo_awal'));
+
+
+    // part pasiva
+    $filteredCoaPasiva = array_filter($coaLastPeriod, function ($item) {
+      return $item['posisi'] === 'PASIVA' && $item['table_source'] === 't_coa_sbb';
+    });
+
+    $pasiva = $this->M_coa->getNeracaConsolByDate('t_coa_sbb', 'PASIVA', $tanggal, $periode, $id_company);
+    $combinedPasiva = [];
+
+    foreach ($pasiva as $item) {
+      if (!isset($combinedPasiva[$item['no_sbb']])) {
+        $combinedPasiva[$item['no_sbb']] = (object) [
+          'no_sbb' => $item['no_sbb'],
+          'saldo_awal' => $item['saldo_awal'],
+        ];
+      } else {
+        $combinedPasiva[$item['no_sbb']]['saldo_awal'] += $item['saldo_awal'];
+      }
+    }
+
+    foreach ($filteredCoaPasiva as $item) {
+      if (!isset($combinedPasiva[$item['no_sbb']])) {
+        $combinedPasiva[$item['no_sbb']] = (object) [
+          'no_sbb' => $item['no_sbb'],
+          'saldo_awal' => $item['saldo_awal'],
+        ];
+      } else {
+        $combinedPasiva[$item['no_sbb']]['saldo_awal'] += $item['saldo_awal'];
+      }
+    }
+
+    usort($combinedPasiva, function ($a, $b) {
+      return strcmp($a->no_sbb, $b->no_sbb);
+    });
+    $total_pasiva = array_sum(array_column($combinedPasiva, 'saldo_awal'));
+
+
+    // part pendapatan
+    $filteredCoaPendapatan = array_filter($coaLastPeriod, function ($item) {
+      return $item['posisi'] === 'PASIVA' && $item['table_source'] === 't_coalr_sbb';
+    });
+
+    $pendapatan = $this->M_coa->getNeracaConsolByDate('t_coalr_sbb', 'PASIVA', $tanggal, $periode, $id_company);
+    $combinedPendapatan = [];
+
+    foreach ($pendapatan as $item) {
+      if (!isset($combinedPendapatan[$item['no_sbb']])) {
+        $combinedPendapatan[$item['no_sbb']] = (object) [
+          'no_sbb' => $item['no_sbb'],
+          'saldo_awal' => $item['saldo_awal'],
+        ];
+      } else {
+        $combinedPendapatan[$item['no_sbb']]['saldo_awal'] += $item['saldo_awal'];
+      }
+    }
+
+    foreach ($filteredCoaPendapatan as $item) {
+      if (!isset($combinedPendapatan[$item['no_sbb']])) {
+        $combinedPendapatan[$item['no_sbb']] = (object) [
+          'no_sbb' => $item['no_sbb'],
+          'saldo_awal' => $item['saldo_awal'],
+        ];
+      } else {
+        $combinedPendapatan[$item['no_sbb']]['saldo_awal'] += $item['saldo_awal'];
+      }
+    }
+
+    usort($combinedPendapatan, function ($a, $b) {
+      return strcmp($a->no_sbb, $b->no_sbb);
+    });
+    $total_pendapatan = array_sum(array_column($combinedPendapatan, 'saldo_awal'));
+
+
+    // part beban
+    $filteredCoaBeban = array_filter($coaLastPeriod, function ($item) {
+      return $item['posisi'] === 'AKTIVA' && $item['table_source'] === 't_coalr_sbb';
+    });
+
+    $beban = $this->M_coa->getNeracaConsolByDate('t_coalr_sbb', 'AKTIVA', $tanggal, $periode, $id_company);
+    $combinedBeban = [];
+
+    foreach ($beban as $item) {
+      if (!isset($combinedBeban[$item['no_sbb']])) {
+        $combinedBeban[$item['no_sbb']] = (object) [
+          'no_sbb' => $item['no_sbb'],
+          'saldo_awal' => $item['saldo_awal'],
+        ];
+      } else {
+        $combinedBeban[$item['no_sbb']]['saldo_awal'] += $item['saldo_awal'];
+      }
+    }
+
+    foreach ($filteredCoaBeban as $item) {
+      if (!isset($combinedBeban[$item['no_sbb']])) {
+        $combinedBeban[$item['no_sbb']] = (object) [
+          'no_sbb' => $item['no_sbb'],
+          'saldo_awal' => $item['saldo_awal'],
+        ];
+      } else {
+        $combinedBeban[$item['no_sbb']]['saldo_awal'] += $item['saldo_awal'];
+      }
+    }
+
+    usort($combinedBeban, function ($a, $b) {
+      return strcmp($a->no_sbb, $b->no_sbb);
+    });
+    $total_beban = array_sum(array_column($combinedBeban, 'saldo_awal'));
+
+    $laba = $total_pendapatan - $total_beban;
+    $sum_pasiva = $total_pasiva + $laba;
+
+    $data['activa'] = $combinedActiva;
+    $data['sum_activa'] = $total_activa;
+    $data['pasiva'] = $combinedPasiva;
+    $data['laba'] = $laba;
+    $data['sum_pasiva'] = $sum_pasiva;
+    $data['neraca'] = $sum_pasiva - $total_activa;
+    // echo '<pre>';
+    // print_r($beban);
+    // echo '</pre>';
+    // exit;
+    $data['title'] = 'Neraca per tanggal ' . format_indo($tanggal);
+    $data['utility'] = $this->db->get('utility')->row_array();
+    $data['pages_script'] = 'script/financial/s_financial';
+    $data['pages'] = 'pages/financial/v_neraca_consol_by_date';
+    $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
+
+    if ($button_sbm == "excel") {
+      require_once(APPPATH . 'libraries/PHPExcel/IOFactory.php');
+
+      $excel = new PHPExcel();
+      $sheet = $excel->getActiveSheet();
+
+      $excel->getProperties()->setCreator('Bariskode')
+        ->setLastModifiedBy('Bariskode')
+        ->setTitle("Neraca SBB")
+        ->setSubject("Neraca SBB")
+        ->setDescription("Neraca SBB per tanggal " . format_indo($tanggal))
+        ->setKeywords("Neraca SBB");
+
+      // Merge cells untuk header utama
+      $sheet->mergeCells('A1:G1');
+      $sheet->mergeCells('A2:C2');
+      $sheet->mergeCells('E2:G2');
+
+      // Isi data header
+      $sheet->setCellValue('A1', 'Neraca SBB per tanggal ' . format_indo($tanggal));
+      $sheet->setCellValue('A2', 'AKTIVA');
+      $sheet->setCellValue('E2', 'PASIVA');
+      $sheet->setCellValue('B3', 'Total: ');
+      $sheet->setCellValue('C3', $total_activa ?? 0);
+      $sheet->setCellValue('F3', 'Total: ');
+      $sheet->setCellValue('G3', $sum_pasiva ?? 0);
+
+      // Buat sub-header untuk tabel
+      $sheet->setCellValue('A4', 'No. CoA');
+      $sheet->setCellValue('B4', 'Nama CoA');
+      $sheet->setCellValue('C4', 'Nominal');
+      $sheet->setCellValue('E4', 'No. CoA');
+      $sheet->setCellValue('F4', 'Nama CoA');
+      $sheet->setCellValue('G4', 'Nominal');
+
+      // Tambahkan data Aktiva
+      $numrowActiva = 5;
+
+      foreach ($combinedActiva as $t) {
+        $coa = $this->M_coa->getCoa($t->no_sbb);
+        if ($coa['table_source'] == "t_coa_sbb" && $coa['posisi'] == 'AKTIVA' && $t->saldo_awal != 0) :
+          $sheet->setCellValue('A' . $numrowActiva, $t->no_sbb);
+          $sheet->setCellValue('B' . $numrowActiva, $coa['nama_perkiraan']);
+          $sheet->setCellValue('C' . $numrowActiva, $t->saldo_awal);
+          $numrowActiva++;
+        endif;
+      }
+
+
+      // Tambahkan data Pasiva
+      $numrowPasiva = 5;
+      foreach ($combinedPasiva as $t) {
+        $coa = $this->M_coa->getCoa($t->no_sbb);
+        if ($coa['table_source'] == "t_coa_sbb" && $coa['posisi'] == 'PASIVA' && $t->saldo_awal != 0) :
+          $sheet->setCellValue('E' . $numrowPasiva, $t->no_sbb);
+          $sheet->setCellValue('F' . $numrowPasiva, $coa['nama_perkiraan']);
+          $sheet->setCellValue('G' . $numrowPasiva, $t->saldo_awal);
+          $numrowPasiva++;
+        endif;
+      }
+
+      $sheet->setCellValue('E' . $numrowPasiva, '3103001');
+      $sheet->setCellValue('F' . $numrowPasiva, 'LABA TAHUN BERJALAN');
+      $sheet->setCellValue('G' . $numrowPasiva, $laba);
+
+      // Set auto size untuk semua kolom
+      foreach (range('A', 'G') as $columnID) {
+        $sheet->getColumnDimension($columnID)->setAutoSize(true);
+      }
+
+      header('Content-Type: application/vnd.ms-excel');
+      header('Content-Disposition: attachment;filename="Neraca per tanggal ' . format_indo($tanggal) . '.xls"');
+      header('Cache-Control: max-age=0');
+      header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+      header('Cache-Control: cache, must-revalidate');
+      header('Pragma: public');
+
+      $objWriter = PHPExcel_IOFactory::createWriter($excel, 'Excel5');
+      $objWriter->save('php://output');
+      exit;
+    } else {
+      $this->load->view('index', $data);
+    }
+  }
+
+  private function prepareLabaRugiConsoleReportByDate($data, $tanggal, $button_sbm = null)
+  {
+    $date = new DateTime($tanggal);
+    $date->modify('first day of previous month');
+    $periode = $date->format('Y-m');
+
+    // Step 1: get id perusahaan berdasarkan akun user
+    $id_company = $this->session->userdata('user_perusahaan_id');
+
+    // Step 2: get saldo awal berdasarkan id_company dan periode
+    $coas = $this->cb->select('coa')->where(['id_company' => $id_company, 'periode' => $periode])->get('saldo_awal')->result();
+
+    // Step 3: Gabungkan dan jumlahkan saldo_awal untuk no_sbb yang sama
+    $mergedCoa = [];
+
+    foreach ($coas as $coa) {
+      // Decode JSON dari setiap record
+      $coaArray = json_decode($coa->coa, true);
+
+      // Loop setiap item dalam array coa
+      foreach ($coaArray as $item) {
+        $no_sbb = $item['no_sbb'];
+
+        if (isset($mergedCoa[$no_sbb])) {
+          // Kalau no_sbb sudah ada, jumlahkan saldo_awal
+          $mergedCoa[$no_sbb]['saldo_awal'] += $item['saldo_awal'];
+        } else {
+          // Kalau belum ada, masukkan item baru
+          $mergedCoa[$no_sbb] = $item;
+        }
+      }
+    }
+
+    // Convert ke indexed array (opsional, kalau mau tetap associative skip ini)
+    $coaLastPeriod = array_values($mergedCoa);
+
+    // part pendapatan
+    $filteredCoaPendapatan = array_filter($coaLastPeriod, function ($item) {
+      return $item['posisi'] === 'PASIVA' && $item['table_source'] === 't_coalr_sbb';
+    });
+
+    $pendapatan = $this->M_coa->getNeracaConsolByDate('t_coalr_sbb', 'PASIVA', $tanggal, $periode, $id_company);
+    $combinedPendapatan = [];
+
+    foreach ($pendapatan as $item) {
+      if (!isset($combinedPendapatan[$item['no_sbb']])) {
+        $combinedPendapatan[$item['no_sbb']] = (object) [
+          'no_sbb' => $item['no_sbb'],
+          'saldo_awal' => $item['saldo_awal'],
+        ];
+      } else {
+        $combinedPendapatan[$item['no_sbb']]['saldo_awal'] += $item['saldo_awal'];
+      }
+    }
+
+    foreach ($filteredCoaPendapatan as $item) {
+      if (!isset($combinedPendapatan[$item['no_sbb']])) {
+        $combinedPendapatan[$item['no_sbb']] = (object) [
+          'no_sbb' => $item['no_sbb'],
+          'saldo_awal' => $item['saldo_awal'],
+        ];
+      } else {
+        $combinedPendapatan[$item['no_sbb']]['saldo_awal'] += $item['saldo_awal'];
+      }
+    }
+
+    usort($combinedPendapatan, function ($a, $b) {
+      return strcmp($a->no_sbb, $b->no_sbb);
+    });
+    $total_pendapatan = array_sum(array_column($combinedPendapatan, 'saldo_awal'));
+
+
+    // part beban
+    $filteredCoaBeban = array_filter($coaLastPeriod, function ($item) {
+      return $item['posisi'] === 'AKTIVA' && $item['table_source'] === 't_coalr_sbb';
+    });
+
+    $beban = $this->M_coa->getNeracaConsolByDate('t_coalr_sbb', 'AKTIVA', $tanggal, $periode, $id_company);
+    $combinedBeban = [];
+
+    foreach ($beban as $item) {
+      if (!isset($combinedBeban[$item['no_sbb']])) {
+        $combinedBeban[$item['no_sbb']] = (object) [
+          'no_sbb' => $item['no_sbb'],
+          'saldo_awal' => $item['saldo_awal'],
+        ];
+      } else {
+        $combinedBeban[$item['no_sbb']]['saldo_awal'] += $item['saldo_awal'];
+      }
+    }
+
+    foreach ($filteredCoaBeban as $item) {
+      if (!isset($combinedBeban[$item['no_sbb']])) {
+        $combinedBeban[$item['no_sbb']] = (object) [
+          'no_sbb' => $item['no_sbb'],
+          'saldo_awal' => $item['saldo_awal'],
+        ];
+      } else {
+        $combinedBeban[$item['no_sbb']]['saldo_awal'] += $item['saldo_awal'];
+      }
+    }
+
+    usort($combinedBeban, function ($a, $b) {
+      return strcmp($a->no_sbb, $b->no_sbb);
+    });
+    $total_beban = array_sum(array_column($combinedBeban, 'saldo_awal'));
+
+
+    $data['biaya'] = $combinedBeban;
+    $data['pendapatan'] = $combinedPendapatan;
+    $data['sum_biaya'] = $total_beban;
+    $data['sum_pendapatan'] = $total_pendapatan;
+    $data['total_pendapatan'] = $total_pendapatan - $total_beban;
+
+    $data['title'] = 'Laba rugi per tanggal ' . format_indo($tanggal);
+    $data['utility'] = $this->db->get('utility')->row_array();
+    $data['pages_script'] = 'script/financial/s_financial';
+    $data['pages'] = 'pages/financial/v_laba_rugi_consol_by_date';
+    $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
+
+    if ($button_sbm == "excel") {
+      require_once(APPPATH . 'libraries/PHPExcel/IOFactory.php');
+
+      $excel = new PHPExcel();
+      $sheet = $excel->getActiveSheet();
+
+      $excel->getProperties()->setCreator('Bariskode')
+        ->setLastModifiedBy('Bariskode')
+        ->setTitle("Laba rugi SBB")
+        ->setSubject("Laba rugi SBB")
+        ->setDescription("Laba rugi SBB per tanggal " . format_indo($tanggal))
+        ->setKeywords("Laba rugi SBB");
+
+      // Merge cells untuk header utama
+      $sheet->mergeCells('A1:G1');
+      $sheet->mergeCells('A2:C2');
+      $sheet->mergeCells('E2:G2');
+
+      // Isi data header
+      $sheet->setCellValue('A1', 'Laba rugi SBB per tanggal ' . format_indo($tanggal));
+      $sheet->setCellValue('A2', 'BEBAN');
+      $sheet->setCellValue('E2', 'PENDAPATAN');
+      $sheet->setCellValue('B3', 'Total: ');
+      $sheet->setCellValue('C3', $total_beban);
+      $sheet->setCellValue('F3', 'Total: ');
+      $sheet->setCellValue('G3', $total_pendapatan);
+
+      // Buat sub-header untuk tabel
+      $sheet->setCellValue('A4', 'No. CoA');
+      $sheet->setCellValue('B4', 'Nama CoA');
+      $sheet->setCellValue('C4', 'Nominal');
+      $sheet->setCellValue('E4', 'No. CoA');
+      $sheet->setCellValue('F4', 'Nama CoA');
+      $sheet->setCellValue('G4', 'Nominal');
+
+      // Tambahkan data Aktiva
+      $numrowActiva = 5;
+      foreach ($combinedBeban as $t) {
+        $coa = $this->M_coa->getCoa($t->no_sbb);
+        if ($coa['table_source'] == "t_coalr_sbb" && $coa['posisi'] == 'AKTIVA' && $t->saldo_awal != 0) :
+          $sheet->setCellValue('A' . $numrowActiva, $t->no_sbb);
+          $sheet->setCellValue('B' . $numrowActiva, $coa['nama_perkiraan']);
+          $sheet->setCellValue('C' . $numrowActiva, $t->saldo_awal);
+          $numrowActiva++;
+        endif;
+      }
+
+      // Tambahkan data Pasiva
+      $numrowPasiva = 5;
+      foreach ($combinedPendapatan as $t) {
+        $coa = $this->M_coa->getCoa($t->no_sbb);
+        if ($coa['table_source'] == "t_coalr_sbb" && $coa['posisi'] == 'PASIVA' && $t->saldo_awal != 0) :
+          $sheet->setCellValue('E' . $numrowPasiva, $t->no_sbb);
+          $sheet->setCellValue('F' . $numrowPasiva, $coa['nama_perkiraan']);
+          $sheet->setCellValue('G' . $numrowPasiva, $t->saldo_awal);
+          $numrowPasiva++;
+        endif;
+      }
+
+      // Set auto size untuk semua kolom
+      foreach (range('A', 'G') as $columnID) {
+        $sheet->getColumnDimension($columnID)->setAutoSize(true);
+      }
+
+      header('Content-Type: application/vnd.ms-excel');
+      header('Content-Disposition: attachment;filename="Laba rugi per tanggal ' . format_indo($tanggal) . '.xls"');
+      header('Cache-Control: max-age=0');
+      header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+      header('Cache-Control: cache, must-revalidate');
+      header('Pragma: public');
+
+      $objWriter = PHPExcel_IOFactory::createWriter($excel, 'Excel5');
+      $objWriter->save('php://output');
+      exit;
+    } else {
+      $this->load->view('index', $data);
+    }
   }
 }

@@ -1,34 +1,4 @@
 <script>
-  // This script will run after the page content loads
-  document.addEventListener('DOMContentLoaded', function() {
-    // Check the PHP flag. Note: It's important to echo the value.
-    var forceShowCard2 = <?php echo json_encode($show_card2); ?>;
-
-    if (forceShowCard2) {
-      // Get the buttons and panes
-      var card1Tab = document.getElementById('card1-tab');
-      var card2Tab = document.getElementById('card2-tab');
-      var card1Pane = document.getElementById('card1');
-      var card2Pane = document.getElementById('card2');
-
-      // Deactivate Card 1
-      card1Tab.classList.remove('active');
-      card1Tab.setAttribute('aria-selected', 'false');
-      card1Pane.classList.remove('active', 'show');
-
-      // Activate Card 2
-      card2Tab.classList.add('active');
-      card2Tab.setAttribute('aria-selected', 'true');
-      card2Pane.classList.add('active', 'show');
-
-      // Disable Card 1 tab to prevent it from being clicked
-      card1Tab.disabled = true;
-      card1Tab.style.pointerEvents = 'none'; // Optional: for visual disabling
-      card1Tab.style.cursor = 'default'; // Optional: for cursor change
-    }
-  });
-</script>
-<script>
   const allCoaBb = <?= json_encode($all_coa_bb) ?>;
 
   $(document).ready(function() {
@@ -760,34 +730,37 @@
       // row.find('input[name="newTotal[]"]').val(formatNumber(total));
     }
   });
+</script>
 
-  <?php
-  if ($this->session->flashdata('message_error')) {
-  ?>
-    Swal.fire({
-      title: "Error!! ",
-      text: '<?= $this->session->flashdata('message_error') ?>',
-      type: "error",
-      icon: "error",
-    });
-  <?php
-    // $this->session->sess_destroy('message_error');
-    unset($_SESSION['message_error']);
-  } ?>
-
-  <?php
-  if ($this->session->flashdata('message_name')) {
-  ?>
+<?php
+// Check for success message first, as it's typically the most important
+if ($this->session->flashdata('message_name')) {
+?>
+  <script>
     Swal.fire({
       title: "Success!! ",
       text: '<?= $this->session->flashdata('message_name') ?>',
       icon: "success",
     });
-  <?php
-    // $this->session->sess_destroy('message_name');
-    unset($_SESSION['message_name']);
-  } ?>
-
+  </script>
+<?php
+  unset($_SESSION['message_name']);
+}
+// Then check for error message
+else if ($this->session->flashdata('message_error')) {
+?>
+  <script>
+    Swal.fire({
+      title: "Error!! ",
+      text: '<?= $this->session->flashdata('message_error') ?>',
+      icon: "error",
+    });
+  </script>
+<?php
+  unset($_SESSION['message_error']);
+}
+?>
+<script>
   $(".btn-process").on("click", function(e) {
     e.preventDefault();
     const href = $(this).attr("href");

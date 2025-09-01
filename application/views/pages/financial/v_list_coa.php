@@ -214,7 +214,7 @@
         </div>
       </div>
     </div>
-  </div> <!-- .row -->
+  </div>
 </div> <!-- .container-fluid -->
 
 <div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="tambahCoa">
