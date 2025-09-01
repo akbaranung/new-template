@@ -246,6 +246,77 @@ class M_coa extends CI_Model
         return $laporan;
     }
 
+    public function count_bb($keyword, $perusahaan, $tabel)
+    {
+        // $this->apply_cabang_filter();
+        // if ($keyword) {
+        //     $this->cb->like('no_sbb', $keyword);
+        //     $this->cb->or_like('no_bb', $keyword);
+        //     $this->cb->or_like('nama_perkiraan', $keyword);
+        // }
+        // return $this->cb->from($tabel)->count_all_results();
+        if ($keyword) {
+            // Start a new group for the OR conditions
+            $this->cb->group_start();
+            $this->cb->or_like('no_bb', $keyword);
+            $this->cb->or_like('nama_perkiraan', $keyword);
+            // End the group
+            $this->cb->group_end();
+        }
+        return $this->cb->from($tabel)->where('id_company', $perusahaan)->count_all_results();
+    }
+
+    public function list_coa_bb_paginate($limit, $from, $keyword, $perusahaan)
+    {
+        // $this->cb;
+        // $this->apply_cabang_filter();
+
+        // $this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
+        // if ($keyword) {
+        //     $this->cb->like('no_sbb', $keyword);
+        //     $this->cb->or_like('no_bb', $keyword);
+        //     $this->cb->or_like('nama_perkiraan', $keyword);
+        // }
+
+        // return $this->cb->order_by(
+        //     'no_sbb',
+        //     'ASC'
+        // )->limit($limit, $from)->get('v_coa_all')->result_array();
+
+        // $laporan = $this->apply_cabang_filter()->order_by(
+        //     'no_sbb',
+        //     'ASC'
+        // )->limit($limit, $from)->get('v_coa_alls')->result_array();
+        // return $laporan;
+
+        // return $this->cb->where('id_cabangs', $cabang)->order_by(
+        //     'no_sbb',
+        //     'ASC'
+        // )->limit($limit, $from)->get('v_coa_all')->result_array();
+
+        if ($keyword) {
+            // Start a new group for the OR conditions
+            $this->cb->group_start();
+            $this->cb->or_like('no_bb', $keyword);
+            $this->cb->or_like('nama_perkiraan', $keyword);
+            // End the group
+            $this->cb->group_end();
+        }
+
+        $laporan = $this->cb->where('id_company', $perusahaan)->order_by(
+            'no_bb',
+            'ASC'
+        )->limit($limit, $from)->get('v_coabb_all')->result_array();
+
+        return $laporan;
+    }
+
+    public function isAvailableBB($kolom, $key)
+    {
+        // $this->apply_cabang_filter();
+        return $this->cb->from('v_coabb_all')->where('id_company', $this->session->userdata('user_perusahaan_id'))->where($kolom, $key)->count_all_results();
+    }
+
     public function isAvailable($kolom, $key)
     {
         $this->apply_cabang_filter();
@@ -479,6 +550,74 @@ class M_coa extends CI_Model
     {
 
         $this->_get_datatables_query1();
+        $query = $this->cb->get();
+
+        return $this->cb->count_all_results();
+    }
+
+    var $table1_bb = 't_coa_bb_gabungan';
+    var $column_order1_bb = array('no_bb', 'nama_perkiraan'); //set column field database for datatable orderable
+    var $column_search1_bb = array('no_bb', 'nama_perkiraan'); //set column field database for datatable searchable 
+    var $order1_bb = array('no_bb' => 'asc'); // default order 
+
+    function _get_datatables_query1_bb()
+    {
+
+        $this->cb->select('t_coa_bb_gabungan.*'); // Select all from t_coa_sbb_gabungan, and specific columns from t_cabang
+        $this->cb->from('t_coa_bb_gabungan');
+        $i = 0;
+
+        foreach ($this->column_search1_bb as $item) // loop column 
+        {
+            if ($_POST['search']['value']) // if datatable send POST for search
+            {
+
+                if ($i === 0) // first loop
+                {
+                    $this->cb->group_start(); // open bracket. query Where with OR clause better with bracket. because maybe can combine with other WHERE with AND.
+                    $this->cb->like($item, $_POST['search']['value']);
+                } else {
+                    $this->cb->or_like($item, $_POST['search']['value']);
+                }
+
+                if (count($this->column_search1_bb) - 1 == $i) //last loop
+                    $this->cb->group_end(); //close bracket
+            }
+            $i++;
+        }
+
+        if (isset($_POST['order'])) // here order processing
+        {
+            $this->cb->order_by($this->column_order1_bb[$_POST['order']['0']['column']], $_POST['order']['0']['dir']);
+        } else if (isset($this->order1_bb)) {
+            $order = $this->order1_bb;
+            // $this->cb->order_by(key($order), $order[key($order)]);
+            foreach ($order as $key => $value) {
+                $this->cb->order_by($key, $value);
+            }
+        }
+    }
+
+    function get_datatables1_bb()
+    {
+        $this->_get_datatables_query1_bb();
+        if ($_POST['length'] != -1)
+            $this->cb->limit($_POST['length'], $_POST['start']);
+        $query = $this->cb->get();
+        return $query->result();
+    }
+
+    function count_filtered1_bb()
+    {
+        $this->_get_datatables_query1_bb();
+        $query = $this->cb->get();
+        return $query->num_rows();
+    }
+
+    function count_all1_bb()
+    {
+
+        $this->_get_datatables_query1_bb();
         $query = $this->cb->get();
 
         return $this->cb->count_all_results();

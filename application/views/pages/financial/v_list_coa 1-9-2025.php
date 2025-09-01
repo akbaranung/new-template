@@ -21,199 +21,132 @@
     background-color: #fee2e2;
     color: #dc2626;
   }
-
-  /* Styling for the entire navbar */
-  .nav-tabs {
-    background-color: white;
-    border-bottom: 1px solid #dee2e6;
-  }
-
-  /* Styling for the nav links (buttons) */
-  .nav-tabs .nav-link {
-    color: black;
-    border: 1px solid transparent;
-    border-top-left-radius: 0.25rem;
-    border-top-right-radius: 0.25rem;
-  }
-
-  /* Styling for the active nav link */
-  .nav-tabs .nav-link.active {
-    background-color: #3f51b5;
-    color: white;
-    /* Change text color to white for better contrast */
-    border-color: #dee2e6 #dee2e6 #fff;
-    /* Optional: Adjust the border to match */
-  }
-
-  /* Styling for nav links on hover */
-  .nav-tabs .nav-link:hover {
-    border-color: #dee2e2 #dee2e2 #dee2e6;
-  }
 </style>
 
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
-      <h1 class="page-title">List Coa</h1>
-      <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <li class="nav-item" role="presentation">
-          <button class="p-2 nav-link active" id="card1-tab" data-toggle="tab" data-target="#card1" type="button" role="tab" aria-controls="card1" aria-selected="true">
-            List COA SBB
-          </button>
-        </li>
-        <li class="nav-item" role="presentation">
-          <button class="p-2 nav-link" id="card2-tab" data-toggle="tab" data-target="#card2" type="button" role="tab" aria-controls="card2" aria-selected="false">
-            List COA BB
-          </button>
-        </li>
-      </ul>
-      <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="card1" role="tabpanel" aria-labelledby="card1-tab">
-          <div class="card shadow mb-4">
-            <div class="card-body">
-              <div class="row">
-                <div class="col-md-12 col-xs-12 form-group pull-right top_search">
-                  <!-- <form class="form-horizontal form-label-left" method="post" action="<?= base_url('financial_first/list_coa') ?>">
-                    <div class="input-group">
-                      <input type="text" class="form-control" name="keyword" placeholder="Search for..." value="<?= $keyword ?>">
-                      <span class="input-group-btn">
-                        <button class="btn btn-secondary" type="submit">Go!</button>
-                        <a href="<?= base_url('financial_first/reset_coa') ?>" class="btn btn-warning" style="color:white;">Reset</a>
-                        <button class="btn btn-primary text-white" data-toggle="modal" data-target="#tambahCoa" type="button" style="color: white;">Buat CoA</button>
-                        <button class="btn btn-primary text-white" data-toggle="modal" data-target="#TemplateCoa" type="button" style="color: white;">Ambil CoA</button>
-                      </span>
-                    </div>
-                  </form> -->
-                  <form class="form-horizontal form-label-left" method="post" action="<?= base_url('financial_first/list_coa') ?>">
-                    <div class="input-group">
-                      <input type="text" class="form-control" name="keyword_sbb" placeholder="Search for..." value="<?= $keyword_sbb ?>">
-                      <span class="input-group-btn">
-                        <button class="btn btn-secondary" type="submit">Go!</button>
-                        <a href="<?= base_url('financial_first/reset_coa') ?>" class="btn btn-warning" style="color:white;">Reset</a>
-                        <button class="btn btn-primary text-white" data-toggle="modal" data-target="#tambahCoa" type="button" style="color: white;">Buat CoA</button>
-                        <?php
-                        if ($is_semua_coa == 0) {
-                        ?>
-                          <button class="btn btn-primary text-white" data-toggle="modal" data-target="#TemplateCoa" type="button" style="color: white;">Ambil CoA</button>
-                        <?php
-                        }
-                        ?>
-                      </span>
-                    </div>
-                  </form>
+      <h1 class="page-title">List Coa </h1>
+      <div class="card shadow mb-4">
+        <!-- <div class="card-header">
+          <p class="card-title"><strong>List Coa</strong></p>
+        </div> -->
+        <div class="card-body">
+          <?php if ($this->session->flashdata('error')) : ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <strong>Error!</strong> <?= $this->session->flashdata('error'); ?><button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <!-- <strong><?= $this->session->flashdata('error'); ?>!</strong><button type="button" class="close" data-dismiss="alert" aria-label="Close"> -->
+                <span aria-hidden="true">x</span>
+              </button>
+            </div>
+          <?php endif; ?>
+          <?php if ($this->session->flashdata('success')) : ?>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+              <strong>Success!</strong> <?= $this->session->flashdata('success'); ?><button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">x</span>
+              </button>
+            </div>
+          <?php endif; ?> <div class="row">
+            <div class="col-md-12 col-xs-12 form-group pull-right top_search">
+              <form class="form-horizontal form-label-left" method="post" action="<?= base_url('financial/list_coa') ?>">
+                <div class="input-group">
+                  <select class="form-control" name="cabang_select" id="cabang_select">
+                    <!-- <option value="1">Tes</option> -->
+                    <?php
+                    foreach ($cabang as $c) {
+                    ?>
+                      <option <?= $cabang_now == $c->uid ? 'selected' : '' ?> value="<?= $c->uid ?>">Cabang : <?= $c->nama_cabang ?></option>
+                    <?php
+                    }
+                    ?>
+                  </select>
+                  <input type="text" class="form-control" name="keyword" placeholder="Search for..." value="<?= $keyword ?>">
+                  <span class="input-group-btn">
+                    <button class="btn btn-secondary" type="submit">Go!</button>
+                    <a href="<?= base_url('financial/reset_coa') ?>" class="btn btn-warning" style="color:white;">Reset</a>
+                    <button class="btn btn-primary text-white" data-toggle="modal" data-target="#tambahCoa" type="button" style="color: white;">Buat CoA</button>
+                    <?php
+                    if ($is_semua_coa == 0 && $cabang_now == $this->session->userdata('kode_cabang')) {
+                    ?>
+                      <button class="btn btn-primary text-white" data-toggle="modal" data-target="#TemplateCoa" type="button" style="color: white;">Ambil CoA</button>
+                    <?php
+                    }
+                    ?>
+                    <?php
+                    if ($is_sawal == 0 && $cabang_now == $this->session->userdata('kode_cabang')) {
+                    ?>
+                      <button class="btn btn-pink text-white" data-toggle="modal" data-target="#saldoAwal" type="button" style="color: white;">Buat Saldo Awal</button>
+                    <?php
+                    }
+                    ?>
+                  </span>
                 </div>
-              </div>
-              <div class="table-responsive">
-                <table id="" class="table table-striped" style="width:100%">
-                  <thead class="thead-dark">
-                    <tr>
-                      <th>No.</th>
-                      <th>BB</th>
-                      <th>Sub BB</th>
-                      <th>Nama Perkiraan</th>
-                      <th class="text-center">Saldo Awal</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <?php if ($coa) {
-                      $no = ($this->uri->segment(3)) ? ((($this->uri->segment(3) - 1) * 10) + 1) : '1';
-                      foreach ($coa as $i) : ?>
-                        <tr>
-                          <td><?= $no++ ?>.</td>
-                          <td><?= $i['no_bb'] ?></td>
-                          <td><?= $i['no_sbb'] ?></td>
-                          <td><?= ($i['nama_perkiraan']) ?></td>
-                          <td class="text-right"><?= $i['nominal'] != null ? number_format($i['nominal']) : 0 ?></td>
-                        </tr>
-                      <?php endforeach;
-                    } else { ?>
-                      <tr>
-                        <td colspan="5">Tidak ada data yang ditampilkan</td>
-                      </tr>
-                    <?php } ?>
-                  </tbody>
-                </table>
-              </div>
-              <div class="row">
-                <div class="col-md-12 col-xs-12 text-right">
-                  <?= $this->pagination->create_links() ?>
-                </div>
-              </div>
+              </form>
             </div>
           </div>
-        </div>
+          <div class="table-responsive">
+            <table id="" class="table table-sm" style="width:100%">
+              <thead class="thead-dark">
+                <tr>
+                  <th>No.</th>
+                  <th>BB</th>
+                  <th>Sub BB</th>
+                  <th>Nama Perkiraan</th>
+                  <th class="text-center">Nominal</th>
+                  <!-- <th class="text-center">Saldo Awal</th> -->
+                  <?php
+                  if ($is_sawal == 0 && $cabang_now == $this->session->userdata('kode_cabang')) {
+                  ?>
+                    <th class="text-center">Aksi</th>
+                  <?php
+                  }
+                  ?>
+                </tr>
+              </thead>
+              <tbody>
+                <?php
+                if ($coa) {
+                  $no = ($this->uri->segment(3)) ? ((($this->uri->segment(3) - 1) * 10) + 1) : '1';
 
-        <div class="tab-pane fade" id="card2" role="tabpanel" aria-labelledby="card2-tab">
-          <div class="card shadow mb-4">
-            <div class="card-body">
-              <div class="row">
-                <div class="col-md-12 col-xs-12 form-group pull-right top_search">
-                  <form class="form-horizontal form-label-left" method="post" action="<?= base_url('financial_first/list_coa') ?>">
-                    <div class="input-group">
-                      <input type="text" class="form-control" name="keyword_bb" placeholder="Search for..." value="<?= $keyword_bb ?>">
-                      <span class="input-group-btn">
-                        <button class="btn btn-secondary" type="submit">Go!</button>
-                        <a href="<?= base_url('financial_first/reset_coa') ?>" class="btn btn-warning" style="color:white;">Reset</a>
-                        <button class="btn btn-primary text-white" data-toggle="modal" data-target="#tambahCoaBB" type="button" style="color: white;">Buat CoA BB</button>
-
-                        <?php
-                        if ($is_semua_coa_bb == 0) {
-                        ?>
-                          <button class="btn btn-primary text-white" data-toggle="modal" data-target="#TemplateCoaBB" type="button" style="color: white;">Ambil CoA BB</button>
-                        <?php
-                        }
-                        ?>
-                      </span>
-                    </div>
-                  </form>
-                </div>
-              </div>
-              <div class="table-responsive">
-                <table id="" class="table table-striped" style="width:100%">
-                  <thead class="thead-dark">
-                    <tr>
-                      <th>No.</th>
-                      <th>BB</th>
-                      <th>Nama Perkiraan</th>
+                  foreach ($coa as $i) : ?>
+                    <tr style="height: 35px;">
+                      <td><?= $no++ ?>.</td>
+                      <td><?= $i['no_bb'] ?></td>
+                      <td><?= $i['no_sbb'] ?></td>
+                      <td><?= ($i['nama_perkiraan']) ?></td>
+                      <td class="text-right"><?= $i['nominal'] != null ? number_format($i['nominal']) : 0 ?></td>
+                      <?php
+                      if ($is_sawal == 0 && $cabang_now == $this->session->userdata('kode_cabang')) {
+                      ?>
+                        <td class="text-center"><button class="btn btn-sm btn-warning text-white" onclick="onEdit(<?= $i['no_sbb'] ?>, <?= $i['id_cabang'] ?>)" type="button">Update</button></td>
+                      <?php
+                      }
+                      ?>
                     </tr>
-                  </thead>
-                  <tbody>
-                    <?php if ($coa_bb) {
-                      $no = ($this->uri->segment(3)) ? ((($this->uri->segment(3) - 1) * 10) + 1) : '1';
-                      foreach ($coa_bb as $i) : ?>
-                        <tr>
-                          <td><?= $no++ ?>.</td>
-                          <td><?= $i['no_bb'] ?></td>
-                          <td><?= ($i['nama_perkiraan']) ?></td>
-                        </tr>
-                      <?php endforeach;
-                    } else { ?>
-                      <tr>
-                        <td colspan="5">Tidak ada data yang ditampilkan</td>
-                      </tr>
-                    <?php } ?>
-                  </tbody>
-                </table>
-              </div>
-              <div class="row">
-                <div class="col-md-12 col-xs-12 text-right">
-                  <?= $this->pagination->create_links() ?>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <div class="tab-pane fade" id="card3" role="tabpanel" aria-labelledby="card3-tab">
-          <div class="card shadow mb-4">
-            <div class="card-body">
-              <h5 class="card-title">This is Card 3 Content</h5>
-              <p class="card-text">Another card with its own unique information.</p>
+                  <?php
+                  endforeach;
+                } else {
+                  ?>
+                  <tr>
+                    <td colspan="5">Tidak ada data yang ditampilkan</td>
+                  </tr>
+                <?php
+                } ?>
+              </tbody>
+            </table>
+          </div>
+          <div class="row">
+            <div class="col-md-12 col-xs-12">
+              <!-- <h6>*klik kode untuk lihat neraca tersimpan</h6> -->
+            </div>
+            <div class="col-md-12 col-xs-12 text-right">
+              <?= $this->pagination->create_links() ?>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </div> <!-- .col-12 -->
   </div> <!-- .row -->
 </div> <!-- .container-fluid -->
 
@@ -457,72 +390,6 @@
           <button type="submit" class="btn btn-primary">Save changes</button>
         </div>
       </form>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="tambahCoaBB">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">
-          Buat CoA Baru
-        </h4>
-      </div>
-      <form class="form-horizontal form-label-left" method="POST" action="<?= base_url('financial_first/tambahCoaBB') ?>">
-        <div class="modal-body">
-          <div class="form-group row">
-            <div class="col-12 mt-3">
-              <label for="no_sbb" class="form-label">No. BB</label>
-              <input type="text" name="no_sbb" id="no_sbb" class="form-control">
-            </div>
-            <div class="col-12 mt-3">
-              <label for="nama_coa" class="form-label">Nama CoA</label>
-              <input type="text" name="nama_coa" id="nama_coa" class="form-control" oninput="this.value = this.value.toUpperCase()">
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">
-            Tambah CoA
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="TemplateCoaBB">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title" id="myModalLabel">
-          Ambil CoA Baru dari Template
-        </h4>
-      </div>
-      <div class="modal-body">
-        <!-- <div class="float-right">
-          <a href="<?= base_url('financial_first/ambil_semua_coa') ?>" class="btn btn-primary">Ambil Semua</a>
-        </div> -->
-        <div class="table-responsive">
-          <table id="table-template-2" class="table table-striped" style="width:100%">
-            <thead class="thead-dark">
-              <tr>
-                <th>No.</th>
-                <th>BB</th>
-                <th>Nama Perkiraan</th>
-                <th class="text-center">Aksi</th>
-              </tr>
-            </thead>
-          </table>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <!-- <button type="submit" class="btn btn-primary">
-          Tambah CoA
-        </button> -->
-      </div>
     </div>
   </div>
 </div>
