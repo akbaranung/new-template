@@ -16,12 +16,12 @@
       <h1 class="page-title">TELLO CARD LIST</h1>
       <div class="card shadow mb-4">
         <div class="card-header d-flex flex-column justify-content-center align-items-center text-center">
-          <div class="alert alert-primary rounded shadow border d-inline-block">
+          <div class="alert alert-primary rounded shadow w-100 d-inline-block">
             <!-- <p class="card-title"><strong>Card List</strong></p> -->
             <p><?= $task->name ?></p>
             <p class="mb-0"><?= $task->comment ?></p>
           </div>
-          <div class="alert alert-pink rounded shadow border d-inline-block">
+          <div class="alert alert-pink rounded shadow w-100 d-inline-block">
             <p>
               Member Name :
               <?php
