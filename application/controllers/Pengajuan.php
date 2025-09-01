@@ -957,7 +957,8 @@ class Pengajuan extends CI_Controller
           'saldo_kredit' => $saldo_kredit,
           'keterangan' => $item[$i]['item'] . ' - Pengajuan ' . $kode,
           'created_by' => $this->session->userdata('nip'),
-          'id_cabang' => $this->session->userdata('kode_cabang')
+          'id_cabang' => $this->session->userdata('kode_cabang'),
+          'id_company' => $this->session->userdata('user_perusahan_id')
         ];
 
         $pengajuan_detail[] = [
@@ -1082,7 +1083,8 @@ class Pengajuan extends CI_Controller
             'saldo_kredit' => $saldo_kredit,
             'keterangan' => $item[$i]['item'] . ' - close pengajuan ' . $kode,
             'created_by' => $this->session->userdata('nip'),
-            'id_cabang' => $this->session->userdata('kode_cabang')
+            'id_cabang' => $this->session->userdata('kode_cabang'),
+            'id_company' => $this->session->userdata('user_perusahan_id')
           ];
 
           // Debit
@@ -1105,7 +1107,8 @@ class Pengajuan extends CI_Controller
             'saldo_kredit' => $saldo_kredit,
             'keterangan' => $item[$i]['item'] . ' - close pengajuan ' . $kode,
             'created_by' => $this->session->userdata('nip'),
-            'id_cabang' => $this->session->userdata('kode_cabang')
+            'id_cabang' => $this->session->userdata('kode_cabang'),
+            'id_company' => $this->session->userdata('user_perusahan_id')
           ];
         }
 
@@ -1131,7 +1134,8 @@ class Pengajuan extends CI_Controller
             'saldo_kredit' => $saldo_kredit,
             'keterangan' => $item[$i]['item'] . ' - close pengajuan ' . $kode,
             'created_by' => $this->session->userdata('nip'),
-            'id_cabang' => $this->session->userdata('kode_cabang')
+            'id_cabang' => $this->session->userdata('kode_cabang'),
+            'id_company' => $this->session->userdata('user_perusahan_id')
           ];
 
           // Debit
@@ -1155,7 +1159,8 @@ class Pengajuan extends CI_Controller
             'saldo_kredit' => $saldo_kredit,
             'keterangan' => $item[$i]['item'] . ' - close pengajuan ' . $kode,
             'created_by' => $this->session->userdata('nip'),
-            'id_cabang' => $this->session->userdata('kode_cabang')
+            'id_cabang' => $this->session->userdata('kode_cabang'),
+            'id_company' => $this->session->userdata('user_perusahan_id')
           ];
         }
 
@@ -1181,7 +1186,8 @@ class Pengajuan extends CI_Controller
             'saldo_kredit' => $saldo_kredit,
             'keterangan' => $item[$i]['item'] . ' - close pengajuan ' . $kode,
             'created_by' => $this->session->userdata('nip'),
-            'id_cabang' => $this->session->userdata('kode_cabang')
+            'id_cabang' => $this->session->userdata('kode_cabang'),
+            'id_company' => $this->session->userdata('user_perusahan_id')
           ];
         }
 
