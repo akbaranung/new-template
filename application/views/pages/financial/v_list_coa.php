@@ -103,7 +103,7 @@
                           <button class="btn btn-pink text-white" data-toggle="modal" data-target="#saldoAwal" type="button" style="color: white;">Buat Saldo Awal</button>
                         <?php
                         }
-                        ?> ?>
+                        ?>
                       </span>
                     </div>
                   </form>

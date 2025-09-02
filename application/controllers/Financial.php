@@ -2312,6 +2312,7 @@ class Financial extends CI_Controller
       'cabang_now' => $cabang,
       'cabang' => $cabangs,
       'is_semua_coa' => $cabang_s->ambil_semua_coa,
+      'is_sawal' => $cabang_s->generate_sawal,
       'is_semua_coa_bb' => $perusahaansss->ambil_semua_coa_bb,
       'count_inbox' => $result,
       'count_inbox2' => $result2,
