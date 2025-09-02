@@ -167,7 +167,8 @@
             // $label = "COA"
             ?>
             <a href="<?= $button_now ?>" style="text-decoration: none;">
-              <div class="circle-current" data-label="Setting COA Dan SAWAL" style="background-color: #e81f63; color:white;">
+              <!-- <div class="circle-current" data-label="Setting COA Dan SAWAL" style="background-color: #e81f63; color:white;"> -->
+              <div class="circle-current" data-label="COA" style="background-color: #e81f63; color:white;">
                 <div class="fe fe-chevrons-down"></div>
               </div>
             </a>
