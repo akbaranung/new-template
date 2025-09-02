@@ -57,18 +57,18 @@
       <h1 class="page-title">List Coa</h1>
       <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
-          <button class="p-2 nav-link active" id="card1-tab" data-toggle="tab" data-target="#card1" type="button" role="tab" aria-controls="card1" aria-selected="true">
-            List COA SBB
-          </button>
-        </li>
-        <li class="nav-item" role="presentation">
           <button class="p-2 nav-link" id="card2-tab" data-toggle="tab" data-target="#card2" type="button" role="tab" aria-controls="card2" aria-selected="false">
             List COA BB
           </button>
         </li>
+        <li class="nav-item" role="presentation">
+          <button class="p-2 nav-link active" id="card1-tab" data-toggle="tab" data-target="#card1" type="button" role="tab" aria-controls="card1" aria-selected="true">
+            List COA SBB
+          </button>
+        </li>
       </ul>
       <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="card1" role="tabpanel" aria-labelledby="card1-tab">
+        <div class="tab-pane fade " id="card1" role="tabpanel" aria-labelledby="card1-tab">
           <div class="card shadow mb-4">
             <div class="card-body">
               <div class="row">
@@ -143,7 +143,7 @@
           </div>
         </div>
 
-        <div class="tab-pane fade" id="card2" role="tabpanel" aria-labelledby="card2-tab">
+        <div class="tab-pane fade show active" id="card2" role="tabpanel" aria-labelledby="card2-tab">
           <div class="card shadow mb-4">
             <div class="card-body">
               <div class="row">
