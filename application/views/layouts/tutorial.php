@@ -67,7 +67,7 @@
       height: 0;
       border-top: 8px solid transparent;
       /* border-left: 12px solid #3ad29f; */
-      border-left: 12px solid #1b68ff;
+      border-left: 12px solid #3f51b5;
       /* Green for success */
       border-bottom: 8px solid transparent;
     }
@@ -77,7 +77,7 @@
       width: 0;
       height: 0;
       border-top: 8px solid transparent;
-      /* border-left: 12px solid #1b68ff; */
+      /* border-left: 12px solid #3f51b5; */
       border-left: 12px solid #e81f63;
 
       /* Blue for primary */
@@ -129,7 +129,7 @@
               // $active_fishbone = 'active';
           ?>
               <a href="#" style="text-decoration: none;">
-                <div class="circle-success active" data-label="<?= $label ?>" style="background-color: #1b68ff; color:white;">
+                <div class="circle-success active" data-label="<?= $label ?>" style="background-color: #3f51b5; color:white;">
                   <div class="fe fe-user-check"></div>
                 </div>
               </a>
