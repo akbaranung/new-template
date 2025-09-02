@@ -2304,7 +2304,25 @@ class Financial extends CI_Controller
     $all_coa_bb = $query->result_array();
 
 
+    $activa = $this->M_coa->get_coa_activa_by_cabang();
+    $pasiva = $this->M_coa->get_coa_pasiva_by_cabang();
+
+    $Sumactiva = $this->M_coa->get_sum_coa_activa_by_cabang();
+    $sum_activa = $Sumactiva->nominal;
+    $Sumpasiva = $this->M_coa->get_sum_coa_pasiva_by_cabang();
+    $sum_pasiva = $Sumpasiva->nominal;
+
+    $pendapatan = $this->M_coa->get_sum_coa_pasiva_coalr_by_cabang();
+    $beban = $this->M_coa->get_sum_coa_activa_coalr_by_cabang();
+
+    $laba = $pendapatan->nominal - $beban->nominal;
+
     $data = [
+      'laba' => $laba,
+      'activa' => $activa,
+      'pasiva' => $pasiva,
+      'sum_activa' => $sum_activa,
+      'sum_pasiva' => $sum_pasiva,
       'page' => $page,
       'coa' => $coa,
       'page_bb' => $page_bb, // Pass the new page variable
