@@ -808,7 +808,7 @@ else if ($this->session->flashdata('message_error')) {
       var color = state.element.dataset.posisi == "AKTIVA" ? colorAktiva : colorPasiva;
       var sign = state.element.dataset.posisi == "AKTIVA" ? signAktiva : signPasiva;
 
-      var $state = $('<span style="background-color: ' + color + ';"><strong style="color: #fff;">' + state.text + ' ' + sign + '</strong></span>');
+      var $state = $('<p style="background-color: ' + color + ';"><strong style="color: #fff;">' + state.text + ' ' + sign + '</strong></p>');
 
       return $state;
     };
