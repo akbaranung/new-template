@@ -23,10 +23,10 @@
         <label for="inputEmail" class="sr-only">Token</label>
         <input type="text" id="token" name="token" class="form-control form-control-lg" placeholder="Please enter Token" autofocus="true">
       </div>
-      <div class="form-group d-flex justify-content-center">
-        <button id="resend-code-btn" type="button" class="btn btn-lg btn-outline-pink">Kirim Ulang Kode</button>
-      </div>
       <button class="btn btn-lg btn-primary btn-block" type="submit">Verifikasi</button>
+      <!-- <div class="form-group d-flex justify-content-center"> -->
+      <button id="resend-code-btn" type="button" class="btn btn-lg btn-outline-pink btn-block">Kirim Ulang Kode</button>
+      <!-- </div> -->
       <p class="mt-5 mb-3 text-muted text-center">Sudah punya akun? <a href="<?= base_url('auth/logout') ?>">Masuk dengan Akun Perusahaan Anda</a></p>
       <p class="mt-5 mb-3 text-muted text-center">IT BARIS KODE INDONESIA © <?= date('Y') ?></p>
     </div>
