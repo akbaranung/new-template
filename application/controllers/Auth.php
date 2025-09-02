@@ -214,6 +214,7 @@ class Auth extends CI_Controller
     $this->form_validation->set_message('valid_email', 'Format {field} tidak valid.');
     $this->form_validation->set_message('numeric', '{field} harus berupa angka.');
     $this->form_validation->set_message('alpha_numeric', '{field} hanya boleh berisi huruf dan angka.');
+    $this->form_validation->set_message('alpha_dash', '{field} hanya boleh berisi huruf, angka, garis bawah (_), dan tanda hubung (-).');
 
     if ($this->form_validation->run() == FALSE) {
       // If validation fails, reload the registration form with errors
