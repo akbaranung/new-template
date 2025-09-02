@@ -28,6 +28,38 @@
     }
   });
 </script>
+<script>
+  $(document).ready(function() {
+    $('.tab-button').on('click', function() {
+      var activeTab = $(this).data('tab');
+
+      // Use AJAX to send the active tab value to the controller
+      $.ajax({
+        url: '<?= base_url("financial/set_active_tab_session") ?>',
+        method: 'POST',
+        data: {
+          active_tab: activeTab
+        },
+        success: function(response) {
+          console.log('Session updated successfully!');
+
+          // Remove 'active' class from all buttons
+          $('.tab-button').removeClass('active');
+
+          // Add 'active' class to the clicked button
+          $('#' + activeTab + '-tab').addClass('active');
+
+          // Show the correct tab pane content
+          $('.tab-pane').removeClass('show active');
+          $('#' + activeTab).addClass('show active');
+        },
+        error: function() {
+          console.error('Failed to update session.');
+        }
+      });
+    });
+  });
+</script>
 <?php
 // Check for success message first, as it's typically the most important
 if ($this->session->flashdata('message_name')) {

@@ -2179,8 +2179,6 @@ class Financial extends CI_Controller
       // Default to 'card2' (List COA BB) since it's the default active tab in your HTML
       $active_tab = 'card2';
     }
-
-    // echo $active_tab;
     $this->session->set_userdata('active_tab', $active_tab);
 
     $keyword_sbb = ($this->input->post('keyword_sbb')) ? trim($this->input->post('keyword_sbb')) : (($this->session->userdata('search_sbb')) ? $this->session->userdata('search_sbb') : '');
@@ -2194,11 +2192,102 @@ class Financial extends CI_Controller
       $this->session->set_userdata('search_bb', $keyword_bb);
     }
 
+    // Reset logic
+    if ($this->input->get('reset_all')) {
+      $this->session->unset_userdata('search_sbb');
+      $this->session->unset_userdata('search_bb');
+      $keyword_sbb = '';
+      $keyword_bb = '';
+    } else {
+      $this->session->set_userdata('search_sbb', $keyword_sbb);
+      $this->session->set_userdata('search_bb', $keyword_bb);
+    }
 
     $cabang = $this->input->post('cabang_select') ? $this->input->post('cabang_select') : '';
     if ($cabang === null || $cabang === '') $cabang = $this->session->userdata('kode_cabang');
 
     $perusahaan = $this->session->userdata('user_perusahaan_id');
+
+    // --- PAGINATION FOR CARD 1 (v_coa_all) ---
+    $config = [
+      'base_url' => site_url('financial/list_coa'),
+      'total_rows' => $this->M_coa->count($keyword_sbb, $cabang, 'v_coa_all'),
+      'per_page' => 25,
+      'uri_segment' => 3,
+      'num_links' => 10,
+      // 'use_page_numbers' => TRUE,
+      // 'enable_query_strings' => TRUE,
+      'page_query_string' => TRUE,
+      'reuse_query_string' => TRUE,
+      'query_string_segment' => 'page_sbb',
+      'attributes' => ['class' => 'page-link'],
+    ];
+
+    $config['full_tag_open'] = '<ul class="pagination justify-content-end">';
+    $config['full_tag_close'] = '</ul>';
+    $config['first_link'] = "<i class='fe fe-chevrons-left'></i>";
+    $config['last_link'] = "<i class='fe fe-chevrons-right'></i>";
+    $config['first_tag_open'] = '<li class="page-item">';
+    $config['first_tag_close'] = '</li>';
+    $config['prev_link'] = "<i class='fe fe-chevron-left'></i>";
+    $config['prev_tag_open'] = '<li class="page-item">';
+    $config['prev_tag_close'] = '</li>';
+    $config['next_link'] = "<i class='fe fe-chevron-right'></i>";
+    $config['next_tag_open'] = '<li class="page-item">';
+    $config['next_tag_close'] = '</li>';
+    $config['last_tag_open'] = '<li class="page-item">';
+    $config['last_tag_close'] = '</li>';
+    $config['cur_tag_open'] = '<li class="page-item active"><a class="page-link" href="#">';
+    $config['cur_tag_close'] = '</a></li>';
+    $config['num_tag_open'] = '<li class="page-item">';
+    $config['num_tag_close'] = '</li>';
+    $config['attributes'] = array('class' => 'page-link');
+
+    $this->pagination->initialize($config);
+
+    $page_sbb = ($this->input->get('page_sbb')) ? (($this->input->get('page_sbb') - 1) * $config['per_page']) : 0;
+    $coa_sbb = $this->M_coa->list_coa_paginate($config["per_page"], $page_sbb, $keyword_sbb, $cabang);
+
+    // --- PAGINATION FOR CARD 2 (t_coa_bb) ---
+    $config_bb = [
+      'base_url' => site_url('financial/list_coa'),
+      'total_rows' => $this->M_coa->count_bb($keyword_bb, $perusahaan, 'v_coabb_all'), // You'll need to create this M_coa function
+      'per_page' => 25,
+      'uri_segment' => 3,
+      // 'num_links' => 10,
+      // 'use_page_numbers' => TRUE,
+      // 'enable_query_strings' => TRUE,
+      'page_query_string' => TRUE,
+      'reuse_query_string' => TRUE,
+      'query_string_segment' => 'page_bb', // Use a different query string segment
+      'attributes' => ['class' => 'page-link'],
+    ];
+
+    // Reuse the same pagination styling as above
+    $config_bb['full_tag_open'] = $config['full_tag_open'];
+    $config_bb['full_tag_close'] = $config['full_tag_close'];
+    $config_bb['first_link'] = $config['first_link'];
+    $config_bb['last_link'] = $config['last_link'];
+    $config_bb['first_tag_open'] = $config['first_tag_open'];
+    $config_bb['first_tag_close'] = $config['first_tag_close'];
+    $config_bb['prev_link'] = $config['prev_link'];
+    $config_bb['prev_tag_open'] = $config['prev_tag_open'];
+    $config_bb['prev_tag_close'] = $config['prev_tag_close'];
+    $config_bb['next_link'] = $config['next_link'];
+    $config_bb['next_tag_open'] = $config['next_tag_open'];
+    $config_bb['next_tag_close'] = $config['next_tag_close'];
+    $config_bb['last_tag_open'] = $config['last_tag_open'];
+    $config_bb['last_tag_close'] = $config['last_tag_close'];
+    $config_bb['cur_tag_open'] = $config['cur_tag_open'];
+    $config_bb['cur_tag_close'] = $config['cur_tag_close'];
+    $config_bb['num_tag_open'] = $config['num_tag_open'];
+    $config_bb['num_tag_close'] = $config['num_tag_close'];
+    $config_bb['attributes'] = $config['attributes'];
+
+    $this->pagination->initialize($config_bb);
+
+    $page_bb = ($this->input->get('page_bb')) ? (($this->input->get('page_bb') - 1) * $config_bb['per_page']) : 0;
+    $coa_bb = $this->M_coa->list_coa_bb_paginate($config_bb["per_page"], $page_bb, $keyword_bb, $perusahaan); // You'll need to create this M_coa function
 
     $nip = $this->session->userdata('nip');
     $sql = "SELECT COUNT(Id) FROM memo WHERE (nip_kpd LIKE '%$nip%' OR nip_cc LIKE '%$nip%') AND (`read` NOT LIKE '%$nip%');";
@@ -2241,26 +2330,6 @@ class Financial extends CI_Controller
 
     $laba = $pendapatan->nominal - $beban->nominal;
 
-    // --- PAGINATION FOR CARD 1 (v_coa_all) ---
-
-    $per_page = 25;
-
-    // Get total rows for SBB
-    $total_sbb_rows = $this->M_coa->count($keyword_sbb, $cabang, 'v_coa_all');
-
-    // Get total rows for BB
-    $total_bb_rows = $this->M_coa->count_bb($keyword_bb, $perusahaan, 'v_coabb_all');
-
-    // Prepare the configuration arrays using the new function
-    $config_sbb = $this->_pagination_config($total_sbb_rows, $per_page, 'page_sbb');
-    $config_bb = $this->_pagination_config($total_bb_rows, $per_page, 'page_bb');
-
-    $page_sbb = ($this->input->get('page_sbb')) ? (($this->input->get('page_sbb') - 1) * $per_page) : 0;
-    $coa_sbb = $this->M_coa->list_coa_paginate($per_page, $page_sbb, $keyword_sbb, $cabang);
-
-    $page_bb = ($this->input->get('page_bb')) ? (($this->input->get('page_bb') - 1) * $per_page) : 0;
-    $coa_bb = $this->M_coa->list_coa_bb_paginate($per_page, $page_bb, $keyword_bb, $perusahaan);
-
     $data = [
       'laba' => $laba,
       'activa' => $activa,
@@ -2271,9 +2340,6 @@ class Financial extends CI_Controller
       'coa' => $coa_sbb,
       'page_bb' => $page_bb, // Pass the new page variable
       'coa_bb' => $coa_bb,   // Pass the new data for Card 2
-      'config_sbb' => $config_sbb, // Pass the SBB config
-      'config_bb' => $config_bb, // Pass the BB config
-
       'cabang_now' => $cabang,
       'cabang' => $cabangs,
       'is_semua_coa' => $cabang_s->ambil_semua_coa,
@@ -2291,60 +2357,11 @@ class Financial extends CI_Controller
 
     ];
 
-
     $data['pages'] = "pages/financial/v_list_coa";
     $data['utility'] = $this->db->get('utility')->row_array();
     $data['pages_script'] = 'script/financial/s_financial';
     $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
     $this->load->view('index', $data);
-  }
-
-  private function _pagination_config($total_rows, $per_page, $query_string_segment)
-  {
-    $config = [
-      'base_url' => site_url('financial/list_coa'),
-      'total_rows' => $total_rows,
-      'per_page' => $per_page,
-      'uri_segment' => 3,
-      'num_links' => 10,
-      'use_page_numbers' => TRUE,
-      'enable_query_strings' => TRUE,
-      'page_query_string' => TRUE,
-      'reuse_query_string' => TRUE,
-      'query_string_segment' => $query_string_segment,
-      'full_tag_open' => '<ul class="pagination justify-content-end">',
-      'full_tag_close' => '</ul>',
-      'first_link' => "<i class='fe fe-chevrons-left'></i>",
-      'last_link' => "<i class='fe fe-chevrons-right'></i>",
-      'first_tag_open' => '<li class="page-item">',
-      'first_tag_close' => '</li>',
-      'prev_link' => "<i class='fe fe-chevron-left'></i>",
-      'prev_tag_open' => '<li class="page-item">',
-      'prev_tag_close' => '</li>',
-      'next_link' => "<i class='fe fe-chevron-right'></i>",
-      'next_tag_open' => '<li class="page-item">',
-      'next_tag_close' => '</li>',
-      'last_tag_open' => '<li class="page-item">',
-      'last_tag_close' => '</li>',
-      'cur_tag_open' => '<li class="page-item active"><a class="page-link" href="#">',
-      'cur_tag_close' => '</a></li>',
-      'num_tag_open' => '<li class="page-item">',
-      'num_tag_close' => '</li>',
-      'attributes' => ['class' => 'page-link'],
-    ];
-    return $config;
-  }
-
-  public function set_active_tab_session()
-  {
-    // Check if the request is an AJAX request
-    if ($this->input->is_ajax_request()) {
-      $active_tab = $this->input->post('active_tab');
-      if ($active_tab) {
-        $this->session->set_userdata('active_tab', $active_tab);
-        echo json_encode(['status' => 'success']);
-      }
-    }
   }
 
   public function search_coa_bb()
@@ -2366,10 +2383,7 @@ class Financial extends CI_Controller
 
   public function reset_coa()
   {
-
-    $this->session->unset_userdata('search_sbb');
-    $this->session->unset_userdata('search_bb');
-
+    $this->session->unset_userdata('search');
     redirect('financial/list_coa');
   }
 

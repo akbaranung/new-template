@@ -57,39 +57,41 @@
       <h1 class="page-title">List Coa</h1>
       <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
-          <button class="p-2 nav-link active" id="card2-tab" data-toggle="tab" data-target="#card2" type="button" role="tab" aria-controls="card2" aria-selected="false">
+          <button class="p-2 nav-link tab-button <?= ($active_tab == 'card2') ? 'active' : '' ?>" id="card2-tab" data-tab="card2" type="button" role="tab" aria-controls="card2" aria-selected="<?= ($active_tab == 'card2') ? 'true' : 'false' ?>">
             List COA BB
           </button>
         </li>
         <li class="nav-item" role="presentation">
-          <button class="p-2 nav-link" id="card1-tab" data-toggle="tab" data-target="#card1" type="button" role="tab" aria-controls="card1" aria-selected="true">
+          <button class="p-2 nav-link tab-button <?= ($active_tab == 'card1') ? 'active' : '' ?>" id="card1-tab" data-tab="card1" type="button" role="tab" aria-controls="card1" aria-selected="<?= ($active_tab == 'card1') ? 'true' : 'false' ?>">
             List COA SBB
           </button>
         </li>
       </ul>
       <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade " id="card1" role="tabpanel" aria-labelledby="card1-tab">
+        <div class="tab-pane fade <?= ($active_tab == 'card1') ? 'show active' : '' ?>" id="card1" role="tabpanel" aria-labelledby="card1-tab">
           <div class="card shadow mb-4">
             <div class="card-body">
               <div class="row">
                 <div class="col-md-12 col-xs-12 form-group pull-right top_search">
-                  <!-- <form class="form-horizontal form-label-left" method="post" action="<?= base_url('financial_first/list_coa') ?>">
+                  <!-- <form class="form-horizontal form-label-left" method="post" action="<?= base_url('financial/list_coa') ?>">
                     <div class="input-group">
                       <input type="text" class="form-control" name="keyword" placeholder="Search for..." value="<?= $keyword ?>">
                       <span class="input-group-btn">
                         <button class="btn btn-secondary" type="submit">Go!</button>
-                        <a href="<?= base_url('financial_first/reset_coa') ?>" class="btn btn-warning" style="color:white;">Reset</a>
+                        <a href="<?= base_url('financial/reset_coa') ?>" class="btn btn-warning" style="color:white;">Reset</a>
                         <button class="btn btn-primary text-white" data-toggle="modal" data-target="#tambahCoa" type="button" style="color: white;">Buat CoA</button>
                         <button class="btn btn-primary text-white" data-toggle="modal" data-target="#TemplateCoa" type="button" style="color: white;">Ambil CoA</button>
                       </span>
                     </div>
                   </form> -->
-                  <form class="form-horizontal form-label-left" method="post" action="<?= base_url('financial_first/list_coa') ?>">
+                  <form class="form-horizontal form-label-left" method="post" action="<?= base_url('financial/list_coa') ?>">
+                    <input type="hidden" name="active_tab" value="card1">
+
                     <div class="input-group">
                       <input type="text" class="form-control" name="keyword_sbb" placeholder="Search for..." value="<?= $keyword_sbb ?>">
                       <span class="input-group-btn">
                         <button class="btn btn-secondary" type="submit">Go!</button>
-                        <a href="<?= base_url('financial_first/reset_coa') ?>" class="btn btn-warning" style="color:white;">Reset</a>
+                        <a href="<?= base_url('financial/reset_coa') ?>" class="btn btn-warning" style="color:white;">Reset</a>
                         <button class="btn btn-primary text-white" data-toggle="modal" data-target="#tambahCoa" type="button" style="color: white;">Buat CoA</button>
                         <?php
                         if ($is_semua_coa == 0) {
@@ -156,24 +158,29 @@
               </div>
               <div class="row">
                 <div class="col-md-12 col-xs-12 text-right">
-                  <?= $this->pagination->create_links() ?>
-                </div>
+                  <?php
+                  // Initialize and generate pagination for SBB
+                  $this->pagination->initialize($config_sbb);
+                  echo $this->pagination->create_links();
+                  ?> </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="tab-pane fade show active" id="card2" role="tabpanel" aria-labelledby="card2-tab">
+        <div class="tab-pane fade <?= ($active_tab == 'card2') ? 'show active' : '' ?>" id="card2" role="tabpanel" aria-labelledby="card2-tab">
           <div class="card shadow mb-4">
             <div class="card-body">
               <div class="row">
                 <div class="col-md-12 col-xs-12 form-group pull-right top_search">
-                  <form class="form-horizontal form-label-left" method="post" action="<?= base_url('financial_first/list_coa') ?>">
+                  <form class="form-horizontal form-label-left" method="post" action="<?= base_url('financial/list_coa') ?>">
+                    <input type="hidden" name="active_tab" value="card2">
+
                     <div class="input-group">
                       <input type="text" class="form-control" name="keyword_bb" placeholder="Search for..." value="<?= $keyword_bb ?>">
                       <span class="input-group-btn">
                         <button class="btn btn-secondary" type="submit">Go!</button>
-                        <a href="<?= base_url('financial_first/reset_coa') ?>" class="btn btn-warning" style="color:white;">Reset</a>
+                        <a href="<?= base_url('financial/reset_coa') ?>" class="btn btn-warning" style="color:white;">Reset</a>
                         <button class="btn btn-primary text-white" data-toggle="modal" data-target="#tambahCoaBB" type="button" style="color: white;">Buat CoA BB</button>
 
                         <?php
@@ -217,8 +224,12 @@
               </div>
               <div class="row">
                 <div class="col-md-12 col-xs-12 text-right">
-                  <?= $this->pagination->create_links() ?>
-                </div>
+                  <?php
+                  // Initialize and generate pagination for BB
+
+                  $this->pagination->initialize($config_bb);
+                  echo $this->pagination->create_links();
+                  ?> </div>
               </div>
             </div>
           </div>
@@ -489,7 +500,7 @@
           Buat CoA Baru
         </h4>
       </div>
-      <form class="form-horizontal form-label-left" method="POST" action="<?= base_url('financial_first/tambahCoaBB') ?>">
+      <form class="form-horizontal form-label-left" method="POST" action="<?= base_url('financial/tambahCoaBB') ?>">
         <div class="modal-body">
           <div class="form-group row">
             <div class="col-12 mt-3">
@@ -522,7 +533,7 @@
       </div>
       <div class="modal-body">
         <!-- <div class="float-right">
-          <a href="<?= base_url('financial_first/ambil_semua_coa') ?>" class="btn btn-primary">Ambil Semua</a>
+          <a href="<?= base_url('financial/ambil_semua_coa') ?>" class="btn btn-primary">Ambil Semua</a>
         </div> -->
         <div class="table-responsive">
           <table id="table-template-2" class="table table-striped" style="width:100%">
