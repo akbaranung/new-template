@@ -57,12 +57,12 @@
       <h1 class="page-title">List Coa</h1>
       <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
-          <button class="p-2 nav-link" id="card2-tab" data-toggle="tab" data-target="#card2" type="button" role="tab" aria-controls="card2" aria-selected="false">
+          <button class="p-2 nav-link active" id="card2-tab" data-toggle="tab" data-target="#card2" type="button" role="tab" aria-controls="card2" aria-selected="false">
             List COA BB
           </button>
         </li>
         <li class="nav-item" role="presentation">
-          <button class="p-2 nav-link active" id="card1-tab" data-toggle="tab" data-target="#card1" type="button" role="tab" aria-controls="card1" aria-selected="true">
+          <button class="p-2 nav-link" id="card1-tab" data-toggle="tab" data-target="#card1" type="button" role="tab" aria-controls="card1" aria-selected="true">
             List COA SBB
           </button>
         </li>
@@ -97,7 +97,13 @@
                           <button class="btn btn-primary text-white" data-toggle="modal" data-target="#TemplateCoa" type="button" style="color: white;">Ambil CoA</button>
                         <?php
                         }
+
+                        if ($is_sawal == 0 && $cabang_now == $this->session->userdata('kode_cabang')) {
                         ?>
+                          <button class="btn btn-pink text-white" data-toggle="modal" data-target="#saldoAwal" type="button" style="color: white;">Buat Saldo Awal</button>
+                        <?php
+                        }
+                        ?> ?>
                       </span>
                     </div>
                   </form>
@@ -112,6 +118,13 @@
                       <th>Sub BB</th>
                       <th>Nama Perkiraan</th>
                       <th class="text-center">Saldo Awal</th>
+                      <?php
+                      if ($is_sawal == 0 && $cabang_now == $this->session->userdata('kode_cabang')) {
+                      ?>
+                        <th class="text-center">Aksi</th>
+                      <?php
+                      }
+                      ?>
                     </tr>
                   </thead>
                   <tbody>
@@ -124,6 +137,13 @@
                           <td><?= $i['no_sbb'] ?></td>
                           <td><?= ($i['nama_perkiraan']) ?></td>
                           <td class="text-right"><?= $i['nominal'] != null ? number_format($i['nominal']) : 0 ?></td>
+                          <?php
+                          if ($is_sawal == 0 && $cabang_now == $this->session->userdata('kode_cabang')) {
+                          ?>
+                            <td class="text-center"><button class="btn btn-sm btn-warning text-white" onclick="onEdit(<?= $i['no_sbb'] ?>, <?= $i['id_cabang'] ?>)" type="button">Update</button></td>
+                          <?php
+                          }
+                          ?>
                         </tr>
                       <?php endforeach;
                     } else { ?>
