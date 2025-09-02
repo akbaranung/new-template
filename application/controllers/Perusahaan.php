@@ -308,7 +308,7 @@ class Perusahaan extends CI_Controller
   public function proccess_add_user()
   {
     // Set validation rules
-    $this->form_validation->set_rules('username', 'Username Wajib', 'required|trim|is_unique[users.nip]|min_length[5]|alpha_numeric');
+    $this->form_validation->set_rules('username', 'Username Wajib', 'required|trim|is_unique[users.nip]|min_length[5]|alpha_dash');
     $this->form_validation->set_rules('nama', 'Nama Lengkap', 'required|trim');
     // $this->form_validation->set_rules('username', 'Username', 'required|trim|is_unique[users.username]|min_length[5]');
     $this->form_validation->set_rules('email', 'Email', 'required|trim|valid_email|is_unique[users.email]');
