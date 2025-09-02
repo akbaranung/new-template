@@ -128,9 +128,9 @@
             if (isset($user_counts[$label]) && $user_counts[$label] >= 1) {
               // $active_fishbone = 'active';
           ?>
-              <a href="#">
-                <div class="circle-success active" data-label="<?= $label ?>">
-                  <div class="triangle-right-success"></div>
+              <a href="#" style="text-decoration: none;">
+                <div class="circle-success active" data-label="<?= $label ?>" style="background-color: #1b68ff; color:white;">
+                  <div class="fe fe-user-check"></div>
                 </div>
               </a>
             <?php
@@ -145,8 +145,8 @@
               $label_now = "<a class='btn btn-pink' href='$button_now'>" . $label . "</a>";
             ?>
               <a href="<?= $button_now ?>">
-                <div class="circle-current" data-label="<?= $label ?>">
-                  <div class="triangle-right-primary"></div>
+                <div class="circle-current" data-label="<?= $label ?>" style="background-color: #e81f63; color:white;">
+                  <div class="fe fe-chevrons-down"></div>
                 </div>
               </a>
             <?php
@@ -166,9 +166,9 @@
             $button_now = base_url('financial_first/force_make_coa_sbb');
             // $label = "COA"
             ?>
-            <a href="<?= $button_now ?>">
-              <div class="circle-current" data-label="Setting COA Dan SAWAL">
-                <div class="triangle-right-primary"></div>
+            <a href="<?= $button_now ?>" style="text-decoration: none;">
+              <div class="circle-current" data-label="Setting COA Dan SAWAL" style="background-color: #e81f63; color:white;">
+                <div class="fe fe-chevrons-down"></div>
               </div>
             </a>
           <?php
