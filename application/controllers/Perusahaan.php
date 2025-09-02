@@ -325,6 +325,7 @@ class Perusahaan extends CI_Controller
     $this->form_validation->set_message('valid_email', 'Format {field} tidak valid.');
     $this->form_validation->set_message('numeric', '{field} harus berupa angka.');
     $this->form_validation->set_message('alpha_numeric', '{field} hanya boleh berisi huruf dan angka.');
+    $this->form_validation->set_message('alpha_dash', '{field} hanya boleh berisi huruf, angka, garis bawah (_), dan tanda hubung (-).');
 
     $uri1 = $this->input->post('uri1');
     $uri2 = $this->input->post('uri2');
