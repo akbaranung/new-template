@@ -23,9 +23,107 @@
         <label for="inputEmail" class="sr-only">Token</label>
         <input type="text" id="token" name="token" class="form-control form-control-lg" placeholder="Please enter Token" autofocus="true">
       </div>
+      <div class="form-group d-flex justify-content-center">
+        <button id="resend-code-btn" type="button" class="btn btn-lg btn-outline-pink">Kirim Ulang Kode</button>
+      </div>
       <button class="btn btn-lg btn-primary btn-block" type="submit">Verifikasi</button>
       <p class="mt-5 mb-3 text-muted text-center">Sudah punya akun? <a href="<?= base_url('auth/logout') ?>">Masuk dengan Akun Perusahaan Anda</a></p>
       <p class="mt-5 mb-3 text-muted text-center">IT BARIS KODE INDONESIA © <?= date('Y') ?></p>
     </div>
   </form>
 </div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+  $(document).ready(function() {
+    const resendBtn = $('#resend-code-btn');
+    const cooldownDuration = 3 * 60; // 3 minutes in seconds
+    const cooldownKey = 'resend_cooldown_end_time';
+
+    function startCooldown() {
+      // Set the cooldown end time in localStorage
+      const endTime = Date.now() + (cooldownDuration * 1000);
+      localStorage.setItem(cooldownKey, endTime);
+
+      // Disable the button and start the countdown
+      let timeLeft = cooldownDuration;
+      resendBtn.prop('disabled', true);
+      resendBtn.css('cursor', 'not-allowed');
+
+      const timer = setInterval(function() {
+        const now = Date.now();
+        const remainingTime = Math.ceil((endTime - now) / 1000);
+
+        if (remainingTime <= 0) {
+          clearInterval(timer);
+          resendBtn.prop('disabled', false);
+          resendBtn.css('cursor', 'pointer');
+          resendBtn.text('Kirim Ulang Kode');
+          localStorage.removeItem(cooldownKey); // Clean up localStorage
+        } else {
+          const minutes = Math.floor(remainingTime / 60);
+          const seconds = remainingTime % 60;
+          resendBtn.text(`Tunggu ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
+        }
+      }, 1000);
+    }
+
+    // Check on page load if a cooldown is already active
+    const storedEndTime = localStorage.getItem(cooldownKey);
+    if (storedEndTime) {
+      const now = Date.now();
+      const remainingTime = Math.ceil((storedEndTime - now) / 1000);
+
+      if (remainingTime > 0) {
+        // If a cooldown is active, start the timer immediately
+        const minutes = Math.floor(remainingTime / 60);
+        const seconds = remainingTime % 60;
+        resendBtn.text(`Tunggu ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`);
+        resendBtn.prop('disabled', true);
+        resendBtn.css('cursor', 'not-allowed');
+        startCooldown(); // Restart the timer
+      } else {
+        // Cooldown has expired, remove the key and reset the button
+        localStorage.removeItem(cooldownKey);
+        resendBtn.prop('disabled', false);
+        resendBtn.css('cursor', 'pointer');
+        resendBtn.text('Kirim Ulang Kode');
+      }
+    }
+
+    // AJAX click event
+    resendBtn.on('click', function() {
+      $.ajax({
+        url: "<?= base_url('auth/kirim_ulang_token/') ?>",
+        type: 'POST',
+        dataType: 'json',
+        data: {},
+        success: function(response) {
+          if (response.success) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Berhasil',
+              text: response.message,
+              showConfirmButton: false,
+              timer: 2000
+            });
+            startCooldown();
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Gagal',
+              text: response.message
+            });
+          }
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Terjadi kesalahan. Silahkan coba lagi nanti.'
+          });
+        }
+      });
+    });
+  });
+</script>

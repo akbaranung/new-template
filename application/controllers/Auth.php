@@ -644,6 +644,41 @@ class Auth extends CI_Controller
     $data['pages'] = 'pages/auth/v_verifikasi_akun';
     $this->load->view('pages/auth/index', $data);
   }
+
+  public function kirim_ulang_token()
+  {
+
+    $user = $this->db->from('users')->where('id', $this->session->userdata('user_user_id'))->get()->row();
+    $msg = "Kode verifikasi Akun *Bariskode* Anda adalah *$user->token*, Gunakan Token Saat Login untuk pertama kali. Jangan bagikan kode ini kepada siapa pun.";
+
+    if ($this->api_whatsapp->wa_notif($msg, $user->phone)) {
+      echo json_encode(['success' => true, 'message' => 'Berhasil Mengirim Pesan ke nomor ' . $this->censor_phone_number($user->phone) . '.']);
+    } else {
+      echo json_encode(['success' => false, 'message' => 'Gagal Mengirip Pesan, silahkan coba lagi.']);
+    }
+    // echo json_encode(['success' => false, 'message' => 'Gagal Mengirip Pesan, silahkan coba lagi.']);
+  }
+
+  private function censor_phone_number($phone)
+  {
+    // Get the total length of the phone number string.
+    $length = strlen($phone);
+
+    // If the number is 4 digits or less, don't censor anything.
+    if ($length <= 4) {
+      return $phone;
+    }
+
+    // Extract the last 4 digits.
+    $last_four = substr($phone, -4);
+
+    // Create a string of asterisks to censor the front part.
+    $censored_part = str_repeat('*', $length - 4);
+
+    // Combine the censored part with the last four digits.
+    return $censored_part . $last_four;
+  }
+
   public function cek_token()
   {
     $this->db->from('users');
