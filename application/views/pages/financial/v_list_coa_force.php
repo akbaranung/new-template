@@ -100,7 +100,7 @@
                       $no = ($this->uri->segment(3)) ? ((($this->uri->segment(3) - 1) * 10) + 1) : '1';
                       foreach ($coa as $i) : ?>
                         <tr>
-                          <td><?= $no++ ?>.</td>
+                          <td><?= ++$page ?>.</td>
                           <td><?= $i['no_bb'] ?></td>
                           <td><?= $i['no_sbb'] ?></td>
                           <td><?= ($i['nama_perkiraan']) ?></td>
@@ -163,7 +163,7 @@
                       $no = ($this->uri->segment(3)) ? ((($this->uri->segment(3) - 1) * 10) + 1) : '1';
                       foreach ($coa_bb as $i) : ?>
                         <tr>
-                          <td><?= $no++ ?>.</td>
+                          <td><?= ++$page_bb ?>.</td>
                           <td><?= $i['no_bb'] ?></td>
                           <td><?= ($i['nama_perkiraan']) ?></td>
                         </tr>
