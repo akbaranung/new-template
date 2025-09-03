@@ -265,7 +265,7 @@
     
     <div class="mt-4 pt-3 text-center">
         <img src="${BASE_URL}assets/images/bank/BSI_1.png" alt="Logo Bank BSI" class="mb-2 w-25">
-        <h2 class="mt-3 text-bariskode">(NOMOR REKENING)</h2>
+        <h2 class="mt-3 text-bariskode">79 7070 7004 (BSI) - PT. Baris Kode Indonesia</h2>
     </div>
     
     <div class="mt-4 pt-3 d-flex justify-content-center">
@@ -473,7 +473,7 @@
     
     <div class="mt-4 pt-3 text-center">
         <img src="${BASE_URL}assets/images/bank/BSI_1.png" alt="Logo Bank BSI" class="mb-2 w-25">
-        <h2 class="mt-3 text-bariskode">(NOMOR REKENING)</h2>
+        <h2 class="mt-3 text-bariskode">79 7070 7004 (BSI) - PT. Baris Kode Indonesia</h2>
     </div>
 </div>
             `;
