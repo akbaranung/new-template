@@ -452,6 +452,7 @@ class Perusahaan extends CI_Controller
       "supervisi" => $this->input->post('supervisi'),
       "cuti" => $this->input->post('cuti'),
       "id_lokasi_presensi" => $this->input->post('lokasi_presensi'),
+      "id_cabang" => $this->input->post('cabang'),
       "jam_masuk" => $this->input->post('jam_masuk'),
       "jam_keluar" => $this->input->post('jam_keluar')
     ];

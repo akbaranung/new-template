@@ -734,6 +734,18 @@
                       </select>
                     </div>
                   </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Cabang</label>
+                      <select name="cabang" id="" class="form-control js-example-basic-multiple">
+                        <?php
+
+                        foreach ($cabang as $data) { ?>
+                          <option <?= $user->id_cabang == $data->uid ? 'selected' : '' ?> value="<?= $data->uid ?>"><?= $data->nama_cabang . ' - ' . $data->alamat_cabang ?></option>
+                        <?php } ?>
+                      </select>
+                    </div>
+                  </div>
                   <div class="col-md-12">
                     <label>User Menu Access</label>
                     <div class="row">
