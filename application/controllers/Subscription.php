@@ -288,7 +288,7 @@ class Subscription extends CI_Controller
                 ->row(); // Note the s at the end of num_rows()
             // Send a success response
 
-            $detail_perusahaan = $this->db->from('utility')->where('Id', $confirmation_detail['id_perusahaan'])->get()->row();
+            $detail_perusahaan = $this->db->from('utility')->where('Id', $confirmation_detail->id_perusahaan)->get()->row();
 
             $indonesian_months = [
                 'January' => 'Januari',
