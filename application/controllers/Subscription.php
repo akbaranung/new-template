@@ -221,14 +221,14 @@ class Subscription extends CI_Controller
 
                 $link_konfirmasi = base_url('Subscription/proses_bayar_konfirmasi/' . $last_id);
 
-                $msg_user = "Halo, " . $detail_perusahaan->nama_perusahaan . "! ✨\n\nPembayaran Anda telah kami terima.\n\nBerikut rincian pesanan Anda:\n\n"
+                $msg_user_whatsapp = "Halo, " . $detail_perusahaan->nama_perusahaan . "! ✨\n\nPembayaran Anda telah kami terima.\n\nBerikut rincian pesanan Anda:\n\n"
                     . "- Paket: *" . $data['planName'] . "*\n"
                     . "- Jangka Waktu: *" . $data['months'] . "* Bulan\n"
                     . "- Tanggal Mulai: *" . $tanggal_mulai_formatted . "*\n"
                     . "- Tanggal Selesai: *" . $tanggal_selesai_formatted . "*\n"
                     . "- Total Tagihan: *Rp. " . $formatted_nominal . "*\n\n"
                     . "Mohon segera lakukan konfirmasi pembayaran dengan mengklik link di bawah ini:\n"
-                    . "*<a href='" . $link_konfirmasi . "'>Konfirmasi Pembayaran</a>*\n\n"
+                    . $link_konfirmasi . "\n\n" // Use the raw URL here
                     . "Terima kasih atas kerja sama Anda.\n\n"
                     . "Hormat kami,\n"
                     . "Tim Baris Kode Indonesia";
