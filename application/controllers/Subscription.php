@@ -175,18 +175,19 @@ class Subscription extends CI_Controller
 
             $link_konfirmasi = base_url('Subscription/proses_bayar_konfirmasi/' . $confirmation_detail->id);
 
-            $msg_user_whatsapp = "Halo, " . $detail_perusahaan->nama_perusahaan . "! ✨\n\nPembayaran Anda telah kami terima.\n\nBerikut rincian pesanan Anda:\n\n"
+            $msg_user_whatsapp = "Halo, " . $detail_perusahaan->nama_perusahaan . "! ✨\n\nPembelian paket premium Anda telah kami terima.\n\nBerikut rincian pesanan Anda:\n\n"
                 . "- Paket: *" . $data['planName'] . "*\n"
                 . "- Jangka Waktu: *" . $data['months'] . "* Bulan\n"
-                . "- Tanggal Mulai: *" . $tanggal_mulai_formatted . "*\n"
-                . "- Tanggal Selesai: *" . $tanggal_selesai_formatted . "*\n"
                 . "- Total Tagihan: *Rp. " . $formatted_nominal . "*\n\n"
-                . "Mohon segera lakukan konfirmasi pembayaran dengan mengklik link di bawah ini:\n"
-                . $link_konfirmasi . "\n\n" // Use the raw URL here
+                . "Mohon segera lakukan pembayaran melalui:\n\n"
+                . "*Bank Syariah Indonesia (BSI)*\n"
+                . "Nomor Rekening: *79 7070 7004*\n"
+                . "Atas Nama: *PT. Baris Kode Indonesia*\n\n"
+                . "Setelah melakukan pembayaran, mohon konfirmasi pembelian paket dengan mengklik link di bawah ini:\n"
+                . $link_konfirmasi . "\n\n"
                 . "Terima kasih atas kerja sama Anda.\n\n"
                 . "Hormat kami,\n"
                 . "Tim Baris Kode Indonesia";
-
 
             if ($this->api_whatsapp->wa_notif($msg_user_whatsapp, $detail_user->phone)) {
                 $whatsapp_send = True;
@@ -222,14 +223,16 @@ class Subscription extends CI_Controller
 
                 $link_konfirmasi = base_url('Subscription/proses_bayar_konfirmasi/' . $last_id);
 
-                $msg_user_whatsapp = "Halo, " . $detail_perusahaan->nama_perusahaan . "! ✨\n\nPembayaran Anda telah kami terima.\n\nBerikut rincian pesanan Anda:\n\n"
+                $msg_user_whatsapp = "Halo, " . $detail_perusahaan->nama_perusahaan . "! ✨\n\nPembelian paket premium Anda telah kami terima.\n\nBerikut rincian pesanan Anda:\n\n"
                     . "- Paket: *" . $data['planName'] . "*\n"
                     . "- Jangka Waktu: *" . $data['months'] . "* Bulan\n"
-                    . "- Tanggal Mulai: *" . $tanggal_mulai_formatted . "*\n"
-                    . "- Tanggal Selesai: *" . $tanggal_selesai_formatted . "*\n"
                     . "- Total Tagihan: *Rp. " . $formatted_nominal . "*\n\n"
-                    . "Mohon segera lakukan konfirmasi pembayaran dengan mengklik link di bawah ini:\n"
-                    . $link_konfirmasi . "\n\n" // Use the raw URL here
+                    . "Mohon segera lakukan pembayaran melalui:\n\n"
+                    . "*Bank Syariah Indonesia (BSI)*\n"
+                    . "Nomor Rekening: *79 7070 7004*\n"
+                    . "Atas Nama: *PT. Baris Kode Indonesia*\n\n"
+                    . "Setelah melakukan pembayaran, mohon konfirmasi pembelian paket dengan mengklik link di bawah ini:\n"
+                    . $link_konfirmasi . "\n\n"
                     . "Terima kasih atas kerja sama Anda.\n\n"
                     . "Hormat kami,\n"
                     . "Tim Baris Kode Indonesia";
