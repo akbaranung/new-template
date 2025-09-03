@@ -11,8 +11,7 @@ class Api_Whatsapp
     // $phone = $phonee;
     // $msg = $msgg;
 
-    // $token = "api_key";53C92CE6A40AC365CD9D1FF128EB1B8E
-    $token = "53C92CE6A40AC365CD9D1FF128EB1B8E";
+    $token = "api_key";
     // $phone= "62812xxxxxx"; //untuk group pakai groupid contoh: 62812xxxxxx-xxxxx
     // $message = "Testing by API ruangwa";
 
@@ -27,7 +26,7 @@ class Api_Whatsapp
       CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
       CURLOPT_CUSTOMREQUEST => 'POST',
       // CURLOPT_POSTFIELDS => 'token=' . $token . '&number=' . $phone . '&message=' . $msgg,
-      CURLOPT_POSTFIELDS => array('api_key' => "53C92CE6A40AC365CD9D1FF128EB1B8E", 'phone' => $phone, 'message' => $msgg),
+      CURLOPT_POSTFIELDS => array('api_key' => $token, 'phone' => $phone, 'message' => $msgg),
 
     ));
     $response = curl_exec($curl);
