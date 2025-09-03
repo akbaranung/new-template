@@ -35,6 +35,7 @@ class Api_Whatsapp
   //   return $response;
   // }
 
+
   function wa_notif($message, $phone_number)
   {
     $curl = curl_init();
