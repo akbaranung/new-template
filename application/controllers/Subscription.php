@@ -8,13 +8,6 @@ class Subscription extends CI_Controller
     {
         parent::__construct();
 
-        if ($this->session->userdata('isLogin') == FALSE) {
-            $this->session->set_flashdata('error', 'Your session has expired');
-            redirect('auth');
-        } else if (!$this->session->userdata('nama_perusahaan')) {
-            redirect('auth');
-        }
-
         $this->load->model(['M_user_access', 'M_perusahaans', 'M_subscription']);
 
         $this->cb = $this->load->database('corebank', TRUE);
@@ -22,6 +15,14 @@ class Subscription extends CI_Controller
 
     public function upgrade()
     {
+
+        if ($this->session->userdata('isLogin') == FALSE) {
+            $this->session->set_flashdata('error', 'Your session has expired');
+            redirect('auth');
+        } else if (!$this->session->userdata('nama_perusahaan')) {
+            redirect('auth');
+        }
+
         $nip = $this->session->userdata('nip');
         $data['title'] = 'Perusahaan';
         $data['utility'] = $this->db->get('utility')->row_array();
@@ -35,6 +36,14 @@ class Subscription extends CI_Controller
 
     public function proses_bayar()
     {
+
+        if ($this->session->userdata('isLogin') == FALSE) {
+            $this->session->set_flashdata('error', 'Your session has expired');
+            redirect('auth');
+        } else if (!$this->session->userdata('nama_perusahaan')) {
+            redirect('auth');
+        }
+
         date_default_timezone_set('Asia/Jakarta');
 
         // Set the response header to JSON
@@ -173,7 +182,7 @@ class Subscription extends CI_Controller
             $this->db->where('level_jabatan', 99);
             $detail_user = $this->db->get()->row();
 
-            $link_konfirmasi = base_url('Subscription/proses_bayar_konfirmasi/' . $confirmation_detail->id);
+            $link_konfirmasi = base_url('Subscription/proses_bayar_konfirmasi_link/' . $confirmation_detail->id);
 
             $msg_user_whatsapp = "Halo, " . $detail_perusahaan->nama_perusahaan . "! ✨\n\nPembelian paket premium Anda telah kami terima.\n\nBerikut rincian pesanan Anda:\n\n"
                 . "- Paket: *" . $data['planName'] . "*\n"
@@ -221,7 +230,7 @@ class Subscription extends CI_Controller
                 $this->db->where('level_jabatan', 99);
                 $detail_user = $this->db->get()->row();
 
-                $link_konfirmasi = base_url('Subscription/proses_bayar_konfirmasi/' . $last_id);
+                $link_konfirmasi = base_url('Subscription/proses_bayar_konfirmasi_link/' . $last_id);
 
                 $msg_user_whatsapp = "Halo, " . $detail_perusahaan->nama_perusahaan . "! ✨\n\nPembelian paket premium Anda telah kami terima.\n\nBerikut rincian pesanan Anda:\n\n"
                     . "- Paket: *" . $data['planName'] . "*\n"
@@ -324,7 +333,7 @@ class Subscription extends CI_Controller
             $formatted_nominal = number_format($confirmation_detail->nominal, 0, ',', '.');
 
 
-            $msg = "Pembayaran Premium telah terkonfirmasi oleh user.
+            $msg = "Pembayaran telah dilakukan oleh user,
 Rincian:
 - Perusahaan: *$detail_perusahaan->nama_perusahaan* (ID: *$detail_perusahaan->Id*)
 - Nama Paket: *" . $confirmation_detail->paket . "*
@@ -346,8 +355,119 @@ Mohon untuk memproses pembayaran segera.";
         }
     }
 
+    public function proses_bayar_konfirmasi_link($id)
+    {
+        // Set the response header to JSON
+
+        // Check if the request method is POST
+        // Validate the ID to ensure it's a valid integer
+        if (!is_numeric($id) || $id <= 0) {
+            // Handle invalid ID, e.g., redirect or show an error
+            echo json_encode(['status' => 'error', 'message' => 'ID tidak valid.']);
+            return;
+        }
+
+        // Set the data to be updated
+        $update_data = ['status_bayar' => 1];
+
+        // Update the record in the database
+        $this->db->where('id', $id);
+        $this->db->update('premium_confirmation', $update_data);
+
+        // Check if the update was successful
+        if ($this->db->affected_rows() > 0) {
+
+            $confirmation_detail = $this->db
+                ->from('premium_confirmation')
+                ->where('id', $id)
+                ->get()
+                ->row(); // Note the s at the end of num_rows()
+            // Send a success response
+
+            $detail_perusahaan = $this->db->from('utility')->where('Id', $confirmation_detail->id_perusahaan)->get()->row();
+
+            $indonesian_months = [
+                'January' => 'Januari',
+                'February' => 'Februari',
+                'March' => 'Maret',
+                'April' => 'April',
+                'May' => 'Mei',
+                'June' => 'Juni',
+                'July' => 'Juli',
+                'August' => 'Agustus',
+                'September' => 'September',
+                'October' => 'Oktober',
+                'November' => 'November',
+                'December' => 'Desember'
+            ];
+
+            $tanggal_mulai_obj = new DateTime($confirmation_detail->tanggal_mulai);
+            $tanggal_selesai_obj = new DateTime($confirmation_detail->tanggal_selesai);
+
+            // 2. Format the dates to a string with English month names
+            // For 'tanggal_mulai', include time
+            $tanggal_mulai_english = $tanggal_mulai_obj->format('d F Y H:i:s');
+            // For 'tanggal_selesai', just the date
+            $tanggal_selesai_english = $tanggal_selesai_obj->format('d F Y');
+
+            // 3. Translate the month names using the map
+            $tanggal_mulai_formatted = strtr($tanggal_mulai_english, $indonesian_months);
+            $tanggal_selesai_formatted = strtr($tanggal_selesai_english, $indonesian_months);
+            $formatted_nominal = number_format($confirmation_detail->nominal, 0, ',', '.');
+
+
+            $msg = "Pembayaran telah dilakukan oleh user,
+Rincian:
+- Perusahaan: *$detail_perusahaan->nama_perusahaan* (ID: *$detail_perusahaan->Id*)
+- Nama Paket: *" . $confirmation_detail->paket . "*
+- Total Bulan: *" . $confirmation_detail->total_bulan . "*
+- Tanggal Mulai: *" . $tanggal_mulai_formatted . "*
+- Tanggal Selesai: *" . $tanggal_selesai_formatted . "*
+- Nominal: *Rp. " . $formatted_nominal . "*
+
+Mohon untuk memproses pembayaran segera.";
+
+            // $this->api_whatsapp->wa_notif($msg, "085157563305");
+            $this->api_whatsapp->wa_notif($msg, "08127070700");
+
+
+            // echo json_encode(['status' => 'success', 'message' => 'Status pembayaran berhasil dikonfirmasi.']);
+
+
+            $this->session->set_flashdata('swal_message', [
+                'icon' => 'success', // or 'success', 'warning', 'info', 'question'
+                'title' => 'Berhasil!',
+                'text' => 'Status pembayaran berhasil dikonfirmasi.',
+                'confirmButtonText' => 'Mengerti',
+            ]);
+
+            redirect('home');
+        } else {
+            // The ID was valid, but no rows were updated (e.g., ID not found)
+            // echo json_encode(['status' => 'error', 'message' => 'Gagal mengonfirmasi status pembayaran. ID tidak ditemukan.']);
+
+
+            $this->session->set_flashdata('swal_message', [
+                'icon' => 'error', // or 'success', 'warning', 'info', 'question'
+                'title' => 'Error!',
+                'text' => 'Gagal mengonfirmasi status pembayaran. ID tidak ditemukan.',
+                'confirmButtonText' => 'Mengerti',
+            ]);
+
+            redirect('home');
+        }
+    }
+
     public function premium_confirmation()
     {
+
+        if ($this->session->userdata('isLogin') == FALSE) {
+            $this->session->set_flashdata('error', 'Your session has expired');
+            redirect('auth');
+        } else if (!$this->session->userdata('nama_perusahaan')) {
+            redirect('auth');
+        }
+
         if ($this->session->userdata('username') == "bariskode") {
             $has_access = TRUE;
         } else {
