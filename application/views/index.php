@@ -186,6 +186,36 @@
   ?>
 
   <!-- Your SweetAlert2 JS check (as provided previously) -->
+  <?php
+  // Check for success message first, as it's typically the most important
+  if ($this->session->flashdata('message_name')) {
+  ?>
+    <script>
+      Swal.fire({
+        title: "Success!! ",
+        text: '<?= $this->session->flashdata('message_name') ?>',
+        icon: "success",
+      });
+    </script>
+  <?php
+    unset($_SESSION['message_name']);
+  }
+  // Then check for error message
+  else if ($this->session->flashdata('message_error')) {
+  ?>
+    <script>
+      Swal.fire({
+        title: "Error!! ",
+        text: '<?= $this->session->flashdata('message_error') ?>',
+        icon: "error",
+      });
+    </script>
+  <?php
+    unset($_SESSION['message_error']);
+  }
+  // If no flash data messages are present, show the default warning
+
+  ?>
   <script>
     <?php if ($this->session->flashdata('swal_type')) : ?>
       Swal.fire({
