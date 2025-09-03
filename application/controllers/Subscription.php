@@ -198,7 +198,8 @@ class Subscription extends CI_Controller
                 'message' => 'Anda sudah melakukan Proses Pembayaran dengan Paket :' . $confirmation_detail->paket,
                 'id_pembayaran' => $confirmation_detail->id,
                 'confirmation_detail' => $confirmation_detail,
-                'whatsapp_send' => $whatsapp_send
+                'whatsapp_send' => $whatsapp_send,
+                'whatsapp_number' => $detail_user->phone,
 
             ]);
         } else {
@@ -244,7 +245,8 @@ class Subscription extends CI_Controller
                     'message' => 'Pembayaran berhasil disimpan. Silahkan menunggu konfirmasi.',
                     'id_pembayaran' => $last_id,
                     'confirmation_detail' => $confirmation_detail,
-                    'whatsapp_send' => $whatsapp_send
+                    'whatsapp_send' => $whatsapp_send,
+                    'whatsapp_number' => $detail_user->phone,
                 ]);
             } else {
                 // Send a detailed error response if the insertion fails
