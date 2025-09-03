@@ -2615,49 +2615,41 @@ class Financial extends CI_Controller
     // Update coa kredit
     $update_saldo_kredit = $this->update_saldo_coa($coa_kredit, $nominal, 'kredit');
 
-    if (!$update_saldo_debit) {
-      return "No Debit";
-    } else if (!$update_saldo_kredit) {
-      return "No Kredit";
-    } else {
 
-      // Ambil saldo debit
-      $saldo_debit = $this->get_saldo_coa($coa_debit);
-      // Ambil saldo kredit
-      $saldo_kredit = $this->get_saldo_coa($coa_kredit);
+    // Ambil saldo debit
+    $saldo_debit = $this->get_saldo_coa($coa_debit);
+    // Ambil saldo kredit
+    $saldo_kredit = $this->get_saldo_coa($coa_kredit);
 
-      $dt_jurnal = [
-        'tanggal' => $tanggal,
-        'akun_debit' => $coa_debit,
-        'jumlah_debit' => $nominal,
-        'akun_kredit' => $coa_kredit,
-        'jumlah_kredit' => $nominal,
-        'saldo_debit' => $saldo_debit,
-        'saldo_kredit' => $saldo_kredit,
-        'keterangan' => $keterangan,
-        'created_by' => $this->session->userdata('nip'),
-        'id_invoice' => ($id_invoice) ? $id_invoice : '',
-        'id_cabang' => $this->session->userdata('kode_cabang'),
-        'id_company' => $this->session->userdata('user_perusahaan_id')
-      ];
+    $dt_jurnal = [
+      'tanggal' => $tanggal,
+      'akun_debit' => $coa_debit,
+      'jumlah_debit' => $nominal,
+      'akun_kredit' => $coa_kredit,
+      'jumlah_kredit' => $nominal,
+      'saldo_debit' => $saldo_debit,
+      'saldo_kredit' => $saldo_kredit,
+      'keterangan' => $keterangan,
+      'created_by' => $this->session->userdata('nip'),
+      'id_invoice' => ($id_invoice) ? $id_invoice : '',
+      'id_cabang' => $this->session->userdata('kode_cabang'),
+      'id_company' => $this->session->userdata('user_perusahaan_id')
+    ];
 
-      $this->M_coa->addJurnal($dt_jurnal);
+    $this->M_coa->addJurnal($dt_jurnal);
 
-      $data_transaksi = [
-        'user_id' => $this->session->userdata('nip'),
-        'tgl_trs' => date('Y-m-d H:i:s'),
-        'nominal' => $nominal,
-        'debet' => $coa_debit,
-        'kredit' => $coa_kredit,
-        'keterangan' => trim($keterangan),
-        'id_cabang' => $this->session->userdata('kode_cabang'),
-        'id_company' => $this->session->userdata('user_perusahaan_id')
-      ];
+    $data_transaksi = [
+      'user_id' => $this->session->userdata('nip'),
+      'tgl_trs' => date('Y-m-d H:i:s'),
+      'nominal' => $nominal,
+      'debet' => $coa_debit,
+      'kredit' => $coa_kredit,
+      'keterangan' => trim($keterangan),
+      'id_cabang' => $this->session->userdata('kode_cabang'),
+      'id_company' => $this->session->userdata('user_perusahaan_id')
+    ];
 
-      $this->M_coa->add_transaksi($data_transaksi);
-
-      return "Success";
-    }
+    $this->M_coa->add_transaksi($data_transaksi);
   }
 
 
