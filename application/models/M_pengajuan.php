@@ -39,7 +39,7 @@ class M_pengajuan extends CI_Model
     $this->cb->select('Id')->from('t_pengajuan')
       ->group_start()
       ->where('spv', $nip, 'both')
-      ->where('cabang', $this->session->userdata('kode_cabang'))
+      // ->where('cabang', $this->session->userdata('kode_cabang'))
       ->group_end();
     if ($keyword) {
       $this->cb->like('kode', $keyword, 'both');
@@ -52,7 +52,7 @@ class M_pengajuan extends CI_Model
     $this->cb->select('a.*, b.nama')->from('t_pengajuan a')->join($this->db->database . '.users b', 'b.nip = a.user', 'left')
       ->group_start()
       ->where('a.spv', $nip)
-      ->where('a.cabang', $this->session->userdata('kode_cabang'))
+      // ->where('a.cabang', $this->session->userdata('kode_cabang'))
       ->group_end();
     if ($keyword) {
       $this->cb->like('a.kode', $keyword, 'both');
@@ -63,10 +63,15 @@ class M_pengajuan extends CI_Model
 
   public function pengajuan_count_direksi($nip, $keyword)
   {
+    $id_perusahaan = $this->session->userdata('user_perusahaan_id');
+    $cabang = $this->cb->get_where('t_cabang', ['id_perusahaan' => $id_perusahaan])->result_array();
+
+    $cabang_ids = array_column($cabang, 'Id');
+
     $this->cb->select('Id')->from('t_pengajuan')
       ->group_start()
       ->where('direksi', $nip, 'both')
-      ->where('cabang', $this->session->userdata('kode_cabang'))
+      ->where_in('cabang', $cabang_ids)
       ->group_end();
     if ($keyword) {
       $this->cb->like('kode', $keyword, 'both');
@@ -76,10 +81,14 @@ class M_pengajuan extends CI_Model
 
   public function pengajuan_get_direksi($limit, $start, $nip, $keyword)
   {
+    $id_perusahaan = $this->session->userdata('user_perusahaan_id');
+    $cabang = $this->cb->get_where('t_cabang', ['id_perusahaan' => $id_perusahaan])->result_array();
+
+    $cabang_ids = array_column($cabang, 'Id');
     $this->cb->select('a.*, b.nama')->from('t_pengajuan a')->join($this->db->database . '.users b', 'b.nip = a.user', 'left')
       ->group_start()
       ->where('a.direksi', $nip)
-      ->where('a.cabang', $this->session->userdata('kode_cabang'))
+      ->where('a.cabang', $cabang_ids)
       ->group_end();
     if ($keyword) {
       $this->cb->like('a.kode', $keyword, 'both');
