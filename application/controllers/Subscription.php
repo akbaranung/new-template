@@ -35,6 +35,8 @@ class Subscription extends CI_Controller
 
     public function proses_bayar()
     {
+        date_default_timezone_set('Asia/Jakarta');
+
         // Set the response header to JSON
         $this->output->set_content_type('application/json');
 
@@ -75,6 +77,10 @@ class Subscription extends CI_Controller
         // Prepare the data for insertion, mapping the front-end keys to your database columns
 
 
+        $expired_time = clone $now;
+        $expired_time->modify('+10 minutes');
+        $expired_status_bayar = $expired_time->format('Y-m-d H:i:s');
+
         $add = [
             "id_perusahaan" => $data['id_perusahaan'],
             "paket" => $data['planName'],
@@ -85,6 +91,7 @@ class Subscription extends CI_Controller
             "tanggal_selesai" => $end_date_with_time,
             "nominal" => $data['confirmationPrice'],
             "status_bayar" => 0, // Assuming 0 is the default for 'pending'
+            "expired_status_bayar" => $expired_status_bayar,
         ];
         $nominal = $data['confirmationPrice'];
         $formatted_nominal = number_format($nominal, 0, ',', '.');
@@ -118,46 +125,126 @@ class Subscription extends CI_Controller
 
 
         $detail_perusahaan = $this->db->from('utility')->where('Id', $data['id_perusahaan'])->get()->row();
+        $now = (new DateTime())->format('Y-m-d H:i:s');
 
         // Attempt to insert the data into the database
         $confirmation_num = $this->db
             ->from('premium_confirmation')
             ->where('id_perusahaan', $data['id_perusahaan'])
             ->where('status_bayar', 0)
+            ->where('expired_status_bayar >', $now) // Add this line to check for the expiration date
             ->get()
             ->num_rows(); // Note the s at the end of num_rows()
 
-        if ($confirmation_num) {
+        $approval_num = $this->db
+            ->from('premium_confirmation')
+            ->where('id_perusahaan', $data['id_perusahaan'])
+            ->where('status_bayar', 1)
+            ->where('approval', 0)
+            ->get()
+            ->num_rows(); // Note the s at the end of num_rows()
+
+        if ($approval_num) {
+
             $confirmation_detail = $this->db
                 ->from('premium_confirmation')
                 ->where('id_perusahaan', $data['id_perusahaan'])
-                ->where('status_bayar', 0)
+                ->where('status_bayar', 1)
+                ->where('approval', 0)
                 ->get()
                 ->row(); // Note the s at the end of num_rows()
             echo json_encode([
                 'status'  => 'proses',
-                'message' => 'Anda sudah melakukan Proses Pembayaran dengan Paket :' . $confirmation_detail->paket
+                'message' => 'Anda sudah melakukan Proses Pembayaran dengan Paket :' . $confirmation_detail->paket,
+            ]);
+        } else if ($confirmation_num) {
+            $confirmation_detail = $this->db
+                ->from('premium_confirmation')
+                ->where('id_perusahaan', $data['id_perusahaan'])
+                ->where('status_bayar', 0)
+                ->where('expired_status_bayar >', $now) // Add this line to check for the expiration date
+                ->get()
+                ->row(); // Note the s at the end of num_rows()
+
+            $this->db->from('users');
+            $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
+            $this->db->where('t_cabang.id_perusahaan', $confirmation_detail->id_perusahaan);
+            $this->db->where('nama_jabatan', 'Super Admin');
+            $this->db->where('level_jabatan', 99);
+            $detail_user = $this->db->get()->row();
+
+            $link_konfirmasi = base_url('Subscription/proses_bayar_konfirmasi/' . $confirmation_detail->id);
+
+            $msg_user = "Halo, " . $detail_perusahaan->nama_perusahaan . "! ✨\n\nPembayaran Anda telah kami terima.\n\nBerikut rincian pesanan Anda:\n\n"
+                . "- Paket: *" . $data['planName'] . "*\n"
+                . "- Jangka Waktu: *" . $data['months'] . "* Bulan\n"
+                . "- Tanggal Mulai: *" . $tanggal_mulai_formatted . "*\n"
+                . "- Tanggal Selesai: *" . $tanggal_selesai_formatted . "*\n"
+                . "- Total Tagihan: *Rp. " . $formatted_nominal . "*\n\n"
+                . "Mohon segera lakukan konfirmasi pembayaran dengan mengklik link di bawah ini:\n"
+                . "*<a href='" . $link_konfirmasi . "'>Konfirmasi Pembayaran</a>*\n\n"
+                . "Terima kasih atas kerja sama Anda.\n\n"
+                . "Hormat kami,\n"
+                . "Tim Baris Kode Indonesia";
+
+            if ($this->api_whatsapp->wa_notif($msg_user, $detail_user->phone)) {
+                $whatsapp_send = True;
+            } else {
+                $whatsapp_send = false;
+            }
+
+            echo json_encode([
+                'status'  => 'success',
+                'message' => 'Anda sudah melakukan Proses Pembayaran dengan Paket :' . $confirmation_detail->paket,
+                'id_pembayaran' => $confirmation_detail->id,
+                'confirmation_detail' => $confirmation_detail,
+                'whatsapp_send' => $whatsapp_send
+
             ]);
         } else {
             if ($this->db->insert('premium_confirmation', $add)) {
-                // Send a success response
-                $msg = "Pembayaran Premium telah masuk.
-Rincian:
-- Perusahaan: *$detail_perusahaan->nama_perusahaan* (ID: *$detail_perusahaan->Id*)
-- Nama Paket: *" . $data['planName'] . "*
-- Total Bulan: *" . $data['months'] . "*
-- Tanggal Mulai: *" . $tanggal_mulai_formatted . "*
-- Tanggal Selesai: *" . $tanggal_selesai_formatted . "*
-- Nominal: *Rp. " . $formatted_nominal . "*
+                $last_id = $this->db->insert_id();
 
-Mohon untuk memproses pembayaran segera.";
+                $confirmation_detail = $this->db
+                    ->from('premium_confirmation')
+                    ->where('id', $last_id)
+                    ->get()
+                    ->row(); // Note the s at the end of num_rows()
 
-                // $this->api_whatsapp->wa_notif($msg, "085157563305");
-                $this->api_whatsapp->wa_notif($msg, "08127070700");
+                $this->db->from('users');
+                $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
+                $this->db->where('t_cabang.id_perusahaan', $confirmation_detail->id_perusahaan);
+                $this->db->where('nama_jabatan', 'Super Admin');
+                $this->db->where('level_jabatan', 99);
+                $detail_user = $this->db->get()->row();
+
+                $link_konfirmasi = base_url('Subscription/proses_bayar_konfirmasi/' . $last_id);
+
+                $msg_user = "Halo, " . $detail_perusahaan->nama_perusahaan . "! ✨\n\nPembayaran Anda telah kami terima.\n\nBerikut rincian pesanan Anda:\n\n"
+                    . "- Paket: *" . $data['planName'] . "*\n"
+                    . "- Jangka Waktu: *" . $data['months'] . "* Bulan\n"
+                    . "- Tanggal Mulai: *" . $tanggal_mulai_formatted . "*\n"
+                    . "- Tanggal Selesai: *" . $tanggal_selesai_formatted . "*\n"
+                    . "- Total Tagihan: *Rp. " . $formatted_nominal . "*\n\n"
+                    . "Mohon segera lakukan konfirmasi pembayaran dengan mengklik link di bawah ini:\n"
+                    . "*<a href='" . $link_konfirmasi . "'>Konfirmasi Pembayaran</a>*\n\n"
+                    . "Terima kasih atas kerja sama Anda.\n\n"
+                    . "Hormat kami,\n"
+                    . "Tim Baris Kode Indonesia";
+
+                if ($this->api_whatsapp->wa_notif($msg_user, $detail_user->phone)) {
+                    $whatsapp_send = True;
+                } else {
+                    $whatsapp_send = false;
+                }
+
 
                 echo json_encode([
                     'status'  => 'success',
-                    'message' => 'Pembayaran berhasil disimpan. Silahkan menunggu konfirmasi.'
+                    'message' => 'Pembayaran berhasil disimpan. Silahkan menunggu konfirmasi.',
+                    'id_pembayaran' => $last_id,
+                    'confirmation_detail' => $confirmation_detail,
+                    'whatsapp_send' => $whatsapp_send
                 ]);
             } else {
                 // Send a detailed error response if the insertion fails
@@ -166,6 +253,90 @@ Mohon untuk memproses pembayaran segera.";
                     'message' => 'Gagal menyimpan pembayaran ke database.'
                 ]);
             }
+        }
+    }
+
+    public function proses_bayar_konfirmasi($id)
+    {
+        // Set the response header to JSON
+        $this->output->set_content_type('application/json');
+
+        // Check if the request method is POST
+        // Validate the ID to ensure it's a valid integer
+        if (!is_numeric($id) || $id <= 0) {
+            // Handle invalid ID, e.g., redirect or show an error
+            echo json_encode(['status' => 'error', 'message' => 'ID tidak valid.']);
+            return;
+        }
+
+        // Set the data to be updated
+        $update_data = ['status_bayar' => 1];
+
+        // Update the record in the database
+        $this->db->where('id', $id);
+        $this->db->update('premium_confirmation', $update_data);
+
+        // Check if the update was successful
+        if ($this->db->affected_rows() > 0) {
+
+            $confirmation_detail = $this->db
+                ->from('premium_confirmation')
+                ->where('id', $id)
+                ->get()
+                ->row(); // Note the s at the end of num_rows()
+            // Send a success response
+
+            $detail_perusahaan = $this->db->from('utility')->where('Id', $confirmation_detail['id_perusahaan'])->get()->row();
+
+            $indonesian_months = [
+                'January' => 'Januari',
+                'February' => 'Februari',
+                'March' => 'Maret',
+                'April' => 'April',
+                'May' => 'Mei',
+                'June' => 'Juni',
+                'July' => 'Juli',
+                'August' => 'Agustus',
+                'September' => 'September',
+                'October' => 'Oktober',
+                'November' => 'November',
+                'December' => 'Desember'
+            ];
+
+            $tanggal_mulai_obj = new DateTime($confirmation_detail->tanggal_mulai);
+            $tanggal_selesai_obj = new DateTime($confirmation_detail->tanggal_selesai);
+
+            // 2. Format the dates to a string with English month names
+            // For 'tanggal_mulai', include time
+            $tanggal_mulai_english = $tanggal_mulai_obj->format('d F Y H:i:s');
+            // For 'tanggal_selesai', just the date
+            $tanggal_selesai_english = $tanggal_selesai_obj->format('d F Y');
+
+            // 3. Translate the month names using the map
+            $tanggal_mulai_formatted = strtr($tanggal_mulai_english, $indonesian_months);
+            $tanggal_selesai_formatted = strtr($tanggal_selesai_english, $indonesian_months);
+            $formatted_nominal = number_format($confirmation_detail->nominal, 0, ',', '.');
+
+
+            $msg = "Pembayaran Premium telah terkonfirmasi oleh user.
+Rincian:
+- Perusahaan: *$detail_perusahaan->nama_perusahaan* (ID: *$detail_perusahaan->Id*)
+- Nama Paket: *" . $confirmation_detail->paket . "*
+- Total Bulan: *" . $confirmation_detail->total_bulan . "*
+- Tanggal Mulai: *" . $tanggal_mulai_formatted . "*
+- Tanggal Selesai: *" . $tanggal_selesai_formatted . "*
+- Nominal: *Rp. " . $formatted_nominal . "*
+
+Mohon untuk memproses pembayaran segera.";
+
+            // $this->api_whatsapp->wa_notif($msg, "085157563305");
+            $this->api_whatsapp->wa_notif($msg, "08127070700");
+
+
+            echo json_encode(['status' => 'success', 'message' => 'Status pembayaran berhasil dikonfirmasi.']);
+        } else {
+            // The ID was valid, but no rows were updated (e.g., ID not found)
+            echo json_encode(['status' => 'error', 'message' => 'Gagal mengonfirmasi status pembayaran. ID tidak ditemukan.']);
         }
     }
 
@@ -237,7 +408,7 @@ Mohon untuk memproses pembayaran segera.";
             $row[] = $formatted_start_date;
             $row[] = $formatted_end_date;
             $row[] = $formatted_nominal;
-            if ($cat->status_bayar == 0) {
+            if ($cat->status_bayar == 1 && $cat->approval == 0) {
                 $button_konfirmasi = '
                       <button class="btn btn-primary text-white" data-toggle="modal" data-id="' . $cat->id . '" data-target="#approval_modal" type="button" style="color: white;">Approval</button>';
 
@@ -245,7 +416,7 @@ Mohon untuk memproses pembayaran segera.";
             } else {
                 $button_konfirmasi = '';
 
-                if ($cat->status_bayar == 1) {
+                if ($cat->approval == 1) {
                     $status = "Disetujui";
                 } else {
                     $status = "Tidak Disetujui";

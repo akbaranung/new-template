@@ -107,7 +107,7 @@
 
                 // Generate and display the new payment details content
                 const detailHTML = `
-                <div class="detail-box">
+                <div class="detail-box mt-5">
                     <h3 class="f-20">Rincian Pembayaran : ${planName}</h3>
                     <p>Pilih jangka waktu pembayaran:</p>
                     <div class="month-selection">
@@ -225,61 +225,33 @@
             // Hide the first detail box with animation
             detailsContainer.classList.remove('visible');
 
-            // Wait for the fade-out animation to finish
-            setTimeout(() => {
-                const startDate = new Date();
-                const endDate = new Date();
-                endDate.setMonth(startDate.getMonth() + months);
+            const startDate = new Date();
+            const endDate = new Date();
+            endDate.setMonth(startDate.getMonth() + months);
 
-                const totalPrice = basePrice * months;
-                const randomDigits = Math.floor(Math.random() * 900) + 100; // Generate 3 random digits (100-999)
-                const confirmationPrice = totalPrice + randomDigits;
+            const totalPrice = basePrice * months;
+            const randomDigits = Math.floor(Math.random() * 900) + 100; // Generate 3 random digits (100-999)
+            const confirmationPrice = totalPrice + randomDigits;
+            const formatDateForDatabase = (date) => {
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            };
+            const dbStartStr = formatDateForDatabase(startDate);
+            const dbEndStr = formatDateForDatabase(endDate);
 
-                // Format dates
-                // const formatDate = (date) => {
-                //     const day = String(date.getDate()).padStart(2, '0');
-                //     const month = String(date.getMonth() + 1).padStart(2, '0');
-                //     const year = date.getFullYear();
-                //     return `${day}-${month}-${year}`;
-                // };
-                // These lines now work correctly because formatDate is globally accessible
-                const startStr = formatDate(startDate);
-                const endStr = formatDate(endDate);
+            const data = {
+                planName: planName,
+                months: months,
+                startDate: dbStartStr,
+                endDate: dbEndStr,
+                confirmationPrice: confirmationPrice,
+                id_perusahaan: "<?php echo $this->session->userdata('user_perusahaan_id'); ?>"
+            };
 
-                const dbStartStr = formatDateForDatabase(startDate);
-                const dbEndStr = formatDateForDatabase(endDate);
-                const secondDetailHTML = `
-                <div class="detail-box">
-    <h3 class="f-20">Konfirmasi Pembayaran</h3>
-    <p>Terima kasih telah memilih Plan ${planName}. Berikut rincian pesanan Anda:</p>
-    <ul class="list-unstyled">
-    <li><strong>Paket</strong> ${planName}</li>
-    <li><strong>Jangka Waktu</strong> ${months} Bulan</li>
-    <li><strong>Tanggal Mulai</strong> ${startStr}</li>
-    <li><strong>Tanggal Selesai</strong> ${endStr}</li>
-</ul>
-    <hr>
-    <h4 class="text-center">Total Tagihan:</h4>
-    <h2 class="text-bariskode text-center">${formatRupiah(confirmationPrice)}</h2>
-    <p class="text-center text-muted f-12">Total akhir sudah termasuk 3 digit unik untuk konfirmasi transaksi.</p>
-    
-    <div class="mt-4 pt-3 text-center">
-        <img src="${BASE_URL}assets/images/bank/BSI_1.png" alt="Logo Bank BSI" class="mb-2 w-25">
-        <h2 class="mt-3 text-bariskode">(NOMOR REKENING)</h2>
-    </div>
-    
-    <div class="mt-4 pt-3 d-flex justify-content-center">
-        <button type="button" id="pay-now-btn" class="btn btn-primary btn-rounded w-50">Konfirmasi Pembayaran</button>
-    </div>
-</div>
-            `;
-
-                detailsContainer.innerHTML = secondDetailHTML;
-                detailsContainer.classList.add('visible'); // Show the new box with fade-in
-
-
-                const thirdDetailHTML = `
-    <div class="detail-box text-center">
+            const thirdDetailHTML = `
+    <div class="detail-box text-center mt-5">
         <h3 class="f-20">Pembayaran Terkirim!</h3>
         <p>Terima kasih. Permintaan pembayaran Anda telah berhasil kami terima. <br>
            Mohon tunggu beberapa saat, tim kami akan segera memprosesnya.
@@ -291,8 +263,8 @@
     </div>
 `;
 
-                const fourthDetailHTML = `
-    <div class="detail-box text-center">
+            const fourthDetailHTML = `
+    <div class="detail-box text-center mt-5">
         <h3 class="f-20">Pembayaran Menunggu Konfirmasi</h3>
         <p>Kami mendeteksi bahwa Anda sudah memiliki permintaan konfirmasi pembayaran sebelumnya.<br>
            Mohon bersabar, tim kami sedang memprosesnya. Anda akan mendapatkan notifikasi setelah verifikasi selesai.<br>
@@ -304,110 +276,232 @@
     </div>
 `;
 
+            swal.fire({
+                title: 'Mohon Tunggu...',
+                text: 'Sedang memproses pembayaran Anda',
+                icon: 'info',
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                didOpen: () => {
+                    swal.showLoading();
+                }
+            });
+
+            // This is the Ajax call using the Fetch API (modern JavaScript)
+            const url = `${BASE_URL}Subscription/proses_bayar`;
+
+            // Fetch call using the dynamic URL
+            fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                })
+                .then(response => {
+                    swal.close();
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.status == "success") {
+                        // console.log('Success:', data);
+                        // Handle a successful response from the server,
+                        // e.g., show a success message or redirect the user.
+                        swal.fire({
+                            customClass: 'slow-animation',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            title: 'Berhasil!',
+                            text: data.message,
+                            timer: 1500
+                        }).then(() => {
+                            setTimeout(() => {
+
+                                // Format dates
+                                // const formatDate = (date) => {
+                                //     const day = String(date.getDate()).padStart(2, '0');
+                                //     const month = String(date.getMonth() + 1).padStart(2, '0');
+                                //     const year = date.getFullYear();
+                                //     return `${day}-${month}-${year}`;
+                                // };
+                                // These lines now work correctly because formatDate is globally accessible
+                                console.log(data.confirmation_detail);
+                                // const startStr = formatDate(data.confirmation_detail.tanggal_mulai);
+                                // const endStr = formatDate(data.confirmation_detail.tanggal_selesai);
+                                const id_pembayaran = data.id_pembayaran;
+                                const startDate = new Date(data.confirmation_detail.tanggal_mulai.split(' ')[0]);
+                                const endDate = new Date(data.confirmation_detail.tanggal_selesai.split(' ')[0]);
+
+                                const startStr = formatDate(startDate);
+                                const endStr = formatDate(endDate);
+
+                                const dbStartStr = formatDateForDatabase(startDate);
+                                const dbEndStr = formatDateForDatabase(endDate);
+                                const secondDetailHTML = `
+                <div class="detail-box mt-5">
+    <h3 class="f-20">Konfirmasi Pembayaran</h3>
+    <p>Terima kasih telah memilih Plan ${data.confirmation_detail.paket}. Berikut rincian pesanan Anda:</p>
+    <ul class="list-unstyled">
+    <li><strong>Paket</strong> ${data.confirmation_detail.paket}</li>
+    <li><strong>Jangka Waktu</strong> ${data.confirmation_detail.total_bulan} Bulan</li>
+    <li><strong>Tanggal Mulai</strong> ${startStr}</li>
+    <li><strong>Tanggal Selesai</strong> ${endStr}</li>
+</ul>
+    <hr>
+    <h4 class="text-center">Total Tagihan:</h4>
+    <h2 class="text-bariskode text-center">${formatRupiah(data.confirmation_detail.nominal)}</h2>
+    <p class="text-center text-muted f-12">Total akhir sudah termasuk 3 digit unik untuk konfirmasi transaksi.</p>
+    
+    <div class="mt-4 pt-3 text-center">
+        <img src="${BASE_URL}assets/images/bank/BSI_1.png" alt="Logo Bank BSI" class="mb-2 w-25">
+        <h2 class="mt-3 text-bariskode">79 7070 7004 (BSI) - PT. Baris Kode Indonesia</h2>
+    </div>
+    
+    <div class="mt-4 pt-3 d-flex justify-content-center">
+        <button type="button" id="pay-now-btn" class="btn btn-primary btn-rounded w-50">Konfirmasi Pembayaran</button>
+    </div>
+</div>
+            `;
+
+                                detailsContainer.innerHTML = secondDetailHTML;
+                                detailsContainer.classList.add('visible'); // Show the new box with fade-in
 
 
+                                const payNowBtn = document.getElementById('pay-now-btn');
+                                payNowBtn.addEventListener('click', () => {
+                                    // Data to be sent via Ajax
 
+                                    swal.fire({
+                                        title: 'Mohon Tunggu...',
+                                        text: 'Sedang memproses pembayaran Anda',
+                                        icon: 'info',
+                                        showConfirmButton: false,
+                                        allowOutsideClick: false,
+                                        didOpen: () => {
+                                            swal.showLoading();
+                                        }
+                                    });
 
-                const payNowBtn = document.getElementById('pay-now-btn');
-                payNowBtn.addEventListener('click', () => {
-                    // Data to be sent via Ajax
+                                    const data = {};
 
-                    swal.fire({
-                        title: 'Mohon Tunggu...',
-                        text: 'Sedang memproses pembayaran Anda',
-                        icon: 'info',
-                        showConfirmButton: false,
-                        allowOutsideClick: false,
-                        didOpen: () => {
-                            swal.showLoading();
-                        }
-                    });
+                                    console.log(id_pembayaran);
+                                    // This is the Ajax call using the Fetch API (modern JavaScript)
+                                    const url = `${BASE_URL}Subscription/proses_bayar_konfirmasi/${id_pembayaran}`;
 
-                    const data = {
-                        planName: planName,
-                        months: months,
-                        startDate: dbStartStr,
-                        endDate: dbEndStr,
-                        confirmationPrice: confirmationPrice,
-                        id_perusahaan: "<?php echo $this->session->userdata('user_perusahaan_id'); ?>"
-                    };
+                                    // Fetch call using the dynamic URL
+                                    fetch(url, {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json',
+                                            },
+                                            body: JSON.stringify(data)
+                                        })
+                                        .then(response => {
+                                            swal.close();
+                                            if (!response.ok) {
+                                                throw new Error('Network response was not ok');
+                                            }
+                                            return response.json();
+                                        })
+                                        .then(data => {
+                                            if (data.status == "success") {
+                                                // console.log('Success:', data);
+                                                // Handle a successful response from the server,
+                                                // e.g., show a success message or redirect the user.
+                                                swal.fire({
+                                                    customClass: 'slow-animation',
+                                                    icon: 'success',
+                                                    showConfirmButton: false,
+                                                    title: 'Berhasil!',
+                                                    text: data.message,
+                                                    timer: 1500
+                                                }).then(() => {
+                                                    // After the SweetAlert is dismissed, update the content
+                                                    detailsContainer.classList.remove('visible');
+                                                    setTimeout(() => {
+                                                        detailsContainer.innerHTML = thirdDetailHTML;
+                                                        detailsContainer.classList.add('visible');
+                                                    }, 500); // This delay should match your transition time
+                                                });
+                                                // alert('Pembayaran berhasil dikonfirmasi! Silakan lanjutkan.');
+                                            } else if (data.status == "proses") {
+                                                swal.fire({
+                                                    customClass: 'slow-animation',
+                                                    icon: 'info',
+                                                    showConfirmButton: false,
+                                                    title: 'Proses!',
+                                                    text: data.message,
+                                                    timer: 3000
+                                                }).then(() => {
+                                                    // After the SweetAlert is dismissed, update the content
+                                                    detailsContainer.classList.remove('visible');
+                                                    setTimeout(() => {
+                                                        detailsContainer.innerHTML = fourthDetailHTML;
+                                                        detailsContainer.classList.add('visible');
+                                                    }, 500); // This delay should match your transition time
+                                                });
+                                            } else {
+                                                swal.fire({
+                                                    customClass: 'slow-animation',
+                                                    icon: 'error',
+                                                    showConfirmButton: false,
+                                                    title: 'Gagal!',
+                                                    text: data.message,
+                                                    timer: 1500
+                                                });
+                                            }
+                                        })
+                                        .catch((error) => {
+                                            swal.close();
 
-                    // This is the Ajax call using the Fetch API (modern JavaScript)
-                    const url = `${BASE_URL}Subscription/proses_bayar`;
-
-                    // Fetch call using the dynamic URL
-                    fetch(url, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(data)
-                        })
-                        .then(response => {
-                            swal.close();
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            return response.json();
-                        })
-                        .then(data => {
-                            if (data.status == "success") {
-                                // console.log('Success:', data);
-                                // Handle a successful response from the server,
-                                // e.g., show a success message or redirect the user.
-                                swal.fire({
-                                    customClass: 'slow-animation',
-                                    icon: 'success',
-                                    showConfirmButton: false,
-                                    title: 'Berhasil!',
-                                    text: data.message,
-                                    timer: 1500
-                                }).then(() => {
-                                    // After the SweetAlert is dismissed, update the content
-                                    detailsContainer.classList.remove('visible');
-                                    setTimeout(() => {
-                                        detailsContainer.innerHTML = thirdDetailHTML;
-                                        detailsContainer.classList.add('visible');
-                                    }, 500); // This delay should match your transition time
+                                            console.error('Error:', error);
+                                            // Handle errors, e.g., show an error message to the user
+                                            alert('Terjadi kesalahan saat mengonfirmasi pembayaran. Silakan coba lagi.');
+                                        });
                                 });
-                                // alert('Pembayaran berhasil dikonfirmasi! Silakan lanjutkan.');
-                            } else if (data.status == "proses") {
-                                swal.fire({
-                                    customClass: 'slow-animation',
-                                    icon: 'info',
-                                    showConfirmButton: false,
-                                    title: 'Proses!',
-                                    text: data.message,
-                                    timer: 3000
-                                }).then(() => {
-                                    // After the SweetAlert is dismissed, update the content
-                                    detailsContainer.classList.remove('visible');
-                                    setTimeout(() => {
-                                        detailsContainer.innerHTML = fourthDetailHTML;
-                                        detailsContainer.classList.add('visible');
-                                    }, 500); // This delay should match your transition time
-                                });
-                            } else {
-                                swal.fire({
-                                    customClass: 'slow-animation',
-                                    icon: 'error',
-                                    showConfirmButton: false,
-                                    title: 'Gagal!',
-                                    text: data.message,
-                                    timer: 1500
-                                });
-                            }
-                        })
-                        .catch((error) => {
-                            swal.close();
 
-                            console.error('Error:', error);
-                            // Handle errors, e.g., show an error message to the user
-                            alert('Terjadi kesalahan saat mengonfirmasi pembayaran. Silakan coba lagi.');
+                            }, 500); // This delay should match your transition time
                         });
+                        // alert('Pembayaran berhasil dikonfirmasi! Silakan lanjutkan.');
+                    } else if (data.status == "proses") {
+                        swal.fire({
+                            customClass: 'slow-animation',
+                            icon: 'info',
+                            showConfirmButton: false,
+                            title: 'Proses!',
+                            text: data.message,
+                            timer: 3000
+                        }).then(() => {
+                            // After the SweetAlert is dismissed, update the content
+                            detailsContainer.classList.remove('visible');
+                            setTimeout(() => {
+                                detailsContainer.innerHTML = fourthDetailHTML;
+                                detailsContainer.classList.add('visible');
+                            }, 500); // This delay should match your transition time
+                        });
+                    } else {
+                        swal.fire({
+                            customClass: 'slow-animation',
+                            icon: 'error',
+                            showConfirmButton: false,
+                            title: 'Gagal!',
+                            text: data.message,
+                            timer: 1500
+                        });
+                    }
+                })
+                .catch((error) => {
+                    swal.close();
+
+                    console.error('Error:', error);
+                    // Handle errors, e.g., show an error message to the user
+                    alert('Terjadi kesalahan saat mengonfirmasi pembayaran. Silakan coba lagi.');
                 });
 
-            }, 500); // This delay should match your transition time
+            // Wait for the fade-out animation to finish
         }
 
         function handlePilihDonasiClick(event) {
@@ -473,7 +567,7 @@
     
     <div class="mt-4 pt-3 text-center">
         <img src="${BASE_URL}assets/images/bank/BSI_1.png" alt="Logo Bank BSI" class="mb-2 w-25">
-        <h2 class="mt-3 text-bariskode">(NOMOR REKENING)</h2>
+        <h2 class="mt-3 text-bariskode">79 7070 7004 (BSI) - PT. Baris Kode Indonesia</h2>
     </div>
 </div>
             `;

@@ -82,6 +82,7 @@ class M_check_subscription extends CI_Model
                     return TRUE; // Subscription is still active for now
 
                 } else {
+                    $this->session->set_userdata('is_premium', 1);
                     $this->session->unset_userdata('Tenggat_waktu');
                     // Subscription is active and not expiring soon
                     return TRUE;
