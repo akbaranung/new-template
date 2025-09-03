@@ -233,7 +233,7 @@ class Subscription extends CI_Controller
                     . "Hormat kami,\n"
                     . "Tim Baris Kode Indonesia";
 
-                if ($this->api_whatsapp->wa_notif($msg_user, $detail_user->phone)) {
+                if ($this->api_whatsapp->wa_notif($msg_user_whatsapp, $detail_user->phone)) {
                     $whatsapp_send = True;
                 } else {
                     $whatsapp_send = false;
