@@ -3169,6 +3169,7 @@ class Financial extends CI_Controller
       $this->cb->where('uid', $this->session->userdata('kode_cabang')); // Assuming 'id' is the primary key for users table
       $this->cb->update('t_cabang', $cabang_data);
       $this->session->set_flashdata('message_name', 'Semua COA berhasil ditambahkan.');
+      $this->session->set_userdata('active_tab', 'card1');
     }
     redirect($_SERVER['HTTP_REFERER']);
   }
@@ -3255,6 +3256,7 @@ class Financial extends CI_Controller
       // Assuming 'users' table is in the default database
       $this->db->where('Id', $this->session->userdata('user_perusahaan_id')); // Assuming 'id' is the primary key for users table
       $this->db->update('utility', $company_data);
+      $this->session->set_userdata('active_tab', 'card2');
     }
     redirect($_SERVER['HTTP_REFERER']);
   }
