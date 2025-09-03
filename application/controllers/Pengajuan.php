@@ -269,13 +269,13 @@ class Pengajuan extends CI_Controller
     }
 
     if ($this->uri->segment(4) == 'spv') {
-      if ($data['pengajuan']->spv != $this->session->userdata('nip') or $data['pengajuan']->cabang != $this->session->userdata('kode_cabang')) {
+      if ($data['pengajuan']->spv != $this->session->userdata('nip')) {
         show_error('Forbidden Access: You do not have permission to view this page.', 403, '403 Forbidden');
       }
     }
 
     if ($this->uri->segment(4) == 'direksi') {
-      if ($data['pengajuan']->direksi != $this->session->userdata('nip') or $data['pengajuan']->cabang != $this->session->userdata('kode_cabang')) {
+      if ($data['pengajuan']->direksi != $this->session->userdata('nip')) {
         show_error('Forbidden Access: You do not have permission to view this page.', 403, '403 Forbidden');
       }
     }
