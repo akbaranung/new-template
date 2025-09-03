@@ -175,19 +175,20 @@ class Subscription extends CI_Controller
 
             $link_konfirmasi = base_url('Subscription/proses_bayar_konfirmasi/' . $confirmation_detail->id);
 
-            $msg_user = "Halo, " . $detail_perusahaan->nama_perusahaan . "! ✨\n\nPembayaran Anda telah kami terima.\n\nBerikut rincian pesanan Anda:\n\n"
+            $msg_user_whatsapp = "Halo, " . $detail_perusahaan->nama_perusahaan . "! ✨\n\nPembayaran Anda telah kami terima.\n\nBerikut rincian pesanan Anda:\n\n"
                 . "- Paket: *" . $data['planName'] . "*\n"
                 . "- Jangka Waktu: *" . $data['months'] . "* Bulan\n"
                 . "- Tanggal Mulai: *" . $tanggal_mulai_formatted . "*\n"
                 . "- Tanggal Selesai: *" . $tanggal_selesai_formatted . "*\n"
                 . "- Total Tagihan: *Rp. " . $formatted_nominal . "*\n\n"
                 . "Mohon segera lakukan konfirmasi pembayaran dengan mengklik link di bawah ini:\n"
-                . "*<a href='" . $link_konfirmasi . "'>Konfirmasi Pembayaran</a>*\n\n"
+                . $link_konfirmasi . "\n\n" // Use the raw URL here
                 . "Terima kasih atas kerja sama Anda.\n\n"
                 . "Hormat kami,\n"
                 . "Tim Baris Kode Indonesia";
 
-            if ($this->api_whatsapp->wa_notif($msg_user, $detail_user->phone)) {
+
+            if ($this->api_whatsapp->wa_notif($msg_user_whatsapp, $detail_user->phone)) {
                 $whatsapp_send = True;
             } else {
                 $whatsapp_send = false;
@@ -457,9 +458,9 @@ Mohon untuk memproses pembayaran segera.";
         ];
 
         $id = $this->input->post('id_approval');
-        $status_bayar = $this->input->post('confirmation');
+        $approval = $this->input->post('confirmation');
         $edit_data = [
-            "status_bayar" => $status_bayar,
+            "approval" => $approval,
         ];
         $this->db->where('id', $id);
         if ($this->db->update('premium_confirmation', $edit_data)) {
@@ -480,7 +481,7 @@ Mohon untuk memproses pembayaran segera.";
             $this->db->where('level_jabatan', 99);
             $detail_user = $this->db->get()->row();
 
-            if ($status_bayar == 1) {
+            if ($approval == 1) {
                 // $confirmation_detail = $this->db->from('premium_confirmation')->where('Id', $id)->get()->row();
                 // $perusahaan_detail = $this->db->from('premium_confirmation')->where('Id', $id)->get()->row();
                 if ($confirmation_detail->paket == "Bangsawan Muda") {
