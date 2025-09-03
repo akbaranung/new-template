@@ -250,8 +250,45 @@
                 id_perusahaan: "<?php echo $this->session->userdata('user_perusahaan_id'); ?>"
             };
 
+<<<<<<< HEAD
             const thirdDetailHTML = `
     <div class="detail-box text-center mt-5">
+=======
+                const dbStartStr = formatDateForDatabase(startDate);
+                const dbEndStr = formatDateForDatabase(endDate);
+                const secondDetailHTML = `
+                <div class="detail-box">
+    <h3 class="f-20">Konfirmasi Pembayaran</h3>
+    <p>Terima kasih telah memilih Plan ${planName}. Berikut rincian pesanan Anda:</p>
+    <ul class="list-unstyled">
+    <li><strong>Paket</strong> ${planName}</li>
+    <li><strong>Jangka Waktu</strong> ${months} Bulan</li>
+    <li><strong>Tanggal Mulai</strong> ${startStr}</li>
+    <li><strong>Tanggal Selesai</strong> ${endStr}</li>
+</ul>
+    <hr>
+    <h4 class="text-center">Total Tagihan:</h4>
+    <h2 class="text-bariskode text-center">${formatRupiah(confirmationPrice)}</h2>
+    <p class="text-center text-muted f-12">Total akhir sudah termasuk 3 digit unik untuk konfirmasi transaksi.</p>
+    
+    <div class="mt-4 pt-3 text-center">
+        <img src="${BASE_URL}assets/images/bank/BSI_1.png" alt="Logo Bank BSI" class="mb-2 w-25">
+        <h2 class="mt-3 text-bariskode">79 7070 7004 (BSI) - PT. Baris Kode Indonesia</h2>
+    </div>
+    
+    <div class="mt-4 pt-3 d-flex justify-content-center">
+        <button type="button" id="pay-now-btn" class="btn btn-primary btn-rounded w-50">Konfirmasi Pembayaran</button>
+    </div>
+</div>
+            `;
+
+                detailsContainer.innerHTML = secondDetailHTML;
+                detailsContainer.classList.add('visible'); // Show the new box with fade-in
+
+
+                const thirdDetailHTML = `
+    <div class="detail-box text-center">
+>>>>>>> ac53a3dbccef674c83d0dfeb9be599923360c156
         <h3 class="f-20">Pembayaran Terkirim!</h3>
         <p>Terima kasih. Permintaan pembayaran Anda telah berhasil kami terima. <br>
            Mohon tunggu beberapa saat, tim kami akan segera memprosesnya.
