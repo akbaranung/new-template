@@ -91,8 +91,8 @@ class M_perusahaan extends CI_Model
     }
 
     var $table1 = 'users';
-    var $column_order1 = array('id', 'nama', 'username', 'nip', 'status'); //set column field database for datatable orderable
-    var $column_search1 = array('id', 'nama', 'username', 'nip', 'status'); //set column field database for datatable searchable 
+    var $column_order1 = array('id', 'nama', 'username', 't_cabang.nama_cabang', 'status'); //set column field database for datatable orderable
+    var $column_search1 = array('id', 'nama', 'username', 't_cabang.nama_cabang', 'status'); //set column field database for datatable searchable 
     var $order1 = array('id' => 'asc'); // default order 
 
     function _get_datatables_query1()

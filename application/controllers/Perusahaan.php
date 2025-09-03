@@ -138,7 +138,7 @@ class Perusahaan extends CI_Controller
       $row[] = $no;
       $row[] = $cat->nama;
       $row[] = $cat->username;
-      $row[] = $cat->nip;
+      $row[] = $cat->nama_cabang;
       $row[] = $cat->nama_jabatan;
       if ($cat->status == '1') {
         $row[] = "Aktif";

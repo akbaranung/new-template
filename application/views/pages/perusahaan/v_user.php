@@ -188,7 +188,7 @@
                   <th class="text-center">No.</th>
                   <th class="text-center">Nama</th>
                   <th class="text-center">Username</th>
-                  <th class="text-center">Nip</th>
+                  <th class="text-center">Cabang</th>
                   <th class="text-center">Nama Jabatan</th>
                   <!-- <th class="text-center">User Access</th> -->
                   <th class="text-center">Status</th>

@@ -83,11 +83,10 @@
         <h4 class="modal-title" id="myModalLabel">Approval Premium</h4>
       </div>
       <div class="modal-body">
-        <div class="row">
-          <form id="approval_form">
+        <form id="approval_form">
+          <div class="row">
             <input type="hidden" name="id_approval" id="id_approval">
-
-            <div class="form-group">
+            <div class="form-group ml-3">
               <label class="form-label">Opsi Approval</label>
               <select name="confirmation" id="confirmation" class="form-control w-100 ">
                 <option selected disabled>:: Pilih Opsi </option>
@@ -95,8 +94,8 @@
                 <option value="2">Tidak Setuju</option>
               </select>
             </div>
-          </form>
-        </div>
+          </div>
+        </form>
       </div>
 
       <div class="modal-footer">
