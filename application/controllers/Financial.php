@@ -2414,6 +2414,7 @@ class Financial extends CI_Controller
             'posisi' => $posisi,
             'nominal' => $this->_parse_rupiah($saldo_awal),
             'id_cabang' => $this->session->userdata('kode_cabang'),
+            'id_company' => $this->session->userdata('user_perusahaan_id'),
           ];
         } else if ($substr_coa == "4" || $substr_coa == "5" || $substr_coa == "6" || $substr_coa == "7" || $substr_coa == "8" || $substr_coa == "9") {
           $tabel = "t_coalr_sbb";
@@ -2424,6 +2425,7 @@ class Financial extends CI_Controller
             'posisi' => $posisi,
             'nominal' => $this->_parse_rupiah($saldo_awal),
             'id_cabang' => $this->session->userdata('kode_cabang'),
+            'id_company' => $this->session->userdata('user_perusahaan_id'),
           ];
         } else {
           $this->session->set_flashdata('message_error', 'Format nomor CoA ' . $no_sbb . ' tidak sesuai.');
@@ -2996,6 +2998,7 @@ class Financial extends CI_Controller
             'posisi' => $posisi,
             'nominal' => $this->_parse_rupiah($saldo_awal),
             'id_cabang' => $this->session->userdata('kode_cabang'),
+            'id_company' => $this->session->userdata('user_perusahaan_id'),
           ];
         } else if ($substr_coa == "4" || $substr_coa == "5" || $substr_coa == "6" || $substr_coa == "7" || $substr_coa == "8" || $substr_coa == "9") {
           $tabel = "t_coalr_sbb";
@@ -3006,6 +3009,7 @@ class Financial extends CI_Controller
             'posisi' => $posisi,
             'nominal' => $this->_parse_rupiah($saldo_awal),
             'id_cabang' => $this->session->userdata('kode_cabang'),
+            'id_company' => $this->session->userdata('user_perusahaan_id'),
           ];
         } else {
           // $this->session->set_flashdata('message_error', 'Format nomor CoA ' . $no_sbb . ' tidak sesuai.');
@@ -3197,6 +3201,7 @@ class Financial extends CI_Controller
                 'posisi' => $posisi,
                 'nominal' => $this->_parse_rupiah($saldo_awal),
                 'id_cabang' => $this->session->userdata('kode_cabang'),
+                'id_company' => $this->session->userdata('user_perusahaan_id'),
               ];
             } else if ($substr_coa == "4" || $substr_coa == "5" || $substr_coa == "6" || $substr_coa == "7" || $substr_coa == "8" || $substr_coa == "9") {
               $tabel = "t_coalr_sbb";
@@ -3207,6 +3212,7 @@ class Financial extends CI_Controller
                 'posisi' => $posisi,
                 'nominal' => $this->_parse_rupiah($saldo_awal),
                 'id_cabang' => $this->session->userdata('kode_cabang'),
+                'id_company' => $this->session->userdata('user_perusahaan_id'),
               ];
             } else {
               $this->session->set_flashdata('message_error', 'Format nomor CoA ' . $no_sbb . ' tidak sesuai.');
