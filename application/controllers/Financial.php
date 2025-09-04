@@ -3780,17 +3780,18 @@ class Financial extends CI_Controller
       return $item['posisi'] === 'AKTIVA' && $item['table_source'] === 't_coa_sbb';
     });
 
-    $activa = $this->M_coa->getNeracaConsolByDate('t_coa_sbb', 'AKTIVA', $tanggal, $periode, $id_company);
+    $activa = $this->M_coa->getNeracaConsolByDate('t_coa_sbb', 'AKTIVA', $tanggal, $id_company);
+
     $combinedActiva = [];
 
     foreach ($activa as $item) {
-      if (!isset($combinedActiva[$item['no_sbb']])) {
-        $combinedActiva[$item['no_sbb']] = (object) [
-          'no_sbb' => $item['no_sbb'],
-          'saldo_awal' => $item['saldo_awal'],
+      if (!isset($combinedActiva[$item->no_sbb])) {
+        $combinedActiva[$item->no_sbb] = (object) [
+          'no_sbb' => $item->no_sbb,
+          'saldo_awal' => $item->saldo_awal,
         ];
       } else {
-        $combinedActiva[$item['no_sbb']]['saldo_awal'] += $item['saldo_awal'];
+        $combinedActiva[$item->no_sbb]['saldo_awal'] += $item->saldo_awal;
       }
     }
 
@@ -3801,7 +3802,7 @@ class Financial extends CI_Controller
           'saldo_awal' => $item['saldo_awal'],
         ];
       } else {
-        $combinedActiva[$item['no_sbb']]['saldo_awal'] += $item['saldo_awal'];
+        $combinedActiva[$item['no_sbb']]->saldo_awal += $item['saldo_awal'];
       }
     }
 
@@ -3816,17 +3817,17 @@ class Financial extends CI_Controller
       return $item['posisi'] === 'PASIVA' && $item['table_source'] === 't_coa_sbb';
     });
 
-    $pasiva = $this->M_coa->getNeracaConsolByDate('t_coa_sbb', 'PASIVA', $tanggal, $periode, $id_company);
+    $pasiva = $this->M_coa->getNeracaConsolByDate('t_coa_sbb', 'PASIVA', $tanggal, $id_company);
     $combinedPasiva = [];
 
     foreach ($pasiva as $item) {
-      if (!isset($combinedPasiva[$item['no_sbb']])) {
-        $combinedPasiva[$item['no_sbb']] = (object) [
-          'no_sbb' => $item['no_sbb'],
-          'saldo_awal' => $item['saldo_awal'],
+      if (!isset($combinedPasiva[$item->no_sbb])) {
+        $combinedPasiva[$item->no_sbb] = (object) [
+          'no_sbb' => $item->no_sbb,
+          'saldo_awal' => $item->saldo_awal,
         ];
       } else {
-        $combinedPasiva[$item['no_sbb']]['saldo_awal'] += $item['saldo_awal'];
+        $combinedPasiva[$item->no_sbb]['saldo_awal'] += $item->saldo_awal;
       }
     }
 
@@ -3837,7 +3838,7 @@ class Financial extends CI_Controller
           'saldo_awal' => $item['saldo_awal'],
         ];
       } else {
-        $combinedPasiva[$item['no_sbb']]['saldo_awal'] += $item['saldo_awal'];
+        $combinedPasiva[$item['no_sbb']]->saldo_awal += $item['saldo_awal'];
       }
     }
 
@@ -3852,17 +3853,17 @@ class Financial extends CI_Controller
       return $item['posisi'] === 'PASIVA' && $item['table_source'] === 't_coalr_sbb';
     });
 
-    $pendapatan = $this->M_coa->getNeracaConsolByDate('t_coalr_sbb', 'PASIVA', $tanggal, $periode, $id_company);
+    $pendapatan = $this->M_coa->getNeracaConsolByDate('t_coalr_sbb', 'PASIVA', $tanggal, $id_company);
     $combinedPendapatan = [];
 
     foreach ($pendapatan as $item) {
-      if (!isset($combinedPendapatan[$item['no_sbb']])) {
-        $combinedPendapatan[$item['no_sbb']] = (object) [
-          'no_sbb' => $item['no_sbb'],
-          'saldo_awal' => $item['saldo_awal'],
+      if (!isset($combinedPendapatan[$item->no_sbb])) {
+        $combinedPendapatan[$item->no_sbb] = (object) [
+          'no_sbb' => $item->no_sbb,
+          'saldo_awal' => $item->saldo_awal,
         ];
       } else {
-        $combinedPendapatan[$item['no_sbb']]['saldo_awal'] += $item['saldo_awal'];
+        $combinedPendapatan[$item->no_sbb]['saldo_awal'] += $item->saldo_awal;
       }
     }
 
@@ -3873,7 +3874,7 @@ class Financial extends CI_Controller
           'saldo_awal' => $item['saldo_awal'],
         ];
       } else {
-        $combinedPendapatan[$item['no_sbb']]['saldo_awal'] += $item['saldo_awal'];
+        $combinedPendapatan[$item['no_sbb']]->saldo_awal += $item['saldo_awal'];
       }
     }
 
@@ -3888,7 +3889,7 @@ class Financial extends CI_Controller
       return $item['posisi'] === 'AKTIVA' && $item['table_source'] === 't_coalr_sbb';
     });
 
-    $beban = $this->M_coa->getNeracaConsolByDate('t_coalr_sbb', 'AKTIVA', $tanggal, $periode, $id_company);
+    $beban = $this->M_coa->getNeracaConsolByDate('t_coalr_sbb', 'AKTIVA', $tanggal, $id_company);
     $combinedBeban = [];
 
     foreach ($beban as $item) {
@@ -3927,10 +3928,7 @@ class Financial extends CI_Controller
     $data['laba'] = $laba;
     $data['sum_pasiva'] = $sum_pasiva;
     $data['neraca'] = $sum_pasiva - $total_activa;
-    // echo '<pre>';
-    // print_r($beban);
-    // echo '</pre>';
-    // exit;
+
     $data['title'] = 'Neraca per tanggal ' . format_indo($tanggal);
     $data['utility'] = $this->db->get('utility')->row_array();
     $data['pages_script'] = 'script/financial/s_financial';
@@ -4063,17 +4061,17 @@ class Financial extends CI_Controller
       return $item['posisi'] === 'PASIVA' && $item['table_source'] === 't_coalr_sbb';
     });
 
-    $pendapatan = $this->M_coa->getNeracaConsolByDate('t_coalr_sbb', 'PASIVA', $tanggal, $periode, $id_company);
+    $pendapatan = $this->M_coa->getNeracaConsolByDate('t_coalr_sbb', 'PASIVA', $tanggal, $id_company);
     $combinedPendapatan = [];
 
     foreach ($pendapatan as $item) {
-      if (!isset($combinedPendapatan[$item['no_sbb']])) {
-        $combinedPendapatan[$item['no_sbb']] = (object) [
-          'no_sbb' => $item['no_sbb'],
-          'saldo_awal' => $item['saldo_awal'],
+      if (!isset($combinedPendapatan[$item->no_sbb])) {
+        $combinedPendapatan[$item->no_sbb] = (object) [
+          'no_sbb' => $item->no_sbb,
+          'saldo_awal' => $item->saldo_awal,
         ];
       } else {
-        $combinedPendapatan[$item['no_sbb']]['saldo_awal'] += $item['saldo_awal'];
+        $combinedPendapatan[$item->no_sbb]['saldo_awal'] += $item->saldo_awal;
       }
     }
 
@@ -4103,13 +4101,13 @@ class Financial extends CI_Controller
     $combinedBeban = [];
 
     foreach ($beban as $item) {
-      if (!isset($combinedBeban[$item['no_sbb']])) {
-        $combinedBeban[$item['no_sbb']] = (object) [
-          'no_sbb' => $item['no_sbb'],
-          'saldo_awal' => $item['saldo_awal'],
+      if (!isset($combinedBeban[$item->no_sbb])) {
+        $combinedBeban[$item->no_sbb] = (object) [
+          'no_sbb' => $item->no_sbb,
+          'saldo_awal' => $item->saldo_awal,
         ];
       } else {
-        $combinedBeban[$item['no_sbb']]['saldo_awal'] += $item['saldo_awal'];
+        $combinedBeban[$item->no_sbb]['saldo_awal'] += $item->saldo_awal;
       }
     }
 
