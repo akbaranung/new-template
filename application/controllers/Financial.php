@@ -3899,13 +3899,13 @@ class Financial extends CI_Controller
     $combinedBeban = [];
 
     foreach ($beban as $item) {
-      if (!isset($combinedBeban[$item['no_sbb']])) {
-        $combinedBeban[$item['no_sbb']] = (object) [
-          'no_sbb' => $item['no_sbb'],
-          'saldo_awal' => $item['saldo_awal'],
+      if (!isset($combinedBeban[$item->no_sbb])) {
+        $combinedBeban[$item->no_sbb] = (object) [
+          'no_sbb' => $item->no_sbb,
+          'saldo_awal' => $item->saldo_awal,
         ];
       } else {
-        $combinedBeban[$item['no_sbb']]['saldo_awal'] += $item['saldo_awal'];
+        $combinedBeban[$item->no_sbb]['saldo_awal'] += $item->saldo_awal;
       }
     }
 
