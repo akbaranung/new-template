@@ -122,14 +122,23 @@ class Pengajuan extends CI_Controller
         $this->upload->initialize($config);
 
         // Jika upload error atau gagal
-        if (!$this->upload->do_upload('file')) {
-          $response = [
-            'success' => false,
-            'msg' => $this->upload->display_errors()
-          ];
+        // if (!$this->upload->do_upload('file')) {
+        //   $response = [
+        //     'success' => false,
+        //     'msg' => $this->upload->display_errors()
+        //   ];
+        // }
+        if ($this->upload->do_upload('file')) {
+          // $response = [
+          //   'success' => false,
+          //   'msg' => $this->upload->display_errors()
+          // ];
+
+          $upload = $this->upload->data();
+          $file_name = $upload['file_name'];
+        } else {
+          $file_name = NULL;
         }
-        $upload = $this->upload->data();
-        $file_name = $upload['file_name'];
       } else {
         $file_name = NULL;
       }
