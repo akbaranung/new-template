@@ -155,7 +155,8 @@ class Pengajuan extends CI_Controller
         'bukti_pengajuan' => $file_name,
         'catatan' => $catatan,
         'total' => $this->_parse_rupiah($total),
-        'cabang' => $cabang
+        'cabang' => $cabang,
+        'id_company' => $this->session->userdata('user_perusahan_id')
       ];
 
       // Simpan pengajuan
