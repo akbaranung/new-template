@@ -197,7 +197,17 @@
                     ?>
                       <tr>
                         <td colspan="2">Lampiran</td>
-                        <td colspan="4"><a href="<?= base_url('upload/pengajuan/') . $pengajuan->bukti_pengajuan ?>" class="btn btn-success btn-sm" target="_blank"><i class="fe fe-download fe-12"> Lampiran</i></a></td>
+                        <td colspan="4">
+                          <?php
+                          if ($pengajuan->bukti_pengajuan) {
+                          ?>
+                            <a href="<?= base_url('upload/pengajuan/') . $pengajuan->bukti_pengajuan ?>" class="btn btn-success btn-sm" target="_blank"><i class="fe fe-download fe-12"> Lampiran</i></a>
+                          <?php
+                          } else {
+                            echo "-";
+                          }
+                          ?>
+                        </td>
                       </tr>
                     <?php
                     }
