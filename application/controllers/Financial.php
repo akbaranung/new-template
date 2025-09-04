@@ -4103,7 +4103,7 @@ class Financial extends CI_Controller
       return $item['posisi'] === 'AKTIVA' && $item['table_source'] === 't_coalr_sbb';
     });
 
-    $beban = $this->M_coa->getNeracaConsolByDate('t_coalr_sbb', 'AKTIVA', $tanggal, $periode, $id_company);
+    $beban = $this->M_coa->getNeracaConsolByDate('t_coalr_sbb', 'AKTIVA', $tanggal, $id_company);
     $combinedBeban = [];
 
     foreach ($beban as $item) {
