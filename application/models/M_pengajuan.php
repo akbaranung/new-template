@@ -30,7 +30,14 @@ class M_pengajuan extends CI_Model
     if ($keyword) {
       $this->cb->like('kode', $keyword, 'both');
     }
-    $this->cb->order_by('a.status', 'ASC');
+    // $this->cb->order_by('a.status', 'ASC');
+    $this->cb->order_by(
+      "(CASE a.status
+        WHEN 2 THEN 0
+        ELSE 0
+    END), 
+    a.status ASC, a.id DESC"
+    );
     return $this->cb->limit($limit, $start)->get()->result();
   }
 
@@ -57,7 +64,14 @@ class M_pengajuan extends CI_Model
     if ($keyword) {
       $this->cb->like('a.kode', $keyword, 'both');
     }
-    $this->cb->order_by('a.status', 'ASC');
+    // $this->cb->order_by('a.status', 'ASC');
+    $this->cb->order_by(
+      "(CASE a.status
+        WHEN 2 THEN 0
+        ELSE 0
+    END), 
+    a.status ASC, a.id DESC"
+    );
     return $this->cb->limit($limit, $start)->get()->result();
   }
 
@@ -95,7 +109,14 @@ class M_pengajuan extends CI_Model
     if ($keyword) {
       $this->cb->like('a.kode', $keyword, 'both');
     }
-    $this->cb->order_by('a.status', 'ASC');
+    // $this->cb->order_by('a.status', 'ASC');
+    $this->cb->order_by(
+      "(CASE a.status
+        WHEN 2 THEN 0
+        ELSE 0
+    END), 
+    a.status ASC, a.id DESC"
+    );
     return $this->cb->limit($limit, $start)->get()->result();
   }
 
@@ -122,7 +143,14 @@ class M_pengajuan extends CI_Model
     if ($keyword) {
       $this->cb->like('a.kode', $keyword, 'both');
     }
-    $this->cb->order_by('a.status', 'ASC');
+    // $this->cb->order_by('CASE WHEN a.status = 2 THEN 1 ELSE 0 END, a.status ASC, a.id DESC', false);
+    $this->cb->order_by(
+      "(CASE a.status
+        WHEN 2 THEN 0
+        ELSE 0
+    END), 
+    a.status ASC, a.id DESC"
+    );
     return $this->cb->limit($limit, $start)->get()->result();
   }
 
