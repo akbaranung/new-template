@@ -49,6 +49,9 @@ class Pengajuan extends CI_Controller
     $data['total_pengajuan'] = $total_pengajuan;
     $data['limit_pengajuan'] = $limit_pengajuan;
 
+    $cek_spv = $this->db->select('*')->from('users')->where('nip', $this->session->userdata('nip'))->get()->row();
+
+
     if ($total_pengajuan >= $limit_pengajuan) {
       $this->session->set_flashdata('swal_message', [
         'icon' => 'info', // Tetap gunakan 'info' atau 'question' untuk kesan informatif
@@ -60,6 +63,20 @@ class Pengajuan extends CI_Controller
         'redirectUrl' => base_url('subscription/upgrade')
       ]);
       redirect('pengajuan/list');
+    } else {
+
+      if (!$cek_spv->supervisi) {
+        // echo "no spv";
+        // $this->session->set_flashdata('message_info', 'Anda tidak bisa melakukan Pengajuan karena Anda Tidak memiliki Supervisi Terkait pada akun ini, Silahkan Tambahkan Supervisi di akun anda!');Anda harus memiliki supervisor untuk menggunakan fitur Approval. Silakan hubungi admin untuk pengaturan.
+        // $this->session->set_flashdata('message_info', 'Anda harus memiliki supervisor untuk menggunakan fitur Pengajuan. Silakan hubungi admin untuk pengaturan supervisor.');
+        $this->session->set_flashdata('swal_message', [
+          'icon' => 'info',
+          'title' => 'Supervisor Belum Ditentukan',
+          'text' => 'Anda harus memiliki supervisor untuk menggunakan fitur Pengajuan. Silakan hubungi admin untuk pengaturan supervisor.',
+          'confirmButtonText' => 'Mengerti',
+        ]);
+        // redirect('home');
+      }
     }
 
     $this->load->view('index', $data);

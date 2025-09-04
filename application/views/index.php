@@ -212,6 +212,17 @@
     </script>
   <?php
     unset($_SESSION['message_error']);
+  } else if ($this->session->flashdata('message_info')) {
+  ?>
+    <script>
+      Swal.fire({
+        title: "Perhatian!! ",
+        text: '<?= $this->session->flashdata('message_info') ?>',
+        icon: "info",
+      });
+    </script>
+  <?php
+    unset($_SESSION['message_error']);
   }
   // If no flash data messages are present, show the default warning
 
