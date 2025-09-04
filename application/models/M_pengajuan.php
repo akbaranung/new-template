@@ -66,7 +66,9 @@ class M_pengajuan extends CI_Model
     $id_perusahaan = $this->session->userdata('user_perusahaan_id');
     $cabang = $this->cb->get_where('t_cabang', ['id_perusahaan' => $id_perusahaan])->result_array();
 
-    $cabang_ids = array_column($cabang, 'Id');
+    $cabang_ids = array_column($cabang, 'uid');
+
+    // var_dump($cabang_ids);
 
     $this->cb->select('Id')->from('t_pengajuan')
       ->group_start()
@@ -84,11 +86,11 @@ class M_pengajuan extends CI_Model
     $id_perusahaan = $this->session->userdata('user_perusahaan_id');
     $cabang = $this->cb->get_where('t_cabang', ['id_perusahaan' => $id_perusahaan])->result_array();
 
-    $cabang_ids = array_column($cabang, 'Id');
+    $cabang_ids = array_column($cabang, 'uid');
     $this->cb->select('a.*, b.nama')->from('t_pengajuan a')->join($this->db->database . '.users b', 'b.nip = a.user', 'left')
       ->group_start()
       ->where('a.direksi', $nip)
-      ->where('a.cabang', $cabang_ids)
+      ->where_in('a.cabang', $cabang_ids)
       ->group_end();
     if ($keyword) {
       $this->cb->like('a.kode', $keyword, 'both');
