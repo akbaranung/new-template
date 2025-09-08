@@ -8,7 +8,7 @@ class Subscription extends CI_Controller
     {
         parent::__construct();
 
-        $this->load->model(['M_user_access', 'M_perusahaans', 'M_subscription']);
+        $this->load->model(['M_coa', 'M_user_access', 'M_perusahaans', 'M_subscription']);
 
         $this->cb = $this->load->database('corebank', TRUE);
         date_default_timezone_set('Asia/Jakarta');
@@ -378,7 +378,10 @@ Mohon untuk memproses pembayaran segera.";
 
         // Set the data to be updated
         $now = (new DateTime())->format('Y-m-d H:i:s');
-        $update_data = ['status_bayar' => 1];
+        $update_data = [
+            'status_bayar' => 1,
+            'tanggal_bayar' => $now,
+        ];
         $confirmation_detail = $this->db
             ->from('premium_confirmation')
             ->where('id', $id)
@@ -701,6 +704,13 @@ Mohon untuk memproses pembayaran segera.";
                     $formatted_start_date = strtr($start_date_obj->format('d F Y'), $indonesian_months);
 
 
+                    $id_invoice = NULL;
+
+                    $keterangan = "Pendapatan dari Penjualan Premium Bariskode.";
+
+                    $this->posting('10201', '40102', $keterangan, $this->_parse_rupiah($confirmation_detail->nominal), $confirmation_detail->tanggal_bayar, $id_invoice);
+
+
                     $msg = "Terima kasih, pembayaran Anda telah berhasil kami konfirmasi. Akun Anda telah *di-upgrade* ke *premium*, berlaku hingga tanggal *{$formatted_start_date}*.Dimohon untuk logout akun dan login kembali untuk menikmati fitur premium anda. Kami harap Anda puas dengan layanan kami.";
 
                     // $this->api_whatsapp->wa_notif($msg, "085157563305");
@@ -724,5 +734,118 @@ Mohon untuk memproses pembayaran segera.";
         } else {
             echo json_encode(array("status" => 'error', "message" => "Gagal Mengkonfirmasi"));
         }
+    }
+
+    private function posting($coa_debit, $coa_kredit, $keterangan, $nominal, $tanggal, $id_invoice = NULL)
+    {
+        // Update coa debit 
+        $update_saldo_debit = $this->update_saldo_coa($coa_debit, $nominal, 'debit');
+        // Update coa kredit
+        $update_saldo_kredit = $this->update_saldo_coa($coa_kredit, $nominal, 'kredit');
+
+
+        // Ambil saldo debit
+        $saldo_debit = $this->get_saldo_coa($coa_debit);
+        // Ambil saldo kredit
+        $saldo_kredit = $this->get_saldo_coa($coa_kredit);
+
+        $dt_jurnal = [
+            'tanggal' => $tanggal,
+            'akun_debit' => $coa_debit,
+            'jumlah_debit' => $nominal,
+            'akun_kredit' => $coa_kredit,
+            'jumlah_kredit' => $nominal,
+            'saldo_debit' => $saldo_debit,
+            'saldo_kredit' => $saldo_kredit,
+            'keterangan' => $keterangan,
+            'created_by' => $this->session->userdata('nip'),
+            'id_invoice' => ($id_invoice) ? $id_invoice : '',
+            'id_cabang' => $this->session->userdata('kode_cabang'),
+            'id_company' => $this->session->userdata('user_perusahaan_id')
+        ];
+
+        $this->M_coa->addJurnal($dt_jurnal);
+
+        $data_transaksi = [
+            'user_id' => $this->session->userdata('nip'),
+            'tgl_trs' => date('Y-m-d H:i:s'),
+            'nominal' => $nominal,
+            'debet' => $coa_debit,
+            'kredit' => $coa_kredit,
+            'keterangan' => trim($keterangan),
+            'id_cabang' => $this->session->userdata('kode_cabang'),
+            'id_company' => $this->session->userdata('user_perusahaan_id')
+        ];
+
+        $this->M_coa->add_transaksi($data_transaksi);
+    }
+
+    private function update_saldo_coa($akun_no, $jumlah, $tipe)
+    {
+        $substr_coa = substr($akun_no, 0, 1);
+        if ($substr_coa == "1" || $substr_coa == "2" || $substr_coa == "3") {
+            $table = "t_coa_sbb";
+            $kolom = "no_sbb";
+        } else if ($substr_coa == "4" || $substr_coa == "5" || $substr_coa == "6" || $substr_coa == "7" || $substr_coa == "8" || $substr_coa == "9") {
+            $table = "t_coalr_sbb";
+            $kolom = "no_lr_sbb";
+        }
+
+        $query = $this->cb->query(
+            "SELECT posisi, nominal FROM $table WHERE " . $kolom . " = ? AND id_cabang = " . $this->session->userdata('kode_cabang') . " FOR UPDATE",
+            [$akun_no]
+        );
+
+        $row = $query->row();
+        if (!$row) return FALSE;
+
+        $posisi = $row->posisi;
+        $nominal = $row->nominal;
+
+        if ($posisi == 'AKTIVA') {
+            if ($tipe == 'debit') {
+                $nominal += $jumlah;
+            } else { // kredit
+                $nominal -= $jumlah;
+            }
+        } elseif ($posisi == 'PASIVA') {
+            if ($tipe == 'debit') {
+                $nominal -= $jumlah;
+            } else { // kredit
+                $nominal += $jumlah;
+            }
+        }
+
+        // Update saldo
+        $this->cb->where(($table == 't_coa_sbb') ? 'no_sbb' : 'no_lr_sbb', $akun_no);
+        $this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
+        $this->cb->update($table, ['nominal' => $nominal]);
+    }
+
+    private function get_saldo_coa($akun_no)
+    {
+        $substr_coa = substr($akun_no, 0, 1);
+        if ($substr_coa == "1" || $substr_coa == "2" || $substr_coa == "3") {
+            $table = "t_coa_sbb";
+            $kolom = "no_sbb";
+        } else if ($substr_coa == "4" || $substr_coa == "5" || $substr_coa == "6" || $substr_coa == "7" || $substr_coa == "8" || $substr_coa == "9") {
+            $table = "t_coalr_sbb";
+            $kolom = "no_lr_sbb";
+        }
+
+        $row = $this->cb->select('nominal')
+            ->where($kolom, $akun_no)
+            ->where('id_cabang', $this->session->userdata('kode_cabang'))
+            ->get($table)
+            ->row();
+
+        return $row->nominal;
+    }
+
+    private function _parse_rupiah($rupiah)
+    {
+        // Hilangkan Rp, titik, dan ganti koma dengan titik
+        $rupiah = str_replace(['Rp', '.', ' '], '', $rupiah);
+        return floatval(str_replace(',', '.', $rupiah));
     }
 }
