@@ -419,7 +419,7 @@
 											<select name="level_jabatan" id="" class="form-control">
 												<option value="">Pilih Jabatan</option>
 												<option value="1">Staff</option>
-												<option value="2">Supervisor</option>
+												<option value="2">Supervisi</option>
 												<option value="3">Manajer</option>
 												<option value="4">General Manajer</option>
 												<option value="5">Direktur</option>

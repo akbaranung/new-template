@@ -56,8 +56,8 @@ class Absensi extends CI_Controller
         if (empty($supervisi) || $supervisi == null || $supervisi == 0 || $supervisi == '0') {
             $this->session->set_flashdata('swal_message', [
                 'icon' => 'info',
-                'title' => 'Supervisor Belum Ditentukan',
-                'text' => 'Anda harus memiliki supervisor untuk menggunakan fitur Approval. Silakan hubungi admin untuk pengaturan.',
+                'title' => 'Supervisi Belum Ditentukan',
+                'text' => 'Anda harus memiliki Supervisi untuk menggunakan fitur Approval. Silakan hubungi admin untuk pengaturan.',
                 'confirmButtonText' => 'Mengerti',
             ]);
         }

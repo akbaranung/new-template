@@ -139,7 +139,7 @@
                             <option disabled>Pilih Jabatan</option>
                             <option value="1" <?= set_select('level_jabatan', '1'); ?>>Staff</option>
                             <!-- <option value="2" <?= set_select('level_jabatan', '2'); ?>>Manager</option> -->
-                            <option value="2" <?= set_select('level_jabatan', '2'); ?>>Supervisor</option>
+                            <option value="2" <?= set_select('level_jabatan', '2'); ?>>Supervisi</option>
                             <!-- <option value="3" <?= set_select('level_jabatan', '3'); ?>>Keuangan</option> -->
                             <option value="3" <?= set_select('level_jabatan', '3'); ?>>Manajer</option>
                             <option value="4" <?= set_select('level_jabatan', '4'); ?>>General Manajer</option>
@@ -155,7 +155,7 @@
                             $roles = [
                               1 => 'Staff',
                               // 2 => 'Manager',
-                              2 => 'Supervisor',
+                              2 => 'Supervisi',
                               // 3 => 'Keuangan',
                               3 => 'Manajer',
                               4 => 'General Manajer', // This one is commented out in your example, so keep it commented
@@ -538,7 +538,7 @@
                         ?>
                           <option <?= ($user->level_jabatan == "1") ? 'selected' : '' ?> value="1">Staff</option>
                           <!-- <option <?= ($user->level_jabatan == "2") ? 'selected' : '' ?> value="2">Manager</option> -->
-                          <!-- <option <?= ($user->level_jabatan == "2") ? 'selected' : '' ?> value="2">Supervisor</option> -->
+                          <!-- <option <?= ($user->level_jabatan == "2") ? 'selected' : '' ?> value="2">Supervisi</option> -->
                           <!-- <option value="3">Keuangan</option> -->
                           <option <?= ($user->level_jabatan == "3") ? 'selected' : '' ?> value="3">Manajer</option>
                           <!-- <option <?= ($user->level_jabatan == "4") ? 'selected' : '' ?> value="4">General Manajer</option> -->
@@ -550,7 +550,7 @@
                           $roles = [
                             1 => 'Staff',
                             2 => 'Manager',
-                            // 2 => 'Supervisor',
+                            // 2 => 'Supervisi',
                             // 3 => 'Keuangan',
                             3 => 'Manajer',
                             // 4 => 'General Manajer', // This one is commented out in your example, so keep it commented

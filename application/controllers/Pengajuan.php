@@ -67,12 +67,12 @@ class Pengajuan extends CI_Controller
 
       if (!$cek_spv->supervisi) {
         // echo "no spv";
-        // $this->session->set_flashdata('message_info', 'Anda tidak bisa melakukan Pengajuan karena Anda Tidak memiliki Supervisi Terkait pada akun ini, Silahkan Tambahkan Supervisi di akun anda!');Anda harus memiliki supervisor untuk menggunakan fitur Approval. Silakan hubungi admin untuk pengaturan.
-        // $this->session->set_flashdata('message_info', 'Anda harus memiliki supervisor untuk menggunakan fitur Pengajuan. Silakan hubungi admin untuk pengaturan supervisor.');
+        // $this->session->set_flashdata('message_info', 'Anda tidak bisa melakukan Pengajuan karena Anda Tidak memiliki Supervisi Terkait pada akun ini, Silahkan Tambahkan Supervisi di akun anda!');Anda harus memiliki Supervisi untuk menggunakan fitur Approval. Silakan hubungi admin untuk pengaturan.
+        // $this->session->set_flashdata('message_info', 'Anda harus memiliki Supervisi untuk menggunakan fitur Pengajuan. Silakan hubungi admin untuk pengaturan Supervisi.');
         $this->session->set_flashdata('swal_message', [
           'icon' => 'info',
-          'title' => 'Supervisor Belum Ditentukan',
-          'text' => 'Anda harus memiliki supervisor untuk menggunakan fitur Pengajuan. Silakan hubungi admin untuk pengaturan supervisor.',
+          'title' => 'Supervisi Belum Ditentukan',
+          'text' => 'Anda harus memiliki Supervisi untuk menggunakan fitur Pengajuan. Silakan hubungi admin untuk pengaturan Supervisi.',
           'confirmButtonText' => 'Mengerti',
         ]);
         // redirect('home');
