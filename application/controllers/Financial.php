@@ -33,7 +33,7 @@ class Financial extends CI_Controller
     $cek_coa_cabang = $this->cb->get()->num_rows();
 
     if ($cek_coa_cabang == 0) {
-      redirect('financial_first/list_coa');
+      redirect('financial_first/force_make_coa_sbb');
     }
 
     date_default_timezone_set('Asia/Jakarta');
