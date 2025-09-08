@@ -704,9 +704,11 @@ Mohon untuk memproses pembayaran segera.";
                     $formatted_start_date = strtr($start_date_obj->format('d F Y'), $indonesian_months);
 
 
+                    $detail_perusahaan = $this->db->from('utility')->where('Id', $confirmation_detail->id_perusahaan)->get()->row();
+
                     $id_invoice = NULL;
 
-                    $keterangan = "Pendapatan dari Penjualan Premium Bariskode.";
+                    $keterangan = "PDT Paket *{$confirmation_detail->paket}*, Perusahaan *{$detail_perusahaan->nama_perusahaan}*.";
 
                     $this->posting('10201', '40102', $keterangan, $this->_parse_rupiah($confirmation_detail->nominal), $confirmation_detail->tanggal_bayar, $id_invoice);
 
