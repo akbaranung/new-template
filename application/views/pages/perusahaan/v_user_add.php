@@ -300,26 +300,33 @@
                       </div>
                     </td>
                   </tr>
-                  <tr>
-                    <th>Cuti Reguler</th>
-                    <td><input type="number" name="cuti" class="form-control" value="<?= set_value('cuti', $form_data['cuti'] ?? '') ?>"></td>
-                  </tr>
-                  <tr>
-                    <th>
-                      Lokasi Presensi
-                    </th>
-                    <td>
-                      <select name="lokasi_presensi" class="form-control js-example-basic-multiple">
-                        <option value=""> -- Pilih Lokasi Presensi --</option>
-                        <?php
-                        $lokasi = $this->db->where('id_perusahaan', $this->session->userdata('user_perusahaan_id'))->get('lokasi_presensi')->result();
-                        foreach ($lokasi as $data) {
-                        ?>
-                          <option value="<?= $data->id ?>"><?= $data->nama_lokasi ?></option>
-                        <?php } ?>
-                      </select>
-                    </td>
-                  </tr>
+                  <?php
+                  if ($this->session->userdata('is_premium')) {
+                  ?>
+                    <tr>
+                      <th>Cuti Reguler</th>
+                      <td><input type="number" name="cuti" class="form-control" value="<?= set_value('cuti', $form_data['cuti'] ?? '') ?>"></td>
+                    </tr>
+                    <tr>
+                      <th>
+                        Lokasi Presensi
+                      </th>
+
+                      <td>
+                        <select name="lokasi_presensi" class="form-control js-example-basic-multiple">
+                          <option value=""> -- Pilih Lokasi Presensi --</option>
+                          <?php
+                          $lokasi = $this->db->where('id_perusahaan', $this->session->userdata('user_perusahaan_id'))->get('lokasi_presensi')->result();
+                          foreach ($lokasi as $data) {
+                          ?>
+                            <option value="<?= $data->id ?>"><?= $data->nama_lokasi ?></option>
+                          <?php } ?>
+                        </select>
+                      </td>
+                    </tr>
+                  <?php
+                  }
+                  ?>
                   <tr>
                     <th>Cabang</th>
                     <td>
@@ -708,32 +715,37 @@
                       </select>
                     </div>
                   </div>
-
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label>Cuti</label>
-                      <input type="number" name="cuti" class="form-control" value="<?= $user->cuti ?>">
+                  <?php
+                  if ($this->session->userdata('is_premium')) {
+                  ?>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Cuti</label>
+                        <input type="number" name="cuti" class="form-control" value="<?= $user->cuti ?>">
+                      </div>
                     </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="form-group">
-                      <label>Lokasi Presensi</label>
-                      <select name="lokasi_presensi" class="form-control js-example-basic-multiple">
-                        <option value=""> -- Pilih Lokasi Presensi --</option>
-                        <?php
-                        $lokasi = $this->db->where('id_perusahaan', $this->session->userdata('user_perusahaan_id'))->get('lokasi_presensi')->result();
-                        foreach ($lokasi as $data) {
-                          if ($user->id_lokasi_presensi != null || $user->id_lokasi_presensi != "") {
-                            $selected = $user->id_lokasi_presensi == $data->id ? "selected" : "";
-                          } else {
-                            $selected = "";
-                          }
-                        ?>
-                          <option <?= $selected ?> value="<?= $data->id ?>"><?= $data->nama_lokasi ?></option>
-                        <?php } ?>
-                      </select>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label>Lokasi Presensi</label>
+                        <select name="lokasi_presensi" class="form-control js-example-basic-multiple">
+                          <option value=""> -- Pilih Lokasi Presensi --</option>
+                          <?php
+                          $lokasi = $this->db->where('id_perusahaan', $this->session->userdata('user_perusahaan_id'))->get('lokasi_presensi')->result();
+                          foreach ($lokasi as $data) {
+                            if ($user->id_lokasi_presensi != null || $user->id_lokasi_presensi != "") {
+                              $selected = $user->id_lokasi_presensi == $data->id ? "selected" : "";
+                            } else {
+                              $selected = "";
+                            }
+                          ?>
+                            <option <?= $selected ?> value="<?= $data->id ?>"><?= $data->nama_lokasi ?></option>
+                          <?php } ?>
+                        </select>
+                      </div>
                     </div>
-                  </div>
+                  <?php
+                  }
+                  ?>
                   <div class="col-md-6">
                     <div class="form-group">
                       <label>Cabang</label>
