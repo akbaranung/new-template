@@ -64,12 +64,12 @@
 
           <!-- New input fields for company data -->
           <div class="form-group text-left">
-            <label for="nama_cabang">Nama Cabang</label>
+            <label for="nama_cabang">Nama Kantor</label>
             <input type="text" id="nama_cabang" name="nama_cabang" class="form-control form-control-lg" required value="Cabang Utama">
             <span id="nama_cabang_error_message" class="error-message"></span>
           </div>
           <div class="form-group text-left">
-            <label for="alamat_cabang">Alamat Cabang</label>
+            <label for="alamat_cabang">Alamat Kantor</label>
             <textarea id="alamat_cabang" name="alamat_cabang" class="form-control form-control-lg" rows="3" required></textarea>
             <span id="alamat_cabang_error_message" class="error-message"></span>
           </div>
