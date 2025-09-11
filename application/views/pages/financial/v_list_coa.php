@@ -96,7 +96,7 @@
                         <?php
                         if ($is_semua_coa == 0) {
                         ?>
-                          <button class="btn btn-primary text-white" data-toggle="modal" data-target="#TemplateCoa" type="button" style="color: white;">Ambil CoA</button>
+                          <button class="btn btn-primary text-white" data-toggle="modal" data-target="#TemplateCoa" type="button" style="color: white;">Ambil CoA SBB</button>
                         <?php
                         }
 
@@ -186,7 +186,7 @@
                         <?php
                         if ($is_semua_coa_bb == 0) {
                         ?>
-                          <button class="btn btn-primary text-white" data-toggle="modal" data-target="#TemplateCoaBB" type="button" style="color: white;">Ambil CoA BB</button>
+                          <button class="btn btn-pink text-white" data-toggle="modal" data-target="#TemplateCoaBB" type="button" style="color: white;">Ambil CoA BB</button>
                         <?php
                         }
                         ?>

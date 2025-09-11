@@ -77,13 +77,7 @@
                         <?php
                         if ($is_semua_coa == 0) {
                         ?>
-                          <button class="btn btn-primary text-white" data-toggle="modal" data-target="#TemplateCoa" type="button" style="color: white;">Ambil CoA</button>
-                        <?php
-                        }
-
-                        if ($is_sawal == 0 && $cabang_now == $this->session->userdata('kode_cabang')) {
-                        ?>
-                          <button class="btn btn-pink text-white" data-toggle="modal" data-target="#saldoAwal" type="button" style="color: white;">Buat Saldo Awal</button>
+                          <button class="btn btn-pink text-white" data-toggle="modal" data-target="#TemplateCoa" type="button" style="color: white;">Ambil CoA SBB</button>
                         <?php
                         }
                         ?>
@@ -167,7 +161,7 @@
                         <?php
                         if ($is_semua_coa_bb == 0) {
                         ?>
-                          <button class="btn btn-primary text-white" data-toggle="modal" data-target="#TemplateCoaBB" type="button" style="color: white;">Ambil CoA BB</button>
+                          <button class="btn btn-pink text-white" data-toggle="modal" data-target="#TemplateCoaBB" type="button" style="color: white;">Ambil CoA BB</button>
                         <?php
                         }
                         ?>
