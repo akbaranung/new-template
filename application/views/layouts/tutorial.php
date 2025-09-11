@@ -112,7 +112,7 @@
       }
 
       if ($max_users_for_100_percent == $total_user && $cek_coa_cabang == 0) { ?>
-        <p class="card-title mb-0"><strong>Ayo buat COA Sekarang</strong></p>
+        <h5 class="card-title mb-0"><strong>Ayo buat COA Sekarang</strong></h5>
 
       <?php
       } ?>
@@ -177,7 +177,7 @@
           } else if ($cek_saldo_awal == 0) {
           ?>
             <a href="#">
-              <div class="circle" data-label="Setting COA dan SAWAL">
+              <div class="circle" data-label="COA">
                 <div class="triangle-right-secondary"></div>
               </div>
             </a>
@@ -185,7 +185,7 @@
           } else {
           ?>
             <a href="#">
-              <div class="circle-success active" data-label="Setting COA Dan SAWAL">
+              <div class="circle-success active" data-label="COA">
                 <div class="triangle-right-success"></div>
               </div>
             </a>
