@@ -93,6 +93,36 @@
       /* Grey for secondary */
       border-bottom: 8px solid transparent;
     }
+
+    @keyframes bounce {
+
+      0%,
+      20%,
+      50%,
+      80%,
+      100% {
+        transform: translateY(0);
+      }
+
+      40% {
+        transform: translateY(-10px);
+        /* Adjust the height of the bounce */
+      }
+
+      60% {
+        transform: translateY(-5px);
+        /* Adjust the height of the bounce */
+      }
+    }
+
+    /* --- Add this rule --- */
+    .animated-chevron {
+      animation: bounce 2s infinite;
+      /* Apply the bounce animation */
+      /* You can adjust '2s' for duration and 'infinite' to make it loop */
+    }
+
+    /* --- End of added rule --- */
   </style>
   <div class="card shadow mb-4">
     <div class="card-header d-flex justify-content-between align-items-center">
@@ -146,7 +176,7 @@
             ?>
               <a href="<?= $button_now ?>">
                 <div class="circle-current" data-label="<?= $label ?>" style="background-color: #e81f63; color:white;">
-                  <div class="fe fe-chevrons-down"></div>
+                  <div class="fe fe-chevrons-down animated-chevron"></div>
                 </div>
               </a>
             <?php
