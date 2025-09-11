@@ -1,34 +1,4 @@
 <script>
-  // This script will run after the page content loads
-  document.addEventListener('DOMContentLoaded', function() {
-    // Check the PHP flag. Note: It's important to echo the value.
-    var forceShowCard2 = <?php echo json_encode($show_card2); ?>;
-
-    if (forceShowCard2) {
-      // Get the buttons and panes
-      var card1Tab = document.getElementById('card1-tab');
-      var card2Tab = document.getElementById('card2-tab');
-      var card1Pane = document.getElementById('card1');
-      var card2Pane = document.getElementById('card2');
-
-      // Deactivate Card 1
-      card1Tab.classList.remove('active');
-      card1Tab.setAttribute('aria-selected', 'false');
-      card1Pane.classList.remove('active', 'show');
-
-      // Activate Card 2
-      card2Tab.classList.add('active');
-      card2Tab.setAttribute('aria-selected', 'true');
-      card2Pane.classList.add('active', 'show');
-
-      // Disable Card 1 tab to prevent it from being clicked
-      card1Tab.disabled = true;
-      card1Tab.style.pointerEvents = 'none'; // Optional: for visual disabling
-      card1Tab.style.cursor = 'default'; // Optional: for cursor change
-    }
-  });
-</script>
-<script>
   $(document).ready(function() {
     $('.tab-button').on('click', function() {
       var activeTab = $(this).data('tab');

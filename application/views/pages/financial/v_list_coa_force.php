@@ -66,7 +66,23 @@
       <h1 class="page-title">List Coa</h1>
       <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
-          <button class="p-2 nav-link tab-button <?= ($active_tab == 'card2') ? 'active' : '' ?>" id="card2-tab" data-tab="card2" type="button" role="tab" aria-controls="card2" aria-selected="<?= ($active_tab == 'card2') ? 'true' : 'false' ?>">
+          <button class="p-2 nav-link tab-button <?= ($active_tab == 'card2') ? 'active' : '' ?>
+          <?php
+          if ($cek_coa_bb) {
+            echo '';
+          } else {
+            echo 'animated-bounce';
+          }
+          ?>
+          "
+            <?php
+            if ($cek_coa_bb) {
+              echo '';
+            } else {
+              echo 'style="background-color: #e81f63; color:white;"';
+            }
+            ?>
+            id="card2-tab" data-tab="card2" type="button" role="tab" aria-controls="card2" aria-selected="<?= ($active_tab == 'card2') ? 'true' : 'false' ?>">
             List COA BB
           </button>
         </li>
