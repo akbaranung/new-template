@@ -134,7 +134,7 @@ else {
           {
             buttons: [{
               text: 'Ambil Semua',
-              className: 'btn btn-primary',
+              className: 'btn btn-pink',
               action: function(e, dt, button, config) {
                 Swal.fire({
                   title: 'Apakah Anda yakin?',
@@ -308,7 +308,7 @@ else {
           {
             buttons: [{
               text: 'Ambil Semua',
-              className: 'btn btn-primary',
+              className: 'btn btn-pink',
               action: function(e, dt, button, config) {
                 Swal.fire({
                   title: 'Apakah Anda yakin?',

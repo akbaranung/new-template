@@ -1298,7 +1298,7 @@ else if ($this->session->flashdata('message_error')) {
           {
             buttons: [{
               text: 'Ambil Semua',
-              className: 'btn btn-primary',
+              className: 'btn btn-pink',
               action: function(e, dt, button, config) {
                 Swal.fire({
                   title: 'Apakah Anda yakin?',
@@ -1475,7 +1475,7 @@ else if ($this->session->flashdata('message_error')) {
           {
             buttons: [{
               text: 'Ambil Semua',
-              className: 'btn btn-primary',
+              className: 'btn btn-pink',
               action: function(e, dt, button, config) {
                 Swal.fire({
                   title: 'Apakah Anda yakin?',
