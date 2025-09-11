@@ -49,6 +49,34 @@
   .nav-tabs .nav-link:hover {
     border-color: #dee2e2 #dee2e2 #dee2e6;
   }
+
+  @keyframes bounce {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+      transform: translateY(0);
+    }
+
+    40% {
+      transform: translateY(-10px);
+      /* Adjust the height of the bounce */
+    }
+
+    60% {
+      transform: translateY(-5px);
+      /* Adjust the height of the bounce */
+    }
+  }
+
+  /* --- Add this rule --- */
+  .animated-bounce {
+    animation: bounce 2s infinite;
+    /* Apply the bounce animation */
+    /* You can adjust '2s' for duration and 'infinite' to make it loop */
+  }
 </style>
 
 <div class="container-fluid">
@@ -66,6 +94,34 @@
             List COA SBB
           </button>
         </li>
+        <?php
+
+        if ($is_sawal == 0 && $cabang_now == $this->session->userdata('kode_cabang')) {
+        ?>
+          <li class="nav-item">
+            <button class="p-2 nav-link
+          <?php
+          if ($is_sawal != 0) {
+            echo '';
+          } else {
+            echo 'animated-bounce';
+          }
+          ?>
+          "
+              <?php
+              if ($is_sawal != 0) {
+                echo '';
+              } else {
+                echo 'style="background-color: #e81f63; color:white;"';
+              }
+              ?> type="button" data-toggle="modal" data-target="#saldoAwal" aria-selected="false">
+              Buat Saldo Awal
+            </button>
+          </li>
+        <?php
+        }
+        ?>
+
       </ul>
       <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade <?= ($active_tab == 'card1') ? 'show active' : '' ?>" id="card1" role="tabpanel" aria-labelledby="card1-tab">
@@ -102,7 +158,7 @@
 
                         if ($is_sawal == 0 && $cabang_now == $this->session->userdata('kode_cabang')) {
                         ?>
-                          <button class="btn btn-pink text-white" data-toggle="modal" data-target="#saldoAwal" type="button" style="color: white;">Buat Saldo Awal</button>
+                          <!-- <button class="btn btn-pink text-white" data-toggle="modal" data-target="#saldoAwal" type="button" style="color: white;">Buat Saldo Awal</button> -->
                         <?php
                         }
                         ?>
