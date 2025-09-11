@@ -31,6 +31,34 @@
   .nav-tabs .nav-link:hover {
     border-color: #dee2e2 #dee2e2 #dee2e6;
   }
+
+  @keyframes bounce {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+      transform: translateY(0);
+    }
+
+    40% {
+      transform: translateY(-10px);
+      /* Adjust the height of the bounce */
+    }
+
+    60% {
+      transform: translateY(-5px);
+      /* Adjust the height of the bounce */
+    }
+  }
+
+  /* --- Add this rule --- */
+  .animated-bounce {
+    animation: bounce 2s infinite;
+    /* Apply the bounce animation */
+    /* You can adjust '2s' for duration and 'infinite' to make it loop */
+  }
 </style>
 <div class="container-fluid">
   <div class="row justify-content-center">
@@ -43,7 +71,18 @@
           </button>
         </li>
         <li class="nav-item" role="presentation">
-          <button class="p-2 nav-link tab-button <?= ($active_tab == 'card1') ? 'active' : '' ?>" id="card1-tab" data-tab="card1" type="button" role="tab" aria-controls="card1" aria-selected="<?= ($active_tab == 'card1') ? 'true' : 'false' ?>">
+          <button class="p-2 nav-link tab-button <?= ($active_tab == 'card1') ? 'active' : '' ?> <?= ($cek_coa_sbb) ? '' : 'animated-bounce' ?>"
+            <?php
+            if ($cek_coa_bb) {
+              if ($cek_coa_sbb) {
+                echo '';
+              } else {
+                echo 'style="background-color: #e81f63; color:white;"';
+              }
+            } else {
+              echo 'disabled';
+            }
+            ?> id="card1-tab" data-tab="card1" type="button" role="tab" aria-controls="card1" aria-selected="<?= ($active_tab == 'card1') ? 'true' : 'false' ?>">
             List COA SBB
           </button>
         </li>

@@ -106,6 +106,17 @@ class Financial_first extends CI_Controller
     $all_coa_bb = $query->result_array();
 
 
+    $this->cb->from('v_coabb_all');
+    $this->cb->where('id_company', $this->session->userdata('user_perusahaan_id'));
+    $query = $this->cb->get();
+    $cek_coa_bb = $query->num_rows();
+
+
+    $this->cb->from('v_coa_all');
+    $this->cb->where('id_company', $this->session->userdata('user_perusahaan_id'));
+    $query = $this->cb->get();
+    $cek_coa_sbb = $query->num_rows();
+
     $activa = $this->M_coa->get_coa_activa_by_cabang();
     $pasiva = $this->M_coa->get_coa_pasiva_by_cabang();
 
@@ -166,7 +177,8 @@ class Financial_first extends CI_Controller
       // 'cek_coa_bb' => $cek_coa_bb,
       // 'cek_coalr_bb' => $cek_coalr_bb,
       'active_tab' => $active_tab, // Pass the active tab to the view
-
+      'cek_coa_sbb' => $cek_coa_sbb,
+      'cek_coa_bb' => $cek_coa_bb,
     ];
 
 
