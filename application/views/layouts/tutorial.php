@@ -106,7 +106,7 @@
         if ($active_p == 0) {
           $active_p = 1;
       ?>
-          <p class="card-title mb-0"><strong>Ayo buat Akun <?= $label ?> (<?= $total_user . '/' . $max_users_for_100_percent ?>)</strong></p>
+          <h5 class="card-title mb-0"><strong>Ayo buat Akun <?= $label ?> (<?= $total_user . '/' . $max_users_for_100_percent ?>)</strong></h5>
         <?php
         }
       }
