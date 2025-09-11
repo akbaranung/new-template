@@ -20,6 +20,13 @@
     display: block;
   }
 
+  .info-message {
+    color: gray;
+    font-size: 0.875em;
+    margin-top: 5px;
+    display: block;
+  }
+
   .preview-pict {
     max-width: 220px;
     height: auto;
@@ -89,7 +96,6 @@
             <label for="nama_singkat">Nama Singkat</label>
             <input type="text" id="nama_singkat" name="nama_singkat" class="form-control form-control-lg" required>
             <span id="nama_singkat_error_message" class="error-message"></span>
-
           </div>
           <div class="form-group text-left d-none">
             <label for="nama_ppn">Nama PPN</label>
@@ -127,7 +133,7 @@
           <div class="form-group text-left">
             <label for="nama_akronim">Akronim Invoice (3-4 Character)</label>
             <input type="text" id="nama_akronim" name="nama_akronim" class="form-control form-control-lg" maxlength="4" required>
-            <span id="nama_akronim_error_message" class="error-message"></span>
+            <span id="nama_akronim_error_message" class="info-message">Akronim di gunakan untuk pembuatan kode penomoran invoice</span>
 
           </div>
           <!-- End new input fields -->
@@ -245,9 +251,25 @@
         // For example, if (file.size > 2 * 1024 * 1024) { message = 'Ukuran file terlalu besar (maks 2MB).'; isValid = false; }
       }
 
+      // This is the new, crucial part for the akronim field
+      if (inputElement.id === "nama_akronim") {
+        if (!isValid) {
+          errorMessageSpan.textContent = 'Akronim tidak valid.';
+          errorMessageSpan.classList.remove("info-message");
+          errorMessageSpan.classList.add("error-message");
+        } else {
+          errorMessageSpan.textContent = 'Akronim di gunakan untuk pembuatan kode penomoran invoice';
+          errorMessageSpan.classList.remove("error-message");
+          errorMessageSpan.classList.add("info-message");
+        }
+      }
+
       // Only display message and apply border if the field has been touched or form submitted
       if (isTouched) {
-        errorMessageSpan.textContent = message;
+        if (inputElement.id !== "nama_akronim") {
+          errorMessageSpan.textContent = message;
+        }
+        // errorMessageSpan.textContent = message;
         if (!isValid) {
           inputElement.classList.add('is-invalid');
         } else {
