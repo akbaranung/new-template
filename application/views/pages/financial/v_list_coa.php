@@ -435,7 +435,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-pink">Save changes</button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
         </div>
       </form>
     </div>
@@ -456,7 +456,7 @@
           <div class="row">
             <div id="balanceResult" class="col-12 balance-info hidden mb-2"></div>
             <div class="col-lg-12 d-flex justify-content-end">
-              <button type="submit" class="btn btn-primary mb-3">Save changes</button>
+              <button type="submit" class="btn btn-pink mb-3">Save changes</button>
             </div>
           </div>
 
@@ -541,7 +541,7 @@
         <div class="modal-footer">
           <div id="balanceResult2" class="col-12 balance-info hidden mb-2"></div>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Save changes</button>
+          <button type="submit" class="btn btn-pink">Save changes</button>
         </div>
       </form>
     </div>
