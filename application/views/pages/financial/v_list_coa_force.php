@@ -71,7 +71,18 @@
           </button>
         </li>
         <li class="nav-item" role="presentation">
-          <button class="p-2 nav-link tab-button <?= ($active_tab == 'card1') ? 'active' : '' ?> <?= ($cek_coa_sbb) ? '' : 'animated-bounce' ?>"
+          <button class="p-2 nav-link tab-button <?= ($active_tab == 'card1') ? 'active' : '' ?> 
+          <?php
+          if ($cek_coa_bb) {
+            if ($cek_coa_sbb) {
+              echo '';
+            } else {
+              echo 'animated-bounce';
+            }
+          } else {
+            echo '';
+          }
+          ?>"
             <?php
             if ($cek_coa_bb) {
               if ($cek_coa_sbb) {
