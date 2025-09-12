@@ -271,7 +271,7 @@
                     </p>
 
                     <p class="text-muted f-13 mt-2">
-                        *Harga paket dapat berbubah sewaktu-waktu tanpa pemberitahuan
+                        *Harga paket dapat berubah sewaktu-waktu tanpa pemberitahuan
                     </p>
                     <!-- <h3 class="title-heading mt-4">Dekrit Kerajaan: Penawaran Harga Agung</h3>
                     <p class="text-muted f-17 mt-3">
