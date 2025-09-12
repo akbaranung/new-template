@@ -269,6 +269,10 @@
                         mengukuhkan kejayaan dan kekuasaan.<br> Pilih mahkota yang paling sesuai
                         untuk memimpin tahta Anda menuju era keemasan.
                     </p>
+
+                    <p class="text-muted f-13 mt-2">
+                        *Harga paket dapat berbubah sewaktu-waktu tanpa pemberitahuan
+                    </p>
                     <!-- <h3 class="title-heading mt-4">Dekrit Kerajaan: Penawaran Harga Agung</h3>
                     <p class="text-muted f-17 mt-3">
                         Dari balairung agung, kami persembahkan paket-paket layanan pilihan
