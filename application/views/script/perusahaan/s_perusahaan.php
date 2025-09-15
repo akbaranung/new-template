@@ -1,4 +1,208 @@
 <script>
+    const allCoa = <?= json_encode($coa_all) ?>;
+    // Get the PHP variables for initial selection
+    const selectedNamaPerkiraan = '<?= $perusahaan->nama_coa_ppn_keluaran ?? '' ?>';
+    const selectedNoSbb = '<?= $perusahaan->nomor_coa_ppn_keluaran ?? '' ?>';
+
+    $(document).ready(function() {
+        // --- 1. Prepare the Data ---
+        // Default Option
+        const defaultOption = {
+            id: '23011 :: PPN KELUARAN :: Default',
+            text: '23011 :: PPN KELUARAN :: Default',
+            isDefault: true,
+            originalNoSbb: '23011',
+            originalNamaPerkiraan: 'PPN KELUARAN'
+        };
+
+        // Format other COA data
+        const formattedCoa = allCoa.map(item => {
+            const displayText = `${item.no_sbb} :: ${item.nama_perkiraan}`;
+            return {
+                id: displayText,
+                text: displayText,
+                isDefault: false,
+                originalNoSbb: item.no_sbb,
+                originalNamaPerkiraan: item.nama_perkiraan
+            };
+        });
+
+        // Combine all options
+        const combinedCoa = [defaultOption, ...formattedCoa];
+
+        // --- 2. Initialize Select2 ---
+        const $selectElement = $('#coa_ppn_Keluaran');
+
+        $selectElement.select2({
+            placeholder: 'Cari Kode BB...',
+            minimumInputLength: 0,
+            data: combinedCoa,
+            templateResult: function(option) {
+                return option.text;
+            },
+            templateSelection: function(option) {
+                return option.text;
+            }
+        });
+
+        // --- 3. Set Initial Selected Value ---
+        let selectedId = null;
+
+        // Check if the default option should be selected
+        if (selectedNoSbb === defaultOption.originalNoSbb && selectedNamaPerkiraan === defaultOption.originalNamaPerkiraan) {
+            selectedId = defaultOption.id;
+        } else {
+            // Search for the matching item in the formatted data
+            const matchedItem = formattedCoa.find(item =>
+                item.originalNoSbb === selectedNoSbb &&
+                item.originalNamaPerkiraan === selectedNamaPerkiraan
+            );
+
+            if (matchedItem) {
+                selectedId = matchedItem.id;
+            }
+        }
+
+        // Set the selected value if a match was found
+        if (selectedId !== null) {
+            $selectElement.val(selectedId).trigger('change');
+        }
+
+        // --- 4. Handle Form Submission ---
+        // This part is the same as our previous solution to ensure values are sent to PHP
+        $('#update_perusahaan_form').on('submit', function() {
+            const selectedData = $selectElement.select2('data')[0];
+            let finalNoSbb = '',
+                finalNamaPerkiraan = '';
+
+            if (selectedData) {
+                if (selectedData.isDefault) {
+                    finalNoSbb = selectedData.originalNoSbb;
+                    finalNamaPerkiraan = selectedData.originalNamaPerkiraan;
+                } else {
+                    finalNoSbb = selectedData.originalNoSbb;
+                    finalNamaPerkiraan = selectedData.originalNamaPerkiraan;
+                }
+            }
+
+            // Add hidden inputs to the form before submission
+            $(this).append($('<input>').attr({
+                type: 'hidden',
+                name: 'coa_ppn_keluaran_no_sbb',
+                value: finalNoSbb
+            }));
+            $(this).append($('<input>').attr({
+                type: 'hidden',
+                name: 'coa_ppn_keluaran_nama_perkiraan',
+                value: finalNamaPerkiraan
+            }));
+        });
+    });
+</script>
+<script>
+    // const allCoa = <?= json_encode($coa_all) ?>;
+    // Get the PHP variables for initial selection
+    const selectedNamaPerkiraan_pph = '<?= $perusahaan->nama_coa_utang_pph23 ?? '' ?>';
+    const selectedNoSbb_pph = '<?= $perusahaan->nomor_coa_utang_pph23 ?? '' ?>';
+
+    $(document).ready(function() {
+        // --- 1. Prepare the Data ---
+        // Default Option
+        const defaultOption = {
+            id: '23014 :: UTANG PPH 23 :: Default',
+            text: '23014 :: UTANG PPH 23 :: Default',
+            isDefault: true,
+            originalNoSbb: '23014',
+            originalNamaPerkiraan: 'UTANG PPH 23'
+        };
+
+        // Format other COA data
+        const formattedCoa = allCoa.map(item => {
+            const displayText = `${item.no_sbb} :: ${item.nama_perkiraan}`;
+            return {
+                id: displayText,
+                text: displayText,
+                isDefault: false,
+                originalNoSbb: item.no_sbb,
+                originalNamaPerkiraan: item.nama_perkiraan
+            };
+        });
+
+        // Combine all options
+        const combinedCoa = [defaultOption, ...formattedCoa];
+
+        // --- 2. Initialize Select2 ---
+        const $selectElement = $('#coa_utang_pph');
+
+        $selectElement.select2({
+            placeholder: 'Cari Kode BB...',
+            minimumInputLength: 0,
+            data: combinedCoa,
+            templateResult: function(option) {
+                return option.text;
+            },
+            templateSelection: function(option) {
+                return option.text;
+            }
+        });
+
+        // --- 3. Set Initial Selected Value ---
+        let selectedId = null;
+
+        console.log(selectedNoSbb_pph);
+        console.log(selectedNamaPerkiraan_pph);
+
+        // Check if the default option should be selected
+        if (selectedNoSbb_pph === defaultOption.originalNoSbb && selectedNamaPerkiraan_pph === defaultOption.originalNamaPerkiraan) {
+            selectedId = defaultOption.id;
+        } else {
+            // Search for the matching item in the formatted data
+            const matchedItem = formattedCoa.find(item =>
+                item.originalNoSbb === selectedNoSbb_pph &&
+                item.originalNamaPerkiraan === selectedNamaPerkiraan_pph
+            );
+
+            if (matchedItem) {
+                selectedId = matchedItem.id;
+            }
+        }
+
+        // Set the selected value if a match was found
+        if (selectedId !== null) {
+            $selectElement.val(selectedId).trigger('change');
+        }
+
+        // --- 4. Handle Form Submission ---
+        $('#update_perusahaan_form').on('submit', function() {
+            const selectedData = $selectElement.select2('data')[0];
+            let finalNoSbb = '',
+                finalNamaPerkiraan = '';
+
+            if (selectedData) {
+                if (selectedData.isDefault) {
+                    finalNoSbb = selectedData.originalNoSbb;
+                    finalNamaPerkiraan = selectedData.originalNamaPerkiraan;
+                } else {
+                    finalNoSbb = selectedData.originalNoSbb;
+                    finalNamaPerkiraan = selectedData.originalNamaPerkiraan;
+                }
+            }
+
+            // Add hidden inputs to the form before submission
+            $(this).append($('<input>').attr({
+                type: 'hidden',
+                name: 'coa_utang_pph_no_sbb',
+                value: finalNoSbb
+            }));
+            $(this).append($('<input>').attr({
+                type: 'hidden',
+                name: 'coa_utang_pph_nama_perkiraan',
+                value: finalNamaPerkiraan
+            }));
+        });
+    });
+</script>
+<script>
     function previewImage(event) {
         // Get the image preview element
         const imagePreview = document.getElementById('logo_preview');

@@ -723,7 +723,11 @@ class Perusahaan extends CI_Controller
     $data['pages'] = 'pages/perusahaan/v_perusahaan_detail';
     $data['pages_script'] = 'script/perusahaan/s_perusahaan';
 
-
+    $this->cb->from('v_coa_all');
+    $this->cb->join('t_cabang', 't_cabang.uid = v_coa_all.id_cabang');
+    $this->cb->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
+    $coa_all = $this->cb->get()->result(); // Get the number of rows
+    $data['coa_all'] = $coa_all;
     $this->load->view('index', $data);
     // $this->load->view('pages/absensi/lokasi_presensi_form', $data);
   }
@@ -786,6 +790,10 @@ class Perusahaan extends CI_Controller
       "nama_bank" => $this->input->post('nama_bank'),
       "alamat_perusahaan" => $this->input->post('alamat_perusahaan'),
       "nama_akronim" => $this->input->post('nama_akronim'),
+      "nama_coa_ppn_keluaran" => $this->input->post('coa_ppn_keluaran_nama_perkiraan'),
+      "nomor_coa_ppn_keluaran" => $this->input->post('coa_ppn_keluaran_no_sbb'),
+      "nama_coa_utang_pph23" => $this->input->post('coa_utang_pph_nama_perkiraan'),
+      "nomor_coa_utang_pph23" => $this->input->post('coa_utang_pph_no_sbb'),
     ];
 
     if (!empty($_FILES['logo_perusahaan']['name']) && $_FILES['logo_perusahaan']['error'] == UPLOAD_ERR_OK) {
