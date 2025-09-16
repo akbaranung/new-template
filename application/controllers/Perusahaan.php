@@ -726,7 +726,9 @@ class Perusahaan extends CI_Controller
     $this->cb->from('v_coa_all');
     $this->cb->join('t_cabang', 't_cabang.uid = v_coa_all.id_cabang');
     $this->cb->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
-    $coa_all = $this->cb->get()->result(); // Get the number of rows
+    // Tambahkan klausa where untuk memfilter kolom yang dimulai dengan '2'
+    $this->cb->where('v_coa_all.no_sbb LIKE', '2%');
+    $coa_all = $this->cb->get()->result();
     $data['coa_all'] = $coa_all;
     $this->load->view('index', $data);
     // $this->load->view('pages/absensi/lokasi_presensi_form', $data);
