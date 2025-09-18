@@ -332,6 +332,7 @@
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Absen Online (by Face Recognition & Geo-Location)</b></p>
                         <!-- <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Surat-menyurat</b></p> -->
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Manajemen Aset & Otomasi Penyusutan</b></p>
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Notifikasi Whatsapp</b></p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Fitur-fitur Premium Lainnya</b></p>
                     </div>
 
@@ -382,6 +383,7 @@
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Absen Online (by Face Recognition & Geo-Location)</b></p>
                         <!-- <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Surat-menyurat</b></p> -->
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Manajemen Aset & Otomasi Penyusutan</b></p>
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Notifikasi Whatsapp</b></p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Fitur-fitur Premium Lainnya</b></p>
                     </div>
 
@@ -431,6 +433,7 @@
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Absen Online (by Face Recognition & Geo-Location)</b></p>
                         <!-- <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Surat-menyurat</b></p> -->
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Manajemen Aset & Otomasi Penyusutan</b></p>
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Notifikasi Whatsapp</b></p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Fitur-fitur Premium Lainnya</b></p>
                     </div>
 
