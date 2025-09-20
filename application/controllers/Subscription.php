@@ -637,10 +637,27 @@ Mohon untuk memproses pembayaran segera.";
             $total_bulan = $confirmation_detail->total_bulan;
 
             // Set the start date to the current date and time
-            $start_date = date('Y-m-d H:i:s');
+            $detail_perusahaan = $this->db->from('utility')->where('Id', $confirmation_detail->id_perusahaan)->get()->row();
 
-            // Calculate the expired date by adding $total_bulan to the start date
-            $expired_date = date('Y-m-d H:i:s', strtotime("+$total_bulan months"));
+            if ($this->session->userdata('is_premium')) {
+                $expired_date_now = $detail_perusahaan->expired_day;
+
+                $expired_date_now = new DateTime($expired_date_now);
+
+                $expired_date_now->modify("+$total_bulan months");
+
+
+                $start_date = $detail_perusahaan->start_day;
+                $expired_date = $expired_date_now->format('Y-m-d H:i:s');
+
+                // echo $expired_date;
+            } else {
+                $start_date = date('Y-m-d H:i:s');
+
+                // Calculate the expired date by adding $total_bulan to the start date
+                $expired_date = date('Y-m-d H:i:s', strtotime("+$total_bulan months"));
+            }
+
 
             $this->db->select('users.*'); // Select all from users, and specific columns from t_cabang
             $this->db->from('users');
@@ -702,9 +719,6 @@ Mohon untuk memproses pembayaran segera.";
                     $start_date_obj = new DateTime($confirmation_detail->tanggal_selesai);
 
                     $formatted_start_date = strtr($start_date_obj->format('d F Y'), $indonesian_months);
-
-
-                    $detail_perusahaan = $this->db->from('utility')->where('Id', $confirmation_detail->id_perusahaan)->get()->row();
 
                     $id_invoice = NULL;
 

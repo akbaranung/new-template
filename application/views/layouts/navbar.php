@@ -36,7 +36,14 @@
   <ul class="nav">
 
     <li class="nav-item">
-      <a href="#" onclick="upgrade_premium()" data-is-premium="<?= (int)($this->session->userdata('is_premium') == '1'); ?>" class="my-2 btn btn-<?= ($this->session->userdata('is_premium') == '1') ? 'primary' : 'pink' ?>">
+      <?php
+      if ($this->session->userdata('is_premium')) {
+        $url = base_url('subscription/upgrade');
+      } else {
+        $url = '#';
+      }
+      ?>
+      <a href="<?= $url ?>" onclick="upgrade_premium()" data-is-premium="<?= (int)($this->session->userdata('is_premium') == '1'); ?>" class="my-2 btn btn-<?= ($this->session->userdata('is_premium') == '1') ? 'primary' : 'pink' ?>">
         <?php if ($this->session->userdata('is_premium') == '1') {
           if ($this->session->userdata('Tenggat_waktu')) {
             echo '<b><span class="desktop-only">Masa Berlaku Titah : </span>' . $this->session->userdata('Tenggat_waktu') . ' Hari </b> <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="16" height="16">
