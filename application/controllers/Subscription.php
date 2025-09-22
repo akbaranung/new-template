@@ -345,16 +345,27 @@ class Subscription extends CI_Controller
                 $formatted_nominal = number_format($confirmation_detail->nominal, 0, ',', '.');
 
 
-                $msg = "Pembayaran telah dilakukan oleh user,
-Rincian:
-- Perusahaan: *$detail_perusahaan->nama_perusahaan* (ID: *$detail_perusahaan->Id*)
-- Nama Paket: *" . $confirmation_detail->paket . "*
-- Total Bulan: *" . $confirmation_detail->total_bulan . "*
-- Tanggal Mulai: *" . $tanggal_mulai_formatted . "*
-- Tanggal Selesai: *" . $tanggal_selesai_formatted . "*
-- Nominal: *Rp. " . $formatted_nominal . "*
+                //                 $msg = "Pembayaran telah dilakukan oleh user,
+                // Rincian:
+                // - Perusahaan: *$detail_perusahaan->nama_perusahaan* (ID: *$detail_perusahaan->Id*)
+                // - Nama Paket: *" . $confirmation_detail->paket . "*
+                // - Total Bulan: *" . $confirmation_detail->total_bulan . "*
+                // - Tanggal Mulai: *" . $tanggal_mulai_formatted . "*
+                // - Tanggal Selesai: *" . $tanggal_selesai_formatted . "*
+                // - Nominal: *Rp. " . $formatted_nominal . "*
 
-Mohon untuk memproses pembayaran segera.";
+                // Mohon untuk memproses pembayaran segera.";
+
+
+
+                $msg = "Pembayaran telah dilakukan oleh user,
+                Rincian:
+                - Perusahaan: *$detail_perusahaan->nama_perusahaan* (ID: *$detail_perusahaan->Id*)
+                - Nama Paket: *" . $confirmation_detail->paket . "*
+                - Total Bulan: *" . $confirmation_detail->total_bulan . "*
+                - Nominal: *Rp. " . $formatted_nominal . "*
+
+                Mohon untuk memproses pembayaran segera.";
 
                 // $this->api_whatsapp->wa_notif($msg, "085157563305");
                 $this->api_whatsapp->wa_notif($msg, "08127070700");
@@ -444,13 +455,23 @@ Mohon untuk memproses pembayaran segera.";
                 $formatted_nominal = number_format($confirmation_detail->nominal, 0, ',', '.');
 
 
+                //                 $msg = "Pembayaran telah dilakukan oleh user,
+                // Rincian:
+                // - Perusahaan: *$detail_perusahaan->nama_perusahaan* (ID: *$detail_perusahaan->Id*)
+                // - Nama Paket: *" . $confirmation_detail->paket . "*
+                // - Total Bulan: *" . $confirmation_detail->total_bulan . "*
+                // - Tanggal Mulai: *" . $tanggal_mulai_formatted . "*
+                // - Tanggal Selesai: *" . $tanggal_selesai_formatted . "*
+                // - Nominal: *Rp. " . $formatted_nominal . "*
+
+                // Mohon untuk memproses pembayaran segera.";
+
+
                 $msg = "Pembayaran telah dilakukan oleh user,
 Rincian:
 - Perusahaan: *$detail_perusahaan->nama_perusahaan* (ID: *$detail_perusahaan->Id*)
 - Nama Paket: *" . $confirmation_detail->paket . "*
 - Total Bulan: *" . $confirmation_detail->total_bulan . "*
-- Tanggal Mulai: *" . $tanggal_mulai_formatted . "*
-- Tanggal Selesai: *" . $tanggal_selesai_formatted . "*
 - Nominal: *Rp. " . $formatted_nominal . "*
 
 Mohon untuk memproses pembayaran segera.";
