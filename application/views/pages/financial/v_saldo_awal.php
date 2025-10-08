@@ -8,7 +8,7 @@
         </div> -->
         <div class="card-body">
           <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#proses-closing">Closing EoM</a>
-          <p class="mt-4"><strong>* Harap untuk melakukan closing setiap akhir bulan, untuk membentuk saldo awal bulan berikutnya!</strong></p>
+          <p class="mt-4"><strong>* Closing harus dilakukan setiap akhir bulan, untuk membentuk saldo awal bulan berikutnya!</strong></p>
           <!-- <form class="form-horizontal form-label-left" method="POST" action="<?= base_url('financial/save_saldo_awal') ?>">
             <div class="row mb-4">
               <div class="col-md-3 col-xs-12">
