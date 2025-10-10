@@ -37,6 +37,79 @@
         radius: radius
     }).addTo(map);
 
+    // Define a custom red icon for the user's location
+    const RedIcon = new L.Icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+    });
+
+    // Initialize the user location marker (will be added to the map only on success)
+    let userMarker = null;
+
+    // --- END NEW CODE ---
+
+
+    // -------------------------------------------------------------------------
+    // MODIFIED GEOLOCATION LOGIC
+    // -------------------------------------------------------------------------
+
+    function onLocationFound(e) {
+        const latlng = e.latlng;
+        const accuracy = e.accuracy; // in meters
+
+        // If the user marker hasn't been created yet, create it and add it to the map
+        if (userMarker === null) {
+            userMarker = L.marker(latlng, {
+                icon: RedIcon,
+                draggable: false // User location marker should not be draggable
+            }).addTo(map);
+            userMarker.bindPopup(`You are here (± ${Math.round(accuracy)}m)`).openPopup();
+        } else {
+            // If it exists, just update its position
+            userMarker.setLatLng(latlng);
+            userMarker.setPopupContent(`You are here (± ${Math.round(accuracy)}m)`);
+        }
+
+        // You can optionally move the map to the user's location, but 
+        // we'll keep it focused on the main marker's location by default.
+        // map.setView(latlng, 16); 
+
+        // Optional: draw a circle around the user's location showing accuracy (different from input radius)
+        L.circle(latlng, {
+            radius: accuracy,
+            color: 'red',
+            fillColor: '#f03',
+            fillOpacity: 0.1
+        }).addTo(map);
+    }
+
+    function onLocationError(e) {
+        console.warn("Geolocation failed:", e.message);
+        // You can add logic here to remove the marker if it was previously set, though 
+        // typically an error means it was never found in the first place.
+    }
+
+    // 1. Attach the event listeners to the map
+    map.on('locationfound', onLocationFound);
+    map.on('locationerror', onLocationError);
+
+    // 2. Request the user's location
+    map.locate({
+        watch: false, // Set to true to continuously track, false for a one-time fix
+        setView: false, // Don't automatically move the map to the user's location
+        maxZoom: 16,
+        enableHighAccuracy: true
+    });
+
+    // -------------------------------------------------------------------------
+    // END MODIFIED GEOLOCATION LOGIC
+    // -------------------------------------------------------------------------
+
+
     // Event listener for marker drag
     marker.on('dragend', () => {
         const latLng = marker.getLatLng();
