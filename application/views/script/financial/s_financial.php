@@ -872,13 +872,27 @@ else if ($this->session->flashdata('message_error')) {
     });
 
     function disabledSubmit(debit, kredit) {
+
+      // const inputFieldDisableFinancialEntry = document.getElementById('inputToCheck');
+      const warningBoxDisableFinancialEntry = document.getElementById('warningMessage');
+
       if (debit && kredit) {
         if (debit == kredit) {
           console.log('sama');
-          $('.btn-primary').prop('disabled', true);
+          // $('.btn-primary').prop('disabled', true);
+          $('#btn-submit').prop('disabled', true);
+          warningBoxDisableFinancialEntry.style.display = 'block';
+          warningBoxDisableFinancialEntry.innerHTML = '⚠️ **Peringatan!** Nomor COA tidak boleh sama. Silahkan Pilih Nomor COA Lain'; // Optional: Also highlight the input border red for better feedback
+          // this.style.borderColor = '#dc3545';
         } else {
           console.log('tidak sama');
-          $('.btn-primary').prop('disabled', false);
+          $('#btn-submit').prop('disabled', false);
+          // Hide the warning message by setting display to 'none'
+          warningBoxDisableFinancialEntry.style.display = 'none';
+
+          // Reset input field border
+          // this.style.borderColor = '';
+          warningBoxDisableFinancialEntry.innerHTML = '';
         }
       }
     }

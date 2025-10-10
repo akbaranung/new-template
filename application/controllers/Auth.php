@@ -280,14 +280,25 @@ class Auth extends CI_Controller
 
         //Send notif wa
         $msg = "Kode verifikasi Akun *Bariskode* Anda adalah *$token*, Gunakan Token Saat Login untuk pertama kali. Jangan bagikan kode ini kepada siapa pun.";
-        if ($this->api_whatsapp->wa_notif($msg, $this->input->post('phone'))) {
-          $this->session->set_flashdata('success', 'Berhasil Membuat Akun, silahkan Masuk.');
-          redirect('auth');
-        } else {
+        $this->api_whatsapp->wa_notif($msg, $this->input->post('phone'));
+        // $response = [
+        //   'success' => TRUE,
+        //   'msg' => 'Berhasil Membuat Akun! Token telah dirikim ke nomor berikut : ' . $this->input->post('phone') . '. Silahkan Login dan gunakan token untuk verifikasi akun.',
+        //   // 'reload' => base_url('home')
+        // ];
 
-          $this->session->set_flashdata('error', 'Gagal Mengirim Token ke Whatsapp');
-          redirect('auth/register');
-        }
+        $this->session->set_flashdata('message_name', 'Berhasil Membuat Akun! Token telah dirikim ke nomor berikut : ' . $this->input->post('phone') . '. Silahkan Login dan gunakan token untuk verifikasi akun.');
+        redirect('auth');
+        // echo json_encode($response);
+
+        // if ($this->api_whatsapp->wa_notif($msg, $this->input->post('phone'))) {
+        // $this->session->set_flashdata('success', 'Berhasil Membuat Akun, silahkan Masuk.');
+        // redirect('auth');
+        // } else {
+
+        // $this->session->set_flashdata('error', 'Gagal Mengirim Token ke Whatsapp');
+        // redirect('auth/register');
+        // }
 
         // Set success flashdata message
         // $response = [
@@ -302,6 +313,7 @@ class Auth extends CI_Controller
         //   'msg'     => 'Gagal Membuat Akun. Terjadi kesalahan pada server. Silakan coba lagi.'
         // ];
         $this->session->set_flashdata('error', 'Silakan lengkapi data perusahaan terlebih dahulu.');
+        $this->session->set_flashdata('message_error', 'Silakan lengkapi data perusahaan terlebih dahulu.');
         redirect('auth/register');
       }
     }

@@ -1,3 +1,26 @@
+<style>
+  .validation-error-alert {
+    display: none;
+    /* Initially hide the warning */
+    margin-top: 10px;
+    padding: 10px;
+
+    /* White-Red Background */
+    background-color: #ffe8e8;
+    /* Very light red/pink */
+
+    /* Red Border */
+    border: 1px solid #dc3545;
+    /* Standard red color */
+
+    /* Text Styling */
+    color: #dc3545;
+    /* Red text color */
+    border-radius: 4px;
+    /* Optional: smooth corners */
+    font-size: 14px;
+  }
+</style>
 <div class="container-fluid">
   <div class="row justify-content-center">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
@@ -67,6 +90,11 @@
                   endforeach; ?>
                 </select>
               </div>
+              <div class="col-md-12 col-xs-12 form-group has-feedback">
+                <div id="warningMessage" class="validation-error-alert">
+
+                </div>
+              </div>
               <div class="col-md-6 col-xs-12 form-group has-feedback">
                 <label for="" class="form-label">Nominal</label>
                 <!-- <input type="text" class="form-control" name="input_nominal" id="input_nominal" placeholder="Nominal" oninput="format_angka()" onkeypress="return onlyNumberKey(event)" autofocus required> -->
@@ -85,7 +113,7 @@
               <div class="col-md-9 col-sm-9">
                 <button type="button" class="btn btn-primary">Cancel</button>
                 <button class="btn btn-primary" type="reset">Reset</button>
-                <button type="submit" class="btn btn-pink">Submit</button>
+                <button type="submit" id="btn-submit" class="btn btn-pink" disabled>Submit</button>
               </div>
             </div>
           </form>
