@@ -15,10 +15,10 @@
   }
 
   @media all and (max-width:719px) {
-    /* .btn-mobile-block {
+    .btn-mobile-block {
       width: 100%;
       display: block;
-    } */
+    }
   }
 </style>
 <div class="container-fluid">
