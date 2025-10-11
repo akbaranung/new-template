@@ -882,9 +882,9 @@ class Absensi extends CI_Controller
             // $row[] = $cat->jam_masuk . ' ' . $cat->zona_waktu;
             // $row[] = $cat->jam_pulang . ' ' . $cat->zona_waktu;
 
-            $row[] = '<a href="' . base_url('absensi/edit_lokasi_presensi/' . $cat->id) . '" class="btn btn-warning m-1">
+            $row[] = '<a href="' . base_url('absensi/edit_lokasi_presensi/' . $cat->id) . '" class="btn btn-warning btn-mobile-block m-1">
 								Update
-							</a><button onclick="onDelete(' . $cat->id . ')" class="btn btn-danger m-1">
+							</a><button onclick="onDelete(' . $cat->id . ')" class="btn btn-danger btn-mobile-block m-1">
 								Delete
 							</button>';
 

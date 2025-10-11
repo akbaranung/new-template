@@ -13,6 +13,13 @@
     margin-left: 8px;
     /* Adjust this value (e.g., 5px, 10px, 0.5em) as needed */
   }
+
+  @media all and (max-width:719px) {
+    /* .btn-mobile-block {
+      width: 100%;
+      display: block;
+    } */
+  }
 </style>
 <div class="container-fluid">
   <div class="row justify-content-center">
