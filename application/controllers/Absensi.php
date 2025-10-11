@@ -874,8 +874,8 @@ class Absensi extends CI_Controller
             $row[] = '<div style="width: 150px; white-space: normal;">' . $cat->alamat_lokasi . '</div>';
 
             // $row[] = $cat->tipe_lokasi;
-            $row[] = $cat->latitude;
-            $row[] = $cat->longitude;
+            // $row[] = $cat->latitude;
+            // $row[] = $cat->longitude;
             $radius_meter = $cat->radius * 1000;
             $row[] = $radius_meter . ' Meter';
             // $row[] = $cat->zona_waktu;
