@@ -337,18 +337,21 @@ class Absen_m extends CI_Model
                 $users = $this->db->get()->row();
 
 
-                $this->db->select('jam_masuk, jam_pulang');
-                $this->db->from('lokasi_presensi');
-                $this->db->where('id', $users->id_lokasi_presensi);
-                $jam = $this->db->get()->row();
+                // $this->db->select('jam_masuk, jam_pulang');
+                // $this->db->from('lokasi_presensi');
+                // $this->db->where('id', $users->id_lokasi_presensi);
+                // $jam = $this->db->get()->row();
 
-                if ($jam) {
+                if ($users) {
                     // Get current time and set timezone
                     $currentTime = new DateTime('now', new DateTimeZone('Asia/Jakarta'));
 
                     // Parse jam_masuk and jam_keluar as DateTime objects
-                    $jamMasukTime = new DateTime($jam->jam_masuk);
-                    $jamKeluarTime = new DateTime($jam->jam_pulang);
+                    // $jamMasukTime = new DateTime($jam->jam_masuk);
+                    // $jamKeluarTime = new DateTime($jam->jam_pulang);
+
+                    $jamMasukTime = new DateTime($users->jam_masuk);
+                    $jamKeluarTime = new DateTime($users->jam_pulang);
 
                     // Modify jamMasukTime if needed (as per your original code, +2 hours)
                     // Note: This +2 hours might be causing logic issues if it makes jamMasukTime > jamKeluarTime for the same day.

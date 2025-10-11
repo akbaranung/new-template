@@ -438,9 +438,13 @@ class Absensi extends CI_Controller
             redirect('home');
         }
 
-        $jam_masuk_plus_two = (new DateTime($lokasi_presensi_by_id->jam_masuk))->modify('+2 hours')->format('H:i:s');
-        $jam_keluar_plus_two = (new DateTime($lokasi_presensi_by_id->jam_pulang))->modify('+2 hours')->format('H:i:s');
+        // $jam_masuk_plus_two = (new DateTime($lokasi_presensi_by_id->jam_masuk))->modify('+2 hours')->format('H:i:s');
+        // $jam_keluar_plus_two = (new DateTime($lokasi_presensi_by_id->jam_pulang))->modify('+2 hours')->format('H:i:s');
 
+
+        $jam_masuk_plus_two = (new DateTime($lokasi_presensi_user->jam_masuk))->modify('+15 minutes')->format('H:i:s');
+        // $jam_keluar_plus_two = (new DateTime($lokasi_presensi_user->jam_pulang))->modify('+15 minutes')->format('H:i:s');
+        $jam_keluar_plus_two = (new DateTime($lokasi_presensi_user->jam_pulang))->modify('+0 minutes')->format('H:i:s');
         $this->db->select('*');
         $this->db->from('tblattendance');
         $this->db->where('username', $this->session->userdata('username')); // Filter by username
@@ -497,16 +501,16 @@ class Absensi extends CI_Controller
         // Access properties using '->' because $cek_user is an object
         $data_user = $this->user->data_user();
 
-        // $jam_masuk_plus_two = (new DateTime($data_user->jam_masuk))->modify('+2 hours')->format('H:i:s');
-        // $jam_keluar_plus_two = (new DateTime($data_user->jam_keluar))->modify('+0 hours')->format('H:i:s');
+        $jam_masuk_plus_two = (new DateTime($data_user->jam_masuk))->modify('+2 hours')->format('H:i:s');
+        $jam_keluar_plus_two = (new DateTime($data_user->jam_keluar))->modify('+0 hours')->format('H:i:s');
 
         $this->db->select('*');
         $this->db->from('lokasi_presensi');
         $this->db->where('id', $data_user->id_lokasi_presensi); // Filter by username
         $query = $this->db->get(); // Execute the query
         $lokasi_presensi_by_id = $query->row(); // Fetch results
-        $jam_masuk_plus_two = (new DateTime($lokasi_presensi_by_id->jam_masuk))->modify('+2 hours')->format('H:i:s');
-        $jam_keluar_plus_two = (new DateTime($lokasi_presensi_by_id->jam_pulang))->modify('+2 hours')->format('H:i:s');
+        // $jam_masuk_plus_two = (new DateTime($lokasi_presensi_by_id->jam_masuk))->modify('+2 hours')->format('H:i:s');
+        // $jam_keluar_plus_two = (new DateTime($lokasi_presensi_by_id->jam_pulang))->modify('+2 hours')->format('H:i:s');
 
 
         if ($users) {
@@ -875,8 +879,8 @@ class Absensi extends CI_Controller
             $radius_meter = $cat->radius * 1000;
             $row[] = $radius_meter . ' Meter';
             // $row[] = $cat->zona_waktu;
-            $row[] = $cat->jam_masuk . ' ' . $cat->zona_waktu;
-            $row[] = $cat->jam_pulang . ' ' . $cat->zona_waktu;
+            // $row[] = $cat->jam_masuk . ' ' . $cat->zona_waktu;
+            // $row[] = $cat->jam_pulang . ' ' . $cat->zona_waktu;
 
             $row[] = '<a href="' . base_url('absensi/edit_lokasi_presensi/' . $cat->id) . '" class="btn btn-warning">
 								Update
@@ -939,9 +943,9 @@ class Absensi extends CI_Controller
             'latitude'            => $this->input->post('latitude_lokasi'),
             'longitude'                => $this->input->post('longitude_lokasi'),
             'radius'                => $radius,
-            'zona_waktu'            => $this->input->post('zona_waktu'),
-            'jam_masuk'                => $this->input->post('jam_masuk'),
-            'jam_pulang'                => $this->input->post('jam_pulang'),
+            // 'zona_waktu'            => $this->input->post('zona_waktu'),
+            // 'jam_masuk'                => $this->input->post('jam_masuk'),
+            // 'jam_pulang'                => $this->input->post('jam_pulang'),
             'id_perusahaan'                => $this->session->userdata('user_perusahaan_id'),
         );
         $this->db->insert('lokasi_presensi', $data_insert);
@@ -962,9 +966,9 @@ class Absensi extends CI_Controller
             'latitude'            => $this->input->post('latitude_lokasi'),
             'longitude'                => $this->input->post('longitude_lokasi'),
             'radius'                => $radius,
-            'zona_waktu'            => $this->input->post('zona_waktu'),
-            'jam_masuk'                => $this->input->post('jam_masuk'),
-            'jam_pulang'                => $this->input->post('jam_pulang'),
+            // 'zona_waktu'            => $this->input->post('zona_waktu'),
+            // 'jam_masuk'                => $this->input->post('jam_masuk'),
+            // 'jam_pulang'                => $this->input->post('jam_pulang'),
             // 'id_perusahaan'                => $this->session->userdata('user_perusahaan_id'),
         );
         $this->db->where('id', $this->input->post('id_lokasi')); // Ensure to specify the record to update

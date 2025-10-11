@@ -84,7 +84,7 @@
                 </div>
               </div>
 
-              <div class="row" style="margin-bottom: 10px;">
+              <!-- <div class="row" style="margin-bottom: 10px;">
                 <div class="col-md-4">
                   <label for="zona_waktu">Zona Waktu</label>
                   <select class="form-control" name="zona_waktu" id="zona_waktu">
@@ -101,7 +101,7 @@
                   <label for="jam_pulang">Jam Pulang</label>
                   <input type="time" class="form-control" name="jam_pulang" id="jam_pulang" value="17:00:00">
                 </div>
-              </div>
+              </div> -->
 
               <button type="submit" class="btn btn-primary">Submit</button>
               <button type="reset" class="btn btn-warning">Reset</button>
@@ -141,7 +141,7 @@
                 </div>
               </div>
 
-              <div class="row" style="margin-bottom: 10px;">
+              <!-- <div class="row" style="margin-bottom: 10px;">
                 <div class="col-md-4">
                   <label for="zona_waktu">Zona Waktu</label>
                   <select class="form-control" name="zona_waktu" id="zona_waktu">
@@ -159,7 +159,7 @@
                   <label for="jam_pulang">Jam Pulang</label>
                   <input type="time" class="form-control" name="jam_pulang" id="jam_pulang" value="<?= $detail->jam_pulang ?>">
                 </div>
-              </div>
+              </div> -->
               <button type="submit" class="btn btn-primary">Submit</button>
               <button type="reset" class="btn btn-warning">Reset</button>
             </form>

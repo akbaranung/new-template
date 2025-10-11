@@ -4,8 +4,8 @@ class Lokasi_Presensi_m extends CI_Model
 {
 
     var $table = 'lokasi_presensi';
-    var $column_order = array('id', 'nama_lokasi', 'alamat_lokasi', 'latitude', 'longitude', 'radius', 'zona_waktu', 'jam_masuk', 'jam_pulang'); //set column field database for datatable orderable
-    var $column_search = array('id', 'nama_lokasi', 'alamat_lokasi', 'latitude', 'longitude', 'radius', 'zona_waktu', 'jam_masuk', 'jam_pulang'); //set column field database for datatable searchable 
+    var $column_order = array('id', 'nama_lokasi', 'alamat_lokasi', 'latitude', 'longitude', 'radius'); //set column field database for datatable orderable
+    var $column_search = array('id', 'nama_lokasi', 'alamat_lokasi', 'latitude', 'longitude', 'radius'); //set column field database for datatable searchable 
     var $order = array('created_at' => 'desc'); // default order 
 
     function _get_datatables_query()

@@ -29,12 +29,13 @@
 
             //     statusCell.css('min-width', '100px'); // Change '100px' to your desired width
             // },
-            // layout: {
-            //     topStart: 'search',
-            //     topEnd: '',
-            //     bottomStart: 'info',
-            //     bottomEnd: 'paging'
-            // }
+            layout: {
+                topStart: 'search',
+                topEnd: '',
+                bottomStart: 'info',
+                // bottomEnd: 'paging'
+                bottomEnd: ''
+            }
         });
     });
 
@@ -73,7 +74,7 @@
                             // Only reload the table if it was a success or a clear 'info' (already deleted) case
                             if (response.status === 'success' || response.status === 'info') {
                                 // Assuming your DataTables ID is 'datatable', not 'table1' based on previous snippets
-                                $('#datatable').DataTable().ajax.reload(null, false);
+                                $('#datatable_lokasi').DataTable().ajax.reload(null, false);
                             }
                         });
                     },

@@ -45,8 +45,8 @@
                   <th class="text-center">Latitude</th>
                   <th class="text-center">Longitude</th>
                   <th class="text-center">Radius</th>
-                  <th class="text-center">Jam Masuk</th>
-                  <th class="text-center">Jam Pulang</th>
+                  <!-- <th class="text-center">Jam Masuk</th>
+                  <th class="text-center">Jam Pulang</th> -->
                   <th class="text-center">Action</th>
                 </tr>
               </thead>
