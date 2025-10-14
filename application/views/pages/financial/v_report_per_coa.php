@@ -57,6 +57,7 @@
                         <th class="text-center">Kredit</th>
                         <!-- <th class="text-center">Saldo Akhir</th> -->
                         <th class="text-center">Keterangan</th>
+                        <th class="text-center">File</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -74,6 +75,15 @@
                             <td class="text-right"><?= '0' ?></td>
                             <!-- <td class="text-right"><?= rupiah($a->saldo_debit) ?></td> -->
                             <td style="white-space: pre-line;"><?= $a->keterangan ?></td>
+                            <td style="white-space: pre-line;">
+                              <?php if ($a->file): ?>
+                                <a href="<?= site_url('financial/download_file/' . $a->id) ?>" class="btn btn-info">
+                                  <i class="fa fa-download"></i> <?= $a->nama_file ?>
+                                </a>
+                              <?php else: ?>
+                                No Attachment
+                              <?php endif; ?>
+                            </td>
                           </tr>
                           <tr>
                             <td><?= $no++ ?></td>
@@ -83,6 +93,15 @@
                             <td class="text-right"><?= rupiah($a->jumlah_kredit) ?></td>
                             <!-- <td class="text-right"><?= rupiah($a->saldo_kredit) ?></td> -->
                             <td style="white-space: pre-line;"><?= $a->keterangan ?></td>
+                            <td style="white-space: pre-line;">
+                              <?php if ($a->file): ?>
+                                <a href="<?= site_url('financial/download_file/' . $a->id) ?>" class="btn btn-info">
+                                  <i class="fa fa-download"></i> <?= $a->nama_file ?>
+                                </a>
+                              <?php else: ?>
+                                No Attachment
+                              <?php endif; ?>
+                            </td>
                           </tr>
                         <?php
                         endforeach;

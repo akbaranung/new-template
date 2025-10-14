@@ -1205,8 +1205,77 @@ class Financial extends CI_Controller
 
   public function process_financial_entry($jenis = null)
   {
+
     $keterangan = trim($this->input->post('input_keterangan'));
     $tanggal_transaksi = $this->input->post('tanggal');
+
+    $base64_data = null; // Initialize the variable to hold the Base64 string
+    $file_name = null;   // <--- New variable to hold the file name
+    $file_input_name = 'file'; // The name of your <input type="file">
+
+    if (isset($_FILES[$file_input_name]) && $_FILES[$file_input_name]['error'] != UPLOAD_ERR_NO_FILE) {
+
+      $file = $_FILES[$file_input_name];
+
+      // --- File WAS submitted, proceed with custom checks and conversion ---
+
+      // Define your allowed file extensions and maximum size (for custom check)
+      $allowed_types = ['gif', 'jpg', 'png', 'doc', 'docx', 'xls', 'xlsx', 'pdf'];
+      $max_size_kb = 2048; // 2MB
+
+      // Get file extension and size for manual checking
+      $file_ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+      $file_size_kb = round($file['size'] / 1024);
+
+      // **A. Manual Type and Size Checks**
+      if (!in_array(strtolower($file_ext), $allowed_types) || $file_size_kb > $max_size_kb) {
+
+        // File failed manual check (Type or Size)
+        // $error_msg = "The file is not permitted (allowed types: " . implode(', ', $allowed_types) . ") or exceeds the maximum size ({$max_size_kb} KB).";
+        // $error = array('upload_error' => $error_msg);
+
+        // Re-load your form view with the error message
+        // $this->load->view('upload_form', $error);
+        $this->session->set_flashdata('message_error', "The file is not permitted (allowed types: " . implode(', ', $allowed_types) . ") or exceeds the maximum size ({$max_size_kb} KB).");
+
+        redirect('financial/financial_entry');
+
+        return; // Stop execution
+      }
+
+      // **B. Convert the file content to Base64**
+      $file_name = $file['name'];
+
+      // 1. Read the file contents from the temporary location
+
+      $file_content = file_get_contents($file['tmp_name']);
+
+      if ($file_content === FALSE) {
+        // Handle read error
+        // $error = array('upload_error' => 'Error reading file content during conversion.');
+        $this->session->set_flashdata('message_error', 'Error reading file content during conversion.');
+
+        // $this->load->view('financial_entry');
+        redirect('financial/financial_entry');
+
+        return;
+      }
+
+      // 2. Encode the content to Base64
+      $encoded_content = base64_encode($file_content);
+
+      // 3. Create the full Data URI string (MIME type is crucial here)
+      $base64_data = 'data:' . $file['type'] . ';base64,' . $encoded_content;
+
+      // echo "File Base64 :" . $base64_data;
+      // echo "File Name :" . $file_name;
+      // exit();
+    }
+    // else {
+    //   echo "Gak Masuk";
+    //   exit();
+    // }
+
 
     $this->cb->trans_start(); // Mulai transaksi
     $id_invoice = NULL;
@@ -1218,7 +1287,7 @@ class Financial extends CI_Controller
 
       if (is_array($coa_kredit) && is_array($nominal)) {
         foreach ($coa_kredit as $i => $kredit) {
-          $this->posting($coa_debit, $kredit, $keterangan, $this->_parse_rupiah($nominal[$i]), $tanggal_transaksi, $id_invoice);
+          $this->posting($coa_debit, $kredit, $keterangan, $this->_parse_rupiah($nominal[$i]), $tanggal_transaksi, $id_invoice, $base64_data, $file_name);
         }
       }
     } elseif ($jenis == "multi_debit") {
@@ -1228,7 +1297,7 @@ class Financial extends CI_Controller
 
       if (is_array($coa_debit) && is_array($nominal)) {
         foreach ($coa_debit as $i => $debit) {
-          $this->posting($debit, $coa_kredit, $keterangan, $this->_parse_rupiah($nominal[$i]), $tanggal_transaksi, $id_invoice);
+          $this->posting($debit, $coa_kredit, $keterangan, $this->_parse_rupiah($nominal[$i]), $tanggal_transaksi, $id_invoice, $base64_data, $file_name);
         }
       }
     } else {
@@ -1242,7 +1311,7 @@ class Financial extends CI_Controller
 
       // $nominal = preg_replace('/[^a-zA-Z0-9\']/', '', $this->input->post('input_nominal'));
       $nominal = $this->_parse_rupiah($this->input->post('input_nominal'));
-      $this->posting($coa_debit, $coa_kredit, $keterangan, $nominal, $tanggal_transaksi, $id_invoice);
+      $this->posting($coa_debit, $coa_kredit, $keterangan, $nominal, $tanggal_transaksi, $id_invoice, $base64_data, $file_name);
     }
 
     $this->cb->trans_complete(); // Selesaikan transaksi
@@ -2690,7 +2759,7 @@ class Financial extends CI_Controller
     return null;
   }
 
-  private function posting($coa_debit, $coa_kredit, $keterangan, $nominal, $tanggal, $id_invoice = NULL)
+  private function posting($coa_debit, $coa_kredit, $keterangan, $nominal, $tanggal, $id_invoice = NULL, $base64_data = NULL, $nama_data = NULL)
   {
     // Update coa debit 
     $update_saldo_debit = $this->update_saldo_coa($coa_debit, $nominal, 'debit');
@@ -2715,7 +2784,9 @@ class Financial extends CI_Controller
       'created_by' => $this->session->userdata('nip'),
       'id_invoice' => ($id_invoice) ? $id_invoice : '',
       'id_cabang' => $this->session->userdata('kode_cabang'),
-      'id_company' => $this->session->userdata('user_perusahaan_id')
+      'id_company' => $this->session->userdata('user_perusahaan_id'),
+      'nama_file' => $nama_data,
+      'file' => $base64_data
     ];
 
     $this->M_coa->addJurnal($dt_jurnal);
@@ -4223,5 +4294,81 @@ class Financial extends CI_Controller
     } else {
       $this->load->view('index', $data);
     }
+  }
+
+  public function download_file($record_id)
+  {
+    // 1. Load the model and retrieve the record data
+    // Assuming your model is named Financial_model
+
+    $record = $this->cb->from('jurnal_neraca')->where('id', $record_id)->get()->row();
+
+    if (empty($record) || empty($record->file) || empty($record->nama_file)) {
+      // Handle case where record is not found or no file is attached
+      show_error('File not found or no attachment available.', 404);
+      return;
+    }
+
+    // 2. Extract Data URI components
+    $base64_string = $record->file;
+    $file_name = $record->nama_file;
+
+    // Check if it's a valid Data URI format
+    // if (!preg_match('/^data:(\w+\/\w+);base64,(.*)$/s', $base64_string, $matches)) {
+    //   show_error('Invalid Base64 file format.', 500);
+    //   return;
+    // }
+    // The [^;]+ part allows almost any character in the MIME type until the next semicolon
+    if (!preg_match('/^data:([^;]+);base64,(.*)$/s', $base64_string, $matches)) {
+      show_error('Invalid Base64 file format (Regex failed).', 500);
+      return;
+    }
+
+    // $matches[1] will be the MIME type (e.g., application/vnd.openxmlformats-officedocument.wordprocessingml.document)
+    // $matches[2] will be the raw Base64 data
+    $mime_type = $matches[1];
+    $base64_content = $matches[2];
+
+    // if (strpos($base64_string, 'data:') === 0) {
+    //   // Use the flexible regex if the prefix is present
+    //   if (!preg_match('/^data:([^;]+);base64,(.*)$/s', $base64_string, $matches)) {
+    //     show_error('Invalid Base64 format.', 500);
+    //     return;
+    //   }
+    //   $mime_type = $matches[1];
+    //   $base64_content = $matches[2];
+    // } else {
+    //   // Prefix is missing. We must reconstruct it.
+    //   $extension = pathinfo($file_name, PATHINFO_EXTENSION);
+    //   $mime_type_lookup = [
+    //     'xls' => 'application/vnd.ms-excel',
+    //     'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    //     'doc' => 'application/msword',
+    //     'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    //     'pdf' => 'application/pdf',
+    //     'png' => 'image/png',
+    //     'jpg' => 'image/jpeg',
+    //     'jpeg' => 'image/jpeg',
+    //     // ... add all allowed types
+    //   ];
+
+    //   if (!isset($mime_type_lookup[strtolower($extension)])) {
+    //     show_error('Unknown file type for download.', 500);
+    //     return;
+    //   }
+
+    //   $mime_type = $mime_type_lookup[strtolower($extension)];
+    //   $base64_content = $base64_string; // Assume the DB column holds ONLY the raw Base64 data
+    // }
+
+
+    // 3. Decode the Base64 content
+    $file_content = base64_decode($base64_content);
+
+    // 4. Send headers to force download (using CI3 Download Helper)
+    $this->load->helper('download');
+
+    // Force download the decoded content
+    force_download($file_name, $file_content, $mime_type);
   }
 }
