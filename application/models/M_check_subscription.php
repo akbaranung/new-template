@@ -40,7 +40,7 @@ class M_check_subscription extends CI_Model
                     // *** Subscription has EXPIRED ***
                     $data = array(
                         'kuota_invoice' => 1000,
-                        'kuota_memo' => 1000,
+                        'kuota_memo' => 100,
                         'kuota_pengajuan_biaya' => 1000,
                         'kuota_user' => 5,
                         'kuota_cabang' => 1,

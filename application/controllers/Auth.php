@@ -427,7 +427,7 @@ class Auth extends CI_Controller
         'nama_coa_utang_pph23'       => 'UTANG PPH 23',
         'nomor_coa_utang_pph23'       => '23014',
         'kuota_invoice' => 1000,
-        'kuota_memo' => 1000,
+        'kuota_memo' => 100,
         'kuota_pengajuan_biaya' => 1000,
         'kuota_user' => 5,
         'kuota_cabang' => 1,

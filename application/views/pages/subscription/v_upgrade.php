@@ -525,8 +525,8 @@
                             Manajemen Penugasan (Tello)</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>1000</b>
                             Invoice / Bulan</p>
-                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>1000</b>
-                            Digital Memorandum / Bulan</p>
+                        <!-- <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>1000</b>
+                            Digital Memorandum / Bulan</p> -->
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>1000</b>
                             Pengajuan Multi Layer Approval / Bulan</p>
                         <!-- <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>1000</b>
