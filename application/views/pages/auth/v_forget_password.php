@@ -73,23 +73,15 @@
             <input type="text" id="username" name="username" class="form-control form-control-lg" placeholder="Please enter username" autofocus="true">
           </div>
         </div>
-        <div id="passwordSection" class="d-none">
-          <!-- <h6 id="nsAddressDisplay" class="text-black text-xl mb-3"></h6> -->
-          <div class="form-group">
-            <label for="inputPassword" class="sr-only">Password</label>
-            <input type="password" id="password" name="password" class="form-control form-control-lg" placeholder="Password" autofocus>
-          </div>
-        </div>
-
         <!-- <div class="form-group">
         <label for="inputPassword" class="sr-only">Password</label>
         <input type="password" id="password" name="password" class="form-control form-control-lg" placeholder="Password">
       </div> -->
         <button id="checkUsernameBtn" class="btn btn-lg btn-primary btn-block" type="button" onclick="onCheck()">
-          Lanjut
+          Konfirmasi
         </button>
         <button id="loginbtn" class="btn btn-lg btn-primary btn-block btn-login d-none" type="button" disabled>Login</button>
-        <a class="mt-5 mb-3 text-center" href="<?= base_url('auth/forgot_password') ?>">Lupa Kata Sandi Anda?</a>
+        <a class="mt-5 mb-3 text-center" href="<?= base_url('auth/login') ?>">Login</a>
         <p class="mb-3 text-muted text-center">Belum punya akun? <a href="<?= base_url('auth/') ?>register">Daftarkan Akun Perusahaan Anda</a></p>
         <p class="mt-5 mb-3 text-muted text-center">IT BARIS KODE INDONESIA © <?= date('Y') ?></p>
       </div>
@@ -185,7 +177,7 @@
       const url = "<?= base_url() ?>"
 
       $.ajax({
-        url: "<?= base_url('auth/cek_user/') ?>", // Use POST for ID, don't append to URL unless it's a RESTful DELETE
+        url: "<?= base_url('auth/proses_lupa_password/') ?>", // Use POST for ID, don't append to URL unless it's a RESTful DELETE
         type: 'POST', // Keep as POST
         data: {
           username: username
@@ -195,31 +187,31 @@
           let iconType = 'error'; // Default to error
           if (response.status == 'success') {
             // iconType = 'success';
-            // Swal.fire(
-            //   response.status === 'success' ? 'Berhasil!' : 'Perhatian!', // Dynamic title
-            //   response.message, // Display the message from the backend
-            //   iconType = 'success',
-            // ).then(() => {
+            Swal.fire(
+              response.status === 'success' ? 'Berhasil!' : 'Perhatian!', // Dynamic title
+              response.message, // Display the message from the backend
+              iconType = 'success',
+            )
             // Only reload the table if it was a success or a clear 'info' (already deleted) case
-            if (response.status === 'success' || response.status === 'info') {
-              // Assuming your DataTables ID is 'datatable', not 'table1' based on previous snippets
-              // $('#passwordSection').removeClass('d-none');
-              // // $('#nsAddressDisplay').html('NS Address : ' + response.ns_address);
-              // $('#loginbtn').removeClass('d-none');
-              // $('#checkUsernameBtn').addClass('d-none');
-              // $('#loginbtn').removeAttr('disabled');
-              // passwordInput.focus();
-              // loginForm.setAttribute('action', response.ns_address + '/login');
-              // loginForm.setAttribute('action', 'https://admin.kodesis.id/login/login_form');
-              // loginForm.setAttribute('action', 'https://' + response.ns_address + '/auth/login');
-              // loginForm.setAttribute('action', url + '/auth/login');
-              // loginForm.setAttribute('action', 'http://localhost/new-template/auth/login');
-              // window.location.href = 'https://' + response.ns_address + '/auth/login_continue/' + username;
-              window.location.href = '<?= base_url('/auth/login_continue/') ?>' + username; // Adjust this URL as needed
-              // loginForm.setAttribute('action', );
+            // if (response.status === 'success' || response.status === 'info') {
+            // Assuming your DataTables ID is 'datatable', not 'table1' based on previous snippets
+            // $('#passwordSection').removeClass('d-none');
+            // // $('#nsAddressDisplay').html('NS Address : ' + response.ns_address);
+            // $('#loginbtn').removeClass('d-none');
+            // $('#checkUsernameBtn').addClass('d-none');
+            // $('#loginbtn').removeAttr('disabled');
+            // passwordInput.focus();
+            // loginForm.setAttribute('action', response.ns_address + '/login');
+            // loginForm.setAttribute('action', 'https://admin.kodesis.id/login/login_form');
+            // loginForm.setAttribute('action', 'https://' + response.ns_address + '/auth/login');
+            // loginForm.setAttribute('action', url + '/auth/login');
+            // loginForm.setAttribute('action', 'http://localhost/new-template/auth/login');
+            // window.location.href = 'https://' + response.ns_address + '/auth/login_continue/' + username;
+            // window.location.href = '<?= base_url('/auth/login_continue/') ?>' + username; // Adjust this URL as needed
+            // loginForm.setAttribute('action', );
 
 
-            }
+            // }
             // });
           } else {
             Swal.fire(

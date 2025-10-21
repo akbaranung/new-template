@@ -735,4 +735,74 @@ class Auth extends CI_Controller
       redirect('auth/verifikasi_akun');
     }
   }
+
+  public function forgot_password()
+  {
+    if ($this->session->userdata('isLogin')) {
+      if (!$this->session->userdata('nama_perusahaan')) {
+        redirect('auth/register_perusahaan');
+      } else {
+        redirect('home');
+      }
+    }
+    $data['title'] = 'Forget Password';
+    $data['utility'] = $this->db->get('utility')->row_array();
+    $data['pages'] = 'pages/auth/v_forget_password';
+    $this->load->view('pages/auth/index', $data);
+  }
+
+  public function proses_lupa_password()
+  {
+    $username = $this->input->post('username');
+
+    $user = $this->M_login->cekPenggunaForget($username);
+
+    if ($user) {
+
+      $new_random_password = $this->generate_random_password(10); // Misalnya 10 karakter
+      $hashed_password = password_hash($new_random_password, PASSWORD_DEFAULT);
+      $this->db->where('username', $username)->update('users', ['password' => $hashed_password]);
+
+      $msg = "Kata Sandi Akun *Bariskode* Anda yang baru adalah *$new_random_password*. Gunakan kata sandi ini untuk masuk. Kami sarankan Anda segera menggantinya setelah login.";
+
+      $this->api_whatsapp->wa_notif($msg, $user->phone);
+
+      $response = [
+        'status' => 'success',
+        'message' => 'Akun ditemukan! Kata sandi baru Anda telah dikirimkan ke nomor WhatsApp yang terdaftar.',
+      ];
+    } else {
+      $response = [
+        'status' => 'error',
+        'message' => 'Akun tidak ditemukan!'
+      ];
+    }
+    echo json_encode($response);
+  }
+
+  function generate_random_password(int $length = 12): string
+  {
+    // Character sets to use:
+    // 1. Lowercase letters
+    $lower = 'abcdefghijkmnpqrstuvwxyz';
+    // 2. Uppercase letters (excluding similar letters like I, L, O)
+    $upper = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+    // 3. Digits (excluding 0 and 1)
+    $digits = '23456789';
+    // 4. Symbols (common, non-problematic symbols)
+    $symbols = '!@#$%^&*()-_+={}[]:;<,>.?/~';
+
+    $all_chars = $lower . $upper . $digits . $symbols;
+    $password = '';
+
+    // Generate the random password string
+    for ($i = 0; $i < $length; $i++) {
+      // Select a random character from the combined set
+      $password .= $all_chars[random_int(0, strlen($all_chars) - 1)];
+    }
+
+    // Shuffle the result to ensure unpredictability, especially if using 
+    // guarantee logic (though the loop is usually sufficient for security)
+    return str_shuffle($password);
+  }
 }
