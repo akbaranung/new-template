@@ -7,6 +7,13 @@
   .btns-edit {
     border-radius: 0 0.25rem 0.25rem 0;
   }
+
+  .info-message {
+    color: gray;
+    font-size: 0.875em;
+    margin-top: 5px;
+    display: block;
+  }
 </style>
 <div class="container-fluid">
   <div class="row justify-content-center">
@@ -62,6 +69,7 @@
                       <input type="file" name="logo_perusahaan" id="logo_input" class="form-control input-edit is-readonly" onchange="previewImage(event)" disabled>
                       <button type="button" class="btn btn-secondary btns-edit" data-target="logo_input"><i class="fe fe-edit-2"></i></button>
                     </div>
+                    <span id="logo_perusahaan_error_message" class="info-message">Unggah logo perusahaan Anda dalam format <b>JPG, JPEG, PNG,</b> atau <b>GIF</b>. Ukuran file dibatasi hingga <b>2MB</b>.</span>
                   </div>
                 </div>
                 <div class="col-md-6">

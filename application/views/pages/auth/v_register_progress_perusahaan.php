@@ -84,7 +84,7 @@
             <label for="nama_perusahaan">Logo Perusahaan</label>
             <input type="file" class="form-control-file" id="logo_perusahaan" name="logo_perusahaan" accept=".jpg, .jpeg, .png, .gif, image/jpeg, image/png"
               required>
-            <span id="logo_perusahaan_error_message" class="error-message"></span>
+            <span id="logo_perusahaan_error_message" class="info-message">Ukuran file logo maksimal adalah <b>2MB</b>.</span>
           </div>
           <div class="form-group text-left">
             <label for="nama_perusahaan">Nama Perusahaan</label>
@@ -379,6 +379,9 @@
           logoPreview.src = '#'; // Clear any existing preview
           logoPreviewContainer.style.display = 'none'; // Hide the preview container
           logoErrorMessage.textContent = 'Please select a valid image file (JPG, JPEG, PNG, GIF).';
+          logoErrorMessage.classList.remove("info-message");
+          logoErrorMessage.classList.add("error-message");
+
           logoInput.value = ''; // Clear the file input
         }
       } else {
