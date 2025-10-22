@@ -798,10 +798,17 @@ class Perusahaan extends CI_Controller
       "nomor_coa_utang_pph23" => $this->input->post('coa_utang_pph_no_sbb'),
     ];
 
+    $max_file_size = 2 * 1024 * 1024;
+
     if (!empty($_FILES['logo_perusahaan']['name']) && $_FILES['logo_perusahaan']['error'] == UPLOAD_ERR_OK) {
       $file_tmp_name = $_FILES['logo_perusahaan']['tmp_name'];
       $file_type = $_FILES['logo_perusahaan']['type'];
-
+      if ($_FILES['logo_perusahaan']['size'] > $max_file_size) {
+        // Error: File size exceeds the limit
+        $this->session->set_flashdata('error', 'Ukuran file logo terlalu besar. Maksimal adalah 2MB.');
+        redirect('perusahaan/detail');
+        exit; // Use exit to stop further execution cleanly
+      }
       // Read the file content
       $file_content = file_get_contents($file_tmp_name);
 
@@ -825,7 +832,7 @@ class Perusahaan extends CI_Controller
           'timerProgressBar' => true, // Shows a progress bar for the timer
         ]);
         $this->session->set_flashdata('error', 'Gagal membaca isi file logo. Silakan coba lagi.');
-        redirect('auth/register_perusahaan');
+        redirect('perusahaan/detail');
       }
     }
 

@@ -371,11 +371,18 @@ class Auth extends CI_Controller
 
       // --- File Upload and Base64 Conversion ---
       $logo_base64 = null; // Initialize to null
+      $max_file_size = 2 * 1024 * 1024;
 
       // Check if a file was uploaded and there are no errors
       if (!empty($_FILES['logo_perusahaan']['name']) && $_FILES['logo_perusahaan']['error'] == UPLOAD_ERR_OK) {
         $file_tmp_name = $_FILES['logo_perusahaan']['tmp_name'];
         $file_type = $_FILES['logo_perusahaan']['type'];
+        if ($_FILES['logo_perusahaan']['size'] > $max_file_size) {
+          // Error: File size exceeds the limit
+          $this->session->set_flashdata('error', 'Ukuran file logo terlalu besar. Maksimal adalah 2MB.');
+          redirect('auth/register_perusahaan');
+          exit; // Use exit to stop further execution cleanly
+        }
 
         // Read the file content
         $file_content = file_get_contents($file_tmp_name);
