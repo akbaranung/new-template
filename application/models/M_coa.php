@@ -750,4 +750,47 @@ class M_coa extends CI_Model
 
         return $query->result();
     }
+    public function getCoaReportAnnually($no_coa, $year)
+    {
+        $id_company = $this->session->userdata('user_perusahaan_id');
+
+        $this->cb->select('*');
+        $this->cb->from('jurnal_neraca');
+        $this->cb->where('tanggal >=', "$year-01-01");
+        $this->cb->where('tanggal <=', "$year-12-31");
+        $this->cb->group_start();
+        $this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
+        $this->cb->where('id_company', $id_company);
+        $this->cb->where('akun_debit', $no_coa);
+        $this->cb->or_where('akun_kredit', $no_coa);
+        $this->cb->group_end();
+        $this->cb->order_by('tanggal', 'ASC');
+        $query = $this->cb->get();
+
+        $result = $query->result();
+
+        return $result;
+    }
+
+    public function getCoaReportMonthly($no_coa, $periode)
+    {
+        $id_company = $this->session->userdata('user_perusahaan_id');
+
+        $this->cb->select('*');
+        $this->cb->from('jurnal_neraca');
+        $this->cb->where('tanggal >=', "$periode-01");
+        $this->cb->where('tanggal <=', "$periode-31");
+        $this->cb->group_start();
+        $this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
+        $this->cb->where('id_company', $id_company);
+        $this->cb->where('akun_debit', $no_coa);
+        $this->cb->or_where('akun_kredit', $no_coa);
+        $this->cb->group_end();
+        $this->cb->order_by('tanggal', 'ASC');
+        $query = $this->cb->get();
+
+        $result = $query->result();
+
+        return $result;
+    }
 }

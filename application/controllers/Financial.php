@@ -4371,4 +4371,328 @@ class Financial extends CI_Controller
     // Force download the decoded content
     force_download($file_name, $file_content, $mime_type);
   }
+
+  public function bukubesar()
+  {
+    $has_access = $this->M_menu->has_access();
+
+    if (!$has_access) {
+      show_error('Forbidden Access: You do not have permission to view this page.', 403, '403 Forbidden');
+    }
+
+    $nip = $this->session->userdata('nip');
+
+    // Fetch counts
+    $result = $this->db->query("SELECT COUNT(Id) FROM memo WHERE (nip_kpd LIKE '%$nip%' OR nip_cc LIKE '%$nip%') AND (`read` NOT LIKE '%$nip%');")->row()->{'COUNT(Id)'};
+    $result2 = $this->db->query("SELECT COUNT(id) FROM task WHERE (`member` LIKE '%$nip%' or `pic` LIKE '%$nip%') AND activity='1'")->row()->{'COUNT(id)'};
+
+    $per_tanggal = ($this->input->post('per_tanggal') ? $this->input->post('per_tanggal') : date('Y-m-d'));
+
+    $data = [
+      'count_inbox' => $result,
+      'count_inbox2' => $result2,
+      'per_tanggal' => $per_tanggal
+    ];
+
+    $button_sbm = $this->input->post('button_sbm');
+    $tahun = $this->input->post('per_tahun') ? $this->input->post('per_tahun') : date('Y');
+    $tahun_before = $tahun - 1;
+    $bulan_saldo_awal = $tahun_before . '-12';
+
+    $saldo_awal = $this->cb->where('periode', $bulan_saldo_awal)->get('saldo_awal')->row_array();
+    $saldo_awal_data = $saldo_awal ? json_decode($saldo_awal['coa']) : [];
+
+    $saldo_awal_indexed = [];
+    foreach ($saldo_awal_data as $sa) {
+      $saldo_awal_indexed[$sa->no_sbb] = $sa->saldo_awal;
+    }
+    $data['saldo_awal'] = $saldo_awal_indexed; // Sudah dalam format array dengan key no_sbb
+    // $data['saldo_awal_raw'] = $saldo_awal_data;
+
+    $list_coa = $this->cb->where('id_company', $this->session->userdata('user_perusahaan_id'))->where('id_cabang', $this->session->userdata('kode_cabang'))->get('v_coa_all')->result();
+
+
+
+    $description = 'Buku besar ' . $this->session->userdata('nama_perusahaan') . ' per tahun ' . $tahun;
+    $data = [
+      'description' => $description,
+      // 'list_coa' => $list_coa,
+      'tahun' => $tahun,
+      'saldo_awal' => $saldo_awal_indexed
+    ];
+
+    $data['list_coa'] = $list_coa;
+    $data['per_tahun'] = $tahun;
+
+    if ($button_sbm == "excel") {
+      // Clear output buffer untuk avoid corrupt
+      if (ob_get_length()) {
+        ob_end_clean();
+      }
+
+      error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
+
+      require_once(APPPATH . 'libraries/PHPExcel/IOFactory.php');
+
+      $excel = new PHPExcel();
+      $sheet = $excel->getActiveSheet();
+
+      $description = 'Buku besar ' . $this->session->userdata('nama_perusahaan') . ' per tahun ' . $tahun;
+
+      $excel->getProperties()->setCreator('KodeSis')
+        ->setLastModifiedBy('KodeSis')
+        ->setTitle('Buku besar')
+        ->setSubject('Buku besar')
+        ->setDescription($description)
+        ->setKeywords('Buku besar');
+
+      // Header utama
+      $sheet->setCellValue('A1', $description);
+      $sheet->mergeCells('A1:D1');
+
+      // Style header utama (opsional)
+      $sheet->getStyle('A1')->getFont()->setBold(true)->setSize(14);
+      $sheet->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+      $numRow = 3;
+
+      if ($list_coa) {
+        foreach ($list_coa as $lc) :
+          $saldo_awal_value = isset($saldo_awal_indexed[$lc->no_sbb]) ? $saldo_awal_indexed[$lc->no_sbb] : 0;
+
+          $transaction = $this->M_coa->getCoaReportAnnually($lc->no_sbb, $tahun);
+
+          if ($transaction) {
+            // Header per COA
+            $sheet->setCellValue('A' . $numRow, $lc->no_sbb);
+            $sheet->setCellValue('B' . $numRow, strtoupper($lc->nama_perkiraan));
+            $sheet->setCellValue('D' . $numRow, 'IDR');
+
+            // Style header COA
+            $sheet->getStyle('A' . $numRow . ':D' . $numRow)->getFont()->setBold(true);
+            $sheet->getStyle('A' . $numRow . ':D' . $numRow)->getFill()
+              ->setFillType(PHPExcel_Style_Fill::FILL_SOLID)
+              ->getStartColor()->setRGB('E8E8E8');
+
+            $numRow++;
+
+            // Sub-header tabel
+            $sheet->setCellValue('A' . $numRow, 'Tanggal');
+            $sheet->setCellValue('B' . $numRow, 'Keterangan');
+            $sheet->setCellValue('C' . $numRow, 'Debit');
+            $sheet->setCellValue('D' . $numRow, 'Kredit');
+
+            // Style sub-header
+            $sheet->getStyle('A' . $numRow . ':D' . $numRow)->getFont()->setBold(true);
+            $sheet->getStyle('A' . $numRow . ':D' . $numRow)->getAlignment()
+              ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+            $numRow++;
+
+            // Data transaksi
+            $total_debit = 0;
+            $total_kredit = 0;
+
+            foreach ($transaction as $tr) {
+              if ($lc->no_sbb == $tr->akun_debit) {
+                $sheet->setCellValue('A' . $numRow, date('d/m/Y', strtotime($tr->tanggal)));
+                $sheet->setCellValue('B' . $numRow, $tr->keterangan);
+                $sheet->setCellValue('C' . $numRow, $tr->jumlah_debit);
+                $sheet->setCellValue('D' . $numRow, '-');
+                $total_debit += $tr->jumlah_debit;
+              } else {
+                $sheet->setCellValue('A' . $numRow, date('d/m/Y', strtotime($tr->tanggal)));
+                $sheet->setCellValue('B' . $numRow, $tr->keterangan);
+                $sheet->setCellValue('C' . $numRow, '-');
+                $sheet->setCellValue('D' . $numRow, $tr->jumlah_kredit);
+                $total_kredit += $tr->jumlah_kredit;
+              }
+
+              // Format angka
+              $sheet->getStyle('C' . $numRow)->getNumberFormat()
+                ->setFormatCode('#,##0');
+              $sheet->getStyle('D' . $numRow)->getNumberFormat()
+                ->setFormatCode('#,##0');
+
+              $numRow++;
+            }
+
+            // $mutasi = $total_debit - $total_kredit;
+            if ($lc->posisi === "AKTIVA") {
+              $mutasi = $total_debit - $total_kredit;
+            } else {
+              $mutasi = $total_kredit - $total_debit;
+            }
+
+            // Total
+            $sheet->setCellValue('A' . $numRow, 'Total');
+            $sheet->setCellValue('C' . $numRow, $total_debit);
+            $sheet->setCellValue('D' . $numRow, $total_kredit);
+            $sheet->getStyle('A' . $numRow . ':D' . $numRow)->getFont()->setBold(true);
+            $sheet->getStyle('C' . $numRow . ':D' . $numRow)->getNumberFormat()
+              ->setFormatCode('#,##0');
+            $numRow++;
+
+            // Saldo Awal
+            $sheet->setCellValue('A' . $numRow, 'Saldo Awal');
+            $sheet->setCellValue('D' . $numRow, $saldo_awal_value);
+            $sheet->getStyle('A' . $numRow . ':D' . $numRow)->getFont()->setBold(true);
+            $sheet->getStyle('D' . $numRow)->getNumberFormat()
+              ->setFormatCode('#,##0');
+            $numRow++;
+
+            // Mutasi
+            $sheet->setCellValue('A' . $numRow, 'Mutasi');
+            $sheet->setCellValue('D' . $numRow, $mutasi);
+            $sheet->getStyle('A' . $numRow . ':D' . $numRow)->getFont()->setBold(true);
+            $sheet->getStyle('D' . $numRow)->getNumberFormat()
+              ->setFormatCode('#,##0');
+            $numRow++;
+
+            // Saldo Akhir
+            // $selisih = $total_debit - $total_kredit;
+            $saldo_akhir = $saldo_awal_value + $mutasi;
+
+            $sheet->setCellValue('A' . $numRow, 'Saldo Akhir');
+            $sheet->setCellValue('D' . $numRow, $saldo_akhir);
+            $sheet->getStyle('A' . $numRow . ':D' . $numRow)->getFont()->setBold(true);
+            $sheet->getStyle('D' . $numRow)->getNumberFormat()
+              ->setFormatCode('#,##0');
+
+            $numRow += 2; // Spacing antar COA
+          }
+        endforeach;
+
+        // Set auto size untuk semua kolom
+        foreach (range('A', 'D') as $columnID) {
+          $sheet->getColumnDimension($columnID)->setAutoSize(true);
+        }
+
+        // Clear any remaining output
+        if (ob_get_length()) {
+          ob_end_clean();
+        }
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $description . '.xlsx"');
+        header('Cache-Control: max-age=0');
+        header('Cache-Control: max-age=1');
+        header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+        header('Cache-Control: cache, must-revalidate');
+        header('Pragma: public');
+
+        $objWriter = PHPExcel_IOFactory::createWriter($excel, 'Excel2007');
+        $objWriter->save('php://output');
+        exit;
+      }
+    } else if ($button_sbm == "pdf") {
+
+      $description = 'Buku besar ' . $this->session->userdata('nama_perusahaan') . ' per tahun ' . $tahun;
+
+      $data = [
+        'description' => $description,
+        'list_coa' => $list_coa,
+        'tahun' => $tahun,
+        'saldo_awal' => $saldo_awal_indexed
+      ];
+
+      $file_pdf = $description;
+
+      $paper = 'A4';
+
+      $orientation = "portrait";
+
+      $this->load->view('pages/financial/v_print_pdf_buku_besar_annually', $data);
+      // Build HTML
+      // $html = $this->load->view('print_pdf_buku_besar', $data, true);
+
+      // $this->pdfgenerator->generate($html, $file_pdf, $paper, $orientation);
+    } else {
+      $data['title'] = 'Buku besar';
+      $data['pages'] = "pages/financial/v_reportbb_annually";
+      $data['utility'] = $this->db->get('utility')->row_array();
+      // $data['pages_script'] = 'script/financial/s_financial';
+      $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
+      $this->load->view('index', $data);
+    }
+  }
+
+  public function bukubesarMonthly()
+  {
+    $nip = $this->session->userdata('nip');
+
+    // Fetch counts
+    $result = $this->db->query("SELECT COUNT(Id) FROM memo WHERE (nip_kpd LIKE '%$nip%' OR nip_cc LIKE '%$nip%') AND (`read` NOT LIKE '%$nip%');")->row()->{'COUNT(Id)'};
+    $result2 = $this->db->query("SELECT COUNT(id) FROM task WHERE (`member` LIKE '%$nip%' or `pic` LIKE '%$nip%') AND activity='1'")->row()->{'COUNT(id)'};
+
+    $per_tanggal = ($this->input->post('per_tanggal') ? $this->input->post('per_tanggal') : date('Y-m-d'));
+
+    $data = [
+      'count_inbox' => $result,
+      'count_inbox2' => $result2,
+      'per_tanggal' => $per_tanggal
+    ];
+
+    $button_sbm = $this->input->post('button_sbm');
+    $tahun = $this->input->post('per_tahun') ? $this->input->post('per_tahun') : date('Y');
+    $bulan = $this->input->post('per_bulan') ? $this->input->post('per_bulan') : date('m');
+
+    $tahun_before = $tahun - 1;
+    $bulan_before = str_pad($bulan - 1, 2, '0', STR_PAD_LEFT);
+
+    $bulan_saldo_awal = $tahun_before . '-' . $bulan_before;
+
+    $saldo_awal = $this->cb->where('periode', $bulan_saldo_awal)->get('saldo_awal')->row_array();
+    $saldo_awal_data = $saldo_awal ? json_decode($saldo_awal['coa']) : [];
+
+    $saldo_awal_indexed = [];
+    foreach ($saldo_awal_data as $sa) {
+      $saldo_awal_indexed[$sa->no_sbb] = $sa->saldo_awal;
+    }
+    $data['saldo_awal'] = $saldo_awal_indexed; // Sudah dalam format array dengan key no_sbb
+    // $data['saldo_awal_raw'] = $saldo_awal_data;
+
+    $list_coa = $this->cb->get('v_coa_all')->result();
+
+    $periode = $tahun . '-' . $bulan;
+
+    $data['list_coa'] = $list_coa;
+    $data['per_periode'] = $periode;
+    $data['per_tahun'] = $tahun;
+    $data['per_bulan'] = $bulan;
+
+    $a = date('F Y', strtotime($periode . '-01'));
+    $data['bulan'] = $a;
+
+    $description = 'Buku besar ' . $this->session->userdata('nama_perusahaan') . ' per bulan ' . $a;
+    $data['description'] = $description;
+
+
+    if ($button_sbm == "pdf") {
+
+      $data['description'] = $description;
+      $data = [
+        'description' => $description,
+        'per_periode' => $periode,
+        'list_coa' => $list_coa,
+        'tahun' => $tahun,
+        'saldo_awal' => $saldo_awal_indexed,
+        'bulan' => $a
+      ];
+
+      $this->load->view('pages/financial/v_print_pdf_buku_besar_monthly', $data);
+      // Build HTML
+      // $html = $this->load->view('print_pdf_buku_besar', $data, true);
+
+      // $this->pdfgenerator->generate($html, $file_pdf, $paper, $orientation);
+    } else {
+      $data['title'] = 'Buku besar';
+      $data['pages'] = "pages/financial/v_reportbb_monthly";
+      $data['utility'] = $this->db->get('utility')->row_array();
+      // $data['pages_script'] = 'script/financial/s_financial';
+      $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
+      $this->load->view('index', $data);
+    }
+  }
 }
