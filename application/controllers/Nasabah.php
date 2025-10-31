@@ -193,6 +193,7 @@ class Nasabah extends CI_Controller
       'tipe_nasabah' => $_POST['tipe_nasabah'] ?? '',
       'segmen_nasabah' => $_POST['segmen_nasabah'] ?? '',
       'warga_negara' => $_POST['warga_negara'] ?? '',
+      'id_cabang' => $this->session->userdata('kode_cabang'),
     ];
 
     // --- SET VALIDATION RULES (Conceptual Framework Syntax) ---
