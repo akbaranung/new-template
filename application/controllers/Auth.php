@@ -577,6 +577,16 @@ class Auth extends CI_Controller
           // } else if ($substr_coa == "4" || $substr_coa == "5" || $substr_coa == "6" || $substr_coa == "7" || $substr_coa == "8" || $substr_coa == "9") {
           //   $tabel = "t_coalr_sbb";
           // }
+          $data_bagian1 = array(
+            'no_bb' => '203',
+            'nama_perkiraan' => 'PPN KELUARAN',
+            'posisi' => 'PASIVA',
+            'nominal' => '0',
+            'id_cabang' => $branch_inserted_id,
+            'id_company' => $company_inserted_id,
+          );
+
+          $this->cb->insert('t_coa_bb', $data_bagian1);
 
           $data_bagian1 = array(
             'no_bb' => '20301',
@@ -585,6 +595,7 @@ class Auth extends CI_Controller
             'posisi' => 'PASIVA',
             'nominal' => '0',
             'id_cabang' => $branch_inserted_id,
+            'id_company' => $company_inserted_id,
           );
 
           $this->cb->insert('t_coa_sbb', $data_bagian1);
@@ -597,6 +608,7 @@ class Auth extends CI_Controller
             'posisi' => 'PASIVA',
             'nominal' => '0',
             'id_cabang' => $branch_inserted_id,
+            'id_company' => $company_inserted_id,
           );
 
           $this->cb->insert('t_coa_sbb', $data_bagian2);
