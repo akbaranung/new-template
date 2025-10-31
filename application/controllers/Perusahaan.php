@@ -88,9 +88,9 @@ class Perusahaan extends CI_Controller
     $this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
     // Add the OR conditions
     $this->cb->group_start(); // Start a WHERE group for the OR conditions
-    // $this->cb->where('no_sbb', '203014');
-    // $this->cb->or_where('no_sbb', '203011');
-    $this->cb->where_not_in('no_sbb', ['203014', '203011']);
+    // $this->cb->where('no_sbb', '20304');
+    // $this->cb->or_where('no_sbb', '20301');
+    $this->cb->where_not_in('no_sbb', ['20304', '20301']);
     $this->cb->group_end(); // End the WHERE group
     $cek_coa_cabang = $this->cb->get()->num_rows();
 
@@ -633,8 +633,8 @@ class Perusahaan extends CI_Controller
     $inserted_id = $this->cb->insert_id();
 
     $data_bagian1 = array(
-      'no_bb' => '203011',
-      'no_sbb' => '203011',
+      'no_bb' => '20301',
+      'no_sbb' => '20301',
       'nama_perkiraan' => 'PPN KELUARAN',
       'posisi' => 'PASIVA',
       'nominal' => '0',
@@ -645,8 +645,8 @@ class Perusahaan extends CI_Controller
 
 
     $data_bagian2 = array(
-      'no_bb' => '203014',
-      'no_sbb' => '203014',
+      'no_bb' => '20304',
+      'no_sbb' => '20304',
       'nama_perkiraan' => 'UTANG PPH 23',
       'posisi' => 'PASIVA',
       'nominal' => '0',

@@ -9,7 +9,7 @@
 </script>
 <script>
     $(document).ready(function() {
-        var table = $('#dataTable').DataTable({
+        var table = $('#user-table').DataTable({
             // responsive: true,
             rowReorder: {
                 selector: 'td:nth-child(2)'

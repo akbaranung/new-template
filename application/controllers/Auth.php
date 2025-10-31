@@ -430,9 +430,9 @@ class Auth extends CI_Controller
         'alamat_perusahaan' => $this->input->post('alamat_perusahaan'),
         'nama_akronim'      => $this->input->post('nama_akronim'),
         'nama_coa_ppn_keluaran'       => 'PPN KELUARAN',
-        'nomor_coa_ppn_keluaran'       => '203011',
+        'nomor_coa_ppn_keluaran'       => '20301',
         'nama_coa_utang_pph23'       => 'UTANG PPH 23',
-        'nomor_coa_utang_pph23'       => '203014',
+        'nomor_coa_utang_pph23'       => '20304',
         'kuota_invoice' => 1000,
         'kuota_memo' => 100,
         'kuota_pengajuan_biaya' => 1000,
@@ -579,8 +579,8 @@ class Auth extends CI_Controller
           // }
 
           $data_bagian1 = array(
-            'no_bb' => '203011',
-            'no_sbb' => '203011',
+            'no_bb' => '20301',
+            'no_sbb' => '20301',
             'nama_perkiraan' => 'PPN KELUARAN',
             'posisi' => 'PASIVA',
             'nominal' => '0',
@@ -591,8 +591,8 @@ class Auth extends CI_Controller
 
 
           $data_bagian2 = array(
-            'no_bb' => '203014',
-            'no_sbb' => '203014',
+            'no_bb' => '20304',
+            'no_sbb' => '20304',
             'nama_perkiraan' => 'UTANG PPH 23',
             'posisi' => 'PASIVA',
             'nominal' => '0',

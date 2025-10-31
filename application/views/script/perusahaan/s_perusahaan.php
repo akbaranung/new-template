@@ -8,10 +8,10 @@
         // --- 1. Prepare the Data ---
         // Default Option
         const defaultOption = {
-            id: '203011 :: PPN KELUARAN :: Default',
-            text: '203011 :: PPN KELUARAN :: Default',
+            id: '20301 :: PPN KELUARAN :: Default',
+            text: '20301 :: PPN KELUARAN :: Default',
             isDefault: true,
-            originalNoSbb: '203011',
+            originalNoSbb: '20301',
             originalNamaPerkiraan: 'PPN KELUARAN'
         };
 
@@ -109,10 +109,10 @@
         // --- 1. Prepare the Data ---
         // Default Option
         const defaultOption = {
-            id: '203014 :: UTANG PPH 23 :: Default',
-            text: '203014 :: UTANG PPH 23 :: Default',
+            id: '20304 :: UTANG PPH 23 :: Default',
+            text: '20304 :: UTANG PPH 23 :: Default',
             isDefault: true,
-            originalNoSbb: '203014',
+            originalNoSbb: '20304',
             originalNamaPerkiraan: 'UTANG PPH 23'
         };
 
