@@ -579,7 +579,7 @@ class Auth extends CI_Controller
           // }
           $data_bagian1 = array(
             'no_bb' => '203',
-            'nama_perkiraan' => 'PPN KELUARAN',
+            'nama_perkiraan' => 'PERPAJAKAN',
             'posisi' => 'PASIVA',
             'nominal' => '0',
             'id_cabang' => $branch_inserted_id,
