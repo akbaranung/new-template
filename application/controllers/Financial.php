@@ -26,9 +26,9 @@ class Financial extends CI_Controller
     $this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
     // Add the OR conditions
     $this->cb->group_start(); // Start a WHERE group for the OR conditions
-    // $this->cb->where('no_sbb', '23014');
-    // $this->cb->or_where('no_sbb', '23011');
-    $this->cb->where_not_in('no_sbb', ['23014', '23011']);
+    // $this->cb->where('no_sbb', '203014');
+    // $this->cb->or_where('no_sbb', '203011');
+    $this->cb->where_not_in('no_sbb', ['203014', '203011']);
     $this->cb->group_end(); // End the WHERE group
     $cek_coa_cabang = $this->cb->get()->num_rows();
 
@@ -2172,7 +2172,7 @@ class Financial extends CI_Controller
     // J2: Kas/Bank bertambah sebesar ppn, ppn keluaran bertambah sebesar ppn keluaran
     if ($inv['besaran_ppn'] !== '0.00') {
       $j1_coa_debit = $inv['coa_debit'];
-      $j1_coa_kredit = "23011";
+      $j1_coa_kredit = "203011";
       $this->posting($j1_coa_debit, $j1_coa_kredit, $keterangan, $inv['besaran_ppn'], $tanggal_bayar);
 
       $j2_coa_debit = $inv['coa_kredit'];
@@ -2183,7 +2183,7 @@ class Financial extends CI_Controller
     if ($inv['opsi_pph23'] == '1') {
       // J4: Kas/Bank bertambah sebesar pph, utang pph 23 bertambah sebesar pph
       $j1_coa_debit = $coa_debit;
-      $j1_coa_kredit = "23014";
+      $j1_coa_kredit = "203014";
       $this->posting($j1_coa_debit, $j1_coa_kredit, $keterangan, $inv['besaran_pph'], $tanggal_bayar);
     }
 

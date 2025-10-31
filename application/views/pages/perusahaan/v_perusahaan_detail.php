@@ -151,7 +151,7 @@
                       <!-- <input type="text" name="nama_akronim" id="nama_akronim" class="form-control input-edit is-readonly" value="<?= $perusahaan->nama_akronim ?>" readonly> -->
                       <!-- <button type="button" class="btn btn-secondary btns-edit" data-target="nama_akronim"><i class="fe fe-edit-2"></i></button> -->
                       <select class="form-control form-select" name="coa_ppn_keluaran" id="coa_ppn_Keluaran">
-                        <!-- <option value="default">23011 :: PPN KELUARAN :: Default</option> -->
+                        <!-- <option value="default">203011 :: PPN KELUARAN :: Default</option> -->
                       </select>
                     </div>
                   </div>
@@ -163,7 +163,7 @@
                       <!-- <input type="text" name="nama_akronim" id="nama_akronim" class="form-control input-edit is-readonly" value="<?= $perusahaan->nama_akronim ?>" readonly> -->
                       <!-- <button type="button" class="btn btn-secondary btns-edit" data-target="nama_akronim"><i class="fe fe-edit-2"></i></button> -->
                       <select class="form-control form-control-select" name="coa_utang_pph" id="coa_utang_pph">
-                        <!-- <option value="default">23011 :: PPN KELUARAN :: Default</option> -->
+                        <!-- <option value="default">203011 :: PPN KELUARAN :: Default</option> -->
                       </select>
                     </div>
                   </div>
