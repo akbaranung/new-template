@@ -341,6 +341,16 @@
                     </td>
                   </tr>
                   <tr>
+                    <th>Jam Masuk</th>
+                    <td><input type="time" name="jam_masuk" class="form-control" value="<?= set_value('jam_masuk', $form_data['jam_masuk'] ?? '09:00') ?>"></td>
+
+                  </tr>
+                  <tr>
+                    <th>Jam Keluar</th>
+                    <td><input type="time" name="jam_keluar" class="form-control" value="<?= set_value('jam_keluar', $form_data['jam_keluar'] ?? '17:00') ?>"></td>
+
+                  </tr>
+                  <tr>
                     <th>User Menu Access</th>
                     <td width="800">
                       <div class="row">
@@ -756,6 +766,18 @@
                           <option <?= $user->id_cabang == $data->uid ? 'selected' : '' ?> value="<?= $data->uid ?>"><?= $data->nama_cabang . ' - ' . $data->alamat_cabang ?></option>
                         <?php } ?>
                       </select>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Jam Masuk</label>
+                      <input type="time" name="jam_masuk" class="form-control" value="<?= $user->jam_masuk ?>">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label>Jam Keluar</label>
+                      <input type="time" name="jam_keluar" class="form-control" value="<?= $user->jam_keluar ?>">
                     </div>
                   </div>
                   <div class="col-md-12">
