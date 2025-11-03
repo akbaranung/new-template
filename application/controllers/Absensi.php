@@ -422,6 +422,23 @@ class Absensi extends CI_Controller
         $query = $this->db->get(); // Execute the query
         $lokasi_presensi_user = $query->row(); // Fetch results
 
+        if ($lokasi_presensi_user->jam_masuk == null || empty($lokasi_presensi_user->jam_masuk)) {
+            $this->session->set_flashdata('swal_message', [
+                'icon' => 'info', // or 'success', 'warning', 'info', 'question'
+                'title' => 'Jam Masuk Kosong',
+                'text' => 'Jam Masuk pada Lokasi Absensi Kosong. Mohon hubungi admin untuk mengisi **Jam Masuk** user.',
+                'confirmButtonText' => 'Mengerti',
+            ]);
+        } else if ($lokasi_presensi_user->jam_pulang == null || empty($lokasi_presensi_user->jam_pulang)) {
+            $this->session->set_flashdata('swal_message', [
+                'icon' => 'info', // or 'success', 'warning', 'info', 'question'
+                'title' => 'Jam Pulang Kosong',
+                'text' => 'Jam Pulang pada Lokasi Absensi Kosong. Mohon hubungi admin untuk mengisi **Jam Pulang** user.',
+                'confirmButtonText' => 'Mengerti',
+            ]);
+        }
+        redirect('home');
+        var_dump($lokasi_presensi_user);
         $this->db->select('*');
         $this->db->from('lokasi_presensi');
         $this->db->where('id', $lokasi_presensi_user->id_lokasi_presensi); // Filter by username
