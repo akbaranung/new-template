@@ -439,7 +439,7 @@ class Absensi extends CI_Controller
             ]);
             redirect('home');
         }
-        var_dump($lokasi_presensi_user);
+        // var_dump($lokasi_presensi_user);
         $this->db->select('*');
         $this->db->from('lokasi_presensi');
         $this->db->where('id', $lokasi_presensi_user->id_lokasi_presensi); // Filter by username
