@@ -398,7 +398,7 @@ class Absensi extends CI_Controller
             'user'
         );
 
-        // $data['data_users'] = $this->user->data_user();
+        $data['data_users'] = $this->user->data_user();
 
         // Access properties using '->' because $cek_user is an object
         // $data_user = $this->user->data_user();
