@@ -429,6 +429,7 @@ class Absensi extends CI_Controller
                 'text' => 'Jam Masuk pada Lokasi Absensi Kosong. Mohon hubungi admin untuk mengisi **Jam Masuk** user.',
                 'confirmButtonText' => 'Mengerti',
             ]);
+            redirect('home');
         } else if ($lokasi_presensi_user->jam_keluar == null || empty($lokasi_presensi_user->jam_keluar)) {
             $this->session->set_flashdata('swal_message', [
                 'icon' => 'info', // or 'success', 'warning', 'info', 'question'
@@ -436,8 +437,8 @@ class Absensi extends CI_Controller
                 'text' => 'Jam Pulang pada Lokasi Absensi Kosong. Mohon hubungi admin untuk mengisi **Jam Pulang** user.',
                 'confirmButtonText' => 'Mengerti',
             ]);
+            redirect('home');
         }
-        redirect('home');
         var_dump($lokasi_presensi_user);
         $this->db->select('*');
         $this->db->from('lokasi_presensi');
