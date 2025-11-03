@@ -429,7 +429,7 @@ class Absensi extends CI_Controller
                 'text' => 'Jam Masuk pada Lokasi Absensi Kosong. Mohon hubungi admin untuk mengisi **Jam Masuk** user.',
                 'confirmButtonText' => 'Mengerti',
             ]);
-        } else if ($lokasi_presensi_user->jam_pulang == null || empty($lokasi_presensi_user->jam_pulang)) {
+        } else if ($lokasi_presensi_user->jam_keluar == null || empty($lokasi_presensi_user->jam_keluar)) {
             $this->session->set_flashdata('swal_message', [
                 'icon' => 'info', // or 'success', 'warning', 'info', 'question'
                 'title' => 'Jam Pulang Kosong',
@@ -456,12 +456,12 @@ class Absensi extends CI_Controller
         }
 
         // $jam_masuk_plus_two = (new DateTime($lokasi_presensi_by_id->jam_masuk))->modify('+2 hours')->format('H:i:s');
-        // $jam_keluar_plus_two = (new DateTime($lokasi_presensi_by_id->jam_pulang))->modify('+2 hours')->format('H:i:s');
+        // $jam_keluar_plus_two = (new DateTime($lokasi_presensi_by_id->jam_keluar))->modify('+2 hours')->format('H:i:s');
 
 
         $jam_masuk_plus_two = (new DateTime($lokasi_presensi_user->jam_masuk))->modify('+15 minutes')->format('H:i:s');
-        // $jam_keluar_plus_two = (new DateTime($lokasi_presensi_user->jam_pulang))->modify('+15 minutes')->format('H:i:s');
-        $jam_keluar_plus_two = (new DateTime($lokasi_presensi_user->jam_pulang))->modify('+0 minutes')->format('H:i:s');
+        // $jam_keluar_plus_two = (new DateTime($lokasi_presensi_user->jam_keluar))->modify('+15 minutes')->format('H:i:s');
+        $jam_keluar_plus_two = (new DateTime($lokasi_presensi_user->jam_keluar))->modify('+0 minutes')->format('H:i:s');
         $this->db->select('*');
         $this->db->from('tblattendance');
         $this->db->where('username', $this->session->userdata('username')); // Filter by username
@@ -527,7 +527,7 @@ class Absensi extends CI_Controller
         $query = $this->db->get(); // Execute the query
         $lokasi_presensi_by_id = $query->row(); // Fetch results
         // $jam_masuk_plus_two = (new DateTime($lokasi_presensi_by_id->jam_masuk))->modify('+2 hours')->format('H:i:s');
-        // $jam_keluar_plus_two = (new DateTime($lokasi_presensi_by_id->jam_pulang))->modify('+2 hours')->format('H:i:s');
+        // $jam_keluar_plus_two = (new DateTime($lokasi_presensi_by_id->jam_keluar))->modify('+2 hours')->format('H:i:s');
 
 
         if ($users) {
@@ -897,7 +897,7 @@ class Absensi extends CI_Controller
             $row[] = $radius_meter . ' Meter';
             // $row[] = $cat->zona_waktu;
             // $row[] = $cat->jam_masuk . ' ' . $cat->zona_waktu;
-            // $row[] = $cat->jam_pulang . ' ' . $cat->zona_waktu;
+            // $row[] = $cat->jam_keluar . ' ' . $cat->zona_waktu;
 
             $row[] = '<a href="' . base_url('absensi/edit_lokasi_presensi/' . $cat->id) . '" class="btn btn-warning btn-mobile-block m-1">
 								Update

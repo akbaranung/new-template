@@ -348,10 +348,10 @@ class Absen_m extends CI_Model
 
                     // Parse jam_masuk and jam_keluar as DateTime objects
                     // $jamMasukTime = new DateTime($jam->jam_masuk);
-                    // $jamKeluarTime = new DateTime($jam->jam_pulang);
+                    // $jamKeluarTime = new DateTime($jam->jam_keluar);
 
                     $jamMasukTime = new DateTime($users->jam_masuk);
-                    $jamKeluarTime = new DateTime($users->jam_pulang);
+                    $jamKeluarTime = new DateTime($users->jam_keluar);
 
                     // Modify jamMasukTime if needed (as per your original code, +2 hours)
                     // Note: This +2 hours might be causing logic issues if it makes jamMasukTime > jamKeluarTime for the same day.

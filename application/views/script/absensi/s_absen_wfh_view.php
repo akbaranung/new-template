@@ -235,8 +235,8 @@
             $current_time = new DateTime();
             // $jam_masuk_plus_two = (new DateTime($lokasi_presensi_by_id->jam_masuk))->modify('+2 hours');
             $jam_masuk_plus_two = (new DateTime($data_users->jam_masuk))->modify('+15 minutes');
-            // $jam_keluar_plus_two = (new DateTime($lokasi_presensi_by_id->jam_pulang))->modify('+2 hours');
-            $jam_keluar_plus_two = (new DateTime($data_users->jam_pulang))->modify('+0 hours');
+            // $jam_keluar_plus_two = (new DateTime($lokasi_presensi_by_id->jam_keluar))->modify('+2 hours');
+            $jam_keluar_plus_two = (new DateTime($data_users->jam_keluar))->modify('+0 hours');
             ?>
             if (detectedFaces.includes(username)) {
                 if (isWithinRange) {
@@ -540,8 +540,8 @@
         $current_time = new DateTime();
         // $jam_masuk_plus_two = (new DateTime($lokasi_presensi_by_id->jam_masuk))->modify('+2 hours');
         $jam_masuk_plus_two = (new DateTime($data_users->jam_masuk))->modify('+15 minutes');
-        // $jam_keluar_plus_two = (new DateTime($lokasi_presensi_by_id->jam_pulang))->modify('+2 hours');
-        $jam_keluar_plus_two = (new DateTime($data_users->jam_pulang))->modify('+0 hours');
+        // $jam_keluar_plus_two = (new DateTime($lokasi_presensi_by_id->jam_keluar))->modify('+2 hours');
+        $jam_keluar_plus_two = (new DateTime($data_users->jam_keluar))->modify('+0 hours');
     ?>
         <?php if ($current_time <= $jam_masuk_plus_two) { ?>
             <?php if (empty($result1)) { ?>
