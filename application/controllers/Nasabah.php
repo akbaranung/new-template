@@ -199,13 +199,18 @@ class Nasabah extends CI_Controller
     // --- SET VALIDATION RULES (Conceptual Framework Syntax) ---
     // In a real framework, you would typically load the validation library first.
     $this->form_validation->set_rules('nama', 'Nama', 'required|max_length[100]');
+    $this->form_validation->set_rules('alamat', 'Alamat', 'required');
     // $this->form_validation->set_rules('alamat', 'Alamat', 'required');
     $this->form_validation->set_rules('no_ktp', 'Nomor KTP', 'required|numeric|exact_length[16]'); // Assuming 16 digits
-    $this->form_validation->set_rules('no_telp', 'No. Telp', 'numeric|max_length[15]');
-    $this->form_validation->set_rules('kode_ao', 'Kode AO', 'required');
-    // $this->form_validation->set_rules('tgl_pendaftaran', 'Tgl Pendaftaran', 'required|valid_date');
-    $this->form_validation->set_rules('tipe_nasabah', 'Tipe Nasabah', 'required');
-    $this->form_validation->set_rules('segmen_nasabah', 'Segmen Nasabah', 'required');
+    $this->form_validation->set_rules('no_telp', 'No. Telp', 'required|numeric|max_length[15]');
+    $this->form_validation->set_rules('ahli_waris', 'Ahli Waris', 'required');
+    $this->form_validation->set_rules('nama_ibu_kandung', 'Nama Ibu Kandung', 'required');
+    $this->form_validation->set_rules('tgl_lahir', 'Tanggal Lahirs', 'required');
+    $this->form_validation->set_rules('tempat_lahir', 'Tempat Lahir', 'required');
+    // $this->form_validation->set_rules('kode_ao', 'Kode AO', 'required');
+    $this->form_validation->set_rules('tgl_pendaftaran', 'Tgl Pendaftaran', 'required|valid_date');
+    // $this->form_validation->set_rules('tipe_nasabah', 'Tipe Nasabah', 'required');
+    // $this->form_validation->set_rules('segmen_nasabah', 'Segmen Nasabah', 'required');
 
     // Run the validation
     if ($this->form_validation->run() == FALSE) {

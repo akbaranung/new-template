@@ -76,27 +76,27 @@
               <?= $this->session->flashdata('msg') ?>
               <form action="<?= base_url('nasabah/proccess_add') ?>" method="post" class="row">
                 <div class="form-group col-6">
-                  <label for="exampleInputEmail1">Nama</label>
+                  <label for="exampleInputEmail1">Nama <span style="color: red;">*</span></label>
                   <input type="text" class="form-control" name="nama" id="nama_add" value="<?= set_value('nama', $form_data['nama'] ?? '') ?>">
 
                 </div>
                 <div class="form-group col-6">
-                  <label for="exampleInputEmail1">Alamat</label>
+                  <label for="exampleInputEmail1">Alamat <span style="color: red;">*</span></label>
                   <textarea class="form-control" name="alamat" id="alamat_add" rows="3"><?= set_value('alamat', $form_data['alamat'] ?? '') ?></textarea>
 
                 </div>
                 <div class="form-group col-6">
-                  <label for="exampleInputEmail1">No Ktp</label>
+                  <label for="exampleInputEmail1">No Ktp <span style="color: red;">*</span></label>
                   <input type="text" class="form-control" name="no_ktp" id="no_ktp_add" value="<?= set_value('no_ktp', $form_data['no_ktp'] ?? '') ?>">
 
                 </div>
                 <div class="form-group col-6">
-                  <label for="exampleInputEmail1">No Telp</label>
+                  <label for="exampleInputEmail1">No Telp <span style="color: red;">*</span></label>
                   <input type="text" class="form-control" name="no_telp" id="no_telp_add" value="<?= set_value('no_telp', $form_data['no_telp'] ?? '') ?>">
 
                 </div>
                 <div class="form-group col-6">
-                  <label for="exampleInputEmail1">Ahli Waris</label>
+                  <label for="exampleInputEmail1">Ahli Waris <span style="color: red;">*</span></label>
                   <input type="text" class="form-control" name="ahli_waris" id="ahli_waris_add" value="<?= set_value('ahli_waris', $form_data['ahli_waris'] ?? '') ?>">
 
                 </div>
@@ -106,7 +106,7 @@
 
                 </div>
                 <div class="form-group col-6">
-                  <label for="exampleInputEmail1">Nama Ibu Kandung</label>
+                  <label for="exampleInputEmail1">Nama Ibu Kandung <span style="color: red;">*</span></label>
                   <input type="text" class="form-control" name="nama_ibu_kandung" id="nama_ibu_kandung_add" value="<?= set_value('nama_ibu_kandung', $form_data['nama_ibu_kandung'] ?? '') ?>">
 
                 </div>
@@ -126,12 +126,12 @@
 
                 </div>
                 <div class="form-group col-6">
-                  <label for="exampleInputEmail1">Tgl Lahir</label>
+                  <label for="exampleInputEmail1">Tgl Lahir <span style="color: red;">*</span></label>
                   <input type="date" class="form-control" name="tgl_lahir" id="tgl_lahir_add" value="<?= set_value('tgl_lahir', $form_data['tgl_lahir'] ?? '') ?>">
 
                 </div>
                 <div class="form-group col-6">
-                  <label for="exampleInputEmail1">Tempat Lahir</label>
+                  <label for="exampleInputEmail1">Tempat Lahir <span style="color: red;">*</span></label>
                   <input type="text" class="form-control" name="tempat_lahir" id="tempat_lahir_add" value="<?= set_value('tempat_lahir', $form_data['tempat_lahir'] ?? '') ?>">
 
                 </div>
@@ -141,8 +141,8 @@
 
                 </div>
                 <div class="form-group col-6">
-                  <label for="exampleInputEmail1">Tgl Pendaftaran</label>
-                  <input type="date" class="form-control" name="tgl_pendaftaran" id="tgl_pendaftaran_add" value="<?= set_value('tgl_pendaftaran', $form_data['tgl_pendaftaran'] ?? '') ?>">
+                  <label for="exampleInputEmail1">Tgl Pendaftaran <span style="color: red;">*</span></label>
+                  <input type="date" class="form-control" name="tgl_pendaftaran" id="tgl_pendaftaran_add" value="<?= set_value('tgl_pendaftaran', $form_data['tgl_pendaftaran'] ?? date('Y-m-d')) ?>">
 
                 </div>
                 <div class="form-group col-6">

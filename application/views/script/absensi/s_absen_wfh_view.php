@@ -28,6 +28,14 @@
     }
 
     function showPosition(position) {
+        Swal.fire({
+            title: 'Loading...',
+            text: 'Sedang Mencari Data Lokasi..',
+            icon: 'info',
+            showConfirmButton: false, // We don't want the user to click OK yet
+            allowOutsideClick: false // Optional: Prevent closing by clicking outside
+        });
+
         const userLatitude = position.coords.latitude;
         const userLongitude = position.coords.longitude;
 
@@ -105,6 +113,14 @@
     }
 
     function updateTable() {
+        Swal.fire({
+            title: 'Loading...',
+            text: 'Mohon Tunggu, Sistem Sedang Mencari Data..',
+            icon: 'info',
+            showConfirmButton: false, // We don't want the user to click OK yet
+            allowOutsideClick: false // Optional: Prevent closing by clicking outside
+        });
+
         var xhr = new XMLHttpRequest();
         xhr.open("POST", "fetch_user", true);
         xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -317,6 +333,8 @@
                 if (!webcamStarted && modelsLoaded) {
                     startWebcam();
                     webcamStarted = true;
+                    Swal.close();
+
                 }
             })
             .catch(() => {
@@ -555,6 +573,13 @@
             <?php if (empty($result2)) { ?>
                 console.log('ada2');
                 getLocation(); // Call function
+                Swal.fire({
+                    title: 'Loading...',
+                    text: 'Sedang Mempersiapkan Lokasi..',
+                    icon: 'info',
+                    showConfirmButton: false, // We don't want the user to click OK yet
+                    allowOutsideClick: false // Optional: Prevent closing by clicking outside
+                });
             <?php } else { ?>
                 Swal.fire('Alert', 'Anda Sudah Melakukan Absensi Pulang', 'warning');
                 updateTablePulang(); // Call function
