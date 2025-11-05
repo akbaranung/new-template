@@ -29,7 +29,7 @@ class Absensi extends CI_Controller
             show_error('Forbidden Access: You do not have permission to view this page.', 403, '403 Forbidden');
         }
 
-        $data['user'] = $this->user->user_get_detail($this->session->userdata('nip'));
+        $data['user'] = $this->user->user_get_detail_with_nip($this->session->userdata('nip'));
 
         $this->db->select('*'); // Fetch only these columns
         $this->db->from('tblattendance'); // Table name
