@@ -372,6 +372,8 @@ class Perusahaan extends CI_Controller
       "jam_masuk" => $this->input->post('jam_masuk'),
       "jam_keluar" => $this->input->post('jam_keluar'),
       "ns_address" => 'ns1.bariskode.id',
+      "akses_export_absensi_list" => $this->input->post('akses_export_absensi_list'),
+
     ];
     $this->db->insert('users', $add);
 
@@ -457,6 +459,7 @@ class Perusahaan extends CI_Controller
       "id_cabang" => $this->input->post('cabang'),
       "jam_masuk" => $this->input->post('jam_masuk'),
       "jam_keluar" => $this->input->post('jam_keluar'),
+      "akses_export_absensi_list" => $this->input->post('akses_export_absensi_list'),
     ];
     $this->db->where('id', $id);
     $this->db->update('users', $edit_data);

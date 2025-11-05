@@ -448,6 +448,19 @@
                       </div>
                     </td>
                   </tr>
+                  <tr>
+                    <th>
+                      Akses Export Absensi List
+                    </th>
+                    <td style="padding-bottom: 25px;">
+                      <div class="form-check">
+                        <input class="form-check-input parent-checkbox" type="checkbox"
+                          name="akses_export_absensi_list"
+                          value="1" id="akses_export_absensi_list">
+                        <label class="form-check-label font-weight-bold" for="akses_export_absensi_list">Beri Akses </label>
+                      </div>
+                    </td>
+                  </tr>
                   <br>
                   <tr>
                     <th>
@@ -821,6 +834,15 @@
                         <?php endif; ?>
                       <?php endforeach; ?>
                     </div>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <div class="form-check">
+                      <input class="form-check-input parent-checkbox" type="checkbox"
+                        name="akses_export_absensi_list"
+                        value="1" id="akses_export_absensi_list" <?= $user->akses_export_absensi_list == '1' ? 'checked' : '' ?>>
+                      <label class="form-check-label font-weight-bold" for="akses_export_absensi_list">Akses Export Absensi List </label>
+                    </div>
+
                   </div>
                   <div class="col-12">
                     <div class="form-group">
