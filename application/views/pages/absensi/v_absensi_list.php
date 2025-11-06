@@ -55,10 +55,15 @@
               </div>
             <?php
             }
+
+            if ($user->akses_export_absensi_list) {
             ?>
-            <div class="col-md-3">
-              <button class="btn btn-pink btn-block" onclick="showExport()"><i class="fa fa-file-excel-o"></i> Export List</button>
-            </div>
+              <div class="col-md-3">
+                <button class="btn btn-pink btn-block" onclick="showExport()"><i class="fa fa-file-excel-o"></i> Export List</button>
+              </div>
+            <?php
+            }
+            ?>
           </div>
         </div>
         <div class="card-body" id="user">
