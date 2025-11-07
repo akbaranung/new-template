@@ -148,7 +148,7 @@
                   <div class="col-md-6">
                     <br>
                     <div class="form-group">
-                      <label for="" class="label">Data</label>
+                      <label for="">Data</label>
                       <select class="form-control" name="data_absensi" id="data_absensi">
                         <option value="All" selected>All</option>
                         <option value="User">User</option>
