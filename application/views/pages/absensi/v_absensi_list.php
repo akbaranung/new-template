@@ -129,11 +129,21 @@
         <div class="card-body" id="excel" style="display: none;">
           <div>
             <div class="content" style="cursor: pointer;  margin: 0;">
-              <form class="form" id="form_export" action="<?= base_url('absensi/process_export') ?>" method="POST">
+              <form class="form" id="form_export" action="<?= base_url('absensi/process_export_new') ?>" method="POST">
                 <div class="row">
                   <div class="col-md-6">
                     <label for="" class="label">Tanggal Absensi</label>
-                    <input type="text" class="form-control month-picker" name="tanggal" id="tanggal_export_absensi">
+                    <!-- <input type="text" class="form-control month-picker" name="tanggal" id="tanggal_export_absensi"> -->
+                    <div class="row">
+                      <div class="form-group col-md-6">
+                        <label for="">Tanggal Mulai</label>
+                        <input type="date" class="form-control" name="tanggal_mulai" id="tanggal_mulai" value="<?= date('Y-m-d') ?>">
+                      </div>
+                      <div class="form-group col-md-6">
+                        <label for="">Tanggal Akhir</label>
+                        <input type="date" class="form-control" name="tanggal_akhir" id="tanggal_akhir" value="<?= date('Y-m-d') ?>">
+                      </div>
+                    </div>
                   </div>
                   <div class="col-md-6">
                     <label for="" class="label">Data</label>
@@ -141,6 +151,7 @@
                       <option value="All" selected>All</option>
                       <option value="User">User</option>
                       <option value="Team">Team</option>
+                      <option value="Cabang">Cabang</option>
                       <!-- <option value="Team">Team</option> -->
                     </select>
 

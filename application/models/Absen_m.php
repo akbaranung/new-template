@@ -2,6 +2,13 @@
 
 class Absen_m extends CI_Model
 {
+    protected $cb; // Declare the property
+
+    public function __construct()
+    {
+        parent::__construct(); // Call the parent constructor
+        $this->cb = $this->load->database('corebank', TRUE);
+    }
 
     var $table = 'tblattendance';
     var $column_order = array('tblattendance.id', 'tblattendance.nip', 'tblattendance.nama', 'tblattendance.date', 'waktu', 'attendanceStatus', 'lokasiAttendance', 'tipe'); //set column field database for datatable orderable
@@ -486,5 +493,38 @@ class Absen_m extends CI_Model
         $sql = "SELECT * from users where nip='$id' ";
         $query = $this->db->query($sql);
         return $query->row();
+    }
+
+    public function get_user_export($data_absensi)
+    {
+        // $this->db->select('id, name, is_late_threshold'); // Select necessary fields
+        $this->db->from('users');
+        $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
+
+        // Filtering based on 'User' or 'Team'
+        if ($data_absensi == 'User') {
+            $this->db->where('username', $this->session->userdata('username'));
+        } else if ($data_absensi == 'Team') {
+            $this->db->where('bagian', $this->session->userdata('bagian'));
+        } else if ($data_absensi == 'Cabang') {
+            $this->db->where('id_cabang', $this->session->userdata('kode_cabang'));
+        } else if ($data_absensi == 'All') {
+            $this->db->where('id_perusahaan', $this->session->userdata('user_perusahaan_id'));
+        }
+
+        $query = $this->db->get();
+        // Use result_array() because the Controller needs an array for processing
+        return $query->result_array();
+    }
+    public function get_Absensi_export($tanggal_mulai, $tanggal_akhir)
+    {
+        $this->db->from('tblattendance'); // Replace with your table name
+        // $this->db->where('YEAR(date)', $year);
+        // $this->db->where('MONTH(date)', $month);
+        $this->db->where('date >=', $tanggal_mulai);
+        $this->db->where('date <=', $tanggal_akhir);
+
+        $query = $this->db->get();
+        return $query->result_array();
     }
 }

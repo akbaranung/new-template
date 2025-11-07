@@ -384,6 +384,222 @@ class Absensi extends CI_Controller
         exit(); // Terminate script after download is complete
     }
 
+    public function process_export_new()
+    {
+        $this->load->model('absen_m', 'user');
+
+        // $tanggal = $this->input->post('tanggal');
+        // list($month, $year) = explode('/', $tanggal);
+        // $tanggal_mulai = $this->input->post('tanggal_mulai');
+        // $tanggal_akhir = $this->input->post('tanggal_akhir');
+        $start_date_str = $this->input->post('tanggal_mulai');
+        $end_date_str = $this->input->post('tanggal_akhir');
+
+
+        $data_absensi = $this->input->post('data_absensi');
+        require APPPATH . 'third_party/autoload.php';
+        require APPPATH . 'third_party/autoload_zip.php';
+
+        // Include PhpSpreadsheet from third_party
+
+        require APPPATH . 'third_party/psr/simple-cache/src/CacheInterface.php';
+
+        $users = $this->user->get_user_export($data_absensi, $start_date_str, $end_date_str);
+
+        $raw_attendance = $this->user->get_Absensi_export($start_date_str, $end_date_str);
+
+        // echo $start_date_str;
+        // echo $end_date_str;
+        // var_dump($raw_attendance);
+        // B. Generate Date Range
+        $date_range = [];
+        $current = new DateTime($start_date_str);
+        $end = new DateTime($end_date_str);
+        while ($current <= $end) {
+            $date_range[] = $current->format('Y-m-d');
+            $current->modify('+1 day');
+        }
+
+        // C. Organize Data for Lookup
+        $organized_attendance = [];
+        foreach ($raw_attendance as $record) {
+            $userId = $record['nip'];
+            $date = $record['date'];
+            $type = $record['tipe'];
+            $jam_absen = $record['jam_absen'];
+            $time = substr($record['waktu'], 0, 5);
+
+            // if (!isset($organized_attendance[$userId][$date])) {
+            //     $organized_attendance[$userId][$date] = ['Masuk' => null, 'Pulang' => null];
+            // }
+
+            $is_late = false;
+            // if ($type === 'Masuk') {
+            //     // Find the user's late threshold (better to join this in the model query)
+            //     $user_data = array_filter($users, fn($u) => $u['id'] === $userId);
+            //     $threshold = reset($user_data)['time'] ?? '09:00:00';
+            //     $is_late = ($record['time'] > $threshold);
+            // }
+
+            if ($type == 'Telat') {
+                $is_late = true;
+            }
+
+            $organized_attendance[$userId][$date][$type] = [
+                'time' => $time,
+                'is_late' => $is_late,
+            ];
+        }
+
+        // --- 3. PHPSPREADSHEET GENERATION ---
+
+        $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Define a universal thin border style
+        $style_border = ['borders' => ['allBorders' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN]]];
+
+        // --- DEFINE STYLES ---
+        $style_header = [
+            'font' => ['bold' => true],
+            'alignment' => ['horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER],
+            // Using fully qualified namespace for Fill
+            'fill' => ['fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 'startColor' => ['argb' => 'FFEFEFEF']], // Light Gray
+            'borders' => ['allBorders' => ['borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN]],
+        ];
+
+        // Green style: Add border
+        $style_green = array_merge($style_border, ['fill' => ['fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 'startColor' => ['argb' => 'FF84CC16']]]);
+        // Yellow style: Add border
+        $style_yellow = array_merge($style_border, ['fill' => ['fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 'startColor' => ['argb' => 'FFFDE047']]]);
+        // Red style: Add border
+        $style_red = array_merge($style_border, ['fill' => ['fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID, 'startColor' => ['argb' => 'FFF87171']]]);
+
+        // --- WRITE HEADER (Rows 1 & 2) ---
+
+        // 1. Main Header Row (No, Nama/Waktu, Tanggal)
+        $sheet->setCellValue('A1', 'No');
+        $sheet->setCellValue('B1', 'Nama / Waktu');
+        $sheet->mergeCells('A1:A2'); // Merge No column
+        $sheet->mergeCells('B1:B2'); // Merge Nama/Waktu column
+
+        $date_col_start_index = 3; // C column
+        $date_col_end_index = $date_col_start_index + count($date_range) - 1;
+
+        $date_col_start = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($date_col_start_index);
+        $date_col_end = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($date_col_end_index);
+
+        $sheet->setCellValue($date_col_start . '1', 'Tanggal');
+        if (count($date_range) > 1) {
+            $sheet->mergeCells($date_col_start . '1:' . $date_col_end . '1');
+        }
+
+        // 2. Date Day Numbers (Row 2)
+        $col_index = $date_col_start_index;
+        foreach ($date_range as $date) {
+            $cell_coord = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($col_index) . '2';
+            $sheet->setCellValue($cell_coord, date('j', strtotime($date)));
+            $col_index++;
+        }
+
+        // Apply header style to the entire header block
+        $sheet->getStyle('A1:' . $date_col_end . '2')->applyFromArray($style_header);
+
+
+        // --- WRITE DATA (Rows 3 onwards) ---
+        $row_index = 3;
+        $user_no = 1;
+
+        foreach ($users as $user) {
+            $user_id = $user['nip'];
+            $user_name = $user['nama'];
+
+            // MASUK Row (e.g., Row 3 for Dimas)
+            $sheet->setCellValue('B' . $row_index, $user_name . "\nMasuk"); // B3 (Nama/Masuk)
+            $sheet->getStyle('B' . $row_index)->getAlignment()->setWrapText(true);
+            // Apply border to the Name/Time column
+            $sheet->getStyle('B' . $row_index)->applyFromArray($style_border);
+
+            $col_index = $date_col_start_index;
+            foreach ($date_range as $date) {
+                $record = $organized_attendance[$user_id][$date]['Masuk'] ?? null;
+                $time = $record['time'] ?? '';
+
+                $cell_name = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($col_index) . $row_index;
+
+                if (!empty($time)) {
+                    $sheet->setCellValue($cell_name, $time);
+                    // Apply Green (On Time) or Yellow (Telat)
+                    $style = $record['is_late'] ? $style_yellow : $style_green;
+                    $sheet->getStyle($cell_name)->applyFromArray($style);
+                } else {
+                    $sheet->setCellValue($cell_name, '-');
+                    // Apply Red (Absent)
+                    $sheet->getStyle($cell_name)->applyFromArray($style_red);
+                }
+                $col_index++;
+            }
+            $row_index++; // Move to the Pulang row
+
+            // PULANG Row (e.g., Row 4 for Dimas)
+            $sheet->setCellValue('B' . $row_index, 'Pulang'); // B4 (Pulang)
+            // Apply border to the Name/Time column
+            $sheet->getStyle('B' . $row_index)->applyFromArray($style_border);
+
+            $col_index = $date_col_start_index;
+            foreach ($date_range as $date) {
+                $record = $organized_attendance[$user_id][$date]['Pulang'] ?? null;
+                $time = $record['time'] ?? '';
+
+                $cell_name = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($col_index) . $row_index;
+
+                if (!empty($time)) {
+                    $sheet->setCellValue($cell_name, $time);
+                    // Always Green if recorded
+                    $sheet->getStyle($cell_name)->applyFromArray($style_green);
+                } else {
+                    $sheet->setCellValue($cell_name, '-');
+                    // Apply Red (Absent)
+                    $sheet->getStyle($cell_name)->applyFromArray($style_red);
+                }
+                $col_index++;
+            }
+
+            // Merge the 'No' column cells
+            $start_row = $row_index - 1;
+            $end_row = $row_index;
+            $sheet->setCellValue('A' . $start_row, $user_no);
+            $sheet->mergeCells('A' . $start_row . ':A' . $end_row);
+            // Apply border to the merged 'No' column
+            $sheet->getStyle('A' . $start_row . ':A' . $end_row)->applyFromArray($style_border);
+
+            $row_index++; // Move to the next user's Masuk row
+            $user_no++;
+        }
+
+        // Auto size columns for better readability
+        foreach (range('A', $date_col_end) as $column) {
+            $sheet->getColumnDimension($column)->setAutoSize(true);
+        }
+        $sheet->getColumnDimension('A')->setWidth(5);
+        $sheet->getColumnDimension('B')->setWidth(15);
+        $spreadsheet->getDefaultStyle()->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+        $sheet->getStyle('B3:B' . ($row_index - 1))->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
+
+
+        // --- 4. OUTPUT THE FILE ---
+
+        $filename = 'Laporan_Absensi_' . date('Ymd', strtotime($start_date_str)) . '_to_' . date('Ymd', strtotime($end_date_str)) . '.xlsx';
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $filename . '"');
+        header('Cache-Control: max-age=0');
+
+        // Using fully qualified namespace for Xlsx writer
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+        $writer->save('php://output');
+        exit;
+    }
 
     public function absen_wfa()
     {
