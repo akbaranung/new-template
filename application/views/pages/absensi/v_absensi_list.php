@@ -146,14 +146,17 @@
                     </div>
                   </div>
                   <div class="col-md-6">
-                    <label for="" class="label">Data</label>
-                    <select class="form-control" name="data_absensi" id="data_absensi">
-                      <option value="All" selected>All</option>
-                      <option value="User">User</option>
-                      <option value="Team">Team</option>
-                      <option value="Cabang">Cabang</option>
-                      <!-- <option value="Team">Team</option> -->
-                    </select>
+                    <br>
+                    <div class="form-group">
+                      <label for="" class="label">Data</label>
+                      <select class="form-control" name="data_absensi" id="data_absensi">
+                        <option value="All" selected>All</option>
+                        <option value="User">User</option>
+                        <option value="Team">Team</option>
+                        <option value="Cabang">Cabang</option>
+                        <!-- <option value="Team">Team</option> -->
+                      </select>
+                    </div>
 
                   </div>
                 </div>
