@@ -426,7 +426,6 @@ class Absensi extends CI_Controller
             $userId = $record['nip'];
             $date = $record['date'];
             $type = $record['tipe'];
-            $jam_absen = $record['jam_absen'];
             $time = substr($record['waktu'], 11, 8);
 
             // if (!isset($organized_attendance[$userId][$date])) {
