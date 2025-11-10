@@ -47,7 +47,7 @@
                                     <th>Nama</th>
                                     <th>Jenis</th>
                                     <th>Detail</th>
-                                    <th>Tanggal Pengajuan</th>
+                                    <th>Tanggal</th>
                                     <th>Mulai</th>
                                     <th>Jumlah</th>
                                     <th>Status Atasan</th>

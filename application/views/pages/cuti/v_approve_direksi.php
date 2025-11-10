@@ -245,7 +245,7 @@
                                     <th class="column-title">Nama</th>
                                     <th class="column-title">Jenis</th>
                                     <th class="column-title">Alasan</th>
-                                    <th class="column-title">Tanggal Pengajuan</th>
+                                    <th class="column-title">Tanggal</th>
                                     <th class="column-title">Mulai</th>
                                     <th class="column-title">Jumlah</th>
                                     <th class="column-title">Atasan</th>

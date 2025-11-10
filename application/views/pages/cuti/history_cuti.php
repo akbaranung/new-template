@@ -253,7 +253,7 @@
                                     <th>Nama</th>
                                     <th>Jenis Cuti</th>
                                     <th>Detail Cuti</th>
-                                    <th>Tanggal Pengajuan</th>
+                                    <th>Tanggal</th>
                                     <th>Mulai Cuti</th>
                                     <th>Jumlah Cuti</th>
                                     <th>Status Atasan</th>
