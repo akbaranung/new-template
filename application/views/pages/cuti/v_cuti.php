@@ -120,11 +120,11 @@
 								<tr>
 									<th class="column-title">No.</th>
 									<th class="column-title">Nama</th>
-									<th class="column-title">Jenis Cuti</th>
-									<th class="column-title">Alasan Cuti</th>
+									<th class="column-title">Jenis</th>
+									<th class="column-title">Alasan</th>
 									<th class="column-title">Tanggal Pengajuan</th>
-									<th class="column-title">Mulai Cuti</th>
-									<th class="column-title">Jumlah Cuti</th>
+									<th class="column-title">Mulai</th>
+									<th class="column-title">Jumlah</th>
 									<th class="column-title">Atasan</th>
 									<th class="column-title">Status</th>
 									<th class="column-title">Aksi</th>
@@ -155,9 +155,9 @@
 						<input type="text" readonly class="form-control" placeholder="Nama Karyawan" id="nama" name="nama" value="<?= $this->session->userdata('nama') ?>">
 					</div>
 					<div class="form-group" id="error_jenis">
-						<label for="jenisCuti">Jenis Cuti</label>
+						<label for="jenisCuti">Jenis</label>
 						<select class="form-control select2" id="jenisCuti" name="jenisCuti" style="width:100%;">
-							<option value="">-- Pilih Jenis Cuti --</option>
+							<option value="">-- Pilih Jenis --</option>
 							<?php foreach ($jenis_cuti as $row) : ?>
 								<option value="<?= $row['Id'] ?>"><?= $row['nama_jenis'] ?></option>
 							<?php endforeach ?>
@@ -177,7 +177,7 @@
 						<span id="err_file" class="text-danger"></span>
 					</div>
 					<div class="form-group">
-						<label for="alamat">Alamat Cuti</label>
+						<label for="alamat">Alamat</label>
 						<textarea name="alamat" id="alamat" class="form-control"></textarea>
 						<span id="err_alamat" class="text-danger"></span>
 					</div>
@@ -211,7 +211,7 @@
 						</div>
 					</div>
 					<div class="form-group" id="error_alasan">
-						<label for="alasan">Alasan Cuti</label>
+						<label for="alasan">Alasan</label>
 						<input type="text" class="form-control" placeholder="Alasan Cuti" id="alasan" name="alasan">
 						<span id="err_alasan" class="text-danger"></span>
 					</div>

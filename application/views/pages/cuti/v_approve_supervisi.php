@@ -29,11 +29,11 @@
                                 <tr class="headings">
                                     <th class="column-title">No.</th>
                                     <th class="column-title">Nama</th>
-                                    <th class="column-title">Jenis Cuti</th>
-                                    <th class="column-title">Alasan Cuti</th>
+                                    <th class="column-title">Jenis</th>
+                                    <th class="column-title">Alasan</th>
                                     <th class="column-title">Tanggal Pengajuan</th>
-                                    <th class="column-title">Mulai Cuti</th>
-                                    <th class="column-title">Jumlah Cuti</th>
+                                    <th class="column-title">Mulai</th>
+                                    <th class="column-title">Jumlah</th>
                                     <th class="column-title">Atasan</th>
                                     <th class="column-title">Status</th>
                                     <th class="column-title">Aksi</th>
@@ -77,9 +77,9 @@
                         <span id="err_namapeng" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label for="jenis_cuti">Jenis Cuti</label>
+                        <label for="jenis_cuti">Jenis</label>
                         <select class="form-control select2" id="jenis_cuti" name="jenis_cuti" style="width:100%;">
-                            <option value="">-- Pilih Jenis Cuti --</option>
+                            <option value="">-- Pilih Jenis --</option>
                             <?php foreach ($all_jenis as $row) : ?>
                                 <option value="<?= $row['Id'] ?>"><?= $row['nama_jenis'] ?></option>
                             <?php endforeach ?>
@@ -99,7 +99,7 @@
                         <span id="err_file_pendukung" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label for="alamat_cuti">Alamat Cuti</label>
+                        <label for="alamat_cuti">Alamat</label>
                         <textarea name="alamat_cuti" id="alamat_cuti" class="form-control"></textarea>
                         <span id="err_alamat_cuti" class="text-danger"></span>
                     </div>
@@ -133,7 +133,7 @@
                         </div>
                     </div>
                     <div class="form-group" id="error_alasan">
-                        <label for="alasan_cuti">Alasan Cuti</label>
+                        <label for="alasan_cuti">Alasan</label>
                         <input type="text" class="form-control" placeholder="Alasan Cuti" id="alasan_cuti" name="alasan_cuti">
                         <span id="err_alasan_cuti" class="text-danger"></span>
                     </div>
@@ -214,7 +214,7 @@
                     <div class="form-group">
                         <label for="status_cuti">Status</label>
                         <select class="form-control select2" id="status_cuti" name="status_cuti" style="width: 100%;">
-                            <option value="">-- Pilih Status Cuti --</option>
+                            <option value="">-- Pilih Status --</option>
                             <option value="Disetujui"> Disetujui </option>
                             <option value="Ditolak"> Ditolak </option>
                         </select>

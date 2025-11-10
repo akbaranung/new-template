@@ -45,11 +45,11 @@
                                 <tr>
                                     <th>No.</th>
                                     <th>Nama</th>
-                                    <th>Jenis Cuti</th>
-                                    <th>Detail Cuti</th>
+                                    <th>Jenis</th>
+                                    <th>Detail</th>
                                     <th>Tanggal Pengajuan</th>
-                                    <th>Mulai Cuti</th>
-                                    <th>Jumlah Cuti</th>
+                                    <th>Mulai</th>
+                                    <th>Jumlah</th>
                                     <th>Status Atasan</th>
                                 </tr>
                             </thead>

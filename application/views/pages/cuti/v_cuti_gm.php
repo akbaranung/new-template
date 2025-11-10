@@ -22,8 +22,8 @@
                                 <tr class="headings">
                                     <th class="column-title">No.</th>
                                     <th class="column-title">Nama</th>
-                                    <th class="column-title">Jenis Cuti</th>
-                                    <th class="column-title">Alasan Cuti</th>
+                                    <th class="column-title">Jenis</th>
+                                    <th class="column-title">Alasan</th>
                                     <th class="column-title">Status HRD</th>
                                     <th class="column-title">Status Atasan</th>
                                     <th class="column-title">Aksi</th>

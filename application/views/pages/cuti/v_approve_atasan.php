@@ -43,11 +43,11 @@
                                 <tr>
                                     <th class="column-title">No.</th>
                                     <th class="column-title">Nama</th>
-                                    <th class="column-title">Jenis Cuti</th>
-                                    <th class="column-title">Alasan Cuti</th>
+                                    <th class="column-title">Jenis</th>
+                                    <th class="column-title">Alasan</th>
                                     <th class="column-title">Tanngal Pengajuan</th>
-                                    <th class="column-title">Mulai Cuti</th>
-                                    <th class="column-title">Jumlah Cuti</th>
+                                    <th class="column-title">Mulai</th>
+                                    <th class="column-title">Jumlah</th>
                                     <th class="column-title">Atasan</th>
                                     <th class="column-title">Status</th>
                                     <th class="column-title">Aksi</th>
@@ -76,7 +76,7 @@
                     <div class="form-group">
                         <label for="status_cuti">Status</label>
                         <select class="form-control select2" id="status_cuti" name="status_cuti" style="width: 100%;">
-                            <option value="">-- Pilih Status Cuti --</option>
+                            <option value="">-- Pilih Status --</option>
                             <option value="Disetujui"> Disetujui </option>
                             <option value="Ditolak"> Ditolak </option>
                         </select>
