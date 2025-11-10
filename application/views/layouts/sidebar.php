@@ -44,12 +44,36 @@
       <?php
       if ($this->session->userdata('username') == "bariskode") {
       ?>
-        <li class="nav-item w-100">
+        <li class="nav-item dropdown <?= ($current_uri == 'Subscription' || $current_uri == 'Report' || $current_uri == '') ? 'active' : '' ?>">
+          <a href="#adminListCollapse"
+            data-toggle="collapse"
+            aria-expanded="false"
+            class="dropdown-toggle nav-link">
+            <i class="fe fe-home fe-16"></i>
+            <span class="ml-3 item-text">Admin List</span>
+          </a>
+
+          <ul class="collapse list-unstyled pl-4 w-100" id="adminListCollapse">
+            <li class="nav-item">
+              <a class="nav-link pl-3" href="<?= site_url('Subscription/premium_confirmation') ?>">
+                <i class="fe fe-layers fe-16"></i>
+                <span class="ml-1 item-text">Premium Confirmation</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link pl-3" href="<?= site_url('Report') ?>">
+                <i class="fe fe-flag fe-16"></i>
+                <span class="ml-1 item-text">Report</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <!-- <li class="nav-item w-100">
           <a class="nav-link <?= ($current_uri == 'Subscription' or $current_uri == '') ? 'active' : '' ?>" href="<?= site_url('Subscription/premium_confirmation') ?>">
             <i class="fe fe-home fe-16"></i>
             <span class="ml-3 item-text">Premium Confirmation</span>
           </a>
-        </li>
+        </li> -->
       <?php
       }
       ?>

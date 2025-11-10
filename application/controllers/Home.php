@@ -226,4 +226,20 @@ class Home extends CI_Controller
       'laba_rugi' => $laba_rugi
     ];
   }
+
+  public function submitreport()
+  {
+    $insert_report = [
+      'issueType'    => $this->input->post('issueType'),
+      'issueDetails'  => $this->input->post('issueDetails'),
+      'nip' => $this->session->userdata('nip'),
+      // 'remark'  => $remark,
+    ];
+
+    if ($this->db->insert('report', $insert_report)) {
+      echo json_encode(array("status" => True, "message" => "Berhasil Melaporkan ke Admin"));
+    } else {
+      echo json_encode(array("status" => False, "message" => "Laporan Gagal di kirim"));
+    }
+  }
 }

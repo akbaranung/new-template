@@ -505,7 +505,81 @@
       localStorage.setItem('previousMemoCount', currentMemoCount);
     });
   </script>
+  <script>
+    function submitReport() {
+      const swalWithBootstrapButtons = Swal.mixin({
+        customClass: {
+          confirmButton: 'btn btn-primary',
+          cancelButton: 'btn btn-danger'
+        },
+        buttonsStyling: false
+      })
 
+      swalWithBootstrapButtons.fire({
+        title: 'Apakah anda yakin ingin Mengirim Laporan?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya',
+        cancelButtonText: 'Tidak',
+        reverseButtons: true
+      }).then((result) => {
+
+        var formElement = $('#report_form')[0];
+        var formData = new FormData(formElement);
+
+        if (result.isConfirmed) {
+          url = "<?php echo site_url('home/submitreport') ?>";
+
+          $.ajax({
+            url: url,
+            type: "POST",
+            data: formData, // <--- Key step: Assign the FormData object here
+            contentType: false,
+            processData: false,
+            dataType: "JSON",
+            beforeSend: function() {
+              // Assuming 'swal' is SweetAlert
+              swal.fire({
+                title: "Saving data...",
+                allowOutsideClick: false,
+                didOpen: () => {
+                  swal.showLoading()
+                }
+              });
+            },
+            success: function(data) {
+              /* if(!data.status)alert("ho"); */
+              if (!data.status) swal.fire('Gagal menyimpan data', 'error ');
+              else {
+                // document.getElementById('PakaianAdat').reset();
+
+                (JSON.stringify(data));
+                swal.fire({
+                  customClass: 'slow-animation',
+                  icon: 'success',
+                  showConfirmButton: false,
+                  title: data.message,
+                  timer: 1500
+
+                });
+
+                $('#reportModal').modal('hide');
+              }
+
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+              swal.fire('Operation Failed!', errorThrown, 'error');
+            },
+            complete: function() {
+              console.log('Editing job done');
+
+            }
+
+          });
+        }
+      })
+    }
+  </script>
 </body>
 
 </html>

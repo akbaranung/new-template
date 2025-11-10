@@ -138,4 +138,137 @@
         document.getElementById('excel').style.display = 'flex';
 
     }
+
+    function onApprove(id) {
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        })
+
+        swalWithBootstrapButtons.fire({
+            title: 'Apakah anda yakin ingin Approve Absensi?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Approve Absensi',
+            cancelButtonText: 'Tidak',
+            reverseButtons: true
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+                url = "<?php echo site_url('absensi/approval/Approved/') ?>" + id;
+
+                $.ajax({
+                    url: url,
+                    type: "POST",
+                    contentType: false,
+                    processData: false,
+                    dataType: "JSON",
+                    beforeSend: function() {
+                        swal.fire("Saving data...");
+
+                    },
+                    success: function(data) {
+                        /* if(!data.status)alert("ho"); */
+                        if (!data.status) swal.fire('Gagal menyimpan data', 'error ');
+                        else {
+                            // document.getElementById('PakaianAdat').reset();
+
+                            (JSON.stringify(data));
+                            swal.fire({
+                                customClass: 'slow-animation',
+                                icon: 'success',
+                                showConfirmButton: false,
+                                title: 'Berhasil Approve',
+                                timer: 1500
+
+                            });
+                            $('#table1').DataTable().ajax.reload();
+                            $('#table2').DataTable().ajax.reload();
+                            $('#table3').DataTable().ajax.reload();
+                            $('#table4').DataTable().ajax.reload();
+                        }
+
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        swal.fire('Operation Failed!', errorThrown, 'error');
+                    },
+                    complete: function() {
+                        console.log('Editing job done');
+
+                    }
+
+                });
+            }
+        })
+    }
+
+    function onNotApprove(id) {
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: 'btn btn-success',
+                cancelButton: 'btn btn-danger'
+            },
+            buttonsStyling: false
+        })
+
+        swalWithBootstrapButtons.fire({
+            title: 'Apakah anda yakin ingin Tidak Approve Absensi?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Ya, Tidak Approve Absensi',
+            cancelButtonText: 'Tidak',
+            reverseButtons: true
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+                url = "<?php echo site_url('absensi/approval/NotApproved/') ?>" + id;
+
+                $.ajax({
+                    url: url,
+                    type: "POST",
+                    contentType: false,
+                    processData: false,
+                    dataType: "JSON",
+                    beforeSend: function() {
+                        swal.fire("Saving data...");
+
+                    },
+                    success: function(data) {
+                        /* if(!data.status)alert("ho"); */
+                        if (!data.status) swal.fire('Gagal menyimpan data', 'error ');
+                        else {
+                            // document.getElementById('PakaianAdat').reset();
+
+                            (JSON.stringify(data));
+                            swal.fire({
+                                customClass: 'slow-animation',
+                                icon: 'success',
+                                showConfirmButton: false,
+                                title: 'Berhasil Tidak Approve',
+                                timer: 1500
+
+                            });
+
+                            $('#table1').DataTable().ajax.reload();
+                            $('#table2').DataTable().ajax.reload();
+                            $('#table3').DataTable().ajax.reload();
+                            $('#table4').DataTable().ajax.reload();
+                        }
+
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        swal.fire('Operation Failed!', errorThrown, 'error');
+                    },
+                    complete: function() {
+                        console.log('Editing job done');
+
+                    }
+
+                });
+            }
+        })
+    }
 </script>

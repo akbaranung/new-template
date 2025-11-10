@@ -61,6 +61,13 @@
       </a>
     </li>
     <li class="nav-item">
+      <a class="nav-link text-muted my-2" href="#"
+        data-toggle="modal"
+        data-target="#reportModal">
+        <i class="fe fe-flag fe-16"></i>
+      </a>
+    </li>
+    <li class="nav-item">
       <a class="nav-link text-muted my-2" href="#" id="modeSwitcher" data-mode="light">
         <i class="fe fe-sun fe-16"></i>
       </a>
@@ -172,3 +179,43 @@
     </li>
   </ul>
 </nav>
+
+<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="reportModalLabel">
+          <i class="fe fe-flag me-2"></i> Laporkan Masalah
+        </h5>
+        <button type="button" class="btn btn-close" data-dismiss="modal" aria-label="Close">X</button>
+      </div>
+
+      <div class="modal-body">
+        <form id="report_form">
+          <div class="mb-3">
+            <label for="issueType" class="form-label">Jenis Masalah</label>
+            <select class="form-control" id="issueType" name="issueType" required>
+              <option selected disabled value="">Pilih...</option>
+              <option>Tautan/Fitur Rusak</option>
+              <option>Konten Tidak Pantas</option>
+              <option>Salah Ketik atau Kesalahan</option>
+              <option>Lainnya</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label for="issueDetails" class="form-label">Rincian</label>
+            <textarea class="form-control" id="issueDetails" name="issueDetails" rows="4"
+              placeholder="Mohon jelaskan masalah secara rinci di sini... (wajib)" required></textarea>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" onclick="submitReport()" class="btn btn-danger">Submit Report</button>
+      </div>
+
+    </div>
+  </div>
+</div>
