@@ -462,7 +462,7 @@
 
           <div class="row">
             <div class="col-lg-6 col-md-6 col-xs-12">
-              <h2 class="text-center">Activa</h2>
+              <h2 class="text-center">Aktiva</h2>
               <p class="text-right">Total: <strong id="total_aktiva"><?= (isset($sum_activa)) ? number_format($sum_activa, 2) : 0 ?></strong></p>
               <div class="table-responsive">
                 <table class="table table-sm" style="width:100%">

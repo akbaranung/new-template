@@ -1807,10 +1807,12 @@ else if ($this->session->flashdata('message_error')) {
             maximumFractionDigits: 2
           });
 
-          balanceResultDiv.textContent = `Saldo Tidak Seimbang: ${formattedDifference} (${terbilang(difference)})`;
+          // balanceResultDiv.textContent = `Sebelum Menyimpan, Pastikan Posisi Aktiva dan Pasiva Seimbang, Selisih Sekarang: ${formattedDifference} (${terbilang(difference)})`;
+          balanceResultDiv.textContent = `Sebelum Menyimpan, Pastikan Posisi Aktiva dan Pasiva Harus Seimbang.`;
           balanceResultDiv.classList.add('unbalanced');
 
-          balanceResultDiv2.textContent = `Saldo Tidak Seimbang: ${formattedDifference} (${terbilang(difference)})`;
+          // balanceResultDiv2.textContent = `Sebelum Menyimpan, Pastikan Posisi Aktiva dan Pasiva Seimbang, Selisih Sekarang: ${formattedDifference} (${terbilang(difference)})`;
+          balanceResultDiv2.textContent = `Sebelum Menyimpan, Pastikan Posisi Aktiva dan Pasiva Harus Seimbang.`;
           balanceResultDiv2.classList.add('unbalanced');
 
         }
