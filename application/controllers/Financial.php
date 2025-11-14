@@ -1148,8 +1148,9 @@ class Financial extends CI_Controller
   {
 
     $has_access = $this->M_menu->has_access();
+    $access_menu_all = $this->M_menu->get_allowed_routes($this->session->userdata('nip'));
 
-    if (!$has_access) {
+    if (!$has_access and !in_array('financial/financial_entry', $access_menu_all)) {
       show_error('Forbidden Access: You do not have permission to view this page.', 403, '403 Forbidden');
     }
 
