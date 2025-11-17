@@ -335,7 +335,7 @@
                         <?php
                         if ($i['status_bayar'] == "0" and $i['status_void'] != "1") {
                         ?>
-                          <a href="<?= base_url('financial/edit_invoice/' . $i['Id']) ?>" class="btn btn-pink" style="vertical-align: top;">
+                          <a href="<?= base_url('financial/edit_invoice/' . $i['Id']) ?>" class="badge badge-pill badge-pink">
                             Edit
                           </a>
                         <?php
