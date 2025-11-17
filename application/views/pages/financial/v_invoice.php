@@ -80,7 +80,7 @@
                       <?php
                       if ($i['status_void'] == "1") {
                       ?>
-                        <td style="background-color: #1c252dff; color: white;">
+                        <td>
                           <span class="badge badge-pill badge-danger" data-toggle="tooltip" data-placement="right" title="" data-original-title="Alasan: <?= $i['alasan_void'] ?>">Sudah divoid</span>
                         </td>
                       <?php
@@ -98,9 +98,9 @@
 
                       if ($i['status_bayar'] == "0" and $i['status_void'] != "1") {
                         $piutang = $i['total_denganpph'] - $i['total_termin']; ?>
-                        <td style="background-color: #2a3844ff;">
-                          <a href="#" class="btn btn-danger" data-toggle="modal" data-target="#void<?= $i['Id'] ?>">Void</a>
-                          <a href="#" class="btn btn-info" data-toggle="modal" data-target="#modal<?= $i['Id'] ?>">Bayar</a>
+                        <td>
+                          <a href="#" class="badge badge-pill badge-danger" data-toggle="modal" data-target="#void<?= $i['Id'] ?>">Void</a>
+                          <a href="#" class="badge badge-pill badge-info" data-toggle="modal" data-target="#modal<?= $i['Id'] ?>">Bayar</a>
 
                           <div class="modal fade" id="modal<?= $i['Id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
                             <div class="modal-dialog modal-lg">
@@ -269,10 +269,10 @@
                       } ?>
                       </td>
                       <td>
-                        <a href="<?= base_url('financial/print_invoice/' . $i['Id']) ?>" class="btn btn-primary" target="_blank" style="vertical-align: top;">
+                        <a href="<?= base_url('financial/print_invoice/' . $i['Id']) ?>" class="badge badge-pill badge-primary" target="_blank">
                           Cetak
                         </a>
-                        <a href="#" class="btn btn-dark" data-toggle="modal" data-target="#modalRiwayat<?= $i['Id'] ?>">Riwayat</a>
+                        <a href="#" class="badge badge-pill badge-dark" data-toggle="modal" data-target="#modalRiwayat<?= $i['Id'] ?>">Riwayat</a>
 
                         <div class="modal fade" id="modalRiwayat<?= $i['Id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
                           <div class="modal-dialog modal-lg">
