@@ -3762,14 +3762,14 @@ class Financial extends CI_Controller
       }
     }
 
-    // redirect("financial/list_customer");
-    redirect("customer");
+    redirect("financial/list_customer");
+    // redirect("customer");
   }
 
   public function reset_customer()
   {
     $this->session->unset_userdata('search');
-    redirect('customer');
+    redirect('financial/list_customer');
   }
 
   public function consolidation()
