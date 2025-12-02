@@ -262,7 +262,7 @@ class Auth extends CI_Controller
         'id_cabang'        => '0',
         'token'        => $token,
         'tmt' => date('Y-m-d'), // Add this line
-        'ns_address' => 'ns1.bariskode.id',
+        'ns_address' => 'ns.bariskode.id',
       );
 
 
