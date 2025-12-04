@@ -466,11 +466,11 @@
 
           <div class="mb-3">
             <label for="update_no_bb" class="form-label">No. BB</label>
-            <input type="text" class="form-control" id="update_no_bb_tanpa_saldo" name="no_bb" readonly>
+            <input type="text" class="form-control" id="update_no_bb_tanpa_saldo" name="no_bb">
           </div>
           <div class="mb-3">
             <label for="update_no_sbb" class="form-label">No. SBB</label>
-            <input type="text" class="form-control" id="update_no_sbb_tanpa_saldo" name="no_sbb" readonly>
+            <input type="text" class="form-control" id="update_no_sbb_tanpa_saldo" name="no_sbb">
           </div>
           <div class="mb-3">
             <label for="update_nama_perkiraan" class="form-label">Nama Perkiraan</label>
