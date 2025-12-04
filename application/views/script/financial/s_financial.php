@@ -1717,6 +1717,47 @@ else if ($this->session->flashdata('message_error')) {
     });
   }
 
+  function onEditTanpaSaldo(no_sbb, id_cabang) {
+    $('#updateCoaFormTanpaSaldo')[0].reset(); // reset form on modals
+    // $('.form-group').removeClass('has-error'); // clear error class
+    // $('.help-block').empty(); // clear error string
+    // $('.modal-title').text('Edit Poster');
+
+    $.ajax({
+      url: "<?php echo site_url('financial/ajax_edit_coa') ?>/" + no_sbb + "/" + id_cabang,
+      type: "POST",
+      dataType: "JSON",
+      success: function(response) {
+        var coaEntry = response.coa_data;
+        var data = response.data;
+
+        console.log(response);
+
+        JSON.stringify(data.id);
+        // alert(JSON.stringify(data));
+
+        $('#update_table_coa_tanpa_saldo').val(coaEntry.table_source)
+        $('#update_id_coa_tanpa_saldo').val(data.id);
+        if (coaEntry.table_source == "t_coa_sbb") {
+          $('#update_no_bb_tanpa_saldo').val(data.no_bb);
+          $('#update_no_sbb_tanpa_saldo').val(data.no_sbb);
+        } else {
+
+          $('#update_no_bb_tanpa_saldo').val(data.no_lr_bb);
+          $('#update_no_sbb_tanpa_saldo').val(data.no_lr_sbb);
+        }
+        $('#update_nama_perkiraan_tanpa_saldo').val(data.nama_perkiraan);
+
+        $('#updateCoaTanpaSaldoModal').modal('show'); // show bootstrap modal when complete loaded
+
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert('Error get data from ajax');
+      }
+    });
+  }
+
+
   function terbilang(angka) {
     if (typeof angka !== 'number') {
       angka = parseFloat(angka);

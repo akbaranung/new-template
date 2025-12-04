@@ -3460,6 +3460,20 @@ class Financial extends CI_Controller
     redirect('financial/list_coa');
   }
 
+  public function update_coa_tanpa_saldo()
+  {
+
+    $tabel = $this->input->post('table_coa');
+
+    $data_update = [
+      'nama_perkiraan'           => $this->input->post('nama_perkiraan'),
+    ];
+
+    $this->cb->update($tabel, $data_update, array('id' => $this->input->post('id_coa')));
+
+    redirect('financial/list_coa');
+  }
+
   public function buat_saldo_awal()
   {
     $periode_current = date('Y-m'); // e.g., '2025-07'
