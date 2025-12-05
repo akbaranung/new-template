@@ -476,6 +476,7 @@
             <label for="update_nama_perkiraan" class="form-label">Nama Perkiraan</label>
             <input type="text" class="form-control" id="update_nama_perkiraan_tanpa_saldo" name="nama_perkiraan" required>
           </div>
+          <input type="hidden" id="update_nominal_tanpa_saldo" name="nominal">
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

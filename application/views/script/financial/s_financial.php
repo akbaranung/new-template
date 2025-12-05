@@ -1747,6 +1747,7 @@ else if ($this->session->flashdata('message_error')) {
           $('#update_no_sbb_tanpa_saldo').val(data.no_lr_sbb);
         }
         $('#update_nama_perkiraan_tanpa_saldo').val(data.nama_perkiraan);
+        $('#update_nominal_tanpa_saldo').val(data.nominal);
         if (data.nominal == 0) {
           // KONDISI 1: Nominal 0
           // readOnly = false (dapat diisi) => Ini yang Anda inginkan (DELETE read only)

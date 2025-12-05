@@ -3466,10 +3466,15 @@ class Financial extends CI_Controller
     $tabel = $this->input->post('table_coa');
 
     $data_update = [
-      'no_bb'           => $this->input->post('no_bb'),
-      'no_sbb'           => $this->input->post('no_sbb'),
+      // 'no_bb'           => $this->input->post('no_bb'),
+      // 'no_sbb'           => $this->input->post('no_sbb'),
       'nama_perkiraan'           => $this->input->post('nama_perkiraan'),
     ];
+
+    if ($this->input->post('nominal') == 0) {
+      $data_update['no_bb'] = $this->input->post('no_bb');
+      $data_update['no_sbb'] = $this->input->post('no_sbb');
+    }
 
     $this->cb->update($tabel, $data_update, array('id' => $this->input->post('id_coa')));
 
