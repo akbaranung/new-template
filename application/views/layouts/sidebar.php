@@ -50,7 +50,7 @@
             aria-expanded="false"
             class="dropdown-toggle nav-link">
             <i class="fe fe-home fe-16"></i>
-            <span class="ml-3 item-text">Admin List</span>
+            <span class="ml-3 item-text">Administrator</span>
           </a>
 
           <ul class="collapse list-unstyled pl-4 w-100" id="adminListCollapse">
@@ -64,6 +64,12 @@
               <a class="nav-link pl-3" href="<?= site_url('Report') ?>">
                 <i class="fe fe-flag fe-16"></i>
                 <span class="ml-1 item-text">Report</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link pl-3" href="<?= site_url('Resetpassword') ?>">
+                <i class="fe fe-key fe-16"></i>
+                <span class="ml-1 item-text">Reset Password User</span>
               </a>
             </li>
           </ul>
