@@ -81,7 +81,7 @@
           Konfirmasi
         </button>
         <button id="loginbtn" class="btn btn-lg btn-primary btn-block btn-login d-none" type="button" disabled>Login</button>
-        <a class="mt-5 mb-3 text-center" href="<?= base_url('auth/login') ?>">Login</a>
+        <a class="mt-5 mb-3 text-center" href="<?= base_url('auth') ?>">Login</a>
         <p class="mb-3 text-muted text-center">Belum punya akun? <a href="<?= base_url('auth/') ?>register">Daftarkan Akun Perusahaan Anda</a></p>
         <p class="mt-5 mb-3 text-muted text-center">IT BARIS KODE INDONESIA © <?= date('Y') ?></p>
       </div>
