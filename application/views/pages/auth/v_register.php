@@ -104,7 +104,7 @@
       </div>
     </div>
   </div>
-  <form class="col-lg-3 col-md-4 col-10 mx-auto" action="<?= site_url('auth/proccess_register') ?>" method="post">
+  <form class="col-lg-4 col-md-7 col-10 mx-auto" action="<?= site_url('auth/proccess_register') ?>" method="post">
     <div class="card shadow p-4">
       <div class="row">
         <!-- END: Progress Bar Integration -->
