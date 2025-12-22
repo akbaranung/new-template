@@ -309,7 +309,7 @@ class M_invoice extends CI_Model
 			->result_array();
 
 		// mapping user
-		$users = $this->cb->select('nip, nama')->get('users')->result_array();
+		$users = $this->db->select('nip, nama')->get('users')->result_array();
 		$user_map = array_column($users, 'nama', 'nip');
 
 		foreach ($sales as &$sale) {
@@ -319,6 +319,7 @@ class M_invoice extends CI_Model
 
 		return $sales;
 	}
+
 	public function sales_count($keyword = null, $keyword_opt = 'all')
 	{
 		$kode_cabang = $this->session->userdata('kode_cabang');
