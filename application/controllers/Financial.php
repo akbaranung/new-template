@@ -281,7 +281,7 @@ class Financial extends CI_Controller
 
       foreach ($combinedActiva as $t) {
         $coa = $this->M_coa->getCoa($t->no_sbb);
-        if ($coa['table_source'] == "t_coa_sbb" && $coa['posisi'] == 'AKTIVA' && $t->saldo_awal != 0) :
+        if ($coa['table_source'] == "t_coa_sbb" && $coa['posisi'] == 'AKTIVA' && $t->saldo_awal != 0):
           $sheet->setCellValue('A' . $numrowActiva, $t->no_sbb);
           $sheet->setCellValue('B' . $numrowActiva, $coa['nama_perkiraan']);
           $sheet->setCellValue('C' . $numrowActiva, $t->saldo_awal);
@@ -294,7 +294,7 @@ class Financial extends CI_Controller
       $numrowPasiva = 5;
       foreach ($combinedPasiva as $t) {
         $coa = $this->M_coa->getCoa($t->no_sbb);
-        if ($coa['table_source'] == "t_coa_sbb" && $coa['posisi'] == 'PASIVA' && $t->saldo_awal != 0) :
+        if ($coa['table_source'] == "t_coa_sbb" && $coa['posisi'] == 'PASIVA' && $t->saldo_awal != 0):
           $sheet->setCellValue('E' . $numrowPasiva, $t->no_sbb);
           $sheet->setCellValue('F' . $numrowPasiva, $coa['nama_perkiraan']);
           $sheet->setCellValue('G' . $numrowPasiva, $t->saldo_awal);
@@ -459,7 +459,7 @@ class Financial extends CI_Controller
       $numrowActiva = 5;
       foreach ($combinedBeban as $t) {
         $coa = $this->M_coa->getCoa($t->no_sbb);
-        if ($coa['table_source'] == "t_coalr_sbb" && $coa['posisi'] == 'AKTIVA' && $t->saldo_awal != 0) :
+        if ($coa['table_source'] == "t_coalr_sbb" && $coa['posisi'] == 'AKTIVA' && $t->saldo_awal != 0):
           $sheet->setCellValue('A' . $numrowActiva, $t->no_sbb);
           $sheet->setCellValue('B' . $numrowActiva, $coa['nama_perkiraan']);
           $sheet->setCellValue('C' . $numrowActiva, $t->saldo_awal);
@@ -471,7 +471,7 @@ class Financial extends CI_Controller
       $numrowPasiva = 5;
       foreach ($combinedPendapatan as $t) {
         $coa = $this->M_coa->getCoa($t->no_sbb);
-        if ($coa['table_source'] == "t_coalr_sbb" && $coa['posisi'] == 'PASIVA' && $t->saldo_awal != 0) :
+        if ($coa['table_source'] == "t_coalr_sbb" && $coa['posisi'] == 'PASIVA' && $t->saldo_awal != 0):
           $sheet->setCellValue('E' . $numrowPasiva, $t->no_sbb);
           $sheet->setCellValue('F' . $numrowPasiva, $coa['nama_perkiraan']);
           $sheet->setCellValue('G' . $numrowPasiva, $t->saldo_awal);
@@ -632,7 +632,7 @@ class Financial extends CI_Controller
       $numrowActiva = 5;
       foreach ($combinedBeban as $t) {
         $coa = $this->M_coa->getCoa($t->no_sbb);
-        if ($coa['table_source'] == "t_coalr_sbb" && $coa['posisi'] == 'AKTIVA' && $t->saldo_awal != 0) :
+        if ($coa['table_source'] == "t_coalr_sbb" && $coa['posisi'] == 'AKTIVA' && $t->saldo_awal != 0):
           $sheet->setCellValue('A' . $numrowActiva, $t->no_sbb);
           $sheet->setCellValue('B' . $numrowActiva, $coa['nama_perkiraan']);
           $sheet->setCellValue('C' . $numrowActiva, $t->saldo_awal);
@@ -644,7 +644,7 @@ class Financial extends CI_Controller
       $numrowPasiva = 5;
       foreach ($combinedPendapatan as $t) {
         $coa = $this->M_coa->getCoa($t->no_sbb);
-        if ($coa['table_source'] == "t_coalr_sbb" && $coa['posisi'] == 'PASIVA' && $t->saldo_awal != 0) :
+        if ($coa['table_source'] == "t_coalr_sbb" && $coa['posisi'] == 'PASIVA' && $t->saldo_awal != 0):
           $sheet->setCellValue('E' . $numrowPasiva, $t->no_sbb);
           $sheet->setCellValue('F' . $numrowPasiva, $coa['nama_perkiraan']);
           $sheet->setCellValue('G' . $numrowPasiva, $t->saldo_awal);
@@ -1282,9 +1282,9 @@ class Financial extends CI_Controller
     $id_invoice = NULL;
 
     if ($jenis == "multi_kredit") {
-      $coa_debit  = $this->input->post('neraca_debit');
+      $coa_debit = $this->input->post('neraca_debit');
       $coa_kredit = $this->input->post('accounts');
-      $nominal    = $this->input->post('nominals');
+      $nominal = $this->input->post('nominals');
 
       if (is_array($coa_kredit) && is_array($nominal)) {
         foreach ($coa_kredit as $i => $kredit) {
@@ -1292,9 +1292,9 @@ class Financial extends CI_Controller
         }
       }
     } elseif ($jenis == "multi_debit") {
-      $coa_debit  = $this->input->post('accounts');
+      $coa_debit = $this->input->post('accounts');
       $coa_kredit = $this->input->post('neraca_kredit');
-      $nominal    = $this->input->post('nominals');
+      $nominal = $this->input->post('nominals');
 
       if (is_array($coa_debit) && is_array($nominal)) {
         foreach ($coa_debit as $i => $debit) {
@@ -1302,7 +1302,7 @@ class Financial extends CI_Controller
         }
       }
     } else {
-      $coa_debit  = $this->input->post('neraca_debit');
+      $coa_debit = $this->input->post('neraca_debit');
       $coa_kredit = $this->input->post('neraca_kredit');
 
       if ($coa_debit == $coa_kredit) {
@@ -1371,7 +1371,8 @@ class Financial extends CI_Controller
       // Process rows
       foreach ($worksheet->getRowIterator() as $rowIndex => $row) {
         // Skip header rows
-        if ($rowIndex < 3) continue;
+        if ($rowIndex < 3)
+          continue;
 
         $cellIterator = $row->getCellIterator();
         $cellIterator->setIterateOnlyExistingCells(false);
@@ -1382,9 +1383,9 @@ class Financial extends CI_Controller
         }
 
         // Extract and process row data
-        $coa_debit = isset($data[0]) ? (string)$data[0] : null;
-        $coa_kredit = isset($data[1]) ? (string)$data[1] : null;
-        $nominal = isset($data[2]) ? (string)$data[2] : null;
+        $coa_debit = isset($data[0]) ? (string) $data[0] : null;
+        $coa_kredit = isset($data[1]) ? (string) $data[1] : null;
+        $nominal = isset($data[2]) ? (string) $data[2] : null;
         $tanggal = isset($data[3]) ? $this->processDate($data[3]) : null;
         $keterangan = isset($data[4]) ? $data[4] : null;
 
@@ -1433,7 +1434,8 @@ class Financial extends CI_Controller
       echo json_encode(['status' => false, 'message' => $e->getMessage()]);
     } finally {
       // Cleanup uploaded file
-      if (file_exists($file_path)) unlink($file_path);
+      if (file_exists($file_path))
+        unlink($file_path);
     }
   }
 
@@ -1603,7 +1605,6 @@ class Financial extends CI_Controller
       $this->prepareCoaReport($data, $no_coa);
     } else {
       $data['title'] = "Report CoA";
-      $data['daftar_coa'] = $this->M_coa->list_coa();
       $data['pages'] = "pages/financial/v_report_per_coa";
       $data['utility'] = $this->db->get('utility')->row_array();
       $data['pages_script'] = 'script/financial/s_financial';
@@ -1919,7 +1920,13 @@ class Financial extends CI_Controller
 
   public function edit_invoice($id)
   {
-    $inv =  $this->M_invoice->showById($id);
+    $inv = $this->M_invoice->showById($id);
+
+    // Cek jenis invoice, redirect ke halaman edit yang sesuai
+    if ($inv['jenis_invoice'] == 'agen_smu' || $inv['jenis_invoice'] == 'sales') {
+      redirect('financial/edit_invoice_sales/' . $id);
+    }
+
     $nip = $this->session->userdata('nip');
     $sql = "SELECT COUNT(Id) FROM memo WHERE (nip_kpd LIKE '%$nip%' OR nip_cc LIKE '%$nip%') AND (`read` NOT LIKE '%$nip%');";
     $query = $this->db->query($sql);
@@ -2015,7 +2022,7 @@ class Financial extends CI_Controller
 
     $this->cb->trans_begin();
 
-    $inv =  $this->M_invoice->showById($id);
+    $inv = $this->M_invoice->showById($id);
 
     $keterangan_lama = "Jurnal balik edit invoice " . $inv['no_invoice'];
 
@@ -2137,7 +2144,7 @@ class Financial extends CI_Controller
     // exit;
     $id = $this->uri->segment(3);
 
-    $inv =  $this->M_invoice->showById($id);
+    $inv = $this->M_invoice->showById($id);
     $coa_debit = $this->input->post('coa_debit');
     $coa_kredit = $this->input->post('coa_kredit');
     $nominal_bayar = $this->convertToNumber(($this->input->post('nominal_bayar')));
@@ -2209,7 +2216,7 @@ class Financial extends CI_Controller
   {
     $no_inv = $this->uri->segment(3);
 
-    $inv =  $this->M_invoice->show($no_inv);
+    $inv = $this->M_invoice->show($no_inv);
     $coa_persediaan = $inv['coa_persediaan'];
     $jenis = $inv['jenis_invoice'];
     $keterangan = $this->input->post('keterangan');
@@ -2267,7 +2274,8 @@ class Financial extends CI_Controller
 
 
     $cabang = $this->input->post('cabang_select') ? $this->input->post('cabang_select') : '';
-    if ($cabang === null || $cabang === '') $cabang = $this->session->userdata('kode_cabang');
+    if ($cabang === null || $cabang === '')
+      $cabang = $this->session->userdata('kode_cabang');
 
     $perusahaan = $this->session->userdata('user_perusahaan_id');
 
@@ -2649,7 +2657,7 @@ class Financial extends CI_Controller
 
   public function print_invoice($id)
   {
-    $inv =  $this->M_invoice->showById($id);
+    $inv = $this->M_invoice->showById($id);
     $data = [
       'title_pdf' => 'Invoice No. ' . $inv['no_invoice'],
       'invoice' => $inv,
@@ -2740,7 +2748,6 @@ class Financial extends CI_Controller
 
     $data['title'] = "Report CoA " . $no_coa;
     $data['detail_coa'] = $this->M_coa->getCoa($no_coa);
-    $data['daftar_coa'] = $this->M_coa->list_coa();
     $data['pages'] = 'pages/financial/v_report_per_coa';
     $data['utility'] = $this->db->get('utility')->row_array();
     $data['pages_script'] = 'script/financial/s_financial';
@@ -2906,7 +2913,8 @@ class Financial extends CI_Controller
     );
 
     $row = $query->row();
-    if (!$row) return FALSE;
+    if (!$row)
+      return FALSE;
 
     $posisi = $row->posisi;
     $nominal = $row->nominal;
@@ -3453,8 +3461,8 @@ class Financial extends CI_Controller
     $tabel = $this->input->post('table_coa');
 
     $data_update = [
-      'nama_perkiraan'           => $this->input->post('nama_perkiraan'),
-      'nominal'           => $this->input->post('nominal'),
+      'nama_perkiraan' => $this->input->post('nama_perkiraan'),
+      'nominal' => $this->input->post('nominal'),
     ];
 
     $this->cb->update($tabel, $data_update, array('id' => $this->input->post('id_coa')));
@@ -3470,7 +3478,7 @@ class Financial extends CI_Controller
     $data_update = [
       // 'no_bb'           => $this->input->post('no_bb'),
       // 'no_sbb'           => $this->input->post('no_sbb'),
-      'nama_perkiraan'           => $this->input->post('nama_perkiraan'),
+      'nama_perkiraan' => $this->input->post('nama_perkiraan'),
     ];
 
     if ($this->input->post('nominal') == 0) {
@@ -3631,8 +3639,10 @@ class Financial extends CI_Controller
     }
 
     $keyword = ($this->input->post('keyword')) ? trim($this->input->post('keyword')) : (($this->session->userdata('search')) ? $this->session->userdata('search') : '');
-    if ($keyword === null) $keyword = $this->session->userdata('search');
-    else $this->session->set_userdata('search', $keyword);
+    if ($keyword === null)
+      $keyword = $this->session->userdata('search');
+    else
+      $this->session->set_userdata('search', $keyword);
 
     $cabang_now = $this->session->userdata('kode_cabang');
 
@@ -3697,8 +3707,10 @@ class Financial extends CI_Controller
     }
 
     $keyword = ($this->input->post('keyword')) ? trim($this->input->post('keyword')) : (($this->session->userdata('search')) ? $this->session->userdata('search') : '');
-    if ($keyword === null) $keyword = $this->session->userdata('search');
-    else $this->session->set_userdata('search', $keyword);
+    if ($keyword === null)
+      $keyword = $this->session->userdata('search');
+    else
+      $this->session->set_userdata('search', $keyword);
 
     $cabang_now = $this->session->userdata('kode_cabang');
 
@@ -4076,7 +4088,7 @@ class Financial extends CI_Controller
 
       foreach ($combinedActiva as $t) {
         $coa = $this->M_coa->getCoa($t->no_sbb);
-        if ($coa['table_source'] == "t_coa_sbb" && $coa['posisi'] == 'AKTIVA' && $t->saldo_awal != 0) :
+        if ($coa['table_source'] == "t_coa_sbb" && $coa['posisi'] == 'AKTIVA' && $t->saldo_awal != 0):
           $sheet->setCellValue('A' . $numrowActiva, $t->no_sbb);
           $sheet->setCellValue('B' . $numrowActiva, $coa['nama_perkiraan']);
           $sheet->setCellValue('C' . $numrowActiva, $t->saldo_awal);
@@ -4089,7 +4101,7 @@ class Financial extends CI_Controller
       $numrowPasiva = 5;
       foreach ($combinedPasiva as $t) {
         $coa = $this->M_coa->getCoa($t->no_sbb);
-        if ($coa['table_source'] == "t_coa_sbb" && $coa['posisi'] == 'PASIVA' && $t->saldo_awal != 0) :
+        if ($coa['table_source'] == "t_coa_sbb" && $coa['posisi'] == 'PASIVA' && $t->saldo_awal != 0):
           $sheet->setCellValue('E' . $numrowPasiva, $t->no_sbb);
           $sheet->setCellValue('F' . $numrowPasiva, $coa['nama_perkiraan']);
           $sheet->setCellValue('G' . $numrowPasiva, $t->saldo_awal);
@@ -4280,7 +4292,7 @@ class Financial extends CI_Controller
       $numrowActiva = 5;
       foreach ($combinedBeban as $t) {
         $coa = $this->M_coa->getCoa($t->no_sbb);
-        if ($coa['table_source'] == "t_coalr_sbb" && $coa['posisi'] == 'AKTIVA' && $t->saldo_awal != 0) :
+        if ($coa['table_source'] == "t_coalr_sbb" && $coa['posisi'] == 'AKTIVA' && $t->saldo_awal != 0):
           $sheet->setCellValue('A' . $numrowActiva, $t->no_sbb);
           $sheet->setCellValue('B' . $numrowActiva, $coa['nama_perkiraan']);
           $sheet->setCellValue('C' . $numrowActiva, $t->saldo_awal);
@@ -4292,7 +4304,7 @@ class Financial extends CI_Controller
       $numrowPasiva = 5;
       foreach ($combinedPendapatan as $t) {
         $coa = $this->M_coa->getCoa($t->no_sbb);
-        if ($coa['table_source'] == "t_coalr_sbb" && $coa['posisi'] == 'PASIVA' && $t->saldo_awal != 0) :
+        if ($coa['table_source'] == "t_coalr_sbb" && $coa['posisi'] == 'PASIVA' && $t->saldo_awal != 0):
           $sheet->setCellValue('E' . $numrowPasiva, $t->no_sbb);
           $sheet->setCellValue('F' . $numrowPasiva, $coa['nama_perkiraan']);
           $sheet->setCellValue('G' . $numrowPasiva, $t->saldo_awal);
@@ -4481,7 +4493,7 @@ class Financial extends CI_Controller
       $numRow = 3;
 
       if ($list_coa) {
-        foreach ($list_coa as $lc) :
+        foreach ($list_coa as $lc):
           $saldo_awal_value = isset($saldo_awal_indexed[$lc->no_sbb]) ? $saldo_awal_indexed[$lc->no_sbb] : 0;
 
           $transaction = $this->M_coa->getCoaReportAnnually($lc->no_sbb, $tahun);
@@ -4719,152 +4731,1171 @@ class Financial extends CI_Controller
       $this->load->view('index', $data);
     }
   }
-  public function ajax_edit_report_coa($id)
+
+  public function sales()
   {
-    $this->cb->select('*');
-    $this->cb->from('jurnal_neraca');
-    $this->cb->where('id', $id);
-    $get_coa = $this->cb->get()->row();
-    $response = [
-      'data' => $get_coa, // This will contain the COA object/array
+    $keyword_opt = $this->input->get('keyword_opt');
+    $keyword = trim($this->input->get('keyword', true) ?? '');
+
+    $config = [
+      'base_url' => site_url('financial/sales'),
+      'total_rows' => $this->M_invoice->sales_count($keyword, $keyword_opt),
+      'per_page' => 10,
+      'uri_segment' => 3,
+      'num_links' => 5,
+
+      'full_tag_open' => '<ul class="pagination justify-content-end mb-0">',
+      'full_tag_close' => '</ul>',
+
+      'first_link' => false,
+      'last_link' => false,
+
+      // PREV
+      'prev_link' => '<span class="pagination-prev">Previous</span>',
+      'prev_tag_open' => '<li class="page-item">',
+      'prev_tag_close' => '</li>',
+
+      // NEXT
+      'next_link' => '<span class="pagination-next">Next</span>',
+      'next_tag_open' => '<li class="page-item">',
+      'next_tag_close' => '</li>',
+
+      // CURRENT PAGE (blue box)
+      'cur_tag_open' => '<li class="page-item active"><a class="page-link" href="#">',
+      'cur_tag_close' => '</a></li>',
+
+      // OTHER PAGES
+      'num_tag_open' => '<li class="page-item">',
+      'num_tag_close' => '</li>',
     ];
-    echo json_encode($response);
+
+    // apply page-link class only to numbers
+    $config['attributes'] = ['class' => 'page-link'];
+
+    // Override attributes for next/prev so CI doesn't auto-apply
+    $config['anchor_class'] = '';
+
+    $config['use_page_numbers'] = TRUE;
+
+    $page = $this->uri->segment(3);
+    if (!$page || $page < 1) {
+      $page = 1;
+    }
+    $offset = ($page - 1) * $config['per_page'];
+
+
+
+    $this->pagination->initialize($config);
+
+    $page = $this->uri->segment(3) ? $this->uri->segment(3) : 0;
+    $sales = $this->M_invoice->list_sales($config["per_page"], $offset, $keyword, $keyword_opt);
+
+    $nip = $this->session->userdata('nip');
+    $sql = "SELECT COUNT(Id) FROM memo WHERE (nip_kpd LIKE '%$nip%' OR nip_cc LIKE '%$nip%') AND (`read` NOT LIKE '%$nip%');";
+    $query = $this->db->query($sql);
+    $result = $query->row_array()['COUNT(Id)'];
+
+    $sql2 = "SELECT COUNT(id) FROM task WHERE (`member` LIKE '%$nip%' or `pic` like '%$nip%') and activity='1'";
+    $query2 = $this->db->query($sql2);
+    $result2 = $query2->row_array()['COUNT(id)'];
+
+    $data = [
+      'page' => $page,
+      'sales' => $sales,
+      'count_inbox' => $result,
+      'count_inbox2' => $result2,
+      'keyword_opt' => $keyword_opt,
+      'keyword' => $keyword,
+      'title' => "Sales",
+      'customers' => $this->M_customer->list_customer(''),
+    ];
+
+    $data['title'] = "Daftar Sales";
+    $data['pages'] = "pages/financial/v_sales";
+    $data['utility'] = $this->db->get('utility')->row_array();
+    // $data['pages_script'] = 'script/financial/s_financial';
+    $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
+    // echo '<pre>';
+    // print_r($data['invoices']);
+    // echo '</pre>';
+    // exit;
+
+
+    $this->cb->from('invoice');
+    $this->cb->join('t_cabang', 't_cabang.uid = invoice.id_cabang');
+    $this->cb->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
+    $this->cb->where('MONTH(invoice.created_at)', date('m'));
+    $this->cb->where('YEAR(invoice.created_at)', date('Y'));
+    $total_invoice = $this->cb->get()->num_rows(); // Get the number of rows
+
+    $this->db->from('utility');
+    $this->db->where('Id', $this->session->userdata('user_perusahaan_id'));
+    $perusahaan = $this->db->get()->row(); // Get the number of rows
+
+    $limit_invoice = $perusahaan->kuota_invoice;
+
+    $data['total_invoice'] = $total_invoice;
+    $data['limit_invoice'] = $limit_invoice;
+    $data['agents'] = $this->cb->select('agent_name')->group_by('agent_name')->order_by('agent_name', 'ASC')->get('sales')->result();
+
+    // print_r($data['agent']);
+    // exit;
+
+    $this->load->view('index', $data);
   }
 
-  public function update_report_per_coa()
+  public function upload_sales()
   {
+    $id_cabang = $this->session->userdata('kode_cabang');
+    $nip = $this->session->userdata('nip');
 
-    $akun_debit = $this->input->post('neraca_debit');
-    $akun_kredit = $this->input->post('neraca_kredit');
-    $input_nominal = $this->input->post('input_nominal');
-    $input_keterangan = $this->input->post('input_keterangan');
-    $tanggal = $this->input->post('tanggal');
-    $file = $this->input->post('file');
+    // Upload handler
+    if (!isset($_FILES['file_excel']['name']) || $_FILES['file_excel']['name'] == '') {
+      $this->session->set_flashdata('error', 'File Excel belum dipilih');
+      redirect('financial/sales');
+    }
 
-    $data_update = [
-      'tanggal'           => $tanggal,
-      'akun_debit'           => $akun_debit,
-      'jumlah_debit'           => $input_nominal,
-      'akun_kredit'           => $akun_kredit,
-      'jumlah_kredit'           => $input_nominal,
-      'keterangan'           => $input_keterangan,
-      'akun_debit'           => $akun_debit,
+    $file_tmp = $_FILES['file_excel']['tmp_name'];
+
+    // Load PhpSpreadsheet
+    require APPPATH . 'third_party/autoload.php';
+
+    // Include PhpSpreadsheet from third_party
+    require APPPATH . 'third_party/psr/simple-cache/src/CacheInterface.php';
+    $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($file_tmp);
+    $spreadsheet = $reader->load($file_tmp);
+    $sheet = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+
+    // ========== VALIDASI HEADER ========== //
+    $expected_headers = [
+      'A' => 'Tanggal Terbang',
+      'B' => 'Airline Name',
+      'C' => 'Vendor',
+      'D' => 'Kode Komodity',
+      'E' => 'Jenis Barang',
+      'F' => 'Shipper Name',
+      'G' => 'AGENT NAME',
+      'H' => 'NO SMU',
+      'I' => 'ORI',
+      'J' => 'DEST',
+      'K' => 'FLT NO',
+      'L' => 'Koli',
+      'M' => 'Kg',
+      'N' => 'CHWT',
+      'O' => 'SELLING PRICE',
+      'P' => 'FREIGHT',
+      'Q' => '%',
+      'R' => 'SURCHARGE',
+      'S' => 'HHT',
+      'T' => 'ADM FEE',
+      'U' => 'PPN SMU',
+      'V' => 'TOTAL FREIGHT',
+      'W' => 'HANDLING CHARGE',
+      'X' => 'ASURANSI',
+      'Y' => 'EXTRA PACKING',
+      'Z' => 'HANDLING DEST',
+      'AA' => 'OTHER CHARGE',
+      'AB' => 'SUB TOTAL TAGIHAN'
     ];
 
-    $base64_data = null; // Initialize the variable to hold the Base64 string
-    $file_name = null;   // <--- New variable to hold the file name
-    $file_input_name = 'file'; // The name of your <input type="file">
+    // Ambil baris pertama (header)
+    $header_row = $sheet[1];
 
-    if (isset($_FILES[$file_input_name]) && $_FILES[$file_input_name]['error'] != UPLOAD_ERR_NO_FILE) {
-      echo "MASUK";
+    // Cek setiap kolom
+    $header_errors = [];
+    foreach ($expected_headers as $col => $expected_name) {
+      $actual_name = trim($header_row[$col] ?? '');
 
-
-      $file = $_FILES[$file_input_name];
-
-      // --- File WAS submitted, proceed with custom checks and conversion ---
-
-      // Define your allowed file extensions and maximum size (for custom check)
-      $allowed_types = ['gif', 'jpg', 'png', 'doc', 'docx', 'xls', 'xlsx', 'pdf'];
-      $max_size_kb = 2048; // 2MB
-
-      // Get file extension and size for manual checking
-      $file_ext = pathinfo($file['name'], PATHINFO_EXTENSION);
-      $file_size_kb = round($file['size'] / 1024);
-
-      // **A. Manual Type and Size Checks**
-      if (!in_array(strtolower($file_ext), $allowed_types) || $file_size_kb > $max_size_kb) {
-
-        // File failed manual check (Type or Size)
-        // $error_msg = "The file is not permitted (allowed types: " . implode(', ', $allowed_types) . ") or exceeds the maximum size ({$max_size_kb} KB).";
-        // $error = array('upload_error' => $error_msg);
-
-        // Re-load your form view with the error message
-        // $this->load->view('upload_form', $error);
-        $this->session->set_flashdata('message_error', "The file is not permitted (allowed types: " . implode(', ', $allowed_types) . ") or exceeds the maximum size ({$max_size_kb} KB).");
-
-        redirect('financial/coa_report');
-
-        return; // Stop execution
+      // Normalisasi untuk case-insensitive comparison
+      if (strtolower($actual_name) !== strtolower($expected_name)) {
+        $header_errors[] = "Kolom <b>$col</b>: harapan '<b>$expected_name</b>', ditemukan '<b>$actual_name</b>'";
       }
 
-      // **B. Convert the file content to Base64**
-      $file_name = $file['name'];
+      // if ($actual_name !== $expected_name) {
+      // 	$header_errors[] = "Kolom <b>$col</b>: harapan '<b>$expected_name</b>', ditemukan '<b>$actual_name</b>'";
+      // }
+    }
 
-      // 1. Read the file contents from the temporary location
+    // Jika ada error header, kirim response error
+    if (!empty($header_errors)) {
+      ob_clean();
+      echo json_encode([
+        'status' => 'error',
+        'error_type' => 'header_validation',
+        'message' => 'File Excel yang Anda upload tidak sesuai format template!',
+        'total_errors' => count($header_errors),
+        'error_details' => $header_errors
+      ]);
+      exit;
+    }
+    // ========== END VALIDASI HEADER ========== //
 
-      $file_content = file_get_contents($file['tmp_name']);
+    // Mulai transaksi
+    $this->cb->trans_begin();
 
-      if ($file_content === FALSE) {
-        // Handle read error
-        // $error = array('upload_error' => 'Error reading file content during conversion.');
-        $this->session->set_flashdata('message_error', 'Error reading file content during conversion.');
+    $inserted = 0;
+    $skipped = [];
+    $show = [];
 
-        // $this->load->view('financial_entry');
-        redirect('financial/coa_report');
+    foreach ($sheet as $i => $row) {
 
-        return;
+      // Skip header (baris 1)
+      if ($i == 1)
+        continue;
+
+      // Jika baris kosong → skip
+      if ($row['A'] == null && $row['H'] == null)
+        continue;
+
+      $no_smu = ($row['H']) ? trim($row['H']) : '';
+
+      // === CEK DUPLIKASI === //
+      $existing = $this->cb->get_where('sales', ['no_smu' => $no_smu])->row();
+      if ($existing) {
+        $skipped[] = [
+          'no_smu' => $no_smu,
+          'uploaded_at' => $existing->upload_at
+        ];
+        continue;
       }
 
-      // 2. Encode the content to Base64
-      $encoded_content = base64_encode($file_content);
+      // === INSERT DATA === //
+      $data = [
+        'tanggal_terbang' => date('Y-m-d', strtotime($row['A'])),
+        'airline_name' => $row['B'],
+        'vendor' => $row['C'],
+        'kode_komoditi' => $row['D'],
+        'jenis_barang' => $row['E'],
+        'shipper_name' => $row['F'],
+        'agent_name' => $row['G'],
+        'no_smu' => $row['H'],
+        'origin' => $row['I'],
+        'destination' => $row['J'],
+        'flight_number' => $row['K'],
+        'koli' => (int) $row['L'],
+        'gross' => ($row['M'] == '-' or $row['M'] == '') ? 0 : str_replace(',', '.', $row['M']),
+        'chargeable_weight' => ($row['N'] == '-' or $row['N'] == '') ? 0 : str_replace(',', '.', $row['N']),
+        'selling_price' => ($row['O'] == '-' or $row['O'] == '') ? 0 : str_replace(',', '', $row['O']),
+        'freight' => ($row['P'] == '-' or $row['P'] == '') ? 0 : str_replace(',', '', $row['P']),
+        'surcharge_percent' => rtrim($row['Q'], '%'),
+        'surcharge_nominal' => ($row['R'] == '-' or $row['R'] == '') ? 0 : str_replace(',', '', $row['R']),
+        'hht' => ($row['S'] == '-' or $row['S'] == '') ? 0 : str_replace(',', '', $row['S']),
+        'admin_fee' => ($row['T'] == '-' or $row['T'] == '') ? 0 : str_replace(',', '', $row['T']),
+        'ppn_smu' => ($row['U'] == '-' or $row['U'] == '') ? 0 : str_replace(',', '', $row['U']),
+        'total_freight' => ($row['V'] == '-' or $row['V'] == '') ? 0 : str_replace(',', '', $row['V']),
+        'handling_charge' => ($row['W'] == '-' or $row['W'] == '') ? 0 : str_replace(',', '', $row['W']),
+        'asuransi' => ($row['X'] == '-' or $row['X'] == '') ? 0 : str_replace(',', '', $row['X']),
+        'extra_packing' => ($row['Y'] == '-' or $row['Y'] == '') ? 0 : str_replace(',', '', $row['Y']),
+        'handling_dest' => ($row['Z'] == '-' or $row['Z'] == '') ? 0 : str_replace(',', '', $row['Z']),
+        'other_charge' => ($row['AA'] == '-' or $row['AA'] == '') ? 0 : str_replace(',', '', $row['AA']),
+        'sub_total_tagihan' => ($row['AB'] == '-' or $row['AB'] == '') ? 0 : str_replace(',', '', $row['AB']),
+        'vat_percent' => rtrim($row['AC'], '%'),
+        'vat_nominal' => ($row['AD'] == '-' or $row['AD'] == '') ? 0 : str_replace(',', '', $row['AD']),
+        'total_tagihan' => ($row['AE'] == '-' or $row['AE'] == '') ? 0 : str_replace(',', '', $row['AE']),
+        'diskon_customer' => ($row['AF'] == '-' or $row['AF'] == '') ? 0 : str_replace(',', '', $row['AF']),
+        'grand_total_tagihan' => ($row['AG'] == '-' or $row['AG'] == '') ? 0 : str_replace(',', '', $row['AG']),
+        'upload_at' => date('Y-m-d H:i:s'),
+        'upload_by' => $nip,
+        'id_cabang' => $id_cabang,
+        'is_billing' => 0,
+        'status_sales' => 1
+      ];
 
-      // 3. Create the full Data URI string (MIME type is crucial here)
-      $base64_data = 'data:' . $file['type'] . ';base64,' . $encoded_content;
+      // $show[] = $data;
 
-      // echo "File Base64 :" . $base64_data;
-      // echo "File Name :" . $file_name;
-      // exit();
-      $data_update['nama_file'] = $file_name; // Change 'nama_file_kolom' to your actual DB column name
-      $data_update['file'] = $base64_data; // Change 'nama_file_kolom' to your actual DB column name
-
+      $this->cb->insert('sales', $data);
+      $inserted++;
     }
 
+    // echo '<pre>';
+    // print_r($show);
+    // echo '</pre>';
+    // exit;
 
-    $this->cb->update('jurnal_neraca', $data_update, array('id' => $this->input->post('id')));
-    $this->session->set_flashdata('message_name', "Berhasil Update Arus Kas");
-
-    redirect('financial/coa_report');
-  }
-  public function hapus_arus_kas()
-  {
-    $id = $this->input->post('id');
-
-    // 1. Basic validation for ID
-    if (empty($id)) { // Using empty() is often better for checking if a variable is considered "empty"
-      echo json_encode(['status' => 'error', 'message' => 'ID Arus Kas tidak ditemukan atau tidak valid.']);
-      return;
-    }
-
-    // 2. Optional: Check if the record exists before attempting deletion
-    // This provides a more specific error message if the ID doesn't exist
-    $this->cb->where('id', $id);
-    $query = $this->cb->get('jurnal_neraca');
-
-    if ($query->num_rows() == 0) {
-      echo json_encode(['status' => 'info', 'message' => 'Arus Kas tidak ditemukan atau sudah dihapus.']);
-      return;
-    }
-
-    // 3. Attempt the deletion
-    $this->cb->where('id', $id);
-    $delete_result = $this->cb->delete('jurnal_neraca');
-
-    // 4. Check the direct result of the delete operation and affected rows
-    if ($delete_result) { // $delete_result will be TRUE on successful query execution
-      if ($this->cb->affected_rows() > 0) {
-        echo json_encode(['status' => 'success', 'message' => 'Arus Kas berhasil dihapus.']);
-      } else {
-        // This 'else' block means the query ran without error but affected 0 rows.
-        // Given the num_rows() check above, this is now less likely unless
-        // something very unusual happened between check and delete.
-        // Could also happen if a row was deleted by another process milliseconds before.
-        echo json_encode(['status' => 'info', 'message' => 'Arus Kas tidak ditemukan atau sudah dihapus. (Affected rows 0)']);
-      }
+    // Commit / rollback
+    if ($this->cb->trans_status() === false) {
+      $this->cb->trans_rollback();
+      echo json_encode([
+        'status' => 'error',
+        'message' => 'Gagal upload data.'
+      ]);
+      exit;
     } else {
-      // This 'else' block means the DELETE query itself failed (e.g., database error, syntax error).
-      // You might want to log this error.
-      error_log("Database delete error for ID: " . $id . " - " . $this->db->error()['message']);
-      echo json_encode(['status' => 'error', 'message' => 'Terjadi kesalahan saat menghapus Arus Kas. Silakan coba lagi.']);
+      $this->cb->trans_commit();
+
+      $msg = "Berhasil upload <b>$inserted</b> data sales.";
+      if (!empty($skipped)) {
+        $msg .= "<br><br><b>Data yang tidak diupload (duplikat SMU):</b><ul>";
+        foreach ($skipped as $s) {
+          $msg .= "<li>SMU: <b>" . $s['no_smu'] . "</b> — sudah diupload pada <b>" . $s['uploaded_at'] . "</b></li>";
+        }
+        $msg .= "</ul>";
+      }
+
+      // $this->session->set_flashdata('success', $msg);
     }
+
+    // === SIMPAN LOG UPLOAD === //
+    $log_data = [
+      'filename' => $_FILES['file_excel']['name'],
+      'uploaded_by' => $nip,
+      'total_rows' => count($sheet) - 1,
+      'inserted_rows' => $inserted,
+      'skipped_rows' => count($skipped),
+      'uploaded_at' => date('Y-m-d H:i:s'),
+      'full_log' => json_encode($skipped)
+    ];
+
+    $this->cb->insert('sales_upload_log', $log_data);
+
+    $response = [
+      'status' => 'success',
+      'inserted' => $inserted,
+      'message' => $msg,  // ✅ TAMBAHKAN INI!
+      'skipped' => $skipped,
+      'filename' => $_FILES['file_excel']['name'],
+      'total_rows' => count($sheet) - 1,
+      'inserted_rows' => $inserted,
+      'skipped_rows' => count($skipped),
+    ];
+
+    ob_clean(); // hapus output buffer sebelum kirim JSON
+
+    echo json_encode($response);
+    exit;
+  }
+
+  public function create_invoice_sales()
+  {
+    // print_r($_POST);
+
+    $nip = $this->session->userdata('nip');
+    $sql = "SELECT COUNT(Id) FROM memo WHERE (nip_kpd LIKE '%$nip%' OR nip_cc LIKE '%$nip%') AND (`read` NOT LIKE '%$nip%');";
+    $query = $this->db->query($sql);
+    $result = $query->row_array()['COUNT(Id)'];
+
+    $sql2 = "SELECT COUNT(id) FROM task WHERE (`member` LIKE '%$nip%' or `pic` like '%$nip%') and activity='1'";
+    $query2 = $this->db->query($sql2);
+    $result2 = $query2->row_array()['COUNT(id)'];
+
+    $data = [
+      'count_inbox' => $result,
+      'count_inbox2' => $result2,
+      'title' => "Create Invoice Sales",
+      'customers' => $this->M_customer->list_customer(''),
+
+      'pendapatan' => $this->M_coa->getCoaByCode('1'),
+      'persediaan' => $this->M_coa->getCoaByCode('4'),
+    ];
+
+    $data['title'] = "Daftar Sales";
+    $data['pages'] = "pages/financial/v_create_invoice_sales";
+    $data['utility'] = $this->db->get('utility')->row_array();
+    // $data['pages_script'] = 'script/financial/s_financial';
+    $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
+    // echo '<pre>';
+    // print_r($data['invoices']);
+    // echo '</pre>';
+    // exit;
+
+
+    $this->cb->from('invoice');
+    $this->cb->join('t_cabang', 't_cabang.uid = invoice.id_cabang');
+    $this->cb->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
+    $this->cb->where('MONTH(invoice.created_at)', date('m'));
+    $this->cb->where('YEAR(invoice.created_at)', date('Y'));
+    $total_invoice = $this->cb->get()->num_rows(); // Get the number of rows
+
+    $this->db->from('utility');
+    $this->db->where('Id', $this->session->userdata('user_perusahaan_id'));
+    $perusahaan = $this->db->get()->row(); // Get the number of rows
+
+    $limit_invoice = $perusahaan->kuota_invoice;
+
+    $data['total_invoice'] = $total_invoice;
+    $data['limit_invoice'] = $limit_invoice;
+
+    $this->cb->select('
+			sales.*,
+			COALESCE(purchase.hhp_pusat, 0) as hpp_pusat,
+			COALESCE(purchase.asuransi, 0) as asuransi_hpp,
+			COALESCE(purchase.ho_charge, 0) as ho_charge,
+			COALESCE(purchase.total_hpp_smu, 0) as total_hpp_smu,
+			COALESCE(purchase.hpp_grand_total_program, 0) as hpp_program,
+			COALESCE(purchase.hpp_jasa_gudang, 0) as hpp_jasa_gudang,
+			COALESCE(purchase.ra, 0) as ra,
+			COALESCE(purchase.handling_ra, 0) as handling_ra,
+			COALESCE(purchase.hpp_packing, 0) as hpp_packing,
+			COALESCE(purchase.hpp_handling_dest, 0) as hpp_handling_dest,
+			COALESCE(purchase.marketing_fee, 0) as marketing_fee,
+			COALESCE(purchase.hpp_handling, 0) as hpp_handling,
+			0 as hpp_other
+		');
+    $this->cb->join('purchase', 'purchase.no_smu = sales.no_smu AND purchase.tanggal_terbang = sales.tanggal_terbang', 'left');
+
+    // PENTING: Filter harus untuk SALES, bukan PURCHASE!
+    $this->cb->where('sales.is_billing', '0');
+    $this->cb->where('sales.agent_name', $this->input->post('agent_name'));
+    $this->cb->where('sales.tanggal_terbang >=', $this->input->post('tanggal_dari'));
+    $this->cb->where('sales.tanggal_terbang <=', $this->input->post('tanggal_sampai'));
+
+    $data['sales'] = $this->cb->get('sales')->result_array();
+
+    // echo '<pre>';
+    // print_r($data['sales']);
+    // echo '</pre>';
+    // exit;
+
+    $this->load->view('index', $data);
+  }
+
+
+  public function upload_purchase()
+  {
+    $id_cabang = $this->session->userdata('kode_cabang');
+    $nip = $this->session->userdata('nip');
+
+    // Upload handler
+    if (!isset($_FILES['file_excel_purchase']['name']) || $_FILES['file_excel_purchase']['name'] == '') {
+      $this->session->set_flashdata('error', 'File Excel belum dipilih');
+      redirect('financial/sales');
+    }
+
+    $file_tmp = $_FILES['file_excel_purchase']['tmp_name'];
+
+    // Load PhpSpreadsheet
+    require APPPATH . 'third_party/autoload.php';
+
+    // Include PhpSpreadsheet from third_party
+    require APPPATH . 'third_party/psr/simple-cache/src/CacheInterface.php';
+    $reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReaderForFile($file_tmp);
+    $spreadsheet = $reader->load($file_tmp);
+    $sheet = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+
+    // ========== VALIDASI HEADER ========== //
+    $expected_headers = [
+      'A' => 'Tanggal Terbang',
+      'B' => 'Airline Name',
+      'C' => 'Vendor',
+      'D' => 'Kode Komodity',
+      'E' => 'Jenis Barang',
+      'F' => 'Shipper Name',
+      'G' => 'AGENT NAME',
+      'H' => 'NO SMU',
+      'I' => 'ORI',
+      'J' => 'DEST',
+      'K' => 'FLT NO',
+      'L' => 'Koli',
+      'M' => 'Kg',
+      'N' => 'CHWT',
+      'O' => 'HPP PUSAT',
+      'P' => 'ASURANSI',
+      'Q' => 'HO CHARGE',
+      'R' => 'TOTAL HPP SMU',
+      'S' => 'HPP GRAND TOTAL PROGRAM',
+      'T' => 'HPP JASA GUDANG',
+      'U' => 'RA',
+      'V' => 'HANDLING RA',
+      'W' => 'HPP PACKING',
+      'X' => 'HPP OTHER CHARGE',
+      'Y' => 'HPP HANDLING',
+      'Z' => 'HPP HANDLING DEST',
+      'AA' => 'MARKETING FEE'
+    ];
+
+    // Ambil baris pertama (header)
+    $header_row = $sheet[1];
+
+    // Cek setiap kolom
+    $header_errors = [];
+    foreach ($expected_headers as $col => $expected_name) {
+      $actual_name = trim($header_row[$col] ?? '');
+
+      // Normalisasi untuk case-insensitive comparison
+      if (strtolower($actual_name) !== strtolower($expected_name)) {
+        $header_errors[] = "Kolom <b>$col</b>: harapan '<b>$expected_name</b>', ditemukan '<b>$actual_name</b>'";
+      }
+
+      // if ($actual_name !== $expected_name) {
+      // 	$header_errors[] = "Kolom <b>$col</b>: harapan '<b>$expected_name</b>', ditemukan '<b>$actual_name</b>'";
+      // }
+    }
+
+    // Jika ada error header, kirim response error
+    if (!empty($header_errors)) {
+      ob_clean();
+      echo json_encode([
+        'status' => 'error',
+        'error_type' => 'header_validation',
+        'message' => 'File Excel yang Anda upload tidak sesuai format template!',
+        'total_errors' => count($header_errors),
+        'error_details' => $header_errors
+      ]);
+      exit;
+    }
+    // ========== END VALIDASI HEADER ========== //
+
+    // Mulai transaksi
+    $this->cb->trans_begin();
+
+    $inserted = 0;
+    $skipped = [];
+    $show = [];
+
+    foreach ($sheet as $i => $row) {
+
+      // Skip header (baris 1)
+      if ($i == 1)
+        continue;
+
+      // Jika baris kosong → skip
+      if ($row['A'] == null && $row['H'] == null)
+        continue;
+
+      $no_smu = ($row['H']) ? trim($row['H']) : '';
+
+      // === CEK DUPLIKASI === //
+      $existing = $this->cb->get_where('purchase', ['no_smu' => $no_smu])->row();
+      if ($existing) {
+        $skipped[] = [
+          'no_smu' => $no_smu,
+          'uploaded_at' => $existing->upload_at
+        ];
+        continue;
+      }
+
+      // === INSERT DATA === //
+      $data = [
+        'tanggal_terbang' => date('Y-m-d', strtotime($row['A'])),
+        'airline_name' => $row['B'],
+        'vendor' => $row['C'],
+        'kode_komoditi' => $row['D'],
+        'jenis_barang' => $row['E'],
+        'shipper_name' => $row['F'],
+        'agent_name' => $row['G'],
+        'no_smu' => $row['H'],
+        'origin' => $row['I'],
+        'destination' => $row['J'],
+        'flight_number' => $row['K'],
+        'koli' => (int) $row['L'],
+        'gross' => ($row['M'] == '-' or $row['M'] == '') ? 0 : str_replace(',', '.', $row['M']),
+        'chargeable_weight' => ($row['N'] == '-' or $row['N'] == '') ? 0 : str_replace(',', '.', $row['N']),
+        'hhp_pusat' => ($row['O'] == '-' or $row['O'] == '') ? 0 : str_replace(',', '', $row['O']),
+        'asuransi' => ($row['P'] == '-' or $row['P'] == '') ? 0 : str_replace(',', '', $row['P']),
+        'ho_charge' => ($row['Q'] == '-' or $row['Q'] == '') ? 0 : str_replace(',', '', $row['Q']),
+        'total_hpp_smu' => ($row['R'] == '-' or $row['R'] == '') ? 0 : str_replace(',', '', $row['R']),
+        'hpp_grand_total_program' => ($row['S'] == '-' or $row['S'] == '') ? 0 : str_replace(',', '', $row['S']),
+        'hpp_jasa_gudang' => ($row['T'] == '-' or $row['T'] == '') ? 0 : str_replace(',', '', $row['T']),
+        'ra' => ($row['U'] == '-' or $row['U'] == '') ? 0 : str_replace(',', '', $row['U']),
+        'handling_ra' => ($row['V'] == '-' or $row['V'] == '') ? 0 : str_replace(',', '', $row['V']),
+        'hpp_packing' => ($row['W'] == '-' or $row['W'] == '') ? 0 : str_replace(',', '', $row['W']),
+        'hpp_other_charge' => ($row['X'] == '-' or $row['X'] == '') ? 0 : str_replace(',', '', $row['X']),
+        'hpp_handling' => ($row['Y'] == '-' or $row['Y'] == '') ? 0 : str_replace(',', '', $row['Y']),
+        'hpp_handling_dest' => ($row['Z'] == '-' or $row['Z'] == '') ? 0 : str_replace(',', '', $row['Z']),
+        'marketing_fee' => ($row['AA'] == '-' or $row['AA'] == '') ? 0 : str_replace(',', '', $row['AA']),
+        'upload_by' => $nip,
+        'id_cabang' => $id_cabang,
+      ];
+
+      // $show[] = $data;
+
+      $this->cb->insert('purchase', $data);
+      $inserted++;
+    }
+
+    // echo '<pre>';
+    // print_r($show);
+    // echo '</pre>';
+    // exit;
+
+    // Commit / rollback
+    if ($this->cb->trans_status() === false) {
+      $this->cb->trans_rollback();
+      echo json_encode([
+        'status' => 'error',
+        'message' => 'Gagal upload data.'
+      ]);
+      exit;
+    } else {
+      $this->cb->trans_commit();
+
+      $msg = "Berhasil upload <b>$inserted</b> data sales.";
+      if (!empty($skipped)) {
+        $msg .= "<br><br><b>Data yang tidak diupload (duplikat SMU):</b><ul>";
+        foreach ($skipped as $s) {
+          $msg .= "<li>SMU: <b>" . $s['no_smu'] . "</b> — sudah diupload pada <b>" . $s['uploaded_at'] . "</b></li>";
+        }
+        $msg .= "</ul>";
+      }
+
+      // $this->session->set_flashdata('success', $msg);
+    }
+
+    // === SIMPAN LOG UPLOAD === //
+    $log_data = [
+      'filename' => $_FILES['file_excel_purchase']['name'],
+      'uploaded_by' => $nip,
+      'total_rows' => count($sheet) - 1,
+      'inserted_rows' => $inserted,
+      'skipped_rows' => count($skipped),
+      'uploaded_at' => date('Y-m-d H:i:s'),
+      'full_log' => json_encode($skipped)
+    ];
+
+    $this->cb->insert('purchase_upload_log', $log_data);
+
+    $response = [
+      'status' => 'success',
+      'inserted' => $inserted,
+      'message' => $msg,  // ✅ TAMBAHKAN INI!
+      'skipped' => $skipped,
+      'filename' => $_FILES['file_excel']['name'],
+      'total_rows' => count($sheet) - 1,
+      'inserted_rows' => $inserted,
+      'skipped_rows' => count($skipped),
+    ];
+
+    ob_clean(); // hapus output buffer sebelum kirim JSON
+
+    echo json_encode($response);
+    exit;
+  }
+
+  public function save_invoice_sales()
+  {
+    $id_user = $this->session->userdata('nip');
+
+    // Ambil data POST
+    $subtotal = $this->convertToNumberWithComma($this->input->post('subtotal'));
+    $vat = $this->convertToNumberWithComma($this->input->post('vat'));
+    $pph23 = $this->convertToNumberWithComma($this->input->post('pph23'));
+    $total_nonpph = $this->convertToNumberWithComma($this->input->post('total_nonpph'));
+    $total_denganpph = $this->convertToNumberWithComma($this->input->post('total_denganpph'));
+    $total_biaya = $this->convertToNumberWithComma($this->input->post('total_biaya'));
+    $nominal_bayar = $this->convertToNumberWithComma($this->input->post('nominal_bayar'));
+    $gross_profit = $this->convertToNumberWithComma($this->input->post('gross_profit'));
+    $profit_margin = $this->input->post('profit_margin');
+
+    $opsi_termin = $this->input->post('opsi_termin');
+    $opsi_pph = $this->input->post('pph23_check');
+    $coa_debit = $this->input->post('coa_debit');
+    $coa_kredit = $this->input->post('coa_kredit');
+    $tgl_invoice = $this->input->post('tanggal_invoice');
+    $keterangan = trim($this->input->post('keterangan'));
+
+    $pph = isset($opsi_pph) ? '0.02' : 0;
+
+    // Generate nomor invoice
+    $tahun = substr($tgl_invoice, 0, 4);
+    $max_num = $this->M_invoice->select_max($tahun);
+    $bilangan = !$max_num['max'] ? 1 : $max_num['max'] + 1;
+
+    $month = substr($tgl_invoice, 5, 2);
+    $year = substr($tgl_invoice, 2, 2);
+    $no_inv = sprintf("%04d", $bilangan);
+    $kode_cabang = sprintf("%02d", $this->session->userdata('kode_cabang'));
+    $kop_invoice = $this->session->userdata('nama_akronim') . "-" . $kode_cabang;
+    $slug = $no_inv . '/' . strtoupper($kop_invoice) . '/' . intToRoman($month) . '/' . $year;
+
+    // Data invoice header
+    $invoice_data = [
+      'no_invoice' => $no_inv,
+      'tanggal_invoice' => $tgl_invoice,
+      'created_by' => $id_user,
+      'keterangan' => $keterangan,
+      'id_customer' => $this->input->post('bill_to'),
+      'subtotal' => $subtotal,
+      'besaran_ppn' => $vat,
+      'ppn' => '0.11', // 11%
+      'opsi_pph23' => isset($opsi_pph) ? $opsi_pph : '0',
+      'pph' => $pph,
+      'besaran_pph' => $pph23,
+      'total_nonpph' => $total_nonpph,
+      'total_denganpph' => $total_denganpph,
+      'coa_debit' => $coa_debit,
+      'coa_kredit' => $coa_kredit,
+      'total_biaya' => $total_biaya,
+      'nominal_bayar' => $nominal_bayar,
+      'nominal_pendapatan' => $gross_profit,
+      'jenis_invoice' => 'sales',
+      'opsi_termin' => isset($opsi_termin) ? $opsi_termin : '0',
+      'status_pendapatan' => '1',
+      'slug' => $slug,
+      'id_cabang' => $this->session->userdata('kode_cabang'),
+      'id_company' => $this->session->userdata('user_perusahaan_id'),
+      'jenis_invoice' => 'agen_smu'
+    ];
+
+    // echo '<pre>';
+    // print_r($_POST);
+    // echo '</pre>';
+    // exit;
+    $this->cb->trans_begin();
+
+    // Insert invoice
+    $id_invoice = $this->M_invoice->insert($invoice_data);
+    // $id_invoice = '1';
+
+    if (!$id_invoice) {
+      $this->cb->trans_rollback();
+      $this->session->set_flashdata('message_error', 'Failed to create invoice.');
+      redirect("financial/sales");
+    }
+
+    // Ambil array data sales
+    $sales_ids = array_keys($this->input->post('koli'));
+    $kolis = $this->input->post('koli');
+    $actuals = $this->input->post('actual');
+    $chwts = $this->input->post('chwt');
+    $selling_prices = $this->input->post('selling_price');
+    $freights = $this->input->post('freight');
+    $vat_nominals = $this->input->post('vat_nominal');
+    $subtotal_rows = $this->input->post('subtotal_row');
+    $total_hpp_rows = $this->input->post('total_hpp_row');
+    $profit_rows = $this->input->post('profit_row');
+
+    // Detail charges
+    $surcharge_percents = $this->input->post('surcharge_percent');
+    $surcharge_nominals = $this->input->post('surcharge_nominal');
+    $hhts = $this->input->post('hht');
+    $admin_fees = $this->input->post('admin_fee');
+    $ppn_smus = $this->input->post('ppn_smu');
+    $total_freights = $this->input->post('total_freight');
+    $handling_charges = $this->input->post('handling_charge');
+    $asuransis = $this->input->post('asuransi');
+    $extra_packings = $this->input->post('extra_packing');
+    $handling_dests = $this->input->post('handling_dest');
+    $other_charges = $this->input->post('other_charge');
+
+    // HPP breakdown
+    $hpp_pusats = $this->input->post('hpp_pusat');
+    $ho_charges = $this->input->post('ho_charge');
+    $hpp_programs = $this->input->post('hpp_program');
+    $hpp_jasa_gudangs = $this->input->post('hpp_jasa_gudang');
+    $ras = $this->input->post('ra');
+    $handling_ras = $this->input->post('handling_ra');
+    $hpp_packings = $this->input->post('hpp_packing');
+    $hpp_handlings = $this->input->post('hpp_handling');
+    $hpp_handling_dests = $this->input->post('hpp_handling_dest');
+    $marketing_fees = $this->input->post('marketing_fee');
+    $hpp_others = $this->input->post('hpp_other');
+    $asuransi_hpps = $this->input->post('asuransi_hpp');
+
+    $detail_data = [];
+
+    foreach ($sales_ids as $sales_id) {
+      $detail_data[] = [
+        'id_invoice' => $id_invoice,
+        'id_sales' => $sales_id,
+        'koli' => $kolis[$sales_id],
+        'actual' => $this->convertToNumberWithComma($actuals[$sales_id]),
+        'chwt' => $this->convertToNumberWithComma($chwts[$sales_id]),
+        'selling_price' => $this->convertToNumberWithComma($selling_prices[$sales_id]),
+        'freight' => $this->convertToNumberWithComma($freights[$sales_id]),
+        'vat_nominal' => $this->convertToNumber($vat_nominals[$sales_id]),
+        'subtotal_row' => $this->convertToNumberWithComma($subtotal_rows[$sales_id]),
+        'total_hpp_row' => $this->convertToNumberWithComma($total_hpp_rows[$sales_id]),
+        'profit_row' => $this->convertToNumberWithComma($profit_rows[$sales_id]),
+
+        // Charges
+        'surcharge_percent' => $surcharge_percents[$sales_id],
+        'surcharge_nominal' => $this->convertToNumberWithComma($surcharge_nominals[$sales_id]),
+        'hht' => $this->convertToNumberWithComma($hhts[$sales_id]),
+        'admin_fee' => $this->convertToNumberWithComma($admin_fees[$sales_id]),
+        'ppn_smu' => $this->convertToNumberWithComma($ppn_smus[$sales_id]),
+        'total_freight' => $this->convertToNumberWithComma($total_freights[$sales_id]),
+        'handling_charge' => $this->convertToNumberWithComma($handling_charges[$sales_id]),
+        'asuransi' => $this->convertToNumberWithComma($asuransis[$sales_id]),
+        'extra_packing' => $this->convertToNumberWithComma($extra_packings[$sales_id]),
+        'handling_dest' => $this->convertToNumberWithComma($handling_dests[$sales_id]),
+        'other_charge' => $this->convertToNumberWithComma($other_charges[$sales_id]),
+
+        // HPP
+        'hpp_pusat' => $this->convertToNumberWithComma($hpp_pusats[$sales_id]),
+        'ho_charge' => $this->convertToNumberWithComma($ho_charges[$sales_id]),
+        'hpp_program' => $this->convertToNumberWithComma($hpp_programs[$sales_id]),
+        'hpp_jasa_gudang' => $this->convertToNumberWithComma($hpp_jasa_gudangs[$sales_id]),
+        'ra' => $this->convertToNumberWithComma($ras[$sales_id]),
+        'handling_ra' => $this->convertToNumberWithComma($handling_ras[$sales_id]),
+        'hpp_packing' => $this->convertToNumberWithComma($hpp_packings[$sales_id]),
+        'hpp_handling' => $this->convertToNumberWithComma($hpp_handlings[$sales_id]),
+        'hpp_handling_dest' => $this->convertToNumberWithComma($hpp_handling_dests[$sales_id]),
+        'marketing_fee' => $this->convertToNumberWithComma($marketing_fees[$sales_id]),
+        'hpp_other' => $this->convertToNumberWithComma($hpp_others[$sales_id]),
+        'asuransi_hpp' => $this->convertToNumberWithComma($asuransi_hpps[$sales_id]),
+
+        'created_by' => $id_user,
+        'id_cabang' => $this->session->userdata('kode_cabang'),
+        'id_company' => $this->session->userdata('user_perusahaan_id')
+      ];
+    }
+
+    // echo '<pre>';
+    // print_r($detail_data);
+    // echo '</pre>';
+    // exit;
+    if (!empty($detail_data)) {
+      $insert = $this->M_invoice->insert_batch_sales($detail_data);
+
+      if ($insert) {
+
+        foreach ($sales_ids as $sales_id) {
+          $update_sales = [
+            'is_billing' => '1',
+            'id_invoice' => $id_invoice,
+            'tanggal_billing' => date('Y-m-d H:i:s')
+          ];
+          $this->cb->where('Id', $sales_id)->update('sales', $update_sales);
+        }
+
+        // posting($coa_debit, $coa_kredit, $keterangan, $nominal, $tanggal, $id_invoice = NULL, $base64_data = NULL, $nama_data = NULL)
+
+        // Jurnal 1: Piutang Usaha bertambah (dari total_biaya), Persediaan berkurang sebesar total_biaya
+        $this->posting($coa_debit, $coa_kredit, $keterangan, $total_biaya, $tgl_invoice, $id_invoice, NULL, NULL, NULL);
+
+        // Jurnal 2: Piutang Usaha bertambah (pendapatan), PAD-Operasional Lainnya bertambah
+        $coa_debit_2 = "13010";
+        $coa_kredit_2 = "40401";
+        $this->posting($coa_debit_2, $coa_kredit_2, $keterangan, $gross_profit, $tgl_invoice, $id_invoice);
+
+        $this->cb->trans_commit();
+        $this->session->set_flashdata('message_name', 'Sales invoice berhasil dibuat: ' . $no_inv);
+      } else {
+        $this->cb->trans_rollback();
+        $this->session->set_flashdata('message_error', 'Gagal buat invoice.');
+      }
+      redirect("financial/invoice");
+    }
+  }
+
+  public function edit_invoice_sales($id)
+  {
+    $inv = $this->M_invoice->showById($id);
+
+    // Validasi jenis invoice
+    if ($inv['jenis_invoice'] != 'agen_smu' && $inv['jenis_invoice'] != 'sales') {
+      $this->session->set_flashdata('message_error', 'Invoice ini bukan jenis sales/agen_smu');
+      redirect('financial/invoice');
+    }
+
+    // Cek status, tidak bisa edit jika sudah bayar atau void
+    if ($inv['status_bayar'] == '1') {
+      $this->session->set_flashdata('message_error', 'Invoice sudah lunas, tidak dapat diedit');
+      redirect('financial/invoice');
+    }
+
+    if ($inv['status_void'] == '1') {
+      $this->session->set_flashdata('message_error', 'Invoice sudah void, tidak dapat diedit');
+      redirect('financial/invoice');
+    }
+
+    $nip = $this->session->userdata('nip');
+    $sql = "SELECT COUNT(Id) FROM memo WHERE (nip_kpd LIKE '%$nip%' OR nip_cc LIKE '%$nip%') AND (`read` NOT LIKE '%$nip%');";
+    $query = $this->db->query($sql);
+    $res2 = $query->result_array();
+    $result = $res2[0]['COUNT(Id)'];
+
+    $sql2 = "SELECT COUNT(id) FROM task WHERE (`member` LIKE '%$nip%' or `pic` like '%$nip%') and activity='1'";
+    $query2 = $this->db->query($sql2);
+    $res2 = $query2->result_array();
+    $result2 = $res2[0]['COUNT(id)'];
+
+    // Ambil detail invoice sales
+    $sales_details = $this->M_invoice->get_invoice_sales_details($id);
+
+    $data = [
+      'title' => 'Edit Invoice Sales No. ' . $inv['no_invoice'],
+      'inv' => $inv,
+      'sales' => $sales_details,
+      'customers' => $this->M_customer->list_customer(),
+      'count_inbox' => $result,
+      'count_inbox2' => $result2,
+      'pendapatan' => $this->M_coa->getCoaByCode('1'),
+      'persediaan' => $this->M_coa->getCoaByCode('4'),
+      'coa_kas' => $this->M_coa->getCoaByCode('1'),
+      'coa_pendapatan' => $this->M_coa->getCoaByCode('4'),
+    ];
+
+    $data['pages'] = "pages/financial/v_edit_invoice_sales";
+    $data['utility'] = $this->db->get('utility')->row_array();
+    $data['pages_script'] = 'script/financial/s_invoice_sales_edit';
+    $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
+    $this->load->view('index', $data);
+  }
+
+  public function update_invoice_sales()
+  {
+    $id_invoice = $this->input->post('id_invoice');
+    $id_user = $this->session->userdata('nip');
+
+    // Ambil data POST
+    $subtotal = $this->convertToNumberWithComma($this->input->post('subtotal'));
+    $vat = $this->convertToNumberWithComma($this->input->post('vat'));
+    $pph23 = $this->convertToNumberWithComma($this->input->post('pph23'));
+    $total_nonpph = $this->convertToNumberWithComma($this->input->post('total_nonpph'));
+    $total_denganpph = $this->convertToNumberWithComma($this->input->post('total_denganpph'));
+    $total_biaya = $this->convertToNumberWithComma($this->input->post('total_biaya'));
+    $nominal_bayar = $this->convertToNumberWithComma($this->input->post('nominal_bayar'));
+    $gross_profit = $this->convertToNumberWithComma($this->input->post('gross_profit'));
+    $profit_margin = $this->input->post('profit_margin');
+
+    $opsi_termin = $this->input->post('opsi_termin');
+    $opsi_pph = $this->input->post('pph23_check');
+    $coa_debit = $this->input->post('coa_debit');
+    $coa_kredit = $this->input->post('coa_kredit');
+    $tgl_invoice = $this->input->post('tanggal_invoice');
+    $keterangan = trim($this->input->post('keterangan'));
+
+    $pph = isset($opsi_pph) ? '0.02' : 0;
+
+    // Data invoice header untuk update
+    $invoice_data = [
+      'tanggal_invoice' => $tgl_invoice,
+      'updated_by' => $id_user,
+      'updated_at' => date('Y-m-d H:i:s'),
+      'keterangan' => $keterangan,
+      'id_customer' => $this->input->post('bill_to'),
+      'subtotal' => $subtotal,
+      'besaran_ppn' => $vat,
+      'ppn' => '0.11',
+      'opsi_pph23' => isset($opsi_pph) ? $opsi_pph : '0',
+      'pph' => $pph,
+      'besaran_pph' => $pph23,
+      'total_nonpph' => $total_nonpph,
+      'total_denganpph' => $total_denganpph,
+      'coa_debit' => $coa_debit,
+      'coa_kredit' => $coa_kredit,
+      'total_biaya' => $total_biaya,
+      'nominal_bayar' => $nominal_bayar,
+      'nominal_pendapatan' => $gross_profit,
+      'opsi_termin' => isset($opsi_termin) ? $opsi_termin : '0',
+    ];
+
+    $this->cb->trans_begin();
+
+    // ===== AMBIL DATA INVOICE LAMA ===== //
+    $inv = $this->M_invoice->showById($id_invoice);
+
+    if (!$inv) {
+      $this->cb->trans_rollback();
+      $this->session->set_flashdata('message_error', 'Invoice tidak ditemukan.');
+      redirect('financial/invoice');
+    }
+
+    // ===== JURNAL BALIK SEBELUM UPDATE ===== //
+    $keterangan_balik = "Jurnal balik edit invoice sales " . $inv['no_invoice'];
+    $coa_kredit_lama = $inv['coa_kredit'];
+    $coa_debit_lama = $inv['coa_debit'];
+    $total_biaya_lama = $inv['total_biaya'];
+    $gross_profit_lama = $inv['nominal_pendapatan'];
+
+    // Jurnal balik 1: Balik Piutang Usaha & Persediaan
+    $this->posting($coa_kredit_lama, $coa_debit_lama, $keterangan_balik, $total_biaya_lama, $inv['tanggal_invoice'], $inv['Id'], NULL, NULL, NULL);
+
+    // Jurnal balik 2: Balik Piutang Usaha & PAD-Operasional
+    $coa_debit_2_lama = "13010";
+    $coa_kredit_2_lama = "40401";
+    $this->posting($coa_kredit_2_lama, $coa_debit_2_lama, $keterangan_balik, $gross_profit_lama, $inv['tanggal_invoice'], $inv['Id']);
+
+    // ===== UPDATE INVOICE HEADER ===== //
+    if (!$this->M_invoice->update_invoice($id_invoice, $invoice_data)) {
+      $this->cb->trans_rollback();
+      $this->session->set_flashdata('message_error', 'Failed to update invoice.');
+      redirect('financial/invoice');
+    }
+
+    // ===== AMBIL ARRAY DATA SALES ===== //
+    $sales_ids = array_keys($this->input->post('koli'));
+    $kolis = $this->input->post('koli');
+    $actuals = $this->input->post('actual');
+    $chwts = $this->input->post('chwt');
+    $selling_prices = $this->input->post('selling_price');
+    $freights = $this->input->post('freight');
+    $vat_nominals = $this->input->post('vat_nominal');
+    $subtotal_rows = $this->input->post('subtotal_row');
+    $total_hpp_rows = $this->input->post('total_hpp_row');
+    $profit_rows = $this->input->post('profit_row');
+
+    // Detail charges
+    $surcharge_percents = $this->input->post('surcharge_percent');
+    $surcharge_nominals = $this->input->post('surcharge_nominal');
+    $hhts = $this->input->post('hht');
+    $admin_fees = $this->input->post('admin_fee');
+    $ppn_smus = $this->input->post('ppn_smu');
+    $total_freights = $this->input->post('total_freight');
+    $handling_charges = $this->input->post('handling_charge');
+    $asuransis = $this->input->post('asuransi');
+    $extra_packings = $this->input->post('extra_packing');
+    $handling_dests = $this->input->post('handling_dest');
+    $other_charges = $this->input->post('other_charge');
+
+    // HPP breakdown
+    $hpp_pusats = $this->input->post('hpp_pusat');
+    $ho_charges = $this->input->post('ho_charge');
+    $hpp_programs = $this->input->post('hpp_program');
+    $hpp_jasa_gudangs = $this->input->post('hpp_jasa_gudang');
+    $ras = $this->input->post('ra');
+    $handling_ras = $this->input->post('handling_ra');
+    $hpp_packings = $this->input->post('hpp_packing');
+    $hpp_handlings = $this->input->post('hpp_handling');
+    $hpp_handling_dests = $this->input->post('hpp_handling_dest');
+    $marketing_fees = $this->input->post('marketing_fee');
+    $hpp_others = $this->input->post('hpp_other');
+    $asuransi_hpps = $this->input->post('asuransi_hpp');
+
+    // ===== HAPUS DETAIL INVOICE LAMA ===== //
+    $this->cb->where('id_invoice', $id_invoice)->delete('invoice_sales_detail');
+
+    // ===== INSERT DETAIL BARU ===== //
+    $detail_data = [];
+    foreach ($sales_ids as $sales_id) {
+      $detail_data[] = [
+        'id_invoice' => $id_invoice,
+        'id_sales' => $sales_id,
+        'koli' => $kolis[$sales_id],
+        'actual' => $this->convertToNumberWithComma($actuals[$sales_id]),
+        'chwt' => $this->convertToNumberWithComma($chwts[$sales_id]),
+        'selling_price' => $this->convertToNumberWithComma($selling_prices[$sales_id]),
+        'freight' => $this->convertToNumberWithComma($freights[$sales_id]),
+        'vat_nominal' => $this->convertToNumber($vat_nominals[$sales_id]),
+        'subtotal_row' => $this->convertToNumberWithComma($subtotal_rows[$sales_id]),
+        'total_hpp_row' => $this->convertToNumberWithComma($total_hpp_rows[$sales_id]),
+        'profit_row' => $this->convertToNumberWithComma($profit_rows[$sales_id]),
+
+        // Charges
+        'surcharge_percent' => $surcharge_percents[$sales_id],
+        'surcharge_nominal' => $this->convertToNumberWithComma($surcharge_nominals[$sales_id]),
+        'hht' => $this->convertToNumberWithComma($hhts[$sales_id]),
+        'admin_fee' => $this->convertToNumberWithComma($admin_fees[$sales_id]),
+        'ppn_smu' => $this->convertToNumberWithComma($ppn_smus[$sales_id]),
+        'total_freight' => $this->convertToNumberWithComma($total_freights[$sales_id]),
+        'handling_charge' => $this->convertToNumberWithComma($handling_charges[$sales_id]),
+        'asuransi' => $this->convertToNumberWithComma($asuransis[$sales_id]),
+        'extra_packing' => $this->convertToNumberWithComma($extra_packings[$sales_id]),
+        'handling_dest' => $this->convertToNumberWithComma($handling_dests[$sales_id]),
+        'other_charge' => $this->convertToNumberWithComma($other_charges[$sales_id]),
+
+        // HPP
+        'hpp_pusat' => $this->convertToNumberWithComma($hpp_pusats[$sales_id]),
+        'ho_charge' => $this->convertToNumberWithComma($ho_charges[$sales_id]),
+        'hpp_program' => $this->convertToNumberWithComma($hpp_programs[$sales_id]),
+        'hpp_jasa_gudang' => $this->convertToNumberWithComma($hpp_jasa_gudangs[$sales_id]),
+        'ra' => $this->convertToNumberWithComma($ras[$sales_id]),
+        'handling_ra' => $this->convertToNumberWithComma($handling_ras[$sales_id]),
+        'hpp_packing' => $this->convertToNumberWithComma($hpp_packings[$sales_id]),
+        'hpp_handling' => $this->convertToNumberWithComma($hpp_handlings[$sales_id]),
+        'hpp_handling_dest' => $this->convertToNumberWithComma($hpp_handling_dests[$sales_id]),
+        'marketing_fee' => $this->convertToNumberWithComma($marketing_fees[$sales_id]),
+        'hpp_other' => $this->convertToNumberWithComma($hpp_others[$sales_id]),
+        'asuransi_hpp' => $this->convertToNumberWithComma($asuransi_hpps[$sales_id]),
+
+        'updated_by' => $id_user,
+        'updated_at' => date('Y-m-d H:i:s'),
+      ];
+    }
+
+    if (!empty($detail_data)) {
+      if (!$this->M_invoice->insert_batch_sales($detail_data)) {
+        $this->cb->trans_rollback();
+        $this->session->set_flashdata('message_error', 'Gagal update detail invoice.');
+        redirect('financial/invoice');
+      }
+    }
+
+    // ===== POSTING JURNAL BARU ===== //
+
+    // Jurnal 1: Piutang Usaha bertambah (dari total_biaya), Persediaan berkurang sebesar total_biaya
+    $this->posting($coa_debit, $coa_kredit, $keterangan, $total_biaya, $tgl_invoice, $id_invoice, NULL, NULL, NULL);
+
+    // Jurnal 2: Piutang Usaha bertambah (pendapatan), PAD-Operasional Lainnya bertambah
+    $coa_debit_2 = "13010";
+    $coa_kredit_2 = "40401";
+    $this->posting($coa_debit_2, $coa_kredit_2, $keterangan, $gross_profit, $tgl_invoice, $id_invoice);
+
+    // ===== COMMIT TRANSAKSI ===== //
+    if ($this->cb->trans_status() === FALSE) {
+      $this->cb->trans_rollback();
+      $this->session->set_flashdata('message_error', 'Transaction failed.');
+    } else {
+      $this->cb->trans_commit();
+      $this->session->set_flashdata('message_name', 'Invoice sales berhasil diupdate.');
+    }
+
+    redirect('financial/invoice');
+  }
+
+  public function show_margin($id)
+  {
+    $nip = $this->session->userdata('nip');
+
+    // Get memo & task count (standard untuk header)
+    $sql = "SELECT COUNT(Id) FROM memo WHERE (nip_kpd LIKE '%$nip%' OR nip_cc LIKE '%$nip%') AND (`read` NOT LIKE '%$nip%');";
+    $query = $this->db->query($sql);
+    $result = $query->row_array()['COUNT(Id)'];
+
+    $sql2 = "SELECT COUNT(id) FROM task WHERE (`member` LIKE '%$nip%' or `pic` like '%$nip%') and activity='1'";
+    $query2 = $this->db->query($sql2);
+    $result2 = $query2->row_array()['COUNT(id)'];
+
+    // Get sales data by ID
+    $this->cb->where('Id', $id);
+    $sales = $this->cb->get('sales')->row_array();
+
+    if (!$sales) {
+      show_404();
+      return;
+    }
+
+    // Get purchase data berdasarkan no_smu dan tanggal_terbang
+    $this->cb->where('no_smu', $sales['no_smu']);
+    $this->cb->where('tanggal_terbang', $sales['tanggal_terbang']);
+    $purchase = $this->cb->get('purchase')->row_array();
+
+    // ===== HITUNG REVENUE ===== //
+    $subtotal = $sales['sub_total_tagihan'];
+    $vat = $sales['vat_nominal'];
+    $total_tagihan = $sales['grand_total_tagihan'];
+
+    // ===== HITUNG TOTAL HPP ===== //
+    $total_hpp = 0;
+    if ($purchase) {
+      $total_hpp =
+        ($purchase['hhp_pusat'] ?? 0) +
+        ($purchase['ho_charge'] ?? 0) +
+        ($purchase['hpp_jasa_gudang'] ?? 0) +
+        ($purchase['ra'] ?? 0) +
+        ($purchase['handling_ra'] ?? 0) +
+        ($purchase['hpp_packing'] ?? 0) +
+        ($purchase['hpp_handling'] ?? 0) +
+        ($purchase['hpp_handling_dest'] ?? 0) +
+        ($purchase['marketing_fee'] ?? 0) +
+        ($purchase['hpp_other_charge'] ?? 0) +
+        ($purchase['asuransi'] ?? 0);
+    }
+
+    // ===== HITUNG PROFIT & MARGIN ===== //
+    $gross_profit = $subtotal - $total_hpp;
+    $profit_margin = $subtotal > 0 ? ($gross_profit / $subtotal * 100) : 0;
+
+    // Prepare data untuk view
+    $data = [
+      'count_inbox' => $result,
+      'count_inbox2' => $result2,
+      'title' => "Margin Profit - SMU " . $sales['no_smu'],
+      'sales' => $sales,
+      'purchase' => $purchase,
+      'subtotal' => $subtotal,
+      'vat' => $vat,
+      'total_tagihan' => $total_tagihan,
+      'total_hpp' => $total_hpp,
+      'gross_profit' => $gross_profit,
+      'profit_margin' => $profit_margin,
+    ];
+
+    $data['pages'] = "pages/financial/v_show_margin";
+    $data['utility'] = $this->db->get('utility')->row_array();
+    $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
+
+    $this->load->view('index', $data);
   }
 }
