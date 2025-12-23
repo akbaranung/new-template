@@ -1603,6 +1603,7 @@ class Financial extends CI_Controller
       $this->prepareCoaReport($data, $no_coa);
     } else {
       $data['title'] = "Report CoA";
+      $data['daftar_coa'] = $this->M_coa->list_coa();
       $data['pages'] = "pages/financial/v_report_per_coa";
       $data['utility'] = $this->db->get('utility')->row_array();
       $data['pages_script'] = 'script/financial/s_financial';
@@ -2739,6 +2740,7 @@ class Financial extends CI_Controller
 
     $data['title'] = "Report CoA " . $no_coa;
     $data['detail_coa'] = $this->M_coa->getCoa($no_coa);
+    $data['daftar_coa'] = $this->M_coa->list_coa();
     $data['pages'] = 'pages/financial/v_report_per_coa';
     $data['utility'] = $this->db->get('utility')->row_array();
     $data['pages_script'] = 'script/financial/s_financial';
@@ -4715,6 +4717,154 @@ class Financial extends CI_Controller
       // $data['pages_script'] = 'script/financial/s_financial';
       $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
       $this->load->view('index', $data);
+    }
+  }
+  public function ajax_edit_report_coa($id)
+  {
+    $this->cb->select('*');
+    $this->cb->from('jurnal_neraca');
+    $this->cb->where('id', $id);
+    $get_coa = $this->cb->get()->row();
+    $response = [
+      'data' => $get_coa, // This will contain the COA object/array
+    ];
+    echo json_encode($response);
+  }
+
+  public function update_report_per_coa()
+  {
+
+    $akun_debit = $this->input->post('neraca_debit');
+    $akun_kredit = $this->input->post('neraca_kredit');
+    $input_nominal = $this->input->post('input_nominal');
+    $input_keterangan = $this->input->post('input_keterangan');
+    $tanggal = $this->input->post('tanggal');
+    $file = $this->input->post('file');
+
+    $data_update = [
+      'tanggal'           => $tanggal,
+      'akun_debit'           => $akun_debit,
+      'jumlah_debit'           => $input_nominal,
+      'akun_kredit'           => $akun_kredit,
+      'jumlah_kredit'           => $input_nominal,
+      'keterangan'           => $input_keterangan,
+      'akun_debit'           => $akun_debit,
+    ];
+
+    $base64_data = null; // Initialize the variable to hold the Base64 string
+    $file_name = null;   // <--- New variable to hold the file name
+    $file_input_name = 'file'; // The name of your <input type="file">
+
+    if (isset($_FILES[$file_input_name]) && $_FILES[$file_input_name]['error'] != UPLOAD_ERR_NO_FILE) {
+      echo "MASUK";
+
+
+      $file = $_FILES[$file_input_name];
+
+      // --- File WAS submitted, proceed with custom checks and conversion ---
+
+      // Define your allowed file extensions and maximum size (for custom check)
+      $allowed_types = ['gif', 'jpg', 'png', 'doc', 'docx', 'xls', 'xlsx', 'pdf'];
+      $max_size_kb = 2048; // 2MB
+
+      // Get file extension and size for manual checking
+      $file_ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+      $file_size_kb = round($file['size'] / 1024);
+
+      // **A. Manual Type and Size Checks**
+      if (!in_array(strtolower($file_ext), $allowed_types) || $file_size_kb > $max_size_kb) {
+
+        // File failed manual check (Type or Size)
+        // $error_msg = "The file is not permitted (allowed types: " . implode(', ', $allowed_types) . ") or exceeds the maximum size ({$max_size_kb} KB).";
+        // $error = array('upload_error' => $error_msg);
+
+        // Re-load your form view with the error message
+        // $this->load->view('upload_form', $error);
+        $this->session->set_flashdata('message_error', "The file is not permitted (allowed types: " . implode(', ', $allowed_types) . ") or exceeds the maximum size ({$max_size_kb} KB).");
+
+        redirect('financial/coa_report');
+
+        return; // Stop execution
+      }
+
+      // **B. Convert the file content to Base64**
+      $file_name = $file['name'];
+
+      // 1. Read the file contents from the temporary location
+
+      $file_content = file_get_contents($file['tmp_name']);
+
+      if ($file_content === FALSE) {
+        // Handle read error
+        // $error = array('upload_error' => 'Error reading file content during conversion.');
+        $this->session->set_flashdata('message_error', 'Error reading file content during conversion.');
+
+        // $this->load->view('financial_entry');
+        redirect('financial/coa_report');
+
+        return;
+      }
+
+      // 2. Encode the content to Base64
+      $encoded_content = base64_encode($file_content);
+
+      // 3. Create the full Data URI string (MIME type is crucial here)
+      $base64_data = 'data:' . $file['type'] . ';base64,' . $encoded_content;
+
+      // echo "File Base64 :" . $base64_data;
+      // echo "File Name :" . $file_name;
+      // exit();
+      $data_update['nama_file'] = $file_name; // Change 'nama_file_kolom' to your actual DB column name
+      $data_update['file'] = $base64_data; // Change 'nama_file_kolom' to your actual DB column name
+
+    }
+
+
+    $this->cb->update('jurnal_neraca', $data_update, array('id' => $this->input->post('id')));
+    $this->session->set_flashdata('message_name', "Berhasil Update Arus Kas");
+
+    redirect('financial/coa_report');
+  }
+  public function hapus_arus_kas()
+  {
+    $id = $this->input->post('id');
+
+    // 1. Basic validation for ID
+    if (empty($id)) { // Using empty() is often better for checking if a variable is considered "empty"
+      echo json_encode(['status' => 'error', 'message' => 'ID Arus Kas tidak ditemukan atau tidak valid.']);
+      return;
+    }
+
+    // 2. Optional: Check if the record exists before attempting deletion
+    // This provides a more specific error message if the ID doesn't exist
+    $this->cb->where('id', $id);
+    $query = $this->cb->get('jurnal_neraca');
+
+    if ($query->num_rows() == 0) {
+      echo json_encode(['status' => 'info', 'message' => 'Arus Kas tidak ditemukan atau sudah dihapus.']);
+      return;
+    }
+
+    // 3. Attempt the deletion
+    $this->cb->where('id', $id);
+    $delete_result = $this->cb->delete('jurnal_neraca');
+
+    // 4. Check the direct result of the delete operation and affected rows
+    if ($delete_result) { // $delete_result will be TRUE on successful query execution
+      if ($this->cb->affected_rows() > 0) {
+        echo json_encode(['status' => 'success', 'message' => 'Arus Kas berhasil dihapus.']);
+      } else {
+        // This 'else' block means the query ran without error but affected 0 rows.
+        // Given the num_rows() check above, this is now less likely unless
+        // something very unusual happened between check and delete.
+        // Could also happen if a row was deleted by another process milliseconds before.
+        echo json_encode(['status' => 'info', 'message' => 'Arus Kas tidak ditemukan atau sudah dihapus. (Affected rows 0)']);
+      }
+    } else {
+      // This 'else' block means the DELETE query itself failed (e.g., database error, syntax error).
+      // You might want to log this error.
+      error_log("Database delete error for ID: " . $id . " - " . $this->db->error()['message']);
+      echo json_encode(['status' => 'error', 'message' => 'Terjadi kesalahan saat menghapus Arus Kas. Silakan coba lagi.']);
     }
   }
 }

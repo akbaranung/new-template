@@ -747,11 +747,11 @@ class Financial_first extends CI_Controller
 
             if ($query) {
               $this->cb->trans_commit();
-              // $this->session->set_flashdata('message_name', 'CoA ' . $no_sbb . ' berhasil ditambahkan.');
+              $this->session->set_flashdata('message_name', 'CoA ' . $no_sbb . ' berhasil ditambahkan.');
               // redirect($_SERVER['HTTP_REFERER']);
             } else {
               $this->cb->trans_rollback();
-              // $this->session->set_flashdata('message_error', 'CoA ' . $no_sbb . ' gagal disimpan. Ket:' . $this->cb->error());
+              $this->session->set_flashdata('message_error', 'CoA ' . $no_sbb . ' gagal disimpan. Ket:' . $this->cb->error());
             }
           }
         } else {
@@ -773,6 +773,7 @@ class Financial_first extends CI_Controller
       // Assuming 'users' table is in the default database
       $this->cb->where('uid', $this->session->userdata('kode_cabang')); // Assuming 'id' is the primary key for users table
       $this->cb->update('t_cabang', $cabang_data);
+      $this->session->set_flashdata('message_name', 'Semua COA berhasil ditambahkan.');
     }
     redirect($_SERVER['HTTP_REFERER']);
   }

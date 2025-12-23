@@ -58,6 +58,13 @@
                         <!-- <th class="text-center">Saldo Akhir</th> -->
                         <th class="text-center">Keterangan</th>
                         <th class="text-center">File</th>
+                        <?php
+                        if ($this->session->userdata('nama_jabatan') == "Super Admin") {
+                        ?>
+                          <th class="text-center">Action</th>
+                        <?php
+                        }
+                        ?>
                       </tr>
                     </thead>
                     <tbody>
@@ -84,6 +91,13 @@
                                 No Attachment
                               <?php endif; ?>
                             </td>
+                            <?php
+                            if ($this->session->userdata('nama_jabatan') == "Super Admin") {
+                            ?>
+                              <td class="text-center"><button class="btn btn-sm btn-warning text-white" onclick="onEdit_report_per_coa(<?= $a->id ?>)" type="button">Update</button></td>
+                            <?php
+                            }
+                            ?>
                           </tr>
                           <tr>
                             <td><?= $no++ ?></td>
@@ -102,13 +116,20 @@
                                 No Attachment
                               <?php endif; ?>
                             </td>
+                            <?php
+                            if ($this->session->userdata('nama_jabatan') == "Super Admin") {
+                            ?>
+                              <td class="text-center"><button class="btn btn-sm btn-warning text-white" onclick="onEdit_report_per_coa(<?= $a->id ?>)" type="button">Update</button></td>
+                            <?php
+                            }
+                            ?>
                           </tr>
                         <?php
                         endforeach;
                       } else {
                         ?>
                         <tr>
-                          <td colspan="6">Tidak ada transaksi pada periode yang dipilih</td>
+                          <td colspan="8">Tidak ada transaksi pada periode yang dipilih</td>
                         </tr>
                       <?php
                       } ?>
@@ -240,3 +261,79 @@
     </div> <!-- .col-12 -->
   </div> <!-- .row -->
 </div> <!-- .container-fluid -->
+
+<!-- Update COA Modal -->
+<div class="modal fade" id="updateCoaModal" tabindex="-1" aria-labelledby="updateCoaModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateCoaModalLabel">Update COA Entry</h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">X</button>
+      </div>
+      <form id="updateCoaForm" action="<?php echo site_url('financial/update_report_per_coa'); ?>" method="POST" enctype="multipart/form-data">
+        <div class="modal-body">
+          <div class="row">
+            <input type="hidden" name="id" id="update_id">
+            <div class="col-md-6 col-xs-12 form-group has-feedback">
+              <label for="" class="form-label">Debit</label>
+              <select name="neraca_debit" id="update_neraca_debit" class="form-control" style="width: 100%;" required>
+                <option value="">-- Pilih pos neraca debit</option>
+                <?php
+                foreach ($daftar_coa as $c) :
+                ?>
+                  <option value="<?= $c->no_sbb ?>" data-nama="<?= $c->nama_perkiraan ?>" data-posisi="<?= $c->posisi ?>"><?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?></option>
+                <?php
+                endforeach; ?>
+              </select>
+            </div>
+            <div class="col-md-6 col-xs-12 form-group has-feedback">
+              <label for="" class="form-label">Kredit</label>
+              <select name="neraca_kredit" id="update_neraca_kredit" class="form-control" style="width: 100%;" required>
+                <option value="">-- Pilih pos neraca kredit</option>
+                <?php
+                foreach ($daftar_coa as $c) :
+                ?>
+                  <option value="<?= $c->no_sbb ?>" data-nama="<?= $c->nama_perkiraan ?>" data-posisi="<?= $c->posisi ?>"><?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?> </option>
+                <?php
+                endforeach; ?>
+              </select>
+            </div>
+            <div class="col-md-12 col-xs-12 form-group has-feedback">
+              <div id="warningMessage" class="validation-error-alert">
+
+              </div>
+            </div>
+            <div class="col-md-6 col-xs-12 form-group has-feedback">
+              <label for="" class="form-label">Nominal</label>
+              <!-- <input type="text" class="form-control" name="input_nominal" id="input_nominal" placeholder="Nominal" oninput="format_angka()" onkeypress="return onlyNumberKey(event)" autofocus required> -->
+              <input type="text" class="form-control uang" name="input_nominal" id="update_input_nominal" placeholder="Nominal" autofocus required>
+            </div>
+            <div class="col-md-6 col-xs-12 form-group has-feedback">
+              <label for="" class="form-label">Keterangan</label>
+              <input type="text" class="form-control" name="input_keterangan" id="update_input_keterangan" placeholder="Keterangan" oninput="this.value = this.value.toUpperCase()" required>
+            </div>
+            <div class="col-md-6 col-xs-12 form-group has-feedback">
+              <label for="" class="form-label">Tanggal</label>
+              <input type="date" name="tanggal" id="update_tanggal" value="<?= date('Y-m-d') ?>" class="form-control" required>
+            </div>
+            <div class="col-md-6 col-xs-12 form-group has-feedback">
+              <div class="form-group">
+                <label for="file" class="form-label">Attachment (Image/Excel/Word) <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512" width="16" height="16">
+                    <path fill="#FFD43B" d="M309 106c11.4-7 19-19.7 19-34c0-22.1-17.9-40-40-40s-40 17.9-40 40c0 14.4 7.6 27 19 34L209.7 220.6c-9.1 18.2-32.7 23.4-48.6 10.7L72 160c5-6.7 8-15 8-24c0-22.1-17.9-40-40-40S0 113.9 0 136s17.9 40 40 40c.2 0 .5 0 .7 0L86.4 427.4c5.5 30.4 32 52.6 63 52.6l277.2 0c30.9 0 57.4-22.1 63-52.6L535.3 176c.2 0 .5 0 .7 0c22.1 0 40-17.9 40-40s-17.9-40-40-40s-40 17.9-40 40c0 9 3 17.3 8 24l-89.1 71.3c-15.9 12.7-39.5 7.5-48.6-10.7L309 106z" />
+                  </svg></label>
+                <div class="div-file">
+                  <input type="file" class="form-control-file" name="file" id="file">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-danger" onclick="onDeleteArusKas()">Delete</button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -99,6 +99,7 @@ class Auth extends CI_Controller
         $this->session->set_userdata('nip', $data->nip);
         $this->session->set_userdata('kd_agent', $data->kd_agent);
         $this->session->set_userdata('level_jabatan', $data->level_jabatan);
+        $this->session->set_userdata('nama_jabatan', $data->nama_jabatan);
         $this->session->set_userdata('bagian', $data->bagian);
         $this->session->set_userdata('kode_cabang', $data->id_cabang);
         $this->session->set_userdata('is_token', $data->token);
