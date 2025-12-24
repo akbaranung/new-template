@@ -76,7 +76,8 @@
                           $nama_kredit = $this->M_coa->getCoa($a->akun_kredit)['nama_perkiraan']; ?>
                           <tr>
                             <td><?= $no++ ?></td>
-                            <td><?= format_indo($a->tanggal) ?></td>
+                            <!-- <td><?= format_indo($a->tanggal) ?></td> -->
+                            <td><?= date('d/m/Y', strtotime($a->tanggal)) ?></td>
                             <td><?= $a->akun_debit ?> - <?= $nama_debit ?></td>
                             <td class="text-right"><?= rupiah($a->jumlah_debit) ?></td>
                             <td class="text-right"><?= '0' ?></td>
@@ -88,7 +89,8 @@
                                   <i class="fa fa-download"></i> <?= $a->nama_file ?>
                                 </a>
                               <?php else: ?>
-                                No Attachment
+                                <!-- No Attachment -->
+                                -
                               <?php endif; ?>
                             </td>
                             <?php
@@ -101,7 +103,8 @@
                           </tr>
                           <tr>
                             <td><?= $no++ ?></td>
-                            <td><?= format_indo($a->tanggal) ?></td>
+                            <!-- <td><?= format_indo($a->tanggal) ?></td> -->
+                            <td><?= date('d/m/Y', strtotime($a->tanggal)) ?></td>
                             <td><?= $a->akun_kredit ?> - <?= $nama_kredit ?></td>
                             <td class="text-right"><?= '0' ?></td>
                             <td class="text-right"><?= rupiah($a->jumlah_kredit) ?></td>
@@ -113,7 +116,8 @@
                                   <i class="fa fa-download"></i> <?= $a->nama_file ?>
                                 </a>
                               <?php else: ?>
-                                No Attachment
+                                <!-- No Attachment -->
+                                -
                               <?php endif; ?>
                             </td>
                             <?php
