@@ -547,6 +547,20 @@
     applyPriceFormat();
   })
 
+  function applyPriceFormat() {
+    $('.uang').each(function() {
+      new Cleave(this, {
+        numeral: true,
+        numeralThousandsGroupStyle: 'thousand',
+        numeralDecimalMark: ',',
+        delimiter: '.',
+        prefix: 'Rp ',
+        numeralDecimalScale: 2,
+        rawValueTrimPrefix: true
+      });
+    });
+  }
+
   $(document).ready(function() {
 
     $(document).on('change click keyup input paste', 'input[name="jumlah[]"], input[name="total[]"]', function(event) {
@@ -1920,6 +1934,25 @@ else if ($this->session->flashdata('message_error')) {
   });
 </script>
 <script>
+  function formatNumber_update(number) {
+    // Pisahkan bagian integer dan desimal
+    let parts = number.toString().split(",");
+
+    // Format bagian integer dengan pemisah ribuan
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+    // Gabungkan bagian integer dan desimal dengan koma sebagai pemisah desimal
+    return parts.join(",");
+  }
+
+  function format_angka_update() {
+    var nominal = document.getElementById('update_input_nominal').value;
+
+    var formattedValue = formatNumber_update(parseFloat(nominal.split('.').join('')));
+
+    document.getElementById('update_input_nominal').value = formattedValue;
+  }
+
   function onEdit_report_per_coa(id) {
     $('#updateCoaForm')[0].reset(); // reset form on modals
     // $('.form-group').removeClass('has-error'); // clear error class
@@ -1941,7 +1974,7 @@ else if ($this->session->flashdata('message_error')) {
         $('#update_id').val(data.id);
         $('#update_neraca_debit').val(data.akun_debit).trigger('change');
         $('#update_neraca_kredit').val(data.akun_kredit).trigger('change');
-        $('#update_input_nominal').val(data.jumlah_debit);
+        $('#update_input_nominal').val(formatNumber_update(data.jumlah_debit));
         $('#update_input_keterangan').val(data.keterangan);
         $('#update_tanggal').val(data.tanggal);
         // if (coaEntry.table_source == "t_coa_sbb") {
@@ -1957,6 +1990,7 @@ else if ($this->session->flashdata('message_error')) {
 
 
         $('#updateCoaModal').modal('show'); // show bootstrap modal when complete loaded
+        $('#update_input_nominal').trigger('change');
 
       },
       error: function(jqXHR, textStatus, errorThrown) {
