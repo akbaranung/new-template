@@ -337,7 +337,6 @@ class M_invoice extends CI_Model
 		}
 
 
-
 		if ($keyword === null) {
 			$query->where('is_billing', 0);
 		}

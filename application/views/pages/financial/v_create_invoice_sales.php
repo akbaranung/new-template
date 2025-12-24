@@ -65,9 +65,9 @@
 							</div>
 
 							<div class="col-md-3 mb-3">
-								<label for="bill_to" class="form-label">Coa Debit <span class="text-danger">*</span></label>
-								<select name="coa_debit" id="coa_debit" class="form-control select2" style="width: 100%" required>
-									<option value="">:: Pilih CoA Debit</option>
+								<label for="bill_to" class="form-label">Coa Pendapatan <span class="text-danger">*</span></label>
+								<select name="coa_pendapatan" id="coa_pendapatan" class="form-control select2" style="width: 100%" required>
+									<option value="">:: Pilih CoA Pendapatan</option>
 									<?php
 									foreach ($pendapatan as $pd) :
 									?>
@@ -78,9 +78,9 @@
 							</div>
 
 							<div class="col-md-3 mb-3">
-								<label for="bill_to" class="form-label">Coa Kredit <span class="text-danger">*</span></label>
-								<select name="coa_kredit" id="coa_kredit" class="form-control select2" style="width: 100%" required>
-									<option value="">:: Pilih CoA Kredit</option>
+								<label for="bill_to" class="form-label">Coa Persediaan <span class="text-danger">*</span></label>
+								<select name="coa_persediaan" id="coa_k" class="form-control select2" style="width: 100%" required>
+									<option value="">:: Pilih CoA Persediaan</option>
 									<?php
 									foreach ($persediaan as $ps) :
 									?>
