@@ -24,7 +24,7 @@
 				<div class="card-body">
 
 					<div class="row align-items-end">
-						<div class="col-md-8">
+						<div class="col-md-7">
 							<form method="GET" action="<?= base_url('financial/sales') ?>">
 
 								<div class="form-row">
@@ -61,17 +61,71 @@
 							</form>
 						</div>
 
-						<div class="col-md-4 text-right">
-							<button class="btn btn-dark" data-toggle="modal" data-target="#upload_purchase">
-								Upload purchase
-							</button>
-							<button class="btn btn-primary" data-toggle="modal" data-target="#upload_sales">
-								Upload sales
-							</button>
-							<button class="btn btn-pink" data-toggle="modal" data-target="#create_invoice" <?= $agents ? '' : 'disabled' ?>>
-								Create invoice
-							</button>
+						<div class="col-md-5 mt-3 mt-md-0">
+							<div class="d-flex justify-content-between justify-content-md-end flex-nowrap">
+
+								<!-- <button
+									class="btn btn-dark mr-2"
+									data-toggle="modal"
+									data-target="#upload_purchase">
+									<i class="fe fe-upload mr-1"></i>
+									<span>Purchase</span>
+								</button>
+
+								<button
+									class="btn btn-primary mr-2"
+									data-toggle="modal"
+									data-target="#upload_sales">
+									<i class="fe fe-upload mr-1"></i>
+									<span>Sales</span>
+								</button> -->
+
+								<button
+									class="btn btn-pink mr-2"
+									data-toggle="modal"
+									data-target="#create_invoice"
+									<?= $agents ? '' : 'disabled' ?>>
+									<span>Create Invoice</span>
+								</button>
+
+								<!-- DROPDOWN BUTTON -->
+								<div class="dropdown">
+									<button
+										class="btn btn-secondary dropdown-toggle"
+										type="button"
+										id="actionDropdown"
+										data-toggle="dropdown"
+										aria-haspopup="true"
+										aria-expanded="false">
+										<i class="fe fe-more-vertical"></i>Upload
+									</button>
+
+									<div class="dropdown-menu dropdown-menu-right">
+										<a class="dropdown-item" href="#" data-toggle="modal" data-target="#upload_purchase">
+											<i class="fe fe-upload mr-2"></i> Upload Purchase
+										</a>
+										<a class="dropdown-item" href="#" data-toggle="modal" data-target="#upload_sales">
+											<i class="fe fe-upload mr-2"></i> Upload Sales
+										</a>
+										<a class="dropdown-item"
+											href="<?= base_url('assets/template_upload_purchase.xlsx') ?>"
+											download>
+											<i class="fe fe-file mr-2"></i> Template Purchase
+										</a>
+
+										<a class="dropdown-item"
+											href="<?= base_url('assets/template_upload_sales.xlsx') ?>"
+											download>
+											<i class="fe fe-file mr-2"></i> Template Sales
+										</a>
+
+										</a>
+									</div>
+								</div>
+
+							</div>
 						</div>
+
 					</div>
 
 					<div class="table-responsive mt-4">
