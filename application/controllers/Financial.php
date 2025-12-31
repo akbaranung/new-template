@@ -5366,6 +5366,7 @@ class Financial extends CI_Controller
 	public function save_invoice_sales()
 	{
 		$id_user = $this->session->userdata('nip');
+		$kode_cabang = $this->session->userdata('kode_cabang'); // ✅ Definisikan di awal
 
 		// Ambil data POST
 		$subtotal = $this->convertToNumberWithComma($this->input->post('subtotal'));
@@ -5387,6 +5388,64 @@ class Financial extends CI_Controller
 
 		$pph = isset($opsi_pph) ? '0.02' : 0;
 
+		// ===== ✅ VALIDASI COA DI AWAL (SEBELUM PROSES APAPUN) ===== //
+
+		// Cek COA Debit (dari form - biasanya Persediaan)
+		$cek_coa_debit = $this->cb
+			->where('no_sbb', $coa_debit)
+			->where('id_cabang', $kode_cabang)
+			->get('t_coa_sbb')
+			->row_array();
+
+		if (!$cek_coa_debit) {
+			$this->session->set_flashdata('message_error', "COA Debit ($coa_debit) tidak ditemukan di cabang ini.");
+			redirect('financial/create_invoice_sales'); // ✅ redirect ke form create
+			return;
+		}
+
+		// Cek COA Kredit (dari form - biasanya Piutang)
+		$cek_coa_kredit = $this->cb
+			->where('no_sbb', $coa_kredit)
+			->where('id_cabang', $kode_cabang)
+			->get('t_coa_sbb')
+			->row_array();
+
+		if (!$cek_coa_kredit) {
+			$this->session->set_flashdata('message_error', "COA Kredit ($coa_kredit) tidak ditemukan di cabang ini.");
+			redirect('financial/create_invoice_sales');
+			return;
+		}
+
+		// Cek COA untuk Jurnal 2: Piutang Usaha (13010)
+		$coa_debit_2 = "13010";
+		$cek_coa_debit_2 = $this->cb
+			->where('no_sbb', $coa_debit_2)
+			->where('id_cabang', $kode_cabang)
+			->get('t_coa_sbb')
+			->row_array();
+
+		if (!$cek_coa_debit_2) {
+			$this->session->set_flashdata('message_error', 'COA 13010 - Piutang Usaha tidak ditemukan di cabang ini.');
+			redirect('financial/create_invoice_sales');
+			return;
+		}
+
+		// Cek COA untuk Jurnal 2: PAD-Operasional Lainnya (40401)
+		$coa_kredit_2 = "40401";
+		$cek_coa_kredit_2 = $this->cb
+			->where('no_lr_sbb', $coa_kredit_2) // ✅ Pakai no_lr_sbb karena ini t_coalr_sbb
+			->where('id_cabang', $kode_cabang)
+			->get('t_coalr_sbb')
+			->row_array();
+
+		if (!$cek_coa_kredit_2) {
+			$this->session->set_flashdata('message_error', 'COA 40401 - PAD Operasional Lainnya tidak ditemukan di cabang ini.');
+			redirect('financial/create_invoice_sales');
+			return;
+		}
+
+		// ===== VALIDASI SELESAI - LANJUT PROSES ===== //
+
 		// Generate nomor invoice
 		$tahun = substr($tgl_invoice, 0, 4);
 		$max_num = $this->M_invoice->select_max($tahun);
@@ -5395,8 +5454,8 @@ class Financial extends CI_Controller
 		$month = substr($tgl_invoice, 5, 2);
 		$year = substr($tgl_invoice, 2, 2);
 		$no_inv = sprintf("%04d", $bilangan);
-		$kode_cabang = sprintf("%02d", $this->session->userdata('kode_cabang'));
-		$kop_invoice = $this->session->userdata('nama_akronim') . "-" . $kode_cabang;
+		$kode_cabang_format = sprintf("%02d", $kode_cabang);
+		$kop_invoice = $this->session->userdata('nama_akronim') . "-" . $kode_cabang_format;
 		$slug = $no_inv . '/' . strtoupper($kop_invoice) . '/' . intToRoman($month) . '/' . $year;
 
 		// Data invoice header
@@ -5408,7 +5467,7 @@ class Financial extends CI_Controller
 			'id_customer' => $this->input->post('bill_to'),
 			'subtotal' => $subtotal,
 			'besaran_ppn' => $vat,
-			'ppn' => '0.11', // 11%
+			'ppn' => '0.11',
 			'opsi_pph23' => isset($opsi_pph) ? $opsi_pph : '0',
 			'pph' => $pph,
 			'besaran_pph' => $pph23,
@@ -5419,24 +5478,18 @@ class Financial extends CI_Controller
 			'total_biaya' => $total_biaya,
 			'nominal_bayar' => $nominal_bayar,
 			'nominal_pendapatan' => $gross_profit,
-			'jenis_invoice' => 'sales',
+			'jenis_invoice' => 'agen_smu', // ✅ hapus duplikasi
 			'opsi_termin' => isset($opsi_termin) ? $opsi_termin : '0',
 			'status_pendapatan' => '1',
 			'slug' => $slug,
-			'id_cabang' => $this->session->userdata('kode_cabang'),
-			'id_company' => $this->session->userdata('user_perusahaan_id'),
-			'jenis_invoice' => 'agen_smu'
+			'id_cabang' => $kode_cabang,
+			'id_company' => $this->session->userdata('user_perusahaan_id')
 		];
 
-		// echo '<pre>';
-		// print_r($_POST);
-		// echo '</pre>';
-		// exit;
 		$this->cb->trans_begin();
 
 		// Insert invoice
 		$id_invoice = $this->M_invoice->insert($invoice_data);
-		// $id_invoice = '1';
 
 		if (!$id_invoice) {
 			$this->cb->trans_rollback();
@@ -5527,20 +5580,15 @@ class Financial extends CI_Controller
 				'asuransi_hpp' => $this->convertToNumberWithComma($asuransi_hpps[$sales_id]),
 
 				'created_by' => $id_user,
-				'id_cabang' => $this->session->userdata('kode_cabang'),
+				'id_cabang' => $kode_cabang,
 				'id_company' => $this->session->userdata('user_perusahaan_id')
 			];
 		}
 
-		// echo '<pre>';
-		// print_r($detail_data);
-		// echo '</pre>';
-		// exit;
 		if (!empty($detail_data)) {
 			$insert = $this->M_invoice->insert_batch_sales($detail_data);
 
 			if ($insert) {
-
 				foreach ($sales_ids as $sales_id) {
 					$update_sales = [
 						'is_billing' => '1',
@@ -5550,14 +5598,10 @@ class Financial extends CI_Controller
 					$this->cb->where('Id', $sales_id)->update('sales', $update_sales);
 				}
 
-				// posting($coa_debit, $coa_kredit, $keterangan, $nominal, $tanggal, $id_invoice = NULL, $base64_data = NULL, $nama_data = NULL)
+				// ✅ Jurnal 1: Piutang Usaha bertambah, Persediaan berkurang
+				$this->posting($coa_debit, $coa_kredit, $keterangan, $total_biaya, $tgl_invoice, $id_invoice, NULL, NULL);
 
-				// Jurnal 1: Piutang Usaha bertambah (dari total_biaya), Persediaan berkurang sebesar total_biaya
-				$this->posting($coa_debit, $coa_kredit, $keterangan, $total_biaya, $tgl_invoice, $id_invoice, NULL, NULL, NULL);
-
-				// Jurnal 2: Piutang Usaha bertambah (pendapatan), PAD-Operasional Lainnya bertambah
-				$coa_debit_2 = "13010";
-				$coa_kredit_2 = "40401";
+				// ✅ Jurnal 2: Piutang Usaha bertambah, PAD-Operasional bertambah (tanpa pengecekan lagi karena sudah di awal)
 				$this->posting($coa_debit_2, $coa_kredit_2, $keterangan, $gross_profit, $tgl_invoice, $id_invoice);
 
 				$this->cb->trans_commit();
@@ -5899,5 +5943,99 @@ class Financial extends CI_Controller
 		$data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
 
 		$this->load->view('index', $data);
+	}
+
+	public function proses_penihilan()
+	{
+		$tanggal = $this->input->post('tanggal_transaksi');
+		$nip = $this->session->userdata('nip');
+		$kode_cabang = $this->session->userdata('kode_cabang');
+
+		// Validasi tanggal
+		if (!$tanggal) {
+			$this->session->set_flashdata('message_error', 'Tanggal transaksi tidak valid.');
+			redirect('financial/closing');
+			return;
+		}
+
+		// Get pendapatan (PASIVA di t_coalr_sbb) untuk cabang ini
+		$get_pendapatan = $this->cb
+			->where(['posisi' => 'PASIVA', 'nominal !=' => '0'])
+			->where('id_cabang', $kode_cabang)
+			->get('t_coalr_sbb')
+			->result();
+
+		// Get beban (AKTIVA di t_coalr_sbb) untuk cabang ini
+		$get_beban = $this->cb
+			->where(['posisi' => 'AKTIVA', 'nominal !=' => '0'])
+			->where('id_cabang', $kode_cabang)
+			->get('t_coalr_sbb')
+			->result();
+
+		// COA Laba Ditahan
+		$coa_laba_ditahan = "32010";
+		$id_laba_ditahan = $this->cb
+			->where('no_sbb', $coa_laba_ditahan)
+			->where('id_cabang', $kode_cabang)
+			->get('t_coa_sbb')
+			->row_array()['id'] ?? null;
+
+		if (!$id_laba_ditahan) {
+			$this->session->set_flashdata('message_error', 'COA laba ditahan tidak ditemukan.');
+			redirect('financial/closing');
+			return;
+		}
+
+		$this->cb->trans_start();
+
+		// ========== PENIHILAN PENDAPATAN ========== //
+		foreach ($get_pendapatan as $gp) {
+			$coa_debit = $gp->no_lr_sbb;
+			if (!$coa_debit) continue;
+
+			$nominal = $gp->nominal;
+
+			// Gunakan method posting() yang udah ada
+			$this->posting(
+				$coa_debit,              // debit: akun pendapatan
+				$coa_laba_ditahan,       // kredit: laba ditahan
+				"PENIHILAN PENDAPATAN SECARA SISTEM",
+				$nominal,
+				$tanggal,
+				null,  // no invoice
+				null,  // no file
+				null   // no filename
+			);
+		}
+
+		// ========== PENIHILAN BEBAN ========== //
+		foreach ($get_beban as $gb) {
+			$coa_kredit = $gb->no_lr_sbb;
+			if (!$coa_kredit) continue;
+
+			$nominal = $gb->nominal;
+
+			// Gunakan method posting() yang udah ada
+			$this->posting(
+				$coa_laba_ditahan,       // debit: laba ditahan
+				$coa_kredit,             // kredit: akun beban
+				"PENIHILAN BEBAN SECARA SISTEM",
+				$nominal,
+				$tanggal,
+				null,  // no invoice
+				null,  // no file
+				null   // no filename
+			);
+		}
+
+		$this->cb->trans_complete();
+
+		if ($this->cb->trans_status() === FALSE) {
+			$this->session->set_flashdata('message_error', 'Gagal melakukan proses penihilan.');
+		} else {
+			$this->session->set_flashdata('message_name', 'Berhasil melakukan proses penihilan.');
+		}
+
+		redirect('financial/closing');
 	}
 }
