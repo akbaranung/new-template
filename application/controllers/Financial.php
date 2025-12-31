@@ -5947,8 +5947,31 @@ class Financial extends CI_Controller
 
 	public function proses_penihilan()
 	{
+		// ===== VALIDASI PASSWORD ===== //
+		$password = $this->input->post('password');
 		$tanggal = $this->input->post('tanggal_transaksi');
+
+		// Validasi form submission
+		$this->form_validation->set_rules('tanggal_transaksi', 'Tanggal Transaksi', 'required');
+		$this->form_validation->set_rules('password', 'Password', 'required');
+
+		if ($this->form_validation->run() == FALSE) {
+			$error_msg = validation_errors() ? strip_tags(validation_errors()) : 'Form tidak lengkap';
+			$this->session->set_flashdata('message_error', $error_msg);
+			redirect('financial/closing');
+			return;
+		}
+
+		// Validasi password user
 		$nip = $this->session->userdata('nip');
+		$user_data = $this->M_login->datapengguna($this->session->userdata('username'));
+
+		if (!password_verify($password, $user_data->password)) {
+			$this->session->set_flashdata('message_error', 'Password yang Anda masukkan salah!');
+			redirect('financial/closing');
+			return;
+		}
+
 		$kode_cabang = $this->session->userdata('kode_cabang');
 
 		// Validasi tanggal

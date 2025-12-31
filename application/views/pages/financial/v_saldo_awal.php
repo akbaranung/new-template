@@ -7,32 +7,39 @@
           <p class="card-title"><strong>Closing / Saldo Awal</strong></p>
         </div> -->
 				<div class="card-body">
-					<a href="#" class="btn btn-primary" data-toggle="modal" data-target="#proses-closing">Closing EoM</a>
-					<p class="mt-4"><strong>* Closing harus dilakukan setiap akhir bulan, untuk membentuk saldo awal bulan berikutnya!</strong></p>
-					<!-- <form class="form-horizontal form-label-left" method="POST" action="<?= base_url('financial/save_saldo_awal') ?>">
-            <div class="row mb-4">
-              <div class="col-md-3 col-xs-12">
-                <input type="month" class="form-control" name="periode" value="<?= $this->input->post('periode') ?>">
-              </div>
-              <div class="col-md-3 col-xs-12">
-                <button type="submit" class="btn btn-primary">Closing EoM</button>
-              </div>
-            </div>
-          </form> -->
-
-
-
-					<div class="col-md-6 col-xs-12 text-right">
-						<form class="form-horizontal form-label-left" method="POST" action="<?= base_url('financial/proses_penihilan') ?>">
-							<div class="row">
-								<div class="col-md-7 col-xs-12 mt-3">
-									<input type="date" class="form-control datepicker" id="tanggal_transaksi" name="tanggal_transaksi" value="<?= $this->input->post('tanggal_transaksi') ?>">
-								</div>
-								<div class="col-md-5 col-xs-12 mt-3 text-right">
-									<button type="submit" class="btn btn-danger click-process">Proses Penihilan</button>
-								</div>
+					<!-- ✅ LAYOUT SIMPLE - Responsive Desktop & Mobile -->
+					<div class="row mb-4">
+						<!-- Button Closing EoM -->
+						<div class="col-lg-6 col-md-12 mb-3">
+							<div class="text-center p-4 border rounded bg-light">
+								<h5 class="mb-3">
+									<i class="fa fa-calendar-check-o text-primary"></i> Closing Akhir Bulan
+								</h5>
+								<a href="#" class="btn btn-primary btn-lg btn-block" data-toggle="modal" data-target="#proses-closing">
+									<i class="fa fa-lock"></i> Closing EoM
+								</a>
+								<p class="mt-3 mb-0 text-muted">
+									<small><strong><i class="fa fa-info-circle"></i> Penting!</strong><br>
+										Closing harus dilakukan setiap akhir bulan untuk membentuk saldo awal bulan berikutnya</small>
+								</p>
 							</div>
-						</form>
+						</div>
+
+						<!-- Button Proses Penihilan -->
+						<div class="col-lg-6 col-md-12 mb-3">
+							<div class="text-center p-4 border rounded bg-light">
+								<h5 class="mb-3">
+									<i class="fa fa-refresh text-danger"></i> Penihilan Akun
+								</h5>
+								<a href="#" class="btn btn-danger btn-lg btn-block" data-toggle="modal" data-target="#proses-penihilan">
+									<i class="fa fa-refresh"></i> Proses Penihilan
+								</a>
+								<p class="mt-3 mb-0 text-muted">
+									<small><strong><i class="fa fa-info-circle"></i> Penting!</strong><br>
+										Penihilan dilakukan untuk mengosongkan akun pendapatan dan beban ke laba ditahan</small>
+								</p>
+							</div>
+						</div>
 					</div>
 					<div class="table-responsive mt-3">
 						<table id="" class="table table-sm table-stripped" style="width:100%">
@@ -110,3 +117,84 @@
 		</div>
 	</div>
 </div>
+
+<!-- ✅ MODAL BARU - Proses Penihilan -->
+<div class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" id="proses-penihilan">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header bg-danger">
+				<h4 class="modal-title text-white">
+					<i class="fa fa-exclamation-triangle"></i> Proses Penihilan
+				</h4>
+				<button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">×</span>
+				</button>
+			</div>
+			<form class="form-horizontal form-label-left" method="POST" action="<?= base_url('financial/proses_penihilan') ?>">
+				<div class="modal-body">
+					<div class="alert alert-warning">
+						<strong><i class="fa fa-info-circle"></i> Perhatian!</strong>
+						<p class="mb-0">Proses penihilan akan mengosongkan semua akun <strong>Pendapatan</strong> dan <strong>Beban</strong> ke akun <strong>Laba Ditahan (32010)</strong>.</p>
+					</div>
+
+					<div class="form-group row">
+						<div class="col-12">
+							<label for="tanggal_transaksi">Tanggal Transaksi <span class="text-danger">*</span></label>
+							<input type="date"
+								class="form-control"
+								id="tanggal_transaksi"
+								name="tanggal_transaksi"
+								value="<?= date('Y-m-d') ?>"
+								required>
+							<small class="form-text text-muted">Tanggal pencatatan jurnal penihilan</small>
+						</div>
+					</div>
+
+					<div class="form-group row">
+						<div class="col-12">
+							<label for="password_penihilan">Konfirmasi Password <span class="text-danger">*</span></label>
+							<input type="password"
+								name="password"
+								id="password_penihilan"
+								class="form-control"
+								placeholder="Masukkan password anda"
+								required>
+							<small class="form-text text-muted">Password diperlukan untuk otorisasi proses penihilan</small>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">
+						<i class="fa fa-times"></i> Batal
+					</button>
+					<button type="submit" class="btn btn-danger btn-submit">
+						<i class="fa fa-check"></i> Proses Penihilan
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script>
+	$(document).ready(function() {
+		// Konfirmasi sebelum submit penihilan
+		$('#proses-penihilan form').on('submit', function(e) {
+			const password = $('#password_penihilan').val();
+
+			if (!password) {
+				e.preventDefault();
+				alert('Password harus diisi!');
+				return false;
+			}
+
+			if (!confirm('⚠️ PERHATIAN!\n\nProses penihilan akan mengosongkan semua akun Pendapatan dan Beban.\n\nApakah Anda yakin ingin melanjutkan?')) {
+				e.preventDefault();
+				return false;
+			}
+
+			// Disable button untuk prevent double submit
+			$(this).find('.btn-submit').prop('disabled', true).html('<i class="fa fa-spinner fa-spin"></i> Processing...');
+		});
+	});
+</script>
