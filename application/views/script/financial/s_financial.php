@@ -86,7 +86,7 @@
         $('#update_id').val(data.id);
         $('#update_neraca_debit').val(data.akun_debit).trigger('change');
         $('#update_neraca_kredit').val(data.akun_kredit).trigger('change');
-        $('#update_input_nominal').val(formatNumber_update(data.jumlah_debit));
+        $('#update_input_nominal').val(data.jumlah_debit);
         $('#update_input_keterangan').val(data.keterangan);
         $('#update_tanggal').val(data.tanggal);
         // if (coaEntry.table_source == "t_coa_sbb") {
@@ -102,11 +102,130 @@
 
 
         $('#updateCoaModal').modal('show'); // show bootstrap modal when complete loaded
-        $('#update_input_nominal').trigger('change');
 
       },
       error: function(jqXHR, textStatus, errorThrown) {
         alert('Error get data from ajax');
+      }
+    });
+  }
+
+  $(document).ready(function() {
+    function formatState(state, colorAktiva, colorPasiva, signAktiva, signPasiva) {
+      if (!state.id) {
+        return state.text;
+      }
+
+      var color = state.element.dataset.posisi == "AKTIVA" ? colorAktiva : colorPasiva;
+      var sign = state.element.dataset.posisi == "AKTIVA" ? signAktiva : signPasiva;
+
+      var $state = $('<p style="background-color: ' + color + ';"><strong style="color: #fff;">' + state.text + ' ' + sign + '</strong></p>');
+
+      return $state;
+    };
+
+    function formatStateDebit(state) {
+      return formatState(state, '#3f51b5', '#e81f63', '(+)', '(-)');
+    }
+
+    function formatStateKredit(state) {
+      return formatState(state, '#e81f63', '#3f51b5', '(-)', '(+)');
+    }
+
+    $('#update_neraca_debit').select2({
+      // templateResult: formatStateDebit,
+      templateSelection: formatStateDebit,
+      theme: 'bootstrap4',
+    });
+
+    $('#update_neraca_kredit').select2({
+      // templateResult: formatStateKredit,
+      templateSelection: formatStateKredit,
+      theme: 'bootstrap4',
+    });
+
+    $('#update_neraca_debit, #update_neraca_kredit').change(function() {
+      var debit = $('#update_neraca_debit').find(":selected").val();
+      var kredit = $('#update_neraca_kredit').find(":selected").val();
+      disabledSubmit(debit, kredit);
+    });
+
+    function disabledSubmit(debit, kredit) {
+
+      // const inputFieldDisableFinancialEntry = document.getElementById('inputToCheck');
+      const warningBoxDisableFinancialEntry = document.getElementById('warningMessage');
+
+      if (debit && kredit) {
+        if (debit == kredit) {
+          console.log('sama');
+          // $('.btn-primary').prop('disabled', true);
+          $('#btn-submit').prop('disabled', true);
+          warningBoxDisableFinancialEntry.style.display = 'block';
+          warningBoxDisableFinancialEntry.innerHTML = '⚠️ **Peringatan!** Nomor COA tidak boleh sama. Silahkan Pilih Nomor COA Lain'; // Optional: Also highlight the input border red for better feedback
+          // this.style.borderColor = '#dc3545';
+        } else {
+          console.log('tidak sama');
+          $('#btn-submit').prop('disabled', false);
+          // Hide the warning message by setting display to 'none'
+          warningBoxDisableFinancialEntry.style.display = 'none';
+
+          // Reset input field border
+          // this.style.borderColor = '';
+          warningBoxDisableFinancialEntry.innerHTML = '';
+        }
+      }
+    }
+  });
+
+  function onDeleteArusKas() {
+    let id = $('#update_id').val();
+    Swal.fire({
+      title: 'Apakah Anda yakin?',
+      text: "Data yang dihapus tidak dapat dikembalikan!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Ya, hapus!',
+      cancelButtonText: 'Batal'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        $.ajax({
+          url: "<?= base_url('financial/hapus_arus_kas/') ?>", // Use POST for ID, don't append to URL unless it's a RESTful DELETE
+          type: 'POST', // Keep as POST
+          data: {
+            id: id
+          },
+          dataType: 'json', // Expect JSON response
+          success: function(response) {
+            let iconType = 'error'; // Default to error
+            if (response.status == 'success') {
+              iconType = 'success';
+            } else if (response.status == 'info') {
+              iconType = 'info'; // Use info icon for "not found" cases
+            }
+
+            Swal.fire(
+              response.status === 'success' ? 'Berhasil!' : 'Perhatian!', // Dynamic title
+              response.message, // Display the message from the backend
+              iconType
+            ).then(() => {
+              // Only reload the table if it was a success or a clear 'info' (already deleted) case
+              if (response.status === 'success' || response.status === 'info') {
+                // Assuming your DataTables ID is 'datatable', not 'table1' based on previous snippets
+                $('#datatable_lokasi').DataTable().ajax.reload(null, false);
+              }
+            });
+          },
+          error: function(xhr, status, error) {
+            console.error('AJAX Error:', status, error, xhr.responseText); // Log full error for debugging
+            Swal.fire(
+              'Kesalahan Jaringan!', // More specific error message
+              'Terjadi kesalahan komunikasi dengan server. Silakan coba lagi.',
+              'error'
+            );
+          }
+        });
       }
     });
   }
