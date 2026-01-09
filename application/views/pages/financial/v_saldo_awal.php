@@ -36,7 +36,7 @@
 								</a>
 								<p class="mt-3 mb-0 text-muted">
 									<small><strong><i class="fa fa-info-circle"></i> Penting!</strong><br>
-										Penihilan dilakukan untuk mengosongkan akun pendapatan dan beban ke laba ditahan</small>
+										Penihilan dilakukan untuk mengosongkan akun pendapatan dan beban ke laba ditahan.</small>
 								</p>
 							</div>
 						</div>
@@ -139,7 +139,7 @@
 
 					<div class="form-group row">
 						<div class="col-12">
-							<label for="tanggal_transaksi">Tanggal Transaksi <span class="text-danger">*</span></label>
+							<label for="tanggal_transaksi">Tanggal Penihilan <span class="text-danger">*</span></label>
 							<input type="date"
 								class="form-control"
 								id="tanggal_transaksi"
@@ -167,7 +167,7 @@
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">
 						<i class="fa fa-times"></i> Batal
 					</button>
-					<button type="submit" class="btn btn-danger btn-submit">
+					<button type="submit" class="btn btn-danger">
 						<i class="fa fa-check"></i> Proses Penihilan
 					</button>
 				</div>
@@ -175,7 +175,7 @@
 		</div>
 	</div>
 </div>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 	$(document).ready(function() {
 		// Konfirmasi sebelum submit penihilan

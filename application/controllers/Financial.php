@@ -1462,6 +1462,7 @@ class Financial extends CI_Controller
 
 		$data['utility'] = $this->db->get('utility')->row_array();
 		$data['pages_script'] = 'script/financial/s_financial';
+		// $data['pages_script'] = '';
 		$data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
 
 		if ($slug) {
@@ -1482,6 +1483,14 @@ class Financial extends CI_Controller
 			$data['pages'] = 'pages/financial/v_saldo_awal';
 			// $this->load->view('saldo_awal', $data);
 		}
+
+		$this->cb->select('no_bb as id, CONCAT(no_bb, " - ", nama_perkiraan) as text');
+		$this->cb->from('v_coabb_all');
+		$this->cb->where('id_company', $this->session->userdata('user_perusahaan_id'));
+		$query = $this->cb->get();
+		$all_coa_bb = $query->result_array();
+
+		$data['all_coa_bb'] = $all_coa_bb;
 
 		$this->load->view('index', $data);
 	}
@@ -5093,7 +5102,7 @@ class Financial extends CI_Controller
 		$data['title'] = "Daftar Sales";
 		$data['pages'] = "pages/financial/v_create_invoice_sales";
 		$data['utility'] = $this->db->get('utility')->row_array();
-		// $data['pages_script'] = 'script/financial/s_financial';
+		$data['pages_script'] = 'script/financial/s_financial';
 		$data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
 		// echo '<pre>';
 		// print_r($data['invoices']);
@@ -6009,6 +6018,22 @@ class Financial extends CI_Controller
 			return;
 		}
 
+		// Persiapan data log
+		$log_data = [
+			'tanggal_proses' => date('Y-m-d H:i:s'),
+			'tanggal_transaksi' => $tanggal,
+			'kode_cabang' => $kode_cabang,
+			'nip' => $nip,
+			'username' => $this->session->userdata('username'),
+			'ip_address' => $this->input->ip_address()
+		];
+
+		$total_pendapatan = 0;
+		$total_beban = 0;
+		$count_jurnal_pendapatan = 0;
+		$count_jurnal_beban = 0;
+		$detail_logs = [];
+
 		$this->cb->trans_start();
 
 		// ========== PENIHILAN PENDAPATAN ========== //
@@ -6018,17 +6043,28 @@ class Financial extends CI_Controller
 
 			$nominal = $gp->nominal;
 
-			// Gunakan method posting() yang udah ada
-			$this->posting(
-				$coa_debit,              // debit: akun pendapatan
-				$coa_laba_ditahan,       // kredit: laba ditahan
+			$id_jurnal = $this->posting(
+				$coa_debit,
+				$coa_laba_ditahan,
 				"PENIHILAN PENDAPATAN SECARA SISTEM",
 				$nominal,
 				$tanggal,
-				null,  // no invoice
-				null,  // no file
-				null   // no filename
+				null,
+				null,
+				null
 			);
+
+			// Simpan detail untuk log
+			$detail_logs[] = [
+				'tipe' => 'PENDAPATAN',
+				'no_coa' => $coa_debit,
+				'nama_coa' => $gp->nama_lr_sbb ?? '',
+				'nominal' => $nominal,
+				'id_jurnal' => $id_jurnal
+			];
+
+			$total_pendapatan += $nominal;
+			$count_jurnal_pendapatan++;
 		}
 
 		// ========== PENIHILAN BEBAN ========== //
@@ -6038,17 +6074,49 @@ class Financial extends CI_Controller
 
 			$nominal = $gb->nominal;
 
-			// Gunakan method posting() yang udah ada
-			$this->posting(
-				$coa_laba_ditahan,       // debit: laba ditahan
-				$coa_kredit,             // kredit: akun beban
+			$id_jurnal = $this->posting(
+				$coa_laba_ditahan,
+				$coa_kredit,
 				"PENIHILAN BEBAN SECARA SISTEM",
 				$nominal,
 				$tanggal,
-				null,  // no invoice
-				null,  // no file
-				null   // no filename
+				null,
+				null,
+				null
 			);
+
+			// Simpan detail untuk log
+			$detail_logs[] = [
+				'tipe' => 'BEBAN',
+				'no_coa' => $coa_kredit,
+				'nama_coa' => $gb->nama_lr_sbb ?? '',
+				'nominal' => $nominal,
+				'id_jurnal' => $id_jurnal
+			];
+
+			$total_beban += $nominal;
+			$count_jurnal_beban++;
+		}
+
+		// Lengkapi data log
+		$log_data['total_pendapatan'] = $total_pendapatan;
+		$log_data['total_beban'] = $total_beban;
+		$log_data['jumlah_jurnal_pendapatan'] = $count_jurnal_pendapatan;
+		$log_data['jumlah_jurnal_beban'] = $count_jurnal_beban;
+		$log_data['status'] = 'SUCCESS';
+		$log_data['keterangan'] = "Proses penihilan berhasil. Total Pendapatan: Rp " . number_format($total_pendapatan, 0, ',', '.') .
+			", Total Beban: Rp " . number_format($total_beban, 0, ',', '.');
+
+		// Insert log utama
+		$this->cb->insert('t_log_penihilan', $log_data);
+		$id_log = $this->cb->insert_id();
+
+		// Insert log detail - HANYA JIKA ADA DATA
+		if (!empty($detail_logs)) {
+			foreach ($detail_logs as &$detail) {
+				$detail['id_log_penihilan'] = $id_log;
+			}
+			$this->cb->insert_batch('t_log_penihilan_detail', $detail_logs);
 		}
 
 		$this->cb->trans_complete();
