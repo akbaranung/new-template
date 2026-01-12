@@ -407,11 +407,10 @@ class Financial extends CI_Controller
 			$data['pendapatan'] = $combinedPendapatan;
 			$data['sum_biaya'] = $total_beban;
 			$data['sum_pendapatan'] = $total_pendapatan;
-			$data['total_pendapatan'] = $total_pendapatan - $total_beban;
+			$data['total_pendapatan'] = $total_pendapatan - abs($total_beban);
 		} else {
 			$this->session->set_flashdata('message_error', 'Closing bulan ' . format_indo($periode) . ' tidak ditemukan');
 		}
-
 		// print_r($data['total_pendapatan']);
 		// exit;
 		$data['title'] = 'Laba rugi per tanggal ' . format_indo($tanggal);
@@ -5958,7 +5957,7 @@ class Financial extends CI_Controller
 	{
 		// ===== VALIDASI PASSWORD ===== //
 		$password = $this->input->post('password');
-		$tanggal = $this->input->post('tanggal_transaksi');
+		$tanggal_transaksi = $this->input->post('tanggal_transaksi');
 
 		// Validasi form submission
 		$this->form_validation->set_rules('tanggal_transaksi', 'Tanggal Transaksi', 'required');
@@ -5984,27 +5983,152 @@ class Financial extends CI_Controller
 		$kode_cabang = $this->session->userdata('kode_cabang');
 
 		// Validasi tanggal
-		if (!$tanggal) {
+		if (!$tanggal_transaksi) {
 			$this->session->set_flashdata('message_error', 'Tanggal transaksi tidak valid.');
 			redirect('financial/closing');
 			return;
 		}
 
-		// Get pendapatan (PASIVA di t_coalr_sbb) untuk cabang ini
-		$get_pendapatan = $this->cb
-			->where(['posisi' => 'PASIVA', 'nominal !=' => '0'])
-			->where('id_cabang', $kode_cabang)
-			->get('t_coalr_sbb')
-			->result();
+		$date = new DateTime($tanggal_transaksi);
+		$bulan = $date->format('m');
+		$tahun = $date->format('Y');
 
-		// Get beban (AKTIVA di t_coalr_sbb) untuk cabang ini
-		$get_beban = $this->cb
-			->where(['posisi' => 'AKTIVA', 'nominal !=' => '0'])
-			->where('id_cabang', $kode_cabang)
-			->get('t_coalr_sbb')
-			->result();
+		// Periode saldo awal (bulan sebelumnya)
+		$periode_saldo_awal = (new DateTime($tanggal_transaksi))->modify('-1 month')->format('Y-m');
 
-		// COA Laba Ditahan
+		// Tanggal awal periode (tanggal 1 di bulan yang sama dengan tanggal transaksi)
+		$tanggal_awal_periode = $date->format('Y-m-01');
+
+		// ===== STEP 1: Ambil Saldo Awal dari Periode Sebelumnya ===== //
+		$saldo_awal_data = $this->M_coa->cek_saldo_awal($periode_saldo_awal);
+
+		if (empty($saldo_awal_data)) {
+			$this->session->set_flashdata('message_error', 'Saldo awal periode ' . $periode_saldo_awal . ' tidak ditemukan. Harap lakukan closing akhir bulan periode sebelumnya terlebih dahulu.');
+			redirect('financial/closing');
+			return;
+		}
+
+		// Decode saldo awal dan filter hanya COA L/R (beban & pendapatan)
+		$coa_saldo_awal = json_decode($saldo_awal_data['coa'], true);
+		$saldo_lr_map = [];
+
+		foreach ($coa_saldo_awal as $coa) {
+			if ($coa['table_source'] == 't_coalr_sbb') {
+				$saldo_lr_map[$coa['no_sbb']] = [
+					'no_sbb' => $coa['no_sbb'],
+					'nama_perkiraan' => $coa['nama_perkiraan'] ?? '',
+					'posisi' => $coa['posisi'],
+					'saldo_awal' => (float) $coa['saldo_awal']
+				];
+			}
+		}
+
+		// ===== STEP 2: Ambil Transaksi Jurnal Periode Berjalan ===== //
+		$query = $this->cb->query("
+        SELECT 
+            jn.akun_debit,
+            jn.akun_kredit,
+            jn.jumlah_debit,
+            jn.jumlah_kredit,
+            coa_debit.posisi as posisi_debit,
+            coa_kredit.posisi as posisi_kredit
+        FROM 
+            jurnal_neraca jn
+        LEFT JOIN 
+            v_coa_all coa_debit ON jn.akun_debit = coa_debit.no_sbb 
+            AND coa_debit.id_cabang = '$kode_cabang'
+            AND coa_debit.table_source = 't_coalr_sbb'
+        LEFT JOIN 
+            v_coa_all coa_kredit ON jn.akun_kredit = coa_kredit.no_sbb 
+            AND coa_kredit.id_cabang = '$kode_cabang'
+            AND coa_kredit.table_source = 't_coalr_sbb'
+        WHERE 
+            jn.id_cabang = '$kode_cabang'
+            AND jn.tanggal >= '$tanggal_awal_periode'
+            AND jn.tanggal <= '$tanggal_transaksi'
+            AND (coa_debit.table_source = 't_coalr_sbb' OR coa_kredit.table_source = 't_coalr_sbb')
+    ");
+
+		$transaksi_periode = $query->result_array();
+
+		// ===== STEP 3: Kalkulasi Saldo Akhir per COA ===== //
+		foreach ($transaksi_periode as $trans) {
+			// Proses akun debit (jika COA L/R)
+			if (!empty($trans['posisi_debit'])) {
+				$no_coa = $trans['akun_debit'];
+				$nominal = (float) $trans['jumlah_debit'];
+
+				if (!isset($saldo_lr_map[$no_coa])) {
+					// Jika COA belum ada di map, ambil info dari database
+					$coa_info = $this->cb
+						->select('no_sbb, nama_perkiraan, posisi')
+						->where('no_sbb', $no_coa)
+						->where('id_cabang', $kode_cabang)
+						->where('table_source', 't_coalr_sbb')
+						->get('v_coa_all')
+						->row_array();
+
+					if ($coa_info) {
+						$saldo_lr_map[$no_coa] = [
+							'no_sbb' => $no_coa,
+							'nama_perkiraan' => $coa_info['nama_perkiraan'],
+							'posisi' => $coa_info['posisi'],
+							'saldo_awal' => 0
+						];
+					}
+				}
+
+				if (isset($saldo_lr_map[$no_coa])) {
+					// AKTIVA (Beban): bertambah di DEBIT
+					if ($saldo_lr_map[$no_coa]['posisi'] == 'AKTIVA') {
+						$saldo_lr_map[$no_coa]['saldo_awal'] += $nominal;
+					}
+					// PASIVA (Pendapatan): berkurang di DEBIT
+					else if ($saldo_lr_map[$no_coa]['posisi'] == 'PASIVA') {
+						$saldo_lr_map[$no_coa]['saldo_awal'] -= $nominal;
+					}
+				}
+			}
+
+			// Proses akun kredit (jika COA L/R)
+			if (!empty($trans['posisi_kredit'])) {
+				$no_coa = $trans['akun_kredit'];
+				$nominal = (float) $trans['jumlah_kredit'];
+
+				if (!isset($saldo_lr_map[$no_coa])) {
+					// Jika COA belum ada di map, ambil info dari database
+					$coa_info = $this->cb
+						->select('no_sbb, nama_perkiraan, posisi')
+						->where('no_sbb', $no_coa)
+						->where('id_cabang', $kode_cabang)
+						->where('table_source', 't_coalr_sbb')
+						->get('v_coa_all')
+						->row_array();
+
+					if ($coa_info) {
+						$saldo_lr_map[$no_coa] = [
+							'no_sbb' => $no_coa,
+							'nama_perkiraan' => $coa_info['nama_perkiraan'],
+							'posisi' => $coa_info['posisi'],
+							'saldo_awal' => 0
+						];
+					}
+				}
+
+				if (isset($saldo_lr_map[$no_coa])) {
+					// PASIVA (Pendapatan): bertambah di KREDIT
+					if ($saldo_lr_map[$no_coa]['posisi'] == 'PASIVA') {
+						$saldo_lr_map[$no_coa]['saldo_awal'] += $nominal;
+					}
+					// AKTIVA (Beban): berkurang di KREDIT
+					else if ($saldo_lr_map[$no_coa]['posisi'] == 'AKTIVA') {
+						$saldo_lr_map[$no_coa]['saldo_awal'] -= $nominal;
+					}
+				}
+			}
+		}
+
+		// ===== STEP 4: Ambil COA Laba Ditahan ===== //
 		$coa_laba_ditahan = "32010";
 		$id_laba_ditahan = $this->cb
 			->where('no_sbb', $coa_laba_ditahan)
@@ -6021,7 +6145,8 @@ class Financial extends CI_Controller
 		// Persiapan data log
 		$log_data = [
 			'tanggal_proses' => date('Y-m-d H:i:s'),
-			'tanggal_transaksi' => $tanggal,
+			'tanggal_transaksi' => $tanggal_transaksi,
+			'periode_saldo_awal' => $periode_saldo_awal,
 			'kode_cabang' => $kode_cabang,
 			'nip' => $nip,
 			'username' => $this->session->userdata('username'),
@@ -6036,76 +6161,77 @@ class Financial extends CI_Controller
 
 		$this->cb->trans_start();
 
-		// ========== PENIHILAN PENDAPATAN ========== //
-		foreach ($get_pendapatan as $gp) {
-			$coa_debit = $gp->no_lr_sbb;
-			if (!$coa_debit) continue;
+		// ===== STEP 5: Posting Jurnal Penihilan ===== //
+		foreach ($saldo_lr_map as $coa) {
+			$saldo_akhir = $coa['saldo_awal'];
 
-			$nominal = $gp->nominal;
+			// Skip jika saldo = 0
+			if ($saldo_akhir == 0) continue;
 
-			$id_jurnal = $this->posting(
-				$coa_debit,
-				$coa_laba_ditahan,
-				"PENIHILAN PENDAPATAN SECARA SISTEM",
-				$nominal,
-				$tanggal,
-				null,
-				null,
-				null
-			);
+			$nominal = ($saldo_akhir);
 
-			// Simpan detail untuk log
-			$detail_logs[] = [
-				'tipe' => 'PENDAPATAN',
-				'no_coa' => $coa_debit,
-				'nama_coa' => $gp->nama_lr_sbb ?? '',
-				'nominal' => $nominal,
-				'id_jurnal' => $id_jurnal
-			];
+			// PENDAPATAN (PASIVA) - Debit COA, Kredit Laba Ditahan
+			if ($coa['posisi'] == 'PASIVA' && $saldo_akhir > 0) {
+				$id_jurnal = $this->posting(
+					$coa['no_sbb'],           // Debit: COA Pendapatan
+					$coa_laba_ditahan,        // Kredit: Laba Ditahan
+					"PENIHILAN PENDAPATAN SECARA SISTEM - " . strtoupper($coa['nama_perkiraan']),
+					$nominal,
+					$tanggal_transaksi,
+					null,
+					null,
+					null
+				);
 
-			$total_pendapatan += $nominal;
-			$count_jurnal_pendapatan++;
-		}
+				$detail_logs[] = [
+					'tipe' => 'PENDAPATAN',
+					'no_coa' => $coa['no_sbb'],
+					'nama_coa' => $coa['nama_perkiraan'],
+					'saldo_sebelum' => $saldo_akhir,
+					'nominal' => $nominal,
+					'id_jurnal' => $id_jurnal
+				];
 
-		// ========== PENIHILAN BEBAN ========== //
-		foreach ($get_beban as $gb) {
-			$coa_kredit = $gb->no_lr_sbb;
-			if (!$coa_kredit) continue;
+				$total_pendapatan += $nominal;
+				$count_jurnal_pendapatan++;
+			}
+			// BEBAN (AKTIVA) - Debit Laba Ditahan, Kredit COA
+			else if ($coa['posisi'] == 'AKTIVA' && $saldo_akhir > 0) {
+				$id_jurnal = $this->posting(
+					$coa_laba_ditahan,        // Debit: Laba Ditahan
+					$coa['no_sbb'],           // Kredit: COA Beban
+					"PENIHILAN BEBAN SECARA SISTEM - " . strtoupper($coa['nama_perkiraan']),
+					$nominal,
+					$tanggal_transaksi,
+					null,
+					null,
+					null
+				);
 
-			$nominal = $gb->nominal;
+				$detail_logs[] = [
+					'tipe' => 'BEBAN',
+					'no_coa' => $coa['no_sbb'],
+					'nama_coa' => $coa['nama_perkiraan'],
+					'saldo_sebelum' => $saldo_akhir,
+					'nominal' => $nominal,
+					'id_jurnal' => $id_jurnal
+				];
 
-			$id_jurnal = $this->posting(
-				$coa_laba_ditahan,
-				$coa_kredit,
-				"PENIHILAN BEBAN SECARA SISTEM",
-				$nominal,
-				$tanggal,
-				null,
-				null,
-				null
-			);
-
-			// Simpan detail untuk log
-			$detail_logs[] = [
-				'tipe' => 'BEBAN',
-				'no_coa' => $coa_kredit,
-				'nama_coa' => $gb->nama_lr_sbb ?? '',
-				'nominal' => $nominal,
-				'id_jurnal' => $id_jurnal
-			];
-
-			$total_beban += $nominal;
-			$count_jurnal_beban++;
+				$total_beban += $nominal;
+				$count_jurnal_beban++;
+			}
 		}
 
 		// Lengkapi data log
 		$log_data['total_pendapatan'] = $total_pendapatan;
 		$log_data['total_beban'] = $total_beban;
+		$log_data['laba_rugi'] = $total_pendapatan - $total_beban;
 		$log_data['jumlah_jurnal_pendapatan'] = $count_jurnal_pendapatan;
 		$log_data['jumlah_jurnal_beban'] = $count_jurnal_beban;
 		$log_data['status'] = 'SUCCESS';
 		$log_data['keterangan'] = "Proses penihilan berhasil. Total Pendapatan: Rp " . number_format($total_pendapatan, 0, ',', '.') .
-			", Total Beban: Rp " . number_format($total_beban, 0, ',', '.');
+			", Total Beban: Rp " . number_format($total_beban, 0, ',', '.') .
+			", Laba/Rugi: Rp " . number_format($total_pendapatan - $total_beban, 0, ',', '.');
 
 		// Insert log utama
 		$this->cb->insert('t_log_penihilan', $log_data);
@@ -6124,7 +6250,7 @@ class Financial extends CI_Controller
 		if ($this->cb->trans_status() === FALSE) {
 			$this->session->set_flashdata('message_error', 'Gagal melakukan proses penihilan.');
 		} else {
-			$this->session->set_flashdata('message_name', 'Berhasil melakukan proses penihilan.');
+			$this->session->set_flashdata('message_name', 'Berhasil melakukan proses penihilan untuk periode ' . format_indo($tanggal_transaksi) . '. Total Laba/Rugi: Rp ' . number_format($total_pendapatan - $total_beban, 0, ',', '.'));
 		}
 
 		redirect('financial/closing');
