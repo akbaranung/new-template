@@ -1213,64 +1213,65 @@ class Financial extends CI_Controller
     $base64_data = null; // Initialize the variable to hold the Base64 string
     $file_name = null;   // <--- New variable to hold the file name
     $file_input_name = 'file'; // The name of your <input type="file">
+    if ($this->session->userdata('is_premium')) {
+      if (isset($_FILES[$file_input_name]) && $_FILES[$file_input_name]['error'] != UPLOAD_ERR_NO_FILE) {
 
-    if (isset($_FILES[$file_input_name]) && $_FILES[$file_input_name]['error'] != UPLOAD_ERR_NO_FILE) {
+        $file = $_FILES[$file_input_name];
 
-      $file = $_FILES[$file_input_name];
+        // --- File WAS submitted, proceed with custom checks and conversion ---
 
-      // --- File WAS submitted, proceed with custom checks and conversion ---
+        // Define your allowed file extensions and maximum size (for custom check)
+        $allowed_types = ['gif', 'jpg', 'png', 'doc', 'docx', 'xls', 'xlsx', 'pdf'];
+        $max_size_kb = 2048; // 2MB
 
-      // Define your allowed file extensions and maximum size (for custom check)
-      $allowed_types = ['gif', 'jpg', 'png', 'doc', 'docx', 'xls', 'xlsx', 'pdf'];
-      $max_size_kb = 2048; // 2MB
+        // Get file extension and size for manual checking
+        $file_ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $file_size_kb = round($file['size'] / 1024);
 
-      // Get file extension and size for manual checking
-      $file_ext = pathinfo($file['name'], PATHINFO_EXTENSION);
-      $file_size_kb = round($file['size'] / 1024);
+        // **A. Manual Type and Size Checks**
+        if (!in_array(strtolower($file_ext), $allowed_types) || $file_size_kb > $max_size_kb) {
 
-      // **A. Manual Type and Size Checks**
-      if (!in_array(strtolower($file_ext), $allowed_types) || $file_size_kb > $max_size_kb) {
+          // File failed manual check (Type or Size)
+          // $error_msg = "The file is not permitted (allowed types: " . implode(', ', $allowed_types) . ") or exceeds the maximum size ({$max_size_kb} KB).";
+          // $error = array('upload_error' => $error_msg);
 
-        // File failed manual check (Type or Size)
-        // $error_msg = "The file is not permitted (allowed types: " . implode(', ', $allowed_types) . ") or exceeds the maximum size ({$max_size_kb} KB).";
-        // $error = array('upload_error' => $error_msg);
+          // Re-load your form view with the error message
+          // $this->load->view('upload_form', $error);
+          $this->session->set_flashdata('message_error', "The file is not permitted (allowed types: " . implode(', ', $allowed_types) . ") or exceeds the maximum size ({$max_size_kb} KB).");
 
-        // Re-load your form view with the error message
-        // $this->load->view('upload_form', $error);
-        $this->session->set_flashdata('message_error', "The file is not permitted (allowed types: " . implode(', ', $allowed_types) . ") or exceeds the maximum size ({$max_size_kb} KB).");
+          redirect('financial/financial_entry');
 
-        redirect('financial/financial_entry');
+          return; // Stop execution
+        }
 
-        return; // Stop execution
+        // **B. Convert the file content to Base64**
+        $file_name = $file['name'];
+
+        // 1. Read the file contents from the temporary location
+
+        $file_content = file_get_contents($file['tmp_name']);
+
+        if ($file_content === FALSE) {
+          // Handle read error
+          // $error = array('upload_error' => 'Error reading file content during conversion.');
+          $this->session->set_flashdata('message_error', 'Error reading file content during conversion.');
+
+          // $this->load->view('financial_entry');
+          redirect('financial/financial_entry');
+
+          return;
+        }
+
+        // 2. Encode the content to Base64
+        $encoded_content = base64_encode($file_content);
+
+        // 3. Create the full Data URI string (MIME type is crucial here)
+        $base64_data = 'data:' . $file['type'] . ';base64,' . $encoded_content;
+
+        // echo "File Base64 :" . $base64_data;
+        // echo "File Name :" . $file_name;
+        // exit();
       }
-
-      // **B. Convert the file content to Base64**
-      $file_name = $file['name'];
-
-      // 1. Read the file contents from the temporary location
-
-      $file_content = file_get_contents($file['tmp_name']);
-
-      if ($file_content === FALSE) {
-        // Handle read error
-        // $error = array('upload_error' => 'Error reading file content during conversion.');
-        $this->session->set_flashdata('message_error', 'Error reading file content during conversion.');
-
-        // $this->load->view('financial_entry');
-        redirect('financial/financial_entry');
-
-        return;
-      }
-
-      // 2. Encode the content to Base64
-      $encoded_content = base64_encode($file_content);
-
-      // 3. Create the full Data URI string (MIME type is crucial here)
-      $base64_data = 'data:' . $file['type'] . ';base64,' . $encoded_content;
-
-      // echo "File Base64 :" . $base64_data;
-      // echo "File Name :" . $file_name;
-      // exit();
     }
     // else {
     //   echo "Gak Masuk";
@@ -6165,68 +6166,70 @@ class Financial extends CI_Controller
     $file_name = null;   // <--- New variable to hold the file name
     $file_input_name = 'file'; // The name of your <input type="file">
 
-    if (isset($_FILES[$file_input_name]) && $_FILES[$file_input_name]['error'] != UPLOAD_ERR_NO_FILE) {
-      echo "MASUK";
+    if ($this->session->userdata('is_premium')) {
+      if (isset($_FILES[$file_input_name]) && $_FILES[$file_input_name]['error'] != UPLOAD_ERR_NO_FILE) {
+        echo "MASUK";
 
 
-      $file = $_FILES[$file_input_name];
+        $file = $_FILES[$file_input_name];
 
-      // --- File WAS submitted, proceed with custom checks and conversion ---
+        // --- File WAS submitted, proceed with custom checks and conversion ---
 
-      // Define your allowed file extensions and maximum size (for custom check)
-      $allowed_types = ['gif', 'jpg', 'png', 'doc', 'docx', 'xls', 'xlsx', 'pdf'];
-      $max_size_kb = 2048; // 2MB
+        // Define your allowed file extensions and maximum size (for custom check)
+        $allowed_types = ['gif', 'jpg', 'png', 'doc', 'docx', 'xls', 'xlsx', 'pdf'];
+        $max_size_kb = 2048; // 2MB
 
-      // Get file extension and size for manual checking
-      $file_ext = pathinfo($file['name'], PATHINFO_EXTENSION);
-      $file_size_kb = round($file['size'] / 1024);
+        // Get file extension and size for manual checking
+        $file_ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+        $file_size_kb = round($file['size'] / 1024);
 
-      // **A. Manual Type and Size Checks**
-      if (!in_array(strtolower($file_ext), $allowed_types) || $file_size_kb > $max_size_kb) {
+        // **A. Manual Type and Size Checks**
+        if (!in_array(strtolower($file_ext), $allowed_types) || $file_size_kb > $max_size_kb) {
 
-        // File failed manual check (Type or Size)
-        // $error_msg = "The file is not permitted (allowed types: " . implode(', ', $allowed_types) . ") or exceeds the maximum size ({$max_size_kb} KB).";
-        // $error = array('upload_error' => $error_msg);
+          // File failed manual check (Type or Size)
+          // $error_msg = "The file is not permitted (allowed types: " . implode(', ', $allowed_types) . ") or exceeds the maximum size ({$max_size_kb} KB).";
+          // $error = array('upload_error' => $error_msg);
 
-        // Re-load your form view with the error message
-        // $this->load->view('upload_form', $error);
-        $this->session->set_flashdata('message_error', "The file is not permitted (allowed types: " . implode(', ', $allowed_types) . ") or exceeds the maximum size ({$max_size_kb} KB).");
+          // Re-load your form view with the error message
+          // $this->load->view('upload_form', $error);
+          $this->session->set_flashdata('message_error', "The file is not permitted (allowed types: " . implode(', ', $allowed_types) . ") or exceeds the maximum size ({$max_size_kb} KB).");
 
-        redirect('financial/coa_report');
+          redirect('financial/coa_report');
 
-        return; // Stop execution
+          return; // Stop execution
+        }
+
+        // **B. Convert the file content to Base64**
+        $file_name = $file['name'];
+
+        // 1. Read the file contents from the temporary location
+
+        $file_content = file_get_contents($file['tmp_name']);
+
+        if ($file_content === FALSE) {
+          // Handle read error
+          // $error = array('upload_error' => 'Error reading file content during conversion.');
+          $this->session->set_flashdata('message_error', 'Error reading file content during conversion.');
+
+          // $this->load->view('financial_entry');
+          redirect('financial/coa_report');
+
+          return;
+        }
+
+        // 2. Encode the content to Base64
+        $encoded_content = base64_encode($file_content);
+
+        // 3. Create the full Data URI string (MIME type is crucial here)
+        $base64_data = 'data:' . $file['type'] . ';base64,' . $encoded_content;
+
+        // echo "File Base64 :" . $base64_data;
+        // echo "File Name :" . $file_name;
+        // exit();
+        $data_update['nama_file'] = $file_name; // Change 'nama_file_kolom' to your actual DB column name
+        $data_update['file'] = $base64_data; // Change 'nama_file_kolom' to your actual DB column name
+
       }
-
-      // **B. Convert the file content to Base64**
-      $file_name = $file['name'];
-
-      // 1. Read the file contents from the temporary location
-
-      $file_content = file_get_contents($file['tmp_name']);
-
-      if ($file_content === FALSE) {
-        // Handle read error
-        // $error = array('upload_error' => 'Error reading file content during conversion.');
-        $this->session->set_flashdata('message_error', 'Error reading file content during conversion.');
-
-        // $this->load->view('financial_entry');
-        redirect('financial/coa_report');
-
-        return;
-      }
-
-      // 2. Encode the content to Base64
-      $encoded_content = base64_encode($file_content);
-
-      // 3. Create the full Data URI string (MIME type is crucial here)
-      $base64_data = 'data:' . $file['type'] . ';base64,' . $encoded_content;
-
-      // echo "File Base64 :" . $base64_data;
-      // echo "File Name :" . $file_name;
-      // exit();
-      $data_update['nama_file'] = $file_name; // Change 'nama_file_kolom' to your actual DB column name
-      $data_update['file'] = $base64_data; // Change 'nama_file_kolom' to your actual DB column name
-
     }
 
 

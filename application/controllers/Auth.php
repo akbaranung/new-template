@@ -103,7 +103,7 @@ class Auth extends CI_Controller
         $this->session->set_userdata('bagian', $data->bagian);
         $this->session->set_userdata('kode_cabang', $data->id_cabang);
         $this->session->set_userdata('is_token', $data->token);
-				$this->session->set_userdata('role', $data->role_name);
+        $this->session->set_userdata('role', $data->role_name);
 
         // $setting = $this->db->where('Id', '1')->get('utility')->row();
         $this->db->select('utility.*');
@@ -436,7 +436,8 @@ class Auth extends CI_Controller
         'nama_coa_utang_pph23'       => 'UTANG PPH 23',
         'nomor_coa_utang_pph23'       => '20304',
         'kuota_invoice' => 1000,
-        'kuota_memo' => 100,
+        // 'kuota_memo' => 100,
+        'kuota_memo' => 0,
         'kuota_pengajuan_biaya' => 1000,
         'kuota_user' => 5,
         'kuota_cabang' => 1,
