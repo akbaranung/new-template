@@ -323,8 +323,12 @@
                             Pengajuan Multi Layer Approval / Bulan</p>
                         <!-- <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>5000</b>
                             Nota Penjualan / Bulan</p> -->
-                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> Jumlah Cabang <b>3</b></p>
-                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>15</b> User</p>
+                        <!-- <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> Jumlah Cabang <b>3</b></p> -->
+                        <!-- <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>15</b> User</p> -->
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> Jumlah Cabang <b>2</b></p>
+
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>10</b> User</p>
+
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> Fitur
                             <b>Premium</b>
                         </p>
