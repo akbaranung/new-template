@@ -6261,7 +6261,6 @@ class Financial extends CI_Controller
 
 		$akun_debit = $this->input->post('neraca_debit');
 		$akun_kredit = $this->input->post('neraca_kredit');
-		$input_nominal = $this->input->post('input_nominal');
 		$input_keterangan = $this->input->post('input_keterangan');
 		$tanggal = $this->input->post('tanggal');
 		$file = $this->input->post('file');
