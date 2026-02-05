@@ -6265,6 +6265,16 @@ class Financial extends CI_Controller
 		$input_keterangan = $this->input->post('input_keterangan');
 		$tanggal = $this->input->post('tanggal');
 		$file = $this->input->post('file');
+		$input_nominal = $this->input->post('input_nominal');
+
+		// Remove everything that is NOT a digit (0-9)
+		$clean_nominal = preg_replace('/[^0-9]/', '', $input_nominal);
+
+		// Convert to integer (optional, but good for calculations)
+		$input_nominal = (int)$clean_nominal;
+
+		// echo $final_nominal; // Output: 200000
+		// exit();
 
 		$data_update = [
 			'tanggal'           => $tanggal,
@@ -6275,7 +6285,6 @@ class Financial extends CI_Controller
 			'keterangan'           => $input_keterangan,
 			'akun_debit'           => $akun_debit,
 		];
-
 		$base64_data = null; // Initialize the variable to hold the Base64 string
 		$file_name = null;   // <--- New variable to hold the file name
 		$file_input_name = 'file'; // The name of your <input type="file">
