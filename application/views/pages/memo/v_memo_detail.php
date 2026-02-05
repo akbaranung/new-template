@@ -9,7 +9,8 @@
         <div class="card-body">
           <div class="row">
             <div class="col-md-2 col-sm-2 col-2">
-              <img src="<?= $utility['logo'] ?>" alt="" width="100%">
+              <!-- <img src="<?= $utility['logo'] ?>" alt="" width="100%"> -->
+              <img src="<?= $this->session->userdata('icon') ?>" alt="" width="100%">
             </div>
           </div>
           <div class="row">
