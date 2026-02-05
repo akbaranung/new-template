@@ -116,6 +116,9 @@
             $menu_disabled_class = '';
             $menu_onclick_attr = ''; // To show a SweetAlert for premium features
 
+            if ($menu->is_active == 0) {
+              continue;
+            }
             // Determine URL and crown for main menu
             if ($menu->premium == 1) { // If it's a premium menu
               $menu_mahkota = $crown_svg;

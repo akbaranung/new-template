@@ -660,11 +660,10 @@ Mohon untuk memproses pembayaran segera.";
             // Set the start date to the current date and time
             $detail_perusahaan = $this->db->from('utility')->where('Id', $confirmation_detail->id_perusahaan)->get()->row();
 
-            if ($this->session->userdata('is_premium')) {
-                $expired_date_now = $detail_perusahaan->expired_day;
+            if ($detail_perusahaan->is_premium) {
+                $raw_expired_date = $detail_perusahaan->expired_day ?? 'now';
 
-                $expired_date_now = new DateTime($expired_date_now);
-
+                $expired_date_now = new DateTime($raw_expired_date);
                 $expired_date_now->modify("+$total_bulan months");
 
 
