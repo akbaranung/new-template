@@ -136,7 +136,8 @@
                 showValue: true,
                 label: function(value) {
                     // return Math.round(100 * value) / gaugeMax;
-                    return Math.round(100 * value) / gaugeMax + '%';
+                    // return Math.round(100 * value) / gaugeMax + '%';
+                    return ((value / gaugeMax) * 100).toFixed(2) + '%';
                 },
                 color: function(value) {
                     // Set color based on percentage of the max value
@@ -172,8 +173,8 @@
     if (gauge2) {
         // A self-calling function to animate gauge1 (if desired, based on your original code)
         (function animateGauge2() {
-            gauge1.setValue(<?= $total_memo ?>);
-            gauge1.setValueAnimated(<?= $total_memo ?>, 1); // Animate to the actual total_invoice value over 1 second
+            gauge2.setValue(<?= $total_memo ?>);
+            gauge2.setValueAnimated(<?= $total_memo ?>, 1); // Animate to the actual total_invoice value over 1 second
             window.setTimeout(animateGauge2, 6000);
         })();
     }
@@ -184,8 +185,8 @@
     if (gauge3) {
         // A self-calling function to animate gauge1 (if desired, based on your original code)
         (function animateGauge3() {
-            gauge1.setValue(<?= $total_pengajuan ?>);
-            gauge1.setValueAnimated(<?= $total_pengajuan ?>, 1); // Animate to the actual total_invoice value over 1 second
+            gauge3.setValue(<?= $total_pengajuan ?>);
+            gauge3.setValueAnimated(<?= $total_pengajuan ?>, 1); // Animate to the actual total_invoice value over 1 second
             window.setTimeout(animateGauge3, 6000);
         })();
     }
@@ -195,8 +196,8 @@
     if (gauge4) {
         // A self-calling function to animate gauge1 (if desired, based on your original code)
         (function animateGauge4() {
-            gauge1.setValue(<?= $total_user ?>);
-            gauge1.setValueAnimated(<?= $total_user ?>, 1); // Animate to the actual total_invoice value over 1 second
+            gauge4.setValue(<?= $total_user ?>);
+            gauge4.setValueAnimated(<?= $total_user ?>, 1); // Animate to the actual total_invoice value over 1 second
             window.setTimeout(animateGauge4, 6000);
         })();
     }
@@ -206,8 +207,8 @@
     if (gauge5) {
         // A self-calling function to animate gauge1 (if desired, based on your original code)
         (function animateGauge5() {
-            gauge1.setValue(<?= $total_cabang ?>);
-            gauge1.setValueAnimated(<?= $total_cabang ?>, 1); // Animate to the actual total_invoice value over 1 second
+            gauge5.setValue(<?= $total_cabang ?>);
+            gauge5.setValueAnimated(<?= $total_cabang ?>, 1); // Animate to the actual total_invoice value over 1 second
             window.setTimeout(animateGauge5, 6000);
         })();
     }
