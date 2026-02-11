@@ -231,6 +231,12 @@
 				<tr>
 					<td></td>
 					<td class="text-end"></td>
+					<td>PPh21</td>
+					<td class="text-end"><?= number_format($slip->pph21) ?></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td class="text-end"></td>
 					<td>Potongan Lainnya</td>
 					<td class="text-end"><?= number_format($slip->pot_lainnya) ?></td>
 				</tr>
