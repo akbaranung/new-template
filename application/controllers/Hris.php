@@ -119,7 +119,8 @@ class Hris extends CI_Controller
 				'AB' => 'SURAT DOKTER',
 				'AC' => 'POTONG CUTI',
 				'AD' => 'NO. ID',
-				'AE' => 'TGL_GAJI'
+				'AE' => 'TGL_GAJI',
+				'AF' => 'PPH21',
 			];
 
 			// Ambil baris pertama (header) - biasanya row 2 kalau ada title
@@ -214,6 +215,7 @@ class Hris extends CI_Controller
 					'tidak_hadir'   => $this->clean_number($row['AA']),
 					'surat_dokter'  => $this->clean_number($row['AB']),
 					'potong_cuti'   => $this->clean_number($row['AC']),
+					'pph21'         => $this->clean_number($row['AF']),
 					'nip'           => $nip_employee,
 					'bulan_gaji'    => $bulan_gaji,
 					'pembayaran'    => 1, // 1 = Monthly

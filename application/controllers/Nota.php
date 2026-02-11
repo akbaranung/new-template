@@ -136,8 +136,8 @@ class Nota extends CI_Controller
 		try {
 			$no_nota = $this->input->post('no_nota');
 			$tanggal = $this->input->post('tanggal') . ' ' . date('H:i:s');
-			// $customer = trim($this->input->post('customer'));
-			$customer = "";
+			$customer = trim($this->input->post('customer'));
+			// $customer = "";
 			$metode_bayar = $this->input->post('metode_bayar');
 
 			// Detail items
@@ -256,7 +256,26 @@ class Nota extends CI_Controller
 				$this->M_nota->insert_detail($data_detail);
 
 				// Update stok items (kurang) dengan average method
-				$this->M_items->update_stok_with_average($id_item, $qty, 0, 'subtract');
+				$this->M_items->update_stok_with_average($id_item, $qty, $harga_modal, 'subtract');
+
+				// Di akhir method update_stok_with_average(), sebelum return
+				// Log perubahan stok
+				$log_data = [
+					'id_item' => $id_item,
+					'qty_before' => $item->stok,
+					'qty_after' => $data['stok'],
+					'qty_change' => ($type == 'add' ? $qty : -$qty),
+					'nilai_before' => $item->nilai_persediaan,
+					'nilai_after' => $data['nilai_persediaan'],
+					'harga_modal_before' => $item->harga_modal,
+					'harga_modal_after' => $data['harga_modal'] ?? $item->harga_modal,
+					'type' => ($type == 'add' ? 'pembelian' : 'penjualan'),
+					'id_cabang' => $this->session->userdata('kode_cabang'),
+					'id_company' => $this->session->userdata('user_perusahaan_id'),
+					'created_by' => $this->session->userdata('nip'),
+					'created_at' => date('Y-m-d H:i:s')
+				];
+				$this->cb->insert('stok_log', $log_data);
 			}
 
 			// TIDAK ADA POSTING JURNAL DI SINI

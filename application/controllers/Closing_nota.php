@@ -378,7 +378,7 @@ class Closing_nota extends CI_Controller
 
 		$data['count_inbox'] = $result;
 		$data['count_inbox2'] = $result2;
-		$data['pages'] = "pages/nota/v_closing_form";
+		$data['pages'] = "pages/nota/v_closing_detail";
 		$data['utility'] = $this->db->get('utility')->row_array();
 		$data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
 
