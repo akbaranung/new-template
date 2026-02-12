@@ -11,6 +11,8 @@ class M_menu extends CI_Model
 
   public function get_accessible_menus($user_id)
   {
+
+    $user_id = $this->session->userdata('username');
     $menu_access = $this->db->select('user_id,menu_id')->from('user_menu_access')->where('user_id', $user_id)->get()->row();
     if ($menu_access) {
       $where_in = explode(',', $menu_access->menu_id);
@@ -37,6 +39,12 @@ class M_menu extends CI_Model
         $menu->submenus = [];
         $menu_tree[$menu->Id] = $menu;
       } else {
+        if (!isset($menu_tree[$menu->parent_id])) {
+          echo "<strong>Error Found!</strong><br>";
+          echo "Child Menu ID: " . $menu->Id . " (Title: " . $menu->title . ")<br>";
+          echo "Looking for Parent ID: " . $menu->parent_id . " but it was not found in the tree.<br>";
+          echo "Check if Parent ID " . $menu->parent_id . " is active and has access granted.<br><br>";
+        }
         $menu_tree[$menu->parent_id]->submenus[] = $menu;
       }
     }
@@ -46,7 +54,8 @@ class M_menu extends CI_Model
 
   public function has_access()
   {
-    $nip = $this->session->userdata('nip');
+    // $nip = $this->session->userdata('nip');
+    $nip = $this->session->userdata('username');
 
     $menu_access = $this->db->select('user_id,menu_id')->from('user_menu_access')->where('user_id', $nip)->get()->row();
     if ($menu_access) {
@@ -66,6 +75,8 @@ class M_menu extends CI_Model
 
   public function get_allowed_routes($nip)
   {
+    $nip = $this->session->userdata('username');
+
     $menu_access = $this->db->select('user_id,menu_id')->from('user_menu_access')->where('user_id', $nip)->get()->row();
     if ($menu_access) {
       $where_in = explode(',', $menu_access->menu_id);
