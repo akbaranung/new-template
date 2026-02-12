@@ -527,6 +527,7 @@ Mohon untuk memproses pembayaran segera.";
             redirect('auth');
         }
 
+
         if ($this->session->userdata('nip') == "bariskode") {
             $has_access = TRUE;
         } else {

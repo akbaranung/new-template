@@ -24,6 +24,7 @@ class Resetpassword extends CI_Controller
             redirect('auth');
         }
 
+
         if ($this->session->userdata('nip') == "bariskode") {
             $has_access = TRUE;
         } else {
@@ -83,7 +84,7 @@ class Resetpassword extends CI_Controller
 
     public function reset_password_user($id)
     {
-        if ($this->session->userdata('username') == 'bariskode') {
+        if ($this->session->userdata('nip') == 'bariskode') {
             $new_password = '12345';
             $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
             $data = [
