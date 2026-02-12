@@ -24,7 +24,7 @@ class Report extends CI_Controller
             redirect('auth');
         }
 
-        if ($this->session->userdata('username') == "bariskode") {
+        if ($this->session->userdata('nip') == "bariskode") {
             $has_access = TRUE;
         } else {
             $has_access = FALSE;

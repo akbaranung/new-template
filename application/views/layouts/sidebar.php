@@ -42,7 +42,7 @@
         </a>
       </li>
       <?php
-      if ($this->session->userdata('username') == "bariskode") {
+      if ($this->session->userdata('nip') == "bariskode") {
       ?>
         <li class="nav-item dropdown <?= ($current_uri == 'Subscription' || $current_uri == 'Report' || $current_uri == '') ? 'active' : '' ?>">
           <a href="#adminListCollapse"
