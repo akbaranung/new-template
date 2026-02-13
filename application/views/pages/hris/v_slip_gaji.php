@@ -32,13 +32,13 @@
 		thead>tr>th {
 			background-color: #004e81;
 			color: white;
-			padding: 8px;
+			padding: 7px;
 			border: 2px solid white;
 		}
 
 		.table-bordered>tbody>tr>td {
 			background-color: #e7e7e7;
-			padding: 8px;
+			padding: 7px;
 			border: 2px solid white;
 		}
 
@@ -47,7 +47,7 @@
 		}
 
 		.mb-10 {
-			margin-bottom: 10px;
+			margin-bottom: 8px;
 		}
 
 		.mb-30 {
@@ -86,7 +86,7 @@
 			<tbody>
 				<tr>
 					<td>
-						<img src="<?= $this->session->userdata('icon') ?>" style="width: 200px;" alt="">
+						<img src="<?= $this->session->userdata('icon') ?>" style="max-width: 200px;" alt="">
 					</td>
 					<td colspan="2" class="text-end">
 						<p style="font-size: 20pt" class="title">Slip Gaji</p>
