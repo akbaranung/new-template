@@ -61,9 +61,9 @@
 		.net-salary-box {
 			background-color: #004e81;
 			color: white;
-			padding: 13px;
+			padding: 12px;
 			text-align: center;
-			margin-top: 10px;
+			margin-top: 5px;
 		}
 
 		.net-salary-amount {
@@ -86,7 +86,7 @@
 			<tbody>
 				<tr>
 					<td>
-						<img src="<?= $this->session->userdata('icon') ?>" style="width: 250px;" alt="">
+						<img src="<?= $this->session->userdata('icon') ?>" style="width: 200px;" alt="">
 					</td>
 					<td colspan="2" class="text-end">
 						<p style="font-size: 20pt" class="title">Slip Gaji</p>
@@ -282,8 +282,8 @@
 				<tr>
 					<td style="width: 60%;"></td>
 					<td style="text-align: center;">
-						<p style="margin-top: 20px;">Mengetahui,</p>
-						<p style="margin-top: 70px;">___________________</p>
+						<p style="margin-top: 15px;">Mengetahui,</p>
+						<p style="margin-top: 60px;">___________________</p>
 						<p>HRD / Finance</p>
 					</td>
 				</tr>
