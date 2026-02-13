@@ -21,7 +21,7 @@
 
 					<div class="row align-items-end">
 						<div class="col-md-4 col-sm-12">
-							<div class="form-group">
+							<div class="form-group mb-0">
 								<label for="date_pic" class="font-weight-bold">
 									<i class="mdi mdi-calendar-month text-primary"></i> Bulan Gaji <span class="text-danger">*</span>
 								</label>
@@ -33,16 +33,13 @@
 										</span>
 									</div>
 								</div>
-								<small class="form-text text-muted">
-									<i class="mdi mdi-information-outline"></i> Pilih bulan dan tahun gaji
-								</small>
 							</div>
 						</div>
 
 						<div class="col-md-8 col-sm-12">
-							<div class="form-group">
+							<div class="form-group mb-0">
 								<button type="submit" class="btn btn-primary mr-2">
-									<i class="mdi mdi-magnify"></i> Cari Slip Gaji
+									<i class="mdi mdi-magnify"></i> Cari
 								</button>
 								<a href="<?= base_url('hris/list_gaji') ?>" class="btn btn-secondary mr-2">
 									<i class="mdi mdi-refresh"></i> Reset
@@ -51,6 +48,14 @@
 									<i class="mdi mdi-arrow-left"></i> Kembali
 								</a>
 							</div>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-4 col-sm-12">
+							<small class="form-text text-muted mt-2">
+								<i class="mdi mdi-information-outline"></i> Pilih bulan dan tahun gaji
+							</small>
 						</div>
 					</div>
 
