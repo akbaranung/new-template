@@ -865,6 +865,11 @@ class Financial extends CI_Controller
 		$data['pages_script'] = 'script/financial/s_financial';
 		$data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
 
+		// echo '<pre>';
+		// print_r($data);
+		// echo '</pre>';
+		// exit;
+
 		if ($button_sbm == "excel") {
 			require_once(APPPATH . 'libraries/PHPExcel/IOFactory.php');
 
