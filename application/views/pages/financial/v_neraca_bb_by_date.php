@@ -93,7 +93,7 @@
 
 												if ($coa['table_source'] == "t_coa_bb" && $coa['posisi'] == 'PASIVA' && $a->saldo_pasiva != '0') : ?>
 													<tr style="height: 35px;">
-														<td><button class="btn btn-primary arus_kas btn-sm" data-id="<?= $a->no_bb ?>"><?= $a->no_bb ?></td>
+														<td><?= $a->no_bb ?></td>
 														<td><?= $coa ? $coa['nama_perkiraan'] : '-' ?></td>
 														<td class="text-right"><?= rupiah($a->saldo_pasiva) ?></td>
 													</tr>
