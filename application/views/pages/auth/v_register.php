@@ -207,6 +207,8 @@
     <p class="text-gray-700 mb-6">
       Dengan menggunakan Baris Kode Indonesia (selanjutnya disebut "Cloud Base"), Anda mengakui dan setuju terhadap ketentuan berikut:
       <br>
+      <li><b>Batasan Penggunaan Bebas:</b> Pengguna diberikan hak akses cuma-cuma yang berlaku sepenuhnya selama masa operasional perusahaan eksis dapat melayani.</li>
+
       <li><b>Ketersediaan Layanan:</b> Meskipun kami berupaya keras untuk memastikan ketersediaan Layanan yang berkelanjutan, kami tidak menjamin bahwa Layanan akan selalu tersedia tanpa gangguan, tepat waktu, aman, atau bebas kesalahan. Gangguan layanan dapat terjadi karena pemeliharaan, masalah teknis, atau faktor di luar kendali kami.</li>
 
       <br>
