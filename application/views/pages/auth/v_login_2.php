@@ -83,7 +83,7 @@
       </button> -->
       <button id="loginbtn" class="btn btn-lg btn-primary btn-block btn-login" type="submit">Masuk</button>
       <a class="mt-5 mb-3 text-center" href="<?= base_url('auth/forgot_password') ?>">Lupa Kata Sandi Anda?</a>
-      <p class="mb-3 text-muted text-center">Belum punya akun? <a href="<?= base_url('auth/') ?>register">Daftarkan Akun Perusahaan Anda</a></p>
+      <p class="mb-3 text-muted text-center">Belum punya akun? <a href="<?= base_url('auth/') ?>register">Daftarkan Akun Perusahaan Anda GRATIS!</a></p>
       <p class="mt-5 mb-3 text-muted text-center">IT BARIS KODE INDONESIA © <?= date('Y') ?></p>
     </div>
   </form>
