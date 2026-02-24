@@ -2571,8 +2571,20 @@ class Financial extends CI_Controller
 		$this->session->set_userdata('active_tab', 'card2');
 
 		if ($cek_no_bb) {
+			// $this->cb->trans_rollback();
+			// $this->session->set_flashdata('swal_message', [
+			//   'icon' => 'error', // or 'success', 'warning', 'info', 'question'
+			//   'title' => 'Error!',
+			//   'text' => 'Saldo Nomor BB ' . $no_bb . ' Tidak di temukan, Silahkan di buat BB terlebih dahulu',
+			//   'confirmButtonText' => 'Mengerti',
+			// ]);
+			// $this->session->set_flashdata('message_error', 'Nomor COA BB ' . $no_bb . ' Tidak Di Temukan. Silahkan buat BB terlebih dahulu');
+			// redirect($_SERVER['HTTP_REFERER']);
+			$this->session->set_flashdata('message_error', 'CoA BB dengan Nomor ' . $no_bb . ' sudah ada');
+			redirect($_SERVER['HTTP_REFERER']);
+		} else {
 			if ($cek_nama_coa) {
-				$this->session->set_flashdata('message_error', 'CoA ' . $nama_coa . ' sudah ada');
+				$this->session->set_flashdata('message_error', 'CoA BB dengan Nama ' . $nama_coa . ' sudah ada');
 				redirect($_SERVER['HTTP_REFERER']);
 			} else {
 
@@ -2624,18 +2636,9 @@ class Financial extends CI_Controller
 					redirect($_SERVER['HTTP_REFERER']);
 				}
 			}
-		} else {
-			$this->cb->trans_rollback();
-			// $this->session->set_flashdata('swal_message', [
-			//   'icon' => 'error', // or 'success', 'warning', 'info', 'question'
-			//   'title' => 'Error!',
-			//   'text' => 'Saldo Nomor BB ' . $no_bb . ' Tidak di temukan, Silahkan di buat BB terlebih dahulu',
-			//   'confirmButtonText' => 'Mengerti',
-			// ]);
-			$this->session->set_flashdata('message_error', 'Nomor COA BB ' . $no_bb . ' Tidak Di Temukan. Silahkan buat BB terlebih dahulu');
-			redirect($_SERVER['HTTP_REFERER']);
 		}
 	}
+
 
 
 	private function log_pembayaran($jenis, $id_invoice, $nominal, $keterangan)
