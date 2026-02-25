@@ -90,7 +90,7 @@
 														<td><?= $no++ ?></td>
 														<!-- <td><?= format_indo($a->tanggal) ?></td> -->
 														<td><?= date('d/m/Y', strtotime($a->tanggal)) ?></td>
-														<td><?= $a->akun_debit ?> - <?= $coa_debit['posisi'] ?></td>
+														<td><?= $a->akun_debit ?> - <?= $coa_debit['nama_perkiraan'] ?></td>
 														<td class="text-right"><?= rupiah($a->jumlah_debit) ?></td>
 														<td class="text-right"><?= '0' ?></td>
 														<!-- <td class="text-right"><?= rupiah($a->saldo_debit) ?></td> -->
@@ -352,4 +352,3 @@
 			</form>
 		</div>
 	</div>
-</div>
