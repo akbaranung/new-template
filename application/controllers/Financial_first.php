@@ -334,6 +334,83 @@ class Financial_first extends CI_Controller
     }
   }
 
+  // public function tambahCoaBB()
+  // {
+  //   $no_bb = $this->input->post('no_bb');
+  //   $nama_coa = $this->input->post('nama_coa');
+
+  //   $cek_no_bb = $this->M_coa->isAvailableBB('no_bb', $no_bb);
+  //   $cek_nama_coa = $this->M_coa->isAvailableBB('nama_perkiraan', $nama_coa);
+
+  //   $this->session->set_userdata('active_tab', 'card2');
+
+  //   if ($cek_no_bb) {
+  //     if ($cek_nama_coa) {
+  //       $this->session->set_flashdata('message_error', 'CoA ' . $nama_coa . ' sudah ada');
+  //       redirect($_SERVER['HTTP_REFERER']);
+  //     } else {
+
+  //       $substr_coa = substr($no_bb, 0, 1);
+
+  //       if ($substr_coa == "1" || $substr_coa == "5" || $substr_coa == "6" || $substr_coa == "7" || $substr_coa == "5" || $substr_coa == "6") {
+  //         $posisi = 'AKTIVA';
+  //       } else {
+  //         $posisi = 'PASIVA';
+  //       }
+
+  //       // cek tabel
+  //       if ($substr_coa == "1" || $substr_coa == "2" || $substr_coa == "3") {
+  //         $tabel = "t_coa_bb";
+
+  //         $data = [
+  //           'no_bb' => $no_bb,
+  //           'nama_perkiraan' => $nama_coa,
+  //           'posisi' => $posisi,
+  //           'id_cabang' => $this->session->userdata('kode_cabang'),
+  //           'id_company' => $this->session->userdata('user_perusahaan_id'),
+  //         ];
+  //       } else if ($substr_coa == "4" || $substr_coa == "5" || $substr_coa == "6" || $substr_coa == "7" || $substr_coa == "8" || $substr_coa == "9") {
+  //         $tabel = "t_coalr_bb";
+  //         $data = [
+  //           'no_lr_bb' => $no_bb,
+  //           'nama_perkiraan' => $nama_coa,
+  //           'posisi' => $posisi,
+  //           'id_cabang' => $this->session->userdata('kode_cabang'),
+  //           'id_company' => $this->session->userdata('user_perusahaan_id'),
+  //         ];
+  //       } else {
+  //         $this->session->set_flashdata('message_error', 'Format nomor CoA ' . $no_bb . ' tidak sesuai.');
+  //         redirect($_SERVER['HTTP_REFERER']);
+  //       }
+
+
+  //       $this->cb->trans_begin();
+
+  //       $query = $this->cb->insert($tabel, $data);
+
+  //       if ($query) {
+  //         $this->cb->trans_commit();
+  //         $this->session->set_flashdata('message_name', 'CoA ' . $no_bb . ' berhasil ditambahkan.');
+  //         redirect($_SERVER['HTTP_REFERER']);
+  //       } else {
+  //         $this->cb->trans_rollback();
+  //         $this->session->set_flashdata('message_error', 'CoA ' . $no_bb . ' gagal disimpan. Ket:' . $this->cb->error());
+  //         redirect($_SERVER['HTTP_REFERER']);
+  //       }
+  //     }
+  //   } else {
+  //     $this->cb->trans_rollback();
+  //     // $this->session->set_flashdata('swal_message', [
+  //     //   'icon' => 'error', // or 'success', 'warning', 'info', 'question'
+  //     //   'title' => 'Error!',
+  //     //   'text' => 'Saldo Nomor BB ' . $no_bb . ' Tidak di temukan, Silahkan di buat BB terlebih dahulu',
+  //     //   'confirmButtonText' => 'Mengerti',
+  //     // ]);
+  //     $this->session->set_flashdata('message_error', 'Nomor COA BB ' . $no_bb . ' Tidak Di Temukan. Silahkan buat BB terlebih dahulu');
+  //     redirect($_SERVER['HTTP_REFERER']);
+  //   }
+  // }
+
   public function tambahCoaBB()
   {
     $no_bb = $this->input->post('no_bb');
@@ -345,8 +422,20 @@ class Financial_first extends CI_Controller
     $this->session->set_userdata('active_tab', 'card2');
 
     if ($cek_no_bb) {
+      // $this->cb->trans_rollback();
+      // $this->session->set_flashdata('swal_message', [
+      //   'icon' => 'error', // or 'success', 'warning', 'info', 'question'
+      //   'title' => 'Error!',
+      //   'text' => 'Saldo Nomor BB ' . $no_bb . ' Tidak di temukan, Silahkan di buat BB terlebih dahulu',
+      //   'confirmButtonText' => 'Mengerti',
+      // ]);
+      // $this->session->set_flashdata('message_error', 'Nomor COA BB ' . $no_bb . ' Tidak Di Temukan. Silahkan buat BB terlebih dahulu');
+      // redirect($_SERVER['HTTP_REFERER']);
+      $this->session->set_flashdata('message_error', 'CoA BB dengan Nomor ' . $no_bb . ' sudah ada');
+      redirect($_SERVER['HTTP_REFERER']);
+    } else {
       if ($cek_nama_coa) {
-        $this->session->set_flashdata('message_error', 'CoA ' . $nama_coa . ' sudah ada');
+        $this->session->set_flashdata('message_error', 'CoA BB dengan Nama ' . $nama_coa . ' sudah ada');
         redirect($_SERVER['HTTP_REFERER']);
       } else {
 
@@ -360,7 +449,7 @@ class Financial_first extends CI_Controller
 
         // cek tabel
         if ($substr_coa == "1" || $substr_coa == "2" || $substr_coa == "3") {
-          $tabel = "t_coa_sbb";
+          $tabel = "t_coa_bb";
 
           $data = [
             'no_bb' => $no_bb,
@@ -370,7 +459,7 @@ class Financial_first extends CI_Controller
             'id_company' => $this->session->userdata('user_perusahaan_id'),
           ];
         } else if ($substr_coa == "4" || $substr_coa == "5" || $substr_coa == "6" || $substr_coa == "7" || $substr_coa == "8" || $substr_coa == "9") {
-          $tabel = "t_coalr_sbb";
+          $tabel = "t_coalr_bb";
           $data = [
             'no_lr_bb' => $no_bb,
             'nama_perkiraan' => $nama_coa,
@@ -398,16 +487,6 @@ class Financial_first extends CI_Controller
           redirect($_SERVER['HTTP_REFERER']);
         }
       }
-    } else {
-      $this->cb->trans_rollback();
-      // $this->session->set_flashdata('swal_message', [
-      //   'icon' => 'error', // or 'success', 'warning', 'info', 'question'
-      //   'title' => 'Error!',
-      //   'text' => 'Saldo Nomor BB ' . $no_bb . ' Tidak di temukan, Silahkan di buat BB terlebih dahulu',
-      //   'confirmButtonText' => 'Mengerti',
-      // ]);
-      $this->session->set_flashdata('message_error', 'Nomor COA BB ' . $no_bb . ' Tidak Di Temukan. Silahkan buat BB terlebih dahulu');
-      redirect($_SERVER['HTTP_REFERER']);
     }
   }
 

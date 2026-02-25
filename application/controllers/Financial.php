@@ -2602,7 +2602,7 @@ class Financial extends CI_Controller
 
 				// cek tabel
 				if ($substr_coa == "1" || $substr_coa == "2" || $substr_coa == "3") {
-					$tabel = "t_coa_sbb";
+					$tabel = "t_coa_bb";
 
 					$data = [
 						'no_bb' => $no_bb,
@@ -2612,7 +2612,7 @@ class Financial extends CI_Controller
 						'id_company' => $this->session->userdata('user_perusahaan_id'),
 					];
 				} else if ($substr_coa == "4" || $substr_coa == "5" || $substr_coa == "6" || $substr_coa == "7" || $substr_coa == "8" || $substr_coa == "9") {
-					$tabel = "t_coalr_sbb";
+					$tabel = "t_coalr_bb";
 					$data = [
 						'no_lr_bb' => $no_bb,
 						'nama_perkiraan' => $nama_coa,

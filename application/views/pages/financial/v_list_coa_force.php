@@ -395,7 +395,7 @@
           <div class="form-group row">
             <div class="col-12 mt-3">
               <label for="no_sbb" class="form-label">No. BB</label>
-              <input type="text" name="no_sbb" id="no_sbb" class="form-control">
+              <input type="text" name="no_bb" id="no_bb" class="form-control">
             </div>
             <div class="col-12 mt-3">
               <label for="nama_coa" class="form-label">Nama CoA</label>
