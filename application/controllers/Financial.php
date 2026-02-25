@@ -3595,7 +3595,11 @@ class Financial extends CI_Controller
 		];
 
 		if ($this->input->post('nominal') == 0) {
-			$data_update['no_bb'] = $this->input->post('no_bb');
+			if ($tabel == "t_coa_sbb") {
+				$data_update['no_bb'] = $this->input->post('no_bb');
+			} else {
+				$data_update['no_lr_bb'] = $this->input->post('no_bb');
+			}
 			$data_update['no_sbb'] = $this->input->post('no_sbb');
 		}
 
