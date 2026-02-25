@@ -2762,13 +2762,41 @@ class Financial extends CI_Controller
 		// Hitung transaksi dari 15 November - 31 Desember
 		$data['coa'] = $this->M_coa->getCoaReport($no_coa, $from, $to, $keyword);
 
-		$data['sum_debit'] = array_sum(array_map(function ($sum) use ($no_coa) {
-			return $sum->akun_debit == $no_coa ? $sum->jumlah_debit : 0;
-		}, $data['coa']));
+		// Hitung net total hanya jika no_coa == ALL dan keyword ada isinya
+		if ($no_coa == "ALL") {
+			$sum_debit = 0;
+			$sum_kredit = 0;
 
-		$data['sum_kredit'] = array_sum(array_map(function ($sum) use ($no_coa) {
-			return $sum->akun_kredit == $no_coa ? $sum->jumlah_kredit : 0;
-		}, $data['coa']));
+			foreach ($data['coa'] as $a) {
+				$coa_debit  = $this->M_coa->getCoa($a->akun_debit);
+				$coa_kredit = $this->M_coa->getCoa($a->akun_kredit);
+
+				// Kolom Debit
+				if ($coa_debit['posisi'] == 'AKTIVA') {
+					$sum_debit += $a->jumlah_debit;
+				} else { // PASIVA
+					$sum_debit -= $a->jumlah_debit;
+				}
+
+				// Kolom Kredit
+				if ($coa_kredit['posisi'] == 'PASIVA') {
+					$sum_kredit += $a->jumlah_kredit;
+				} else { // AKTIVA
+					$sum_kredit -= $a->jumlah_kredit;
+				}
+			}
+
+			$data['sum_debit'] = $sum_debit;
+			$data['sum_kredit'] = $sum_kredit;
+		} else {
+			$data['sum_debit'] = array_sum(array_map(function ($sum) use ($no_coa) {
+				return $sum->akun_debit == $no_coa ? $sum->jumlah_debit : 0;
+			}, $data['coa']));
+
+			$data['sum_kredit'] = array_sum(array_map(function ($sum) use ($no_coa) {
+				return $sum->akun_kredit == $no_coa ? $sum->jumlah_kredit : 0;
+			}, $data['coa']));
+		}
 
 		$data['title'] = "Report CoA " . $no_coa;
 		$data['detail_coa'] = $this->M_coa->getCoa($no_coa);
@@ -2777,6 +2805,11 @@ class Financial extends CI_Controller
 		$data['utility'] = $this->db->get('utility')->row_array();
 		$data['pages_script'] = 'script/financial/s_financial';
 		$data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
+
+		// echo '<pre>';
+		// print_r($data['coa']);
+		// echo '</pre>';
+		// exit;
 
 		$this->load->view('index', $data);
 	}
