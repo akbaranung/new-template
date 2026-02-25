@@ -86,7 +86,16 @@
         $('#update_id').val(data.id);
         $('#update_neraca_debit').val(data.akun_debit).trigger('change');
         $('#update_neraca_kredit').val(data.akun_kredit).trigger('change');
-        $('#update_input_nominal').val(data.jumlah_debit);
+        var formattedNominal = new Intl.NumberFormat('id-ID', {
+          style: 'currency',
+          currency: 'IDR',
+          minimumFractionDigits: 0
+        }).format(data.jumlah_debit);
+
+        // Ganti simbol Rp yang ada spasinya (bawaan Intl) jika perlu
+        formattedNominal = formattedNominal.replace(/(\D+)/, 'Rp ');
+
+        $('#update_input_nominal').val(formattedNominal);
         $('#update_input_keterangan').val(data.keterangan);
         $('#update_tanggal').val(data.tanggal);
         // if (coaEntry.table_source == "t_coa_sbb") {
