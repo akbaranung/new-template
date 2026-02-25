@@ -3489,8 +3489,57 @@ class Financial extends CI_Controller
 		redirect($_SERVER['HTTP_REFERER']);
 	}
 
+	public function ajax_edit_coa_bb($no_bb, $id_cabang)
+	{
+		$this->cb->select('*');
+		$this->cb->from('v_coabb_all');
+		$this->cb->where('no_bb', $no_bb);
+		$this->cb->where('id_company', $id_cabang);
+		$get_coa = $this->cb->get()->row();
+
+		if ($get_coa->table_source == "t_coa_bb") {
+			$this->cb->select('*');
+			$this->cb->from($get_coa->table_source);
+			$this->cb->where('no_bb', $no_bb);
+			$this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
+			$this->cb->where('id_company', $id_cabang);
+		} else {
+
+			$this->cb->select('*');
+			$this->cb->from($get_coa->table_source);
+			$this->cb->where('no_lr_bb', $no_bb);
+			$this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
+			$this->cb->where('id_company', $id_cabang);
+		}
+		$data = $this->cb->get()->row();
+		$response = [
+			'coa_data' => $get_coa, // This will contain the COA object/array
+			'data' => $data // This will contain the COA object/array
+		];
+		echo json_encode($response);
+	}
+
+	public function update_coa_bb()
+	{
+
+		$tabel = $this->input->post('table_coa');
+
+		$data_update = [
+			// 'no_bb'           => $this->input->post('no_bb'),
+			// 'no_sbb'           => $this->input->post('no_sbb'),
+			'nama_perkiraan' => $this->input->post('nama_perkiraan'),
+		];
+
+		// $data_update['no_bb'] = $this->input->post('no_bb');
+
+		$this->cb->update($tabel, $data_update, array('id' => $this->input->post('id_coa')));
+
+		redirect('financial/list_coa');
+	}
+
 	public function ajax_edit_coa($no_sbb, $id_cabang)
 	{
+		// echo $no_sbb;
 		$this->cb->select('*');
 		$this->cb->from('v_coa_all');
 		$this->cb->where('no_sbb', $no_sbb);

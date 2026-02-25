@@ -1888,7 +1888,7 @@ else if ($this->session->flashdata('message_error')) {
     // $('.form-group').removeClass('has-error'); // clear error class
     // $('.help-block').empty(); // clear error string
     // $('.modal-title').text('Edit Poster');
-
+    console.log(no_sbb);
     $.ajax({
       url: "<?php echo site_url('financial/ajax_edit_coa') ?>/" + no_sbb + "/" + id_cabang,
       type: "POST",
@@ -1968,6 +1968,48 @@ else if ($this->session->flashdata('message_error')) {
           document.getElementById("update_no_sbb_tanpa_saldo").readOnly = true;
         }
         $('#updateCoaTanpaSaldoModal').modal('show'); // show bootstrap modal when complete loaded
+
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        alert('Error get data from ajax');
+      }
+    });
+  }
+
+  function onEditBB(no_bb, id_cabang) {
+    $('#updateCoaFormTanpaSaldo')[0].reset(); // reset form on modals
+    // $('.form-group').removeClass('has-error'); // clear error class
+    // $('.help-block').empty(); // clear error string
+    // $('.modal-title').text('Edit Poster');
+
+    $.ajax({
+      url: "<?php echo site_url('financial/ajax_edit_coa_bb') ?>/" + no_bb + "/" + id_cabang,
+      type: "POST",
+      dataType: "JSON",
+      success: function(response) {
+        var coaEntry = response.coa_data;
+        var data = response.data;
+
+        console.log(response);
+
+        // JSON.stringify(data.id);
+        // alert(JSON.stringify(data));
+
+        $('#updatebb_table_coa').val(coaEntry.table_source)
+        $('#updatebb_id_coa').val(data.id);
+        if (coaEntry.table_source == "t_coa_bb") {
+          console.log(coaEntry.no_bb);
+          $('#updatebb_no_bb').val(coaEntry.no_bb);
+        } else {
+          console.log(coaEntry.no_lr_bb);
+          $('#updatebb_no_bb').val(coaEntry.no_lr_bb);
+        }
+        $('#updatebb_nama_perkiraan').val(data.nama_perkiraan);
+        $('#updatebb_nominal').val(data.nominal);
+        // KONDISI 2: Nominal > 0
+        // readOnly = true (tidak dapat diisi) => Input TIDAK BOLEH diedit
+        document.getElementById("updatebb_no_bb").readOnly = true;
+        $('#updateCoaBB').modal('show'); // show bootstrap modal when complete loaded
 
       },
       error: function(jqXHR, textStatus, errorThrown) {

@@ -265,6 +265,14 @@
                       <th>No.</th>
                       <th>BB</th>
                       <th>Nama Perkiraan</th>
+                      <?php
+                      // if ($is_sawal == 0 && $cabang_now == $this->session->userdata('kode_cabang')) {
+                      if ($cabang_now == $this->session->userdata('kode_cabang')) {
+                      ?>
+                        <th class="text-center">Aksi</th>
+                      <?php
+                      }
+                      ?>
                     </tr>
                   </thead>
                   <tbody>
@@ -275,6 +283,14 @@
                           <td><?= ++$page_bb ?>.</td>
                           <td><?= $i['no_bb'] ?></td>
                           <td><?= ($i['nama_perkiraan']) ?></td>
+                          <?php
+                          if ($cabang_now == $this->session->userdata('kode_cabang')) {
+                          ?>
+                            <td class="text-center"><button class="btn btn-sm btn-warning text-white" onclick="onEditBB(<?= $i['no_bb'] ?>, <?= $i['id_company'] ?>)" type="button">Update</button></td>
+
+                          <?php
+                          }
+                          ?>
                         </tr>
                       <?php endforeach;
                     } else { ?>
@@ -486,6 +502,40 @@
     </div>
   </div>
 </div>
+
+<!-- Update COA Tanpa Saldo Modal -->
+<div class="modal fade" id="updateCoaBB" tabindex="-1" aria-labelledby="updateCoaModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="updateCoaModalLabel">Update COA BB</h5>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">X</button>
+      </div>
+      <form id="updateCoaFormTanpaSaldo" action="<?php echo site_url('financial/update_coa_bb'); ?>" method="POST">
+        <div class="modal-body">
+          <!-- Hidden input for the COA ID (assuming 'id_coa' is your primary key) -->
+          <input type="hidden" id="updatebb_table_coa" name="table_coa">
+          <input type="hidden" id="updatebb_id_coa" name="id_coa">
+
+          <div class="mb-3">
+            <label for="update_no_bb" class="form-label">No. BB</label>
+            <input type="text" class="form-control" id="updatebb_no_bb" name="no_bb">
+          </div>
+          <div class="mb-3">
+            <label for="updatebb_nama_perkiraan" class="form-label">Nama Perkiraan</label>
+            <input type="text" class="form-control" id="updatebb_nama_perkiraan" name="nama_perkiraan" required>
+          </div>
+          <input type="hidden" id="updatebb_nominal" name="nominal">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <!-- Update COA Modal -->
 <div class="modal fade" id="saldoAwal" tabindex="-1" aria-labelledby="updateCoaModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl modal-dialog-centered">
