@@ -55,7 +55,9 @@
 										<?php
 										if (isset($activa)) :
 											foreach ($activa as $a) :
-												$coa = $this->M_coa->getCoaBB($a->no_bb); ?>
+												// $coa = $this->M_coa->getCoaBB($a->no_bb);
+												$coa = $this->cb->where(['no_bb' => $a->no_bb, 'id_cabang' => $this->session->userdata('kode_cabang')])->get('v_coabb_all')->row_array();
+										?>
 												<tr>
 													<td><?= $a->no_bb ?></td>
 													<td><?= $coa ? $coa['nama_perkiraan'] : '-' ?></td>
@@ -89,16 +91,17 @@
 										<?php
 										if (isset($pasiva)) :
 											foreach ($pasiva as $a) :
-												$coa = $this->M_coa->getCoaBB($a->no_bb);
+												$coa = $this->cb->where(['no_bb' => $a->no_bb, 'id_cabang' => $this->session->userdata('kode_cabang')])->get('v_coabb_all')->row_array();
 
-												if ($coa['table_source'] == "t_coa_bb" && $coa['posisi'] == 'PASIVA' && $a->saldo_pasiva != '0') : ?>
-													<tr style="height: 35px;">
-														<td><?= $a->no_bb ?></td>
-														<td><?= $coa ? $coa['nama_perkiraan'] : '-' ?></td>
-														<td class="text-right"><?= rupiah($a->saldo_pasiva) ?></td>
-													</tr>
+												// if ($coa['table_source'] == "t_coa_bb" && $coa['posisi'] == 'PASIVA' && $a->saldo_pasiva != '0') : 
+										?>
+												<tr style="height: 35px;">
+													<td><?= $a->no_bb ?></td>
+													<td><?= $coa ? $coa['nama_perkiraan'] : '-' ?></td>
+													<td class="text-right"><?= rupiah($a->saldo_pasiva) ?></td>
+												</tr>
 											<?php
-												endif;
+											// endif;
 											endforeach;
 											?>
 											<?php
