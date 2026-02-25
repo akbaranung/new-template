@@ -8,7 +8,7 @@
         </div> -->
 				<div class="card-body">
 					<?php
-					if ($this->input->post('no_coa')) { ?>
+					if ($this->input->post('no_coa') || $this->input->post('keyword')) { ?>
 						<form class="form-horizontal form-label-left" method="POST" action="<?= base_url('financial/coa_report') ?>">
 							<div class="row">
 								<div class="col-md-3 col-xs-12">
@@ -45,7 +45,7 @@
 						<div class="row" style="margin-top: 10px;">
 							<div class="col-md-12 col-xs-12 table-responsive">
 								<?php
-								if ($this->input->post('no_coa') == "ALL") {
+								if ($this->input->post('no_coa') == "ALL" || (!$this->input->post('no_coa') && $this->input->post('keyword'))) {
 								?>
 									<table id="" class="table table-sm table-bordered" style="width:100%">
 										<thead class="thead-dark">
@@ -159,7 +159,7 @@
 											<tr>
 												<th class="text-right" colspan="2" style="background-color: #e91e63; font-weight: bolder;">Total:</th>
 												<th class="text-right" style="background-color: #e91e63; font-weight: bolder;"><?= rupiah($sum_debit) ?></th>
-												<th class="text-right" style="background-color: #e91e63; font-weight: bolder;"><?= rupiah($net_total) ?></th>
+												<th class="text-right" style="background-color: #e91e63; font-weight: bolder;"><?= rupiah($sum_kredit) ?></th>
 												<!-- <th class="text-right" colspan="2">Saldo Awal: <?= rupiah($saldo_awal) ?></th> -->
 											</tr>
 											<tr>

@@ -1602,7 +1602,6 @@ class Financial extends CI_Controller
 
 	public function coa_report()
 	{
-
 		$has_access = $this->M_menu->has_access();
 
 		if (!$has_access) {
@@ -1620,9 +1619,14 @@ class Financial extends CI_Controller
 		];
 
 		$no_coa = $this->input->post('no_coa');
+		$keyword = $this->input->post('keyword');
+
+		if ($keyword && $no_coa == "") {
+			$no_coa = "ALL";
+		}
 
 		if ($no_coa) {
-			$this->prepareCoaReport($data, $no_coa);
+			$this->prepareCoaReport($data, $no_coa, $keyword);
 		} else {
 			$data['title'] = "Report CoA";
 			$data['daftar_coa'] = $this->M_coa->list_coa();
@@ -2705,11 +2709,11 @@ class Financial extends CI_Controller
 	}
 
 
-	private function prepareCoaReport(&$data, $no_coa)
+	private function prepareCoaReport(&$data, $no_coa, $keyword = NULL)
 	{
 		$from = $this->input->post('tgl_dari');
 		$to = $this->input->post('tgl_sampai');
-		$keyword = $this->input->post('keyword');
+		// $keyword = $this->input->post('keyword');
 		$kode_cabang = $this->session->userdata('kode_cabang');
 		// return $this->cb->where('id_cabang', $kode_cabang);
 
