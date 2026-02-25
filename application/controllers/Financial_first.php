@@ -658,6 +658,7 @@ class Financial_first extends CI_Controller
     }
     echo json_encode($response);
   }
+
   public function tambahCoaBBAjax()
   {
     $no_bb = $this->input->post('no_bb');
@@ -903,6 +904,7 @@ class Financial_first extends CI_Controller
               'no_bb' => $no_bb,
               'nama_perkiraan' => $nama_coa,
               'posisi' => $posisi,
+              'id_cabang' => $this->session->userdata('kode_cabang'),
               'id_company' => $this->session->userdata('user_perusahaan_id'),
             ];
           } else if ($substr_coa == "4" || $substr_coa == "5" || $substr_coa == "6" || $substr_coa == "7" || $substr_coa == "8" || $substr_coa == "9") {
@@ -911,6 +913,7 @@ class Financial_first extends CI_Controller
               'no_lr_bb' => $no_bb,
               'nama_perkiraan' => $nama_coa,
               'posisi' => $posisi,
+              'id_cabang' => $this->session->userdata('kode_cabang'),
               'id_company' => $this->session->userdata('user_perusahaan_id'),
             ];
           } else {

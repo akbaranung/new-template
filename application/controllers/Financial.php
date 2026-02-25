@@ -3447,6 +3447,7 @@ class Financial extends CI_Controller
 							'no_bb' => $no_bb,
 							'nama_perkiraan' => $nama_coa,
 							'posisi' => $posisi,
+							'id_cabang' => $this->session->userdata('kode_cabang'),
 							'id_company' => $this->session->userdata('user_perusahaan_id'),
 						];
 					} else if ($substr_coa == "4" || $substr_coa == "5" || $substr_coa == "6" || $substr_coa == "7" || $substr_coa == "8" || $substr_coa == "9") {
@@ -3455,6 +3456,7 @@ class Financial extends CI_Controller
 							'no_lr_bb' => $no_bb,
 							'nama_perkiraan' => $nama_coa,
 							'posisi' => $posisi,
+							'id_cabang' => $this->session->userdata('kode_cabang'),
 							'id_company' => $this->session->userdata('user_perusahaan_id'),
 						];
 					} else {
