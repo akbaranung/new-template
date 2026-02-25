@@ -8,7 +8,7 @@ class Financial extends CI_Controller
 	{
 
 		parent::__construct();
-		$this->load->model(['M_coa', 'M_customer', 'M_invoice', 'M_login']);
+		$this->load->model(['M_coa', 'M_customer', 'M_invoice', 'M_login', 'M_project']);
 		$this->load->helper(['number']);
 		$this->load->library(['pdfgenerator']);
 
@@ -2363,7 +2363,7 @@ class Financial extends CI_Controller
 		$coa_sbb = $this->M_coa->list_coa_paginate($per_page, $page_sbb, $keyword_sbb, $cabang);
 
 		$page_bb = ($this->input->get('page_bb')) ? (($this->input->get('page_bb') - 1) * $per_page) : 0;
-		$coa_bb = $this->M_coa->list_coa_bb_paginate($per_page, $page_bb, $keyword_bb, $perusahaan);
+		$coa_bb = $this->M_coa->list_coa_bb_paginate($per_page, $page_bb, $keyword_bb, $cabang);
 
 		$data = [
 			'laba' => $laba,
@@ -6501,5 +6501,348 @@ class Financial extends CI_Controller
 			error_log("Database delete error for ID: " . $id . " - " . $this->db->error()['message']);
 			echo json_encode(['status' => 'error', 'message' => 'Terjadi kesalahan saat menghapus Arus Kas. Silakan coba lagi.']);
 		}
+	}
+
+	public function project()
+	{
+		$has_access = $this->M_menu->has_access();
+		if (!$has_access) {
+			show_error('Forbidden Access: You do not have permission to view this page.', 403, '403 Forbidden');
+		}
+
+		$keyword = trim($this->input->post('keyword', true) ?? '');
+		$nip     = $this->session->userdata('nip');
+
+		$config = [
+			'base_url'        => site_url('financial/project'),
+			'total_rows'      => $this->M_project->count_project($keyword),
+			'per_page'        => 20,
+			'uri_segment'     => 3,
+			'num_links'       => 10,
+			'full_tag_open'   => '<ul class="pagination" style="margin:0 0">',
+			'full_tag_close'  => '</ul>',
+			'first_link'      => false,
+			'last_link'       => false,
+			'prev_link'       => '«',
+			'prev_tag_open'   => '<li class="prev">',
+			'prev_tag_close'  => '</li>',
+			'next_link'       => '»',
+			'next_tag_open'   => '<li>',
+			'next_tag_close'  => '</li>',
+			'cur_tag_open'    => '<li class="active"><a href="#">',
+			'cur_tag_close'   => '</a></li>',
+			'num_tag_open'    => '<li>',
+			'num_tag_close'   => '</li>',
+		];
+		$this->pagination->initialize($config);
+
+		$page     = $this->uri->segment(3) ? $this->uri->segment(3) : 0;
+		$projects = $this->M_project->list_project($config['per_page'], $page, $keyword);
+
+		$result  = $this->db->query("SELECT COUNT(Id) FROM memo WHERE (nip_kpd LIKE '%$nip%' OR nip_cc LIKE '%$nip%') AND (`read` NOT LIKE '%$nip%');")->row()->{'COUNT(Id)'};
+		$result2 = $this->db->query("SELECT COUNT(id) FROM task WHERE (`member` LIKE '%$nip%' or `pic` LIKE '%$nip%') AND activity='1'")->row()->{'COUNT(id)'};
+
+
+		$this->cb->select('no_bb as id, CONCAT(no_bb, " - ", nama_perkiraan) as text');
+		$this->cb->from('v_coabb_all');
+		$this->cb->where('id_company', $this->session->userdata('user_perusahaan_id'));
+		$query = $this->cb->get();
+		$all_coa_bb = $query->result_array();
+
+		$data = [
+			'page'          => $page,
+			'projects'      => $projects,
+			'keyword'       => $keyword,
+			'count_inbox'   => $result,
+			'count_inbox2'  => $result2,
+			'title'         => 'Daftar Project',
+			'pages'         => 'pages/financial/v_project',
+			'utility'       => $this->db->get('utility')->row_array(),
+			'pages_script'  => 'script/financial/s_financial',
+			'menus'         => $this->M_menu->get_accessible_menus($this->session->userdata('nip')),
+			'invoices'		=> [],
+			'all_coa_bb'	=> $all_coa_bb,
+		];
+
+		$this->load->view('index', $data);
+	}
+
+	// =============================================
+	// FORM CREATE PROJECT
+	// =============================================
+	public function create_project()
+	{
+		// $has_access = $this->M_menu->has_access();
+		// if (!$has_access) {
+		// 	show_error('Forbidden Access: You do not have permission to view this page.', 403, '403 Forbidden');
+		// }
+
+		$nip     = $this->session->userdata('nip');
+		$result  = $this->db->query("SELECT COUNT(Id) FROM memo WHERE (nip_kpd LIKE '%$nip%' OR nip_cc LIKE '%$nip%') AND (`read` NOT LIKE '%$nip%');")->row()->{'COUNT(Id)'};
+		$result2 = $this->db->query("SELECT COUNT(id) FROM task WHERE (`member` LIKE '%$nip%' or `pic` LIKE '%$nip%') AND activity='1'")->row()->{'COUNT(id)'};
+
+
+		$this->cb->select('no_bb as id, CONCAT(no_bb, " - ", nama_perkiraan) as text');
+		$this->cb->from('v_coabb_all');
+		$this->cb->where('id_company', $this->session->userdata('user_perusahaan_id'));
+		$query = $this->cb->get();
+		$all_coa_bb = $query->result_array();
+
+		$data = [
+			'no_project'    => $this->M_project->generate_no_project(),
+			'coa'           => $this->M_coa->list_coa(),
+			'count_inbox'   => $result,
+			'count_inbox2'  => $result2,
+			'title'         => 'Create Project',
+			'pages'         => 'pages/financial/v_project_create',
+			'utility'       => $this->db->get('utility')->row_array(),
+			// 'pages_script'  => 'script/financial/s_financial',
+			'menus'         => $this->M_menu->get_accessible_menus($this->session->userdata('nip')),
+			'all_coa_bb'	=> $all_coa_bb,
+		];
+
+		$this->load->view('index', $data);
+	}
+
+	// =============================================
+	// FORM EDIT PROJECT
+	// =============================================
+	public function edit_project($id)
+	{
+		// $has_access = $this->M_menu->has_access();
+		// if (!$has_access) {
+		// 	show_error('Forbidden Access: You do not have permission to view this page.', 403, '403 Forbidden');
+		// }
+
+		$project = $this->M_project->get_project($id);
+		if (!$project) {
+			show_error('Data tidak ditemukan.', 404);
+		}
+
+		$nip     = $this->session->userdata('nip');
+		$result  = $this->db->query("SELECT COUNT(Id) FROM memo WHERE (nip_kpd LIKE '%$nip%' OR nip_cc LIKE '%$nip%') AND (`read` NOT LIKE '%$nip%');")->row()->{'COUNT(Id)'};
+		$result2 = $this->db->query("SELECT COUNT(id) FROM task WHERE (`member` LIKE '%$nip%' or `pic` LIKE '%$nip%') AND activity='1'")->row()->{'COUNT(id)'};
+
+		$data = [
+			'project'        => $project,
+			'project_detail' => $this->M_project->get_project_detail($id),
+			'coa'            => $this->M_coa->list_coa(),
+			'count_inbox'    => $result,
+			'count_inbox2'   => $result2,
+			'title'          => 'Edit Project',
+			'pages'          => 'pages/financial/v_project_edit',
+			'utility'        => $this->db->get('utility')->row_array(),
+			'pages_script'   => 'script/financial/s_financial',
+			'menus'          => $this->M_menu->get_accessible_menus($this->session->userdata('nip')),
+		];
+
+		$this->load->view('index', $data);
+	}
+
+	// =============================================
+	// PROCESS SAVE PROJECT (INSERT)
+	// =============================================
+	public function process_save_project()
+	{
+		$kode_cabang = $this->session->userdata('kode_cabang');
+		$nip         = $this->session->userdata('nip');
+
+		// Upload file jika ada
+		$file      = null;
+		$nama_file = null;
+		if (!empty($_FILES['file_upload']['name'])) {
+			$file_tmp  = $_FILES['file_upload']['tmp_name'];
+			$nama_file = $_FILES['file_upload']['name'];
+			$file      = file_get_contents($file_tmp);
+		}
+
+		$header = [
+			'no_project'  => $this->input->post('no_project'),
+			'tanggal'     => $this->input->post('tanggal'),
+			'keterangan'  => strtoupper($this->input->post('keterangan')),
+			'file'        => $file,
+			'nama_file'   => $nama_file,
+			'created_by'  => $nip,
+			'id_cabang'   => $kode_cabang,
+		];
+
+		// Build detail rows
+		$no_coas   = $this->input->post('no_coa');
+		$nominals  = $this->input->post('nominal');
+		$posisis   = $this->input->post('posisi');
+
+		$details = [];
+		foreach ($no_coas as $i => $no_coa) {
+			if (empty($no_coa) || empty($nominals[$i])) continue;
+
+			// Bersihkan format rupiah jika ada
+			$nominal = preg_replace('/[^0-9]/', '', $nominals[$i]);
+
+			$details[] = [
+				'no_coa'  => $no_coa,
+				'nominal' => $nominal,
+				'posisi'  => $posisis[$i],
+			];
+		}
+
+		$status = $this->M_project->save_project($header, $details);
+
+		if ($status) {
+			$this->session->set_flashdata('swal_message', [
+				'icon'  => 'success',
+				'title' => 'Berhasil!',
+				'text'  => 'Project berhasil disimpan.',
+			]);
+		} else {
+			$this->session->set_flashdata('swal_message', [
+				'icon'  => 'error',
+				'title' => 'Gagal!',
+				'text'  => 'Terjadi kesalahan, project gagal disimpan.',
+			]);
+		}
+
+		redirect('financial/project');
+	}
+
+	// =============================================
+	// PROCESS UPDATE PROJECT (EDIT)
+	// =============================================
+	public function process_update_project($id)
+	{
+		$project = $this->M_project->get_project($id);
+		if (!$project) show_error('Data tidak ditemukan.', 404);
+
+		// Upload file jika ada, pakai yang lama kalau tidak ada upload baru
+		$file      = $project['file'];
+		$nama_file = $project['nama_file'];
+		if (!empty($_FILES['file_upload']['name'])) {
+			$file_tmp  = $_FILES['file_upload']['tmp_name'];
+			$nama_file = $_FILES['file_upload']['name'];
+			$file      = file_get_contents($file_tmp);
+		}
+
+		$header = [
+			'tanggal'    => $this->input->post('tanggal'),
+			'keterangan' => strtoupper($this->input->post('keterangan')),
+			'file'       => $file,
+			'nama_file'  => $nama_file,
+		];
+
+		// Build detail rows
+		$no_coas  = $this->input->post('no_coa');
+		$nominals = $this->input->post('nominal');
+		$posisis  = $this->input->post('posisi');
+
+		$details = [];
+		foreach ($no_coas as $i => $no_coa) {
+			if (empty($no_coa) || empty($nominals[$i])) continue;
+
+			$nominal = preg_replace('/[^0-9]/', '', $nominals[$i]);
+
+			$details[] = [
+				'no_coa'  => $no_coa,
+				'nominal' => $nominal,
+				'posisi'  => $posisis[$i],
+			];
+		}
+
+		$status = $this->M_project->update_project($id, $header, $details);
+
+		if ($status) {
+			$this->session->set_flashdata('swal_message', [
+				'icon'  => 'success',
+				'title' => 'Berhasil!',
+				'text'  => 'Project berhasil diupdate.',
+			]);
+		} else {
+			$this->session->set_flashdata('swal_message', [
+				'icon'  => 'error',
+				'title' => 'Gagal!',
+				'text'  => 'Terjadi kesalahan, project gagal diupdate.',
+			]);
+		}
+
+		redirect('financial/project');
+	}
+
+	// =============================================
+	// DELETE PROJECT
+	// =============================================
+	public function delete_project($id)
+	{
+		$project = $this->M_project->get_project($id);
+		if (!$project) show_error('Data tidak ditemukan.', 404);
+
+		$status = $this->M_project->delete_project($id);
+
+		if ($status) {
+			$this->session->set_flashdata('swal_message', [
+				'icon'  => 'success',
+				'title' => 'Berhasil!',
+				'text'  => 'Project berhasil dihapus.',
+			]);
+		} else {
+			$this->session->set_flashdata('swal_message', [
+				'icon'  => 'error',
+				'title' => 'Gagal!',
+				'text'  => 'Terjadi kesalahan, project gagal dihapus.',
+			]);
+		}
+
+		redirect('financial/project');
+	}
+
+	// =============================================
+	// DOWNLOAD FILE PROJECT
+	// =============================================
+	public function download_project_file($id)
+	{
+		$project = $this->M_project->get_project($id);
+		if (!$project || empty($project['file'])) show_error('File tidak ditemukan.', 404);
+
+		$nama_file = $project['nama_file'] ?? 'attachment';
+		$ext       = strtolower(pathinfo($nama_file, PATHINFO_EXTENSION));
+
+		$mime_types = [
+			'pdf'  => 'application/pdf',
+			'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+			'xls'  => 'application/vnd.ms-excel',
+			'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+			'doc'  => 'application/msword',
+			'jpg'  => 'image/jpeg',
+			'jpeg' => 'image/jpeg',
+			'png'  => 'image/png',
+		];
+
+		$mime = $mime_types[$ext] ?? 'application/octet-stream';
+
+		header('Content-Type: ' . $mime);
+		header('Content-Disposition: attachment; filename="' . $nama_file . '"');
+		header('Content-Length: ' . strlen($project['file']));
+		echo $project['file'];
+		exit;
+	}
+
+	public function print_project($id)
+	{
+		$project = $this->M_project->get_project($id);
+		if (!$project) show_error('Data tidak ditemukan.', 404);
+
+		$user = $this->M_invoice->cek_user($project['created_by']);
+
+		$data = [
+			'title_pdf'      => 'Project ' . $project['no_project'],
+			'project'        => $project,
+			'project_detail' => $this->M_project->get_project_detail($id),
+			'user'           => $user,
+		];
+
+		$file_pdf    = 'Project ' . $project['no_project'];
+		$paper       = 'A4';
+		$orientation = 'portrait';
+
+		$html = $this->load->view('pages/financial/v_project_print', $data, true);
+
+		$this->pdfgenerator->generate($html, $file_pdf, $paper, $orientation);
 	}
 }
