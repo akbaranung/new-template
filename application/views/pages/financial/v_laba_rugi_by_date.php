@@ -84,9 +84,9 @@
 													if ($subtotalBB != 0) : ?>
 														<tr>
 															<td class="text-right">
-																<em><span class="small text-muted"><?= $thisBB ?></span></em>
+																<em><span class="small text-muted"><strong><?= $thisBB ?></strong></span></em>
 															</td>
-															<td><em><span class="small text-muted">Total <?= $namaBB ?></span></em></td>
+															<td><em><span class="small text-muted"><strong>Total <?= $namaBB ?></strong></span></em></td>
 															<td class="text-right">
 																<em><span class="small text-muted"><strong><?= rupiah($subtotalBB) ?></strong></span></em>
 															</td>
@@ -155,9 +155,9 @@
 													if ($subtotalBB != 0) : ?>
 														<tr>
 															<td class="text-right">
-																<em><span class="small text-muted"><?= $thisBB ?></span></em>
+																<em><span class="small text-muted"><strong><?= $thisBB ?></strong></span></em>
 															</td>
-															<td><em><span class="small text-muted">Total <?= $namaBB ?></span></em></td>
+															<td><em><span class="small text-muted"><strong>Total <?= $namaBB ?></strong></span></em></td>
 															<td class="text-right">
 																<em><span class="small text-muted"><strong><?= rupiah($subtotalBB) ?></strong></span></em>
 															</td>
