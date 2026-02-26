@@ -177,16 +177,13 @@
 											if ($coa) {
 
 												foreach ($coa as $a) :
-											?>
+													$nama_coa_debit = $this->M_coa->getCoa($a->akun_debit)['nama_perkiraan'];
+													$nama_coa_kredit = $this->M_coa->getCoa($a->akun_kredit)['nama_perkiraan']; ?>
 													<tr>
 														<td><?= $no++ ?></td>
 														<td><?= format_indo($a->tanggal) ?></td>
-														<!-- <td><?= ($a->akun_debit == $detail_coa['no_sbb']) ? $a->akun_debit : $a->akun_kredit ?></td> -->
-														<td class="text-right"><?= ($a->akun_debit == $detail_coa['no_sbb']) ? (($a->jumlah_debit) ? rupiah($a->jumlah_debit) : '0') : '0' ?></td>
-														<!-- <td class="text-right"><?= ($a->akun_debit == $detail_coa['no_sbb']) ? (($a->saldo_debit) ? rupiah($a->saldo_debit) : '0') : '0' ?></td> -->
-														<td class="text-right"><?= ($a->akun_kredit == $detail_coa['no_sbb']) ? (($a->jumlah_kredit) ? rupiah($a->jumlah_kredit) : '0') : '0' ?></td>
-														<!-- <td class="text-right"><?= ($a->akun_kredit == $detail_coa['no_sbb']) ? (($a->saldo_kredit) ? rupiah($a->saldo_kredit) : '0') : '0' ?></td> -->
-														<!-- <td class="text-right"><?= ($a->akun_kredit == $detail_coa['no_sbb']) ? (($a->saldo_kredit) ? rupiah($a->saldo_kredit) :  '0') : (($a->saldo_debit) ? rupiah($a->saldo_debit) : '0') ?></td> -->
+														<td class="<?= ($a->akun_debit == $detail_coa['no_sbb']) ? (($a->jumlah_debit) ? rupiah($a->jumlah_debit) : "text-right") : "text-center" ?>"><?= ($a->akun_debit == $detail_coa['no_sbb']) ? (($a->jumlah_debit) ? rupiah($a->jumlah_debit) : '0') : $a->akun_debit . ' - ' . $nama_coa_debit ?></td>
+														<td class="<?= ($a->akun_kredit == $detail_coa['no_sbb']) ? (($a->jumlah_kredit) ? rupiah($a->jumlah_kredit) : "text-right") : "text-center" ?>"><?= ($a->akun_kredit == $detail_coa['no_sbb']) ? (($a->jumlah_kredit) ? rupiah($a->jumlah_kredit) : '0') : $a->akun_kredit . ' - ' . $nama_coa_kredit ?></td>
 														<td><?= $a->keterangan ?></td>
 													</tr>
 												<?php

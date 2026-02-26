@@ -40,8 +40,9 @@
 					</form>
 					<div class="row">
 						<div class="col-md-6 col-xs-12">
-							<h2 class="text-center">Biaya</h2>
-							<p class="text-right">Total: <strong><?= rupiah($sum_biaya) ?></strong></p>
+							<h5 class="text-right">Total Biaya: <strong><?= (isset($sum_biaya)) ? rupiah($sum_biaya) : 0 ?></strong></h5>
+							<!-- <h2 class="text-center">Biaya</h2> -->
+							<!-- <p class="text-right">Total: <strong><?= rupiah($sum_biaya) ?></strong></p> -->
 							<div class="table-responsive">
 								<table id="" class="table table-sm" style="width:100%">
 									<thead class="thead-dark">
@@ -70,8 +71,9 @@
 							</div>
 						</div>
 						<div class="col-md-6 col-xs-12">
-							<h2 class="text-center">Pendapatan</h2>
-							<p class="text-right">Total: <strong><?= rupiah($sum_pendapatan) ?></strong></p>
+							<h5 class="text-right">Total Pendapatan: <strong><?= (isset($sum_pendapatan)) ? rupiah($sum_pendapatan) : 0 ?></strong></h5>
+							<!-- <h2 class="text-center">Pendapatan</h2>
+							<p class="text-right">Total: <strong><?= rupiah($sum_pendapatan) ?></strong></p> -->
 							<div class="table-responsive">
 								<table id="" class="table table-sm" style="width:100%;">
 									<thead class="thead-dark">

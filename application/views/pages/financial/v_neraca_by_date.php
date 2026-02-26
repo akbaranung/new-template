@@ -40,8 +40,8 @@
 					</form>
 					<div class="row">
 						<div class="col-lg-6 col-md-6 col-xs-12">
-							<h2 class="text-center">Aktiva</h2>
-							<p class="text-right">Total: <strong><?= (isset($sum_activa)) ? rupiah($sum_activa) : 0 ?></strong></p>
+							<h5 class="text-right">Total Aktiva: <strong><?= (isset($sum_activa)) ? rupiah($sum_activa) : 0 ?></strong></h5>
+							<!-- <p class="text-right">Total: <strong><?= (isset($sum_activa)) ? rupiah($sum_activa) : 0 ?></strong></p> -->
 							<div class="table-responsive">
 								<table class="table table-sm" style="width:100%">
 									<thead class="thead-dark">
@@ -113,8 +113,8 @@
 							</div>
 						</div>
 						<div class="col-md-6 col-xs-12">
-							<h2 class="text-center">Pasiva</h2>
-							<p class="text-right">Total: <strong><?= (isset($sum_pasiva)) ? rupiah($sum_pasiva) : 0 ?></strong></p>
+							<h5 class="text-right">Total Pasiva: <strong><?= (isset($sum_pasiva)) ? rupiah($sum_pasiva) : 0 ?></strong></h5>
+							<!-- <p class="text-right">Total: <strong><?= (isset($sum_pasiva)) ? rupiah($sum_pasiva) : 0 ?></strong></p> -->
 							<div class="table-responsive">
 								<table class="table table-sm" style="width:100%">
 									<thead class="thead-dark">
