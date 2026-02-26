@@ -64,7 +64,7 @@
 												$thisBB = substr($a->no_sbb, 0, 3);
 												$nextBB = isset($bebanList[$i + 1]) ? substr($bebanList[$i + 1]->no_sbb, 0, 3) : null;
 
-												if ($a->saldo_awal > 0) : ?>
+												if ($a->saldo_awal != 0) : ?>
 													<tr>
 														<td>
 															<button class="btn btn-primary arus_kas btn-sm" data-id="<?= $a->no_sbb ?>">
@@ -135,7 +135,7 @@
 												$thisBB = substr($a->no_sbb, 0, 3);
 												$nextBB = isset($pendapatanList[$i + 1]) ? substr($pendapatanList[$i + 1]->no_sbb, 0, 3) : null;
 
-												if ($a->saldo_awal > 0) : ?>
+												if ($a->saldo_awal != 0) : ?>
 													<tr>
 														<td>
 															<button class="btn btn-primary arus_kas btn-sm" data-id="<?= $a->no_sbb ?>">
