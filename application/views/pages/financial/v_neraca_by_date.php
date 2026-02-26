@@ -161,7 +161,7 @@
 															<td class="text-right">
 																<em><span class="small text-muted"><strong><?= $thisBB ?></strong></span></em>
 															</td>
-															<td><em><span class="small text-muted"><strong> <?= $namaBB ?></strong></span></em></td>
+															<td><em><span class="small text-muted"><strong>Total <?= $namaBB ?></strong></span></em></td>
 															<td class="text-right">
 																<em><span class="small text-muted"><strong><?= rupiah($subtotalBB) ?></strong></span></em>
 															</td>
