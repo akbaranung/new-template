@@ -3,9 +3,6 @@
 		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
 			<h1 class="page-title">Neraca L/R</h1>
 			<div class="card shadow mb-4">
-				<!-- <div class="card-header">
-          <p class="card-title"><strong>Neraca per tanggal <?= format_indo($per_tanggal) ?></strong></p>
-        </div> -->
 				<div class="card-body">
 					<form method="POST" action="<?= base_url('financial/reportByDate') ?>">
 						<div class="row">
@@ -20,7 +17,7 @@
 								</div>
 							</div>
 							<div class="col-md-4 col-xs-12">
-								<div class="form-group ">
+								<div class="form-group">
 									<select name="jenis_laporan" id="jenis_laporan" class="form-control">
 										<option <?= ($this->input->post('jenis_laporan') == "neraca") ? "selected" : "" ?> value="neraca">Neraca SBB</option>
 										<option <?= ($this->input->post('jenis_laporan') == "laba_rugi") ? "selected" : "" ?> value="laba_rugi">Laba Rugi SBB</option>
@@ -38,80 +35,156 @@
 							</div>
 						</div>
 					</form>
+
 					<div class="row">
+						<!-- ── BEBAN ─────────────────────────────────────── -->
 						<div class="col-md-6 col-xs-12">
 							<h5 class="text-right">Total Biaya: <strong><?= (isset($sum_biaya)) ? rupiah($sum_biaya) : 0 ?></strong></h5>
-							<!-- <h2 class="text-center">Biaya</h2> -->
-							<!-- <p class="text-right">Total: <strong><?= rupiah($sum_biaya) ?></strong></p> -->
 							<div class="table-responsive">
-								<table id="" class="table table-sm" style="width:100%">
+								<table class="table table-sm" style="width:100%">
 									<thead class="thead-dark">
 										<tr>
-											<th>No. Coa</th>
-											<th>Nama Coa</th>
+											<th>No. CoA</th>
+											<th>Nama CoA</th>
 											<th>Nominal</th>
 										</tr>
 									</thead>
 									<tbody>
 										<?php
-										foreach ($biaya as $a) :
-											$coa = $this->M_coa->getCoa($a->no_sbb);
+										if (!empty($biaya)) :
+											$bebanList     = array_values($biaya);
+											$groupedBiaya  = $grouped_biaya;
 
-											if ($coa['table_source'] == "t_coalr_sbb" && $coa['posisi'] == 'AKTIVA' && $a->saldo_awal > 0) { ?>
-												<tr>
-													<td><button class="btn btn-primary arus_kas" data-id="<?= $a->no_sbb ?>"><?= $a->no_sbb ?></td>
-													<td><?= $coa['nama_perkiraan'] ?></td>
-													<td class="text-right"><?= rupiah($a->saldo_awal) ?></td>
-												</tr>
-										<?php
-											}
-										endforeach; ?>
+											for ($i = 0; $i < count($bebanList); $i++) :
+												$a   = $bebanList[$i];
+												$coa = $this->M_coa->getCoa($a->no_sbb);
+
+												if ($coa['table_source'] != "t_coalr_sbb" || $coa['posisi'] != 'AKTIVA') continue;
+
+												$thisBB = substr($a->no_sbb, 0, 3);
+												$nextBB = isset($bebanList[$i + 1]) ? substr($bebanList[$i + 1]->no_sbb, 0, 3) : null;
+
+												if ($a->saldo_awal > 0) : ?>
+													<tr>
+														<td>
+															<button class="btn btn-primary arus_kas btn-sm" data-id="<?= $a->no_sbb ?>">
+																<?= $a->no_sbb ?>
+															</button>
+														</td>
+														<td><?= $coa['nama_perkiraan'] ?></td>
+														<td class="text-right"><?= rupiah($a->saldo_awal) ?></td>
+													</tr>
+													<?php endif;
+
+												// Subtotal BB jika grup ganti atau elemen terakhir
+												if ($thisBB !== $nextBB) :
+													$coaBB      = $this->M_coa->getCoaBB($thisBB);
+													$namaBB     = $coaBB ? $coaBB['nama_perkiraan'] : '-';
+													$subtotalBB = $groupedBiaya[$thisBB] ?? 0;
+													if ($subtotalBB != 0) : ?>
+														<tr>
+															<td class="text-right">
+																<em><span class="small text-muted"><?= $thisBB ?></span></em>
+															</td>
+															<td><em><span class="small text-muted">Total <?= $namaBB ?></span></em></td>
+															<td class="text-right">
+																<em><span class="small text-muted"><strong><?= rupiah($subtotalBB) ?></strong></span></em>
+															</td>
+														</tr>
+														<tr>
+															<td colspan="3" style="padding:0; border:none;"></td>
+														</tr>
+											<?php endif;
+												endif;
+
+											endfor;
+										else : ?>
+											<tr>
+												<td colspan="3">Tidak ada biaya yang ditampilkan</td>
+											</tr>
+										<?php endif; ?>
 									</tbody>
 								</table>
 							</div>
 						</div>
+
+						<!-- ── PENDAPATAN ─────────────────────────────────── -->
 						<div class="col-md-6 col-xs-12">
 							<h5 class="text-right">Total Pendapatan: <strong><?= (isset($sum_pendapatan)) ? rupiah($sum_pendapatan) : 0 ?></strong></h5>
-							<!-- <h2 class="text-center">Pendapatan</h2>
-							<p class="text-right">Total: <strong><?= rupiah($sum_pendapatan) ?></strong></p> -->
 							<div class="table-responsive">
-								<table id="" class="table table-sm" style="width:100%;">
+								<table class="table table-sm" style="width:100%">
 									<thead class="thead-dark">
 										<tr>
-											<th>No. Coa</th>
-											<th>Nama Coa</th>
+											<th>No. CoA</th>
+											<th>Nama CoA</th>
 											<th>Nominal</th>
 										</tr>
 									</thead>
 									<tbody>
 										<?php
-										foreach ($pendapatan as $a) :
-											$coa = $this->M_coa->getCoa($a->no_sbb);
+										if (!empty($pendapatan)) :
+											$pendapatanList    = array_values($pendapatan);
+											$groupedPendapatan = $grouped_pendapatan;
 
-											if ($coa['table_source'] == "t_coalr_sbb" && $coa['posisi'] == 'PASIVA') {
+											for ($i = 0; $i < count($pendapatanList); $i++) :
+												$a   = $pendapatanList[$i];
+												$coa = $this->M_coa->getCoa($a->no_sbb);
 
-												if ($a->saldo_awal == 0) {
-													continue;
-												}
-										?>
-												<tr>
-													<td><button class="btn btn-primary arus_kas" data-id="<?= $a->no_sbb ?>"><?= $a->no_sbb ?></td>
-													<td><?= $coa['nama_perkiraan'] ?></td>
-													<td class="text-right"><?= rupiah($a->saldo_awal) ?></td>
-												</tr>
-										<?php
-											}
-										endforeach; ?>
+												if ($coa['table_source'] != "t_coalr_sbb" || $coa['posisi'] != 'PASIVA') continue;
+
+												$thisBB = substr($a->no_sbb, 0, 3);
+												$nextBB = isset($pendapatanList[$i + 1]) ? substr($pendapatanList[$i + 1]->no_sbb, 0, 3) : null;
+
+												if ($a->saldo_awal > 0) : ?>
+													<tr>
+														<td>
+															<button class="btn btn-primary arus_kas btn-sm" data-id="<?= $a->no_sbb ?>">
+																<?= $a->no_sbb ?>
+															</button>
+														</td>
+														<td><?= $coa['nama_perkiraan'] ?></td>
+														<td class="text-right"><?= rupiah($a->saldo_awal) ?></td>
+													</tr>
+													<?php endif;
+
+												// Subtotal BB jika grup ganti atau elemen terakhir
+												if ($thisBB !== $nextBB) :
+													$coaBB      = $this->M_coa->getCoaBB($thisBB);
+													$namaBB     = $coaBB ? $coaBB['nama_perkiraan'] : '-';
+													$subtotalBB = $groupedPendapatan[$thisBB] ?? 0;
+													if ($subtotalBB != 0) : ?>
+														<tr>
+															<td class="text-right">
+																<em><span class="small text-muted"><?= $thisBB ?></span></em>
+															</td>
+															<td><em><span class="small text-muted">Total <?= $namaBB ?></span></em></td>
+															<td class="text-right">
+																<em><span class="small text-muted"><strong><?= rupiah($subtotalBB) ?></strong></span></em>
+															</td>
+														</tr>
+														<tr>
+															<td colspan="3" style="padding:0; border:none;"></td>
+														</tr>
+											<?php endif;
+												endif;
+
+											endfor;
+										else : ?>
+											<tr>
+												<td colspan="3">Tidak ada pendapatan yang ditampilkan</td>
+											</tr>
+										<?php endif; ?>
 									</tbody>
 								</table>
 							</div>
 						</div>
 					</div>
+
 				</div>
 			</div>
-		</div> <!-- .col-12 -->
-	</div> <!-- .row -->
-</div> <!-- .container-fluid -->
+		</div>
+	</div>
+</div>
 
 <div class="modal fade" id="detailModal2" tabindex="-1" role="dialog" aria-labelledby="detailModal2" aria-modal="true">
 	<div class="modal-dialog" role="document">
