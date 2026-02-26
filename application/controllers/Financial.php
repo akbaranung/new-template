@@ -6484,6 +6484,14 @@ class Financial extends CI_Controller
 		// echo $final_nominal; // Output: 200000
 		// exit();
 
+		// JS sudah konversi, tapi fallback kalau JS gagal
+		if (strpos($input_nominal, ',') !== false) {
+			// Format Indonesia masuk (JS gagal jalan)
+			$input_nominal = str_replace('.', '', $input_nominal);
+			$input_nominal = str_replace(',', '.', $input_nominal);
+		}
+		$input_nominal = (float)$input_nominal;
+
 		$data_update = [
 			'tanggal'           => $tanggal,
 			'akun_debit'           => $akun_debit,
