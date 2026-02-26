@@ -6468,6 +6468,8 @@ class Financial extends CI_Controller
 		$file = $this->input->post('file');
 		$input_nominal = $this->input->post('input_nominal');
 
+		// print_r($input_nominal);exit;
+
 		// // Remove everything that is NOT a digit (0-9)
 		// $clean_nominal = preg_replace('/[^0-9]/', '', $input_nominal);
 
@@ -6476,9 +6478,9 @@ class Financial extends CI_Controller
 
 
 		// BARU - support desimal format Indonesia (titik=ribuan, koma=desimal)
-		$input_nominal = str_replace('.', '', $input_nominal); // hapus titik ribuan
-		$input_nominal = str_replace(',', '.', $input_nominal); // koma → titik desimal
-		$input_nominal = (float)$input_nominal;
+		// $input_nominal = str_replace('.', '', $input_nominal); // hapus titik ribuan
+		// $input_nominal = str_replace(',', '.', $input_nominal); // koma → titik desimal
+		// $input_nominal = (float)$input_nominal;
 		// echo $final_nominal; // Output: 200000
 		// exit();
 
@@ -6490,6 +6492,11 @@ class Financial extends CI_Controller
 			'jumlah_kredit'           => $input_nominal,
 			'keterangan'           => $input_keterangan,
 		];
+
+		// echo '<pre>';
+		// print_r($data_update);
+		// echo '</pre>';
+		// exit;
 
 		$base64_data = null; // Initialize the variable to hold the Base64 string
 		$file_name = null;   // <--- New variable to hold the file name
