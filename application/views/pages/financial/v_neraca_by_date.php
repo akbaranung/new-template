@@ -54,27 +54,61 @@
 									<tbody>
 										<?php
 										if (isset($activa)) :
-											foreach ($activa as $a) :
-												$coa = $this->M_coa->getCoa($a->no_sbb);
-												// print_r($a->no_sbb);
-												// exit;
+											$activaList  = array_values($activa); // reindex
+											$groupedActiva = $grouped_activa;     // dari controller
 
-												if ($coa['table_source'] == "t_coa_sbb" && $coa['posisi'] == 'AKTIVA' && $a->saldo_awal != '0') : ?>
+											$currentBBTotal = 0;
+											$currentBB      = null;
+
+											for ($i = 0; $i < count($activaList); $i++) :
+												$a   = $activaList[$i];
+												$coa = $this->M_coa->getCoa($a->no_sbb);
+
+												if ($coa['table_source'] != "t_coa_sbb" || $coa['posisi'] != 'AKTIVA') continue;
+
+												$thisBB = substr($a->no_sbb, 0, 3);
+												$nextBB = isset($activaList[$i + 1]) ? substr($activaList[$i + 1]->no_sbb, 0, 3) : null;
+
+												if ($a->saldo_awal != 0) : ?>
 													<tr>
-														<td><button class="btn btn-primary arus_kas btn-sm" data-id="<?= $a->no_sbb ?>"><?= $a->no_sbb ?></button></td>
+														<td>
+															<button class="btn btn-primary arus_kas btn-sm" data-id="<?= $a->no_sbb ?>">
+																<?= $a->no_sbb ?>
+															</button>
+														</td>
 														<td><?= $coa['nama_perkiraan'] ?></td>
 														<td class="text-right"><?= rupiah($a->saldo_awal) ?></td>
 													</tr>
-											<?php
+													<?php endif;
+
+												// Tampilkan subtotal BB jika grup ganti atau elemen terakhir
+												if ($thisBB !== $nextBB) :
+													$coaBB      = $this->M_coa->getCoaBB($thisBB);
+													$namaBB     = $coaBB ? $coaBB['nama_perkiraan'] : '-';
+													$subtotalBB = $groupedActiva[$thisBB] ?? 0;
+													if ($subtotalBB != 0) : ?>
+														<tr>
+
+															<td class="text-right"><em><span class="small text-muted"><?= $thisBB ?></span></em>
+															</td>
+															<td><em><span class="small text-muted">Total <?= $namaBB ?></span></em></td>
+															<td class="text-right"><em><span class="small text-muted"><strong><?= rupiah($subtotalBB) ?></strong></span></em></td>
+
+														</tr>
+														<tr>
+															<td colspan="3" style="padding:0; border:none;"></td>
+														</tr>
+											<?php endif;
 												endif;
-											endforeach;
+
+											endfor;
 										else : ?>
 											<tr>
 												<td colspan="3">Tidak ada activa yang ditampilkan</td>
 											</tr>
-										<?php
-										endif; ?>
+										<?php endif; ?>
 									</tbody>
+
 								</table>
 							</div>
 						</div>
@@ -93,42 +127,67 @@
 									<tbody>
 										<?php
 										if (isset($pasiva)) :
-											foreach ($pasiva as $a) :
+											$pasivaList    = array_values($pasiva);
+											$groupedPasiva = $grouped_pasiva; // dari controller
+
+											for ($i = 0; $i < count($pasivaList); $i++) :
+												$a   = $pasivaList[$i];
 												$coa = $this->M_coa->getCoa($a->no_sbb);
 
-												if ($coa['table_source'] == "t_coa_sbb" && $coa['posisi'] == 'PASIVA' && $a->saldo_awal != '0') : ?>
+												if ($coa['table_source'] != "t_coa_sbb" || $coa['posisi'] != 'PASIVA') continue;
+
+												$thisBB = substr($a->no_sbb, 0, 3);
+												$nextBB = isset($pasivaList[$i + 1]) ? substr($pasivaList[$i + 1]->no_sbb, 0, 3) : null;
+
+												if ($a->saldo_awal != 0) : ?>
 													<tr style="height: 35px;">
-														<td><button class="btn btn-primary arus_kas btn-sm" data-id="<?= $a->no_sbb ?>"><?= $a->no_sbb ?></td>
+														<td>
+															<button class="btn btn-primary arus_kas btn-sm" data-id="<?= $a->no_sbb ?>">
+																<?= $a->no_sbb ?>
+															</button>
+														</td>
 														<td><?= $coa['nama_perkiraan'] ?></td>
 														<td class="text-right"><?= rupiah($a->saldo_awal) ?></td>
 													</tr>
-											<?php
+													<?php endif;
+
+												// Subtotal BB jika grup ganti atau elemen terakhir
+												if ($thisBB !== $nextBB) :
+													$coaBB      = $this->M_coa->getCoaBB($thisBB);
+													$namaBB     = $coaBB ? $coaBB['nama_perkiraan'] : '-';
+													$subtotalBB = $groupedPasiva[$thisBB] ?? 0;
+													if ($subtotalBB != 0) : ?>
+														<tr>
+															<td class="text-right">
+																<em><span class="small text-muted"><?= $thisBB ?></span></em>
+															</td>
+															<td><em><span class="small text-muted">Total <?= $namaBB ?></span></em></td>
+															<td class="text-right">
+																<em><span class="small text-muted"><strong><?= rupiah($subtotalBB) ?></strong></span></em>
+															</td>
+														</tr>
+														<tr>
+															<td colspan="3" style="padding:0; border:none;"></td>
+														</tr>
+												<?php endif;
 												endif;
-											endforeach;
-											?>
-											<?php
-											if ($laba != 0) {
-											?>
+
+											endfor;
+
+											// Baris laba tahun berjalan
+											if ($laba != 0) : ?>
 												<tr>
 													<td>31030</td>
 													<td>LABA TAHUN BERJALAN</td>
 													<td class="text-right"><?= rupiah($laba) ?></td>
 												</tr>
-											<?php
-											}
-											?>
-											<!-- <tr>
-                        <td>31030</td>
-                        <td>LABA TAHUN BERJALAN</td>
-                        <td class="text-right"><?= rupiah($laba) ?></td>
-                      </tr> -->
-										<?php
+											<?php endif;
+
 										else : ?>
 											<tr>
 												<td colspan="3">Tidak ada pasiva yang ditampilkan</td>
 											</tr>
-										<?php
-										endif; ?>
+										<?php endif; ?>
 									</tbody>
 								</table>
 							</div>

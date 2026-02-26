@@ -131,6 +131,19 @@ class Financial extends CI_Controller
 			});
 			$total_activa = array_sum(array_column($combinedActiva, 'saldo_awal'));
 
+			$bbActiva = [];
+			foreach ($combinedActiva as $item) {
+				$key = substr($item->no_sbb, 0, 3);
+				$bbActiva[$key] = ($bbActiva[$key] ?? 0) + $item->saldo_awal;
+			}
+			$groupedActiva = [];
+			foreach ($bbActiva as $key => $saldo) {
+				$groupedActiva[$key] = $saldo; // key = no_bb, value = total saldo
+			}
+
+			$data['activa']         = $combinedActiva;  // tetap SBB untuk view
+			$data['grouped_activa'] = $groupedActiva;
+
 			// Part Pasiva
 			$filteredCoaPasiva = array_filter($coaLastPeriod, function ($item) {
 				return $item->posisi === 'PASIVA' && $item->table_source === 't_coa_sbb';
@@ -163,6 +176,19 @@ class Financial extends CI_Controller
 				return strcmp($a->no_sbb, $b->no_sbb);
 			});
 			$total_pasiva = array_sum(array_column($combinedPasiva, 'saldo_awal'));
+
+			$bbPasiva = [];
+			foreach ($combinedPasiva as $item) {
+				$key = substr($item->no_sbb, 0, 3);
+				$bbPasiva[$key] = ($bbPasiva[$key] ?? 0) + $item->saldo_awal;
+			}
+			$groupedPasiva = [];
+			foreach ($bbPasiva as $key => $saldo) {
+				$groupedPasiva[$key] = $saldo;
+			}
+
+			$data['pasiva']         = $combinedPasiva;
+			$data['grouped_pasiva'] = $groupedPasiva;
 
 			// Part Pendapatan
 			$filteredCoaPendapatan = array_filter($coaLastPeriod, function ($item) {
