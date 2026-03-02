@@ -177,16 +177,13 @@
 											if ($coa) {
 
 												foreach ($coa as $a) :
-											?>
+													$nama_coa_debit = $this->M_coa->getCoa($a->akun_debit)['nama_perkiraan'];
+													$nama_coa_kredit = $this->M_coa->getCoa($a->akun_kredit)['nama_perkiraan']; ?>
 													<tr>
 														<td><?= $no++ ?></td>
 														<td><?= format_indo($a->tanggal) ?></td>
-														<!-- <td><?= ($a->akun_debit == $detail_coa['no_sbb']) ? $a->akun_debit : $a->akun_kredit ?></td> -->
-														<td class="text-right"><?= ($a->akun_debit == $detail_coa['no_sbb']) ? (($a->jumlah_debit) ? rupiah($a->jumlah_debit) : '0') : '0' ?></td>
-														<!-- <td class="text-right"><?= ($a->akun_debit == $detail_coa['no_sbb']) ? (($a->saldo_debit) ? rupiah($a->saldo_debit) : '0') : '0' ?></td> -->
-														<td class="text-right"><?= ($a->akun_kredit == $detail_coa['no_sbb']) ? (($a->jumlah_kredit) ? rupiah($a->jumlah_kredit) : '0') : '0' ?></td>
-														<!-- <td class="text-right"><?= ($a->akun_kredit == $detail_coa['no_sbb']) ? (($a->saldo_kredit) ? rupiah($a->saldo_kredit) : '0') : '0' ?></td> -->
-														<!-- <td class="text-right"><?= ($a->akun_kredit == $detail_coa['no_sbb']) ? (($a->saldo_kredit) ? rupiah($a->saldo_kredit) :  '0') : (($a->saldo_debit) ? rupiah($a->saldo_debit) : '0') ?></td> -->
+														<td class="<?= ($a->akun_debit == $detail_coa['no_sbb']) ? (($a->jumlah_debit) ? rupiah($a->jumlah_debit) : "text-right") : "text-center" ?>"><?= ($a->akun_debit == $detail_coa['no_sbb']) ? (($a->jumlah_debit) ? rupiah($a->jumlah_debit) : '0') : $a->akun_debit . ' - ' . $nama_coa_debit ?></td>
+														<td class="<?= ($a->akun_kredit == $detail_coa['no_sbb']) ? (($a->jumlah_kredit) ? rupiah($a->jumlah_kredit) : "text-right") : "text-center" ?>"><?= ($a->akun_kredit == $detail_coa['no_sbb']) ? (($a->jumlah_kredit) ? rupiah($a->jumlah_kredit) : '0') : $a->akun_kredit . ' - ' . $nama_coa_kredit ?></td>
 														<td><?= $a->keterangan ?></td>
 													</tr>
 												<?php
@@ -322,7 +319,7 @@
 						<div class="col-md-6 col-xs-12 form-group has-feedback">
 							<label for="" class="form-label">Nominal</label>
 							<!-- <input type="text" class="form-control" name="input_nominal" id="input_nominal" placeholder="Nominal" oninput="format_angka()" onkeypress="return onlyNumberKey(event)" autofocus required> -->
-							<input type="text" class="form-control uang" name="input_nominal" id="update_input_nominal" placeholder="Nominal" autofocus required>
+							<input type="text" class="form-control format_angka" name="input_nominal" id="update_input_nominal" placeholder="Nominal" autofocus required>
 						</div>
 						<div class="col-md-6 col-xs-12 form-group has-feedback">
 							<label for="" class="form-label">Keterangan</label>
@@ -352,3 +349,68 @@
 			</form>
 		</div>
 	</div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+	function formatAngka(input) {
+		let raw = input.value;
+
+		// Pisahkan bagian integer dan desimal (koma sebagai separator)
+		let parts = raw.split(',');
+		let intPart = parts[0].replace(/\./g, '').replace(/[^0-9]/g, '');
+		let decPart = parts.length > 1 ? parts[1].replace(/[^0-9]/g, '').substring(0, 2) : null;
+
+		// Format ribuan dengan titik
+		let formatted = intPart ? parseInt(intPart).toLocaleString('id-ID') : '';
+
+		// Tambah desimal jika ada
+		if (decPart !== null) {
+			formatted += ',' + decPart;
+		}
+
+		input.value = formatted;
+	}
+
+	function getRawAngka(val) {
+		if (!val) return 0;
+		// Format Indonesia: titik = ribuan, koma = desimal
+		let cleaned = val.toString().replace(/\./g, '').replace(',', '.');
+		return parseFloat(cleaned) || 0;
+	}
+
+	$(document).ready(function() {
+
+		// Auto-bind ke semua elemen .format_angka
+		$(document).on('input', '.format_angka', function() {
+			formatAngka(this);
+		});
+
+		// Blokir karakter selain angka dan koma
+		$(document).on('keypress', '.format_angka', function(e) {
+			let char = String.fromCharCode(e.which);
+			let val = $(this).val();
+
+			// Hanya izinkan angka dan koma
+			if (!/[0-9,]/.test(char)) return false;
+
+			// Hanya boleh 1 koma
+			if (char === ',' && val.indexOf(',') !== -1) return false;
+
+			// Max 2 digit setelah koma
+			if (val.indexOf(',') !== -1) {
+				let decPart = val.split(',')[1];
+				if (decPart && decPart.length >= 2) return false;
+			}
+		});
+
+		// Sebelum form submit → convert balik ke format raw (titik desimal)
+		// agar nilai yang dikirim ke server adalah angka murni
+		$('form').on('submit', function() {
+			$(this).find('.format_angka').each(function() {
+				$(this).val(getRawAngka($(this).val()));
+			});
+		});
+
+	});
+</script>
