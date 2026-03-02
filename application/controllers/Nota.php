@@ -8,7 +8,7 @@ class Nota extends CI_Controller
 	{
 		parent::__construct();
 		$this->load->model('M_nota');
-		$this->load->model('M_items');
+		$this->load->model('M_item_nota');
 		$this->load->library('pagination');
 
 		// Check if user is logged in
@@ -159,7 +159,7 @@ class Nota extends CI_Controller
 				if (empty($id_item)) continue;
 
 				$qty  = str_replace(',', '.', $qtys[$key]);
-				$item = $this->M_items->get_by_id($id_item);
+				$item = $this->M_item_nota->get_by_id($id_item);
 
 				if (!$item) {
 					echo json_encode(['status' => 'error', 'message' => 'Barang tidak ditemukan!']);
@@ -229,7 +229,7 @@ class Nota extends CI_Controller
 
 				$qty        = str_replace(',', '.', $qtys[$key]);
 				$harga_jual = str_replace('.', '', $harga_juals[$key]);
-				$item       = $this->M_items->get_by_id($id_item);
+				$item       = $this->M_item_nota->get_by_id($id_item);
 				$harga_modal = $item->harga_modal;
 
 				$subtotal_jual = $qty * $harga_jual;
@@ -253,10 +253,10 @@ class Nota extends CI_Controller
 				$harga_modal_before = $item->harga_modal;
 
 				// Update stok (kurang)
-				$this->M_items->update_stok_with_average($id_item, $qty, $harga_modal, 'subtract');
+				$this->M_item_nota->update_stok_with_average($id_item, $qty, $harga_modal, 'subtract');
 
 				// Ambil data item SETELAH update untuk log
-				$item_after = $this->M_items->get_by_id($id_item);
+				$item_after = $this->M_item_nota->get_by_id($id_item);
 
 				// Insert log stok
 				$log_data = [

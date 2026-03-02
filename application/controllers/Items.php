@@ -8,7 +8,7 @@ class Items extends CI_Controller
 	{
 		parent::__construct();
 		$this->cb = $this->load->database('corebank', TRUE);
-		$this->load->model('M_items');
+		$this->load->model('M_item_nota');
 		$this->load->library('pagination');
 
 		// Check if user is logged in
@@ -39,7 +39,7 @@ class Items extends CI_Controller
 
 		// Pagination config
 		$config['base_url'] = base_url('items/index');
-		$config['total_rows'] = $this->M_items->count_all($search);
+		$config['total_rows'] = $this->M_item_nota->count_all($search);
 		$config['per_page'] = 20;
 		$config['uri_segment'] = 3;
 
@@ -74,7 +74,7 @@ class Items extends CI_Controller
 		$page = ($this->uri->segment(3)) ? $this->uri->segment(3) : 0;
 
 		// ✅ Ambil data items
-		$data['items'] = $this->M_items->get_all($config['per_page'], $page, $search);
+		$data['items'] = $this->M_item_nota->get_all($config['per_page'], $page, $search);
 		$data['pagination'] = $this->pagination->create_links();
 		$data['search'] = $search;
 
@@ -93,12 +93,12 @@ class Items extends CI_Controller
 	public function form($id = null)
 	{
 		if ($id) {
-			$data['item'] = $this->M_items->get_by_id($id);
+			$data['item'] = $this->M_item_nota->get_by_id($id);
 			$data['mode'] = 'edit';
 		} else {
 			$data['item'] = null;
 			$data['mode'] = 'add';
-			$data['kode_item'] = $this->M_items->generate_kode();
+			$data['kode_item'] = $this->M_item_nota->generate_kode();
 		}
 
 		$this->load->view('pages/items/form', $data);
@@ -122,7 +122,7 @@ class Items extends CI_Controller
 		}
 
 		// Check kode exists
-		if ($this->M_items->is_kode_exists($kode_item, $id)) {
+		if ($this->M_item_nota->is_kode_exists($kode_item, $id)) {
 			echo json_encode(['status' => 'error', 'message' => 'Kode barang sudah digunakan!']);
 			return;
 		}
@@ -140,13 +140,13 @@ class Items extends CI_Controller
 		if ($id) {
 			// Update
 			$data['updated_at'] = date('Y-m-d H:i:s');
-			$result = $this->M_items->update($id, $data);
+			$result = $this->M_item_nota->update($id, $data);
 			$message = 'Data barang berhasil diupdate!';
 		} else {
 			// Insert
 			// $data['stok'] = $stok;
 			$data['created_at'] = date('Y-m-d H:i:s');
-			$result = $this->M_items->insert($data);
+			$result = $this->M_item_nota->insert($data);
 			$message = 'Data barang berhasil ditambahkan!';
 		}
 
@@ -162,7 +162,7 @@ class Items extends CI_Controller
 	{
 		$id = $this->input->post('id');
 
-		$result = $this->M_items->delete($id);
+		$result = $this->M_item_nota->delete($id);
 
 		if ($result) {
 			echo json_encode(['status' => 'success', 'message' => 'Data barang berhasil dihapus!']);
@@ -175,7 +175,7 @@ class Items extends CI_Controller
 	public function get_items()
 	{
 		$search = $this->input->get('q');
-		$items = $this->M_items->get_for_select2($search);
+		$items = $this->M_item_nota->get_for_select2($search);
 
 		$data = [];
 		foreach ($items as $item) {

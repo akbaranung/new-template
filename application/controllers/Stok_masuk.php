@@ -8,7 +8,7 @@ class Stok_masuk extends CI_Controller
 	{
 		parent::__construct();
 		$this->load->model('M_stok_masuk');
-		$this->load->model('M_items');
+		$this->load->model('M_item_nota');
 		$this->load->model('M_coa'); // Untuk pilih COA
 		$this->load->library('pagination');
 
@@ -196,10 +196,10 @@ class Stok_masuk extends CI_Controller
 				$this->M_stok_masuk->insert_detail($data_detail);
 
 				// Update stok items (tambah)
-				$this->M_items->update_stok_with_average($id_item, $qty, $harga_modal, 'add');
+				$this->M_item_nota->update_stok_with_average($id_item, $qty, $harga_modal, 'add');
 
 				// Update harga modal items (last price)
-				// $this->M_items->update_harga_modal($id_item, $harga_modal);
+				// $this->M_item_nota->update_harga_modal($id_item, $harga_modal);
 			}
 
 			// Posting Jurnal
