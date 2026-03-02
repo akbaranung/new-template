@@ -291,16 +291,76 @@
 </div>
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 <script>
 	$(document).ready(function() {
 
+		// ✅ Init Select2 untuk semua COA
+		function initCOASelect2(id, placeholder) {
+			$('#' + id).select2({
+				placeholder: placeholder,
+				allowClear: true,
+				width: '100%'
+			});
+		}
+
+		<?php if ($total_penjualan_cash > 0) : ?>
+			initCOASelect2('coa_kas', '-- Pilih COA Kas --');
+		<?php endif; ?>
+
+		<?php if ($total_penjualan_piutang > 0) : ?>
+			initCOASelect2('coa_piutang', '-- Pilih COA Piutang --');
+		<?php endif; ?>
+
+		initCOASelect2('coa_penjualan', '-- Pilih COA Penjualan --');
+		initCOASelect2('coa_hpp', '-- Pilih COA HPP --');
+		initCOASelect2('coa_persediaan', '-- Pilih COA Persediaan --');
+
+		// ✅ Fungsi validasi manual (karena Select2 hide native element)
+		function validateCOA() {
+			<?php if ($total_penjualan_cash > 0) : ?>
+				if (!$('#coa_kas').val()) {
+					alert('Pilih COA Kas terlebih dahulu!');
+					$('#coa_kas').select2('open');
+					return false;
+				}
+			<?php endif; ?>
+
+			<?php if ($total_penjualan_piutang > 0) : ?>
+				if (!$('#coa_piutang').val()) {
+					alert('Pilih COA Piutang terlebih dahulu!');
+					$('#coa_piutang').select2('open');
+					return false;
+				}
+			<?php endif; ?>
+
+			if (!$('#coa_penjualan').val()) {
+				alert('Pilih COA Penjualan terlebih dahulu!');
+				$('#coa_penjualan').select2('open');
+				return false;
+			}
+
+			if (!$('#coa_hpp').val()) {
+				alert('Pilih COA HPP terlebih dahulu!');
+				$('#coa_hpp').select2('open');
+				return false;
+			}
+
+			if (!$('#coa_persediaan').val()) {
+				alert('Pilih COA Persediaan terlebih dahulu!');
+				$('#coa_persediaan').select2('open');
+				return false;
+			}
+
+			return true;
+		}
+
 		// Preview Jurnal
 		$('#btnPreview').on('click', function() {
-			// Validasi form
-			if (!$('#formClosing')[0].checkValidity()) {
-				$('#formClosing')[0].reportValidity();
-				return;
-			}
+			// ✅ Pakai validasi manual
+			if (!validateCOA()) return;
 
 			const coa_kas = $('#coa_kas option:selected').text();
 			const coa_piutang = $('#coa_piutang option:selected').text();
@@ -326,43 +386,43 @@
 
 			<?php if ($total_penjualan_cash > 0) : ?>
 				html += `
-                <tr class="table-success">
-                    <td colspan="3"><strong>Jurnal 1: Penjualan Cash</strong></td>
-                </tr>
-                <tr>
-                    <td>${coa_kas}</td>
-                    <td class="text-right text-success"><strong>Rp <?= number_format($total_penjualan_cash, 0, ',', '.') ?></strong></td>
-                    <td class="text-right">-</td>
-                </tr>
-                <tr>
-                    <td>${coa_penjualan}</td>
-                    <td class="text-right">-</td>
-                    <td class="text-right text-danger"><strong>Rp <?= number_format($total_penjualan_cash, 0, ',', '.') ?></strong></td>
-                </tr>
-            `;
+                    <tr class="table-success">
+                        <td colspan="3"><strong>Jurnal 1: Penjualan Cash</strong></td>
+                    </tr>
+                    <tr>
+                        <td>${coa_kas}</td>
+                        <td class="text-right text-success"><strong>Rp <?= number_format($total_penjualan_cash, 0, ',', '.') ?></strong></td>
+                        <td class="text-right">-</td>
+                    </tr>
+                    <tr>
+                        <td>${coa_penjualan}</td>
+                        <td class="text-right">-</td>
+                        <td class="text-right text-danger"><strong>Rp <?= number_format($total_penjualan_cash, 0, ',', '.') ?></strong></td>
+                    </tr>
+                `;
 			<?php endif; ?>
 
 			<?php if ($total_penjualan_piutang > 0) : ?>
 				html += `
-                <tr class="table-info">
-                    <td colspan="3"><strong>Jurnal 2: Penjualan Piutang</strong></td>
-                </tr>
-                <tr>
-                    <td>${coa_piutang}</td>
-                    <td class="text-right text-success"><strong>Rp <?= number_format($total_penjualan_piutang, 0, ',', '.') ?></strong></td>
-                    <td class="text-right">-</td>
-                </tr>
-                <tr>
-                    <td>${coa_penjualan}</td>
-                    <td class="text-right">-</td>
-                    <td class="text-right text-danger"><strong>Rp <?= number_format($total_penjualan_piutang, 0, ',', '.') ?></strong></td>
-                </tr>
-            `;
+                    <tr class="table-info">
+                        <td colspan="3"><strong>Jurnal 2: Penjualan Piutang</strong></td>
+                    </tr>
+                    <tr>
+                        <td>${coa_piutang}</td>
+                        <td class="text-right text-success"><strong>Rp <?= number_format($total_penjualan_piutang, 0, ',', '.') ?></strong></td>
+                        <td class="text-right">-</td>
+                    </tr>
+                    <tr>
+                        <td>${coa_penjualan}</td>
+                        <td class="text-right">-</td>
+                        <td class="text-right text-danger"><strong>Rp <?= number_format($total_penjualan_piutang, 0, ',', '.') ?></strong></td>
+                    </tr>
+                `;
 			<?php endif; ?>
 
 			html += `
                 <tr class="table-warning">
-                    <td colspan="3"><strong>Jurnal 3: HPP</strong></td>
+                    <td colspan="3"><strong>Jurnal <?= ($total_penjualan_cash > 0 && $total_penjualan_piutang > 0) ? 3 : (($total_penjualan_cash > 0 || $total_penjualan_piutang > 0) ? 2 : 1) ?>: HPP</strong></td>
                 </tr>
                 <tr>
                     <td>${coa_hpp}</td>
@@ -381,11 +441,7 @@
                 </tr>
             `;
 
-			html += `
-                        </tbody>
-                    </table>
-                </div>
-            `;
+			html += `</tbody></table></div>`;
 
 			$('#previewContent').html(html);
 			$('#modalPreview').modal('show');
@@ -394,6 +450,9 @@
 		// Submit Form
 		$('#formClosing').on('submit', function(e) {
 			e.preventDefault();
+
+			// ✅ Pakai validasi manual
+			if (!validateCOA()) return;
 
 			if (!confirm('Apakah Anda yakin ingin memproses closing?\n\nSetelah closing, nota tidak dapat diubah lagi!')) {
 				return;

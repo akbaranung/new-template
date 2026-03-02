@@ -262,6 +262,20 @@
 				},
 				success: function(response) {
 					$('#modalCOABody').html(response);
+
+					$('#coa_persediaan').select2({
+						placeholder: '-- Pilih COA Persediaan --',
+						allowClear: true,
+						width: '100%',
+						dropdownParent: $('#modalCOA') // penting agar dropdown muncul di dalam modal
+					});
+
+					$('#coa_kas_utang').select2({
+						placeholder: '-- Pilih COA Kas/Utang --',
+						allowClear: true,
+						width: '100%',
+						dropdownParent: $('#modalCOA')
+					});
 				},
 				error: function() {
 					$('#modalCOABody').html(`
