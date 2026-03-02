@@ -239,47 +239,44 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
-  // Get references to the modal elements
   const customModal = document.getElementById('customModal');
   const closeModalBtn = document.getElementById('closeModalBtn');
   const doNotShowAgainCheckbox = document.getElementById('doNotShowAgain');
 
-  /**
-   * Shows the custom modal by adding the 'show' class.
-   */
   function showModal() {
     customModal.classList.add('show');
+    // Tambahkan class ke body untuk mencegah scroll saat modal terbuka (opsional)
+    document.body.style.overflow = 'hidden';
   }
 
-  /**
-   * Hides the custom modal by removing the 'show' class.
-   * Also logs the state of the checkbox.
-   */
   function hideModal() {
     customModal.classList.remove('show');
-    // You can access the checkbox state here
-    console.log('Do not show again checkbox state:', doNotShowAgainCheckbox.checked);
-    // In a real application, you might save this state to localStorage
-    // if (doNotShowAgainCheckbox.checked) {
-    //     localStorage.setItem('hideModal', 'true');
-    // }
+    document.body.style.overflow = ''; // Kembalikan scroll body
+
+    // Simpan ke localStorage agar tidak muncul lagi jika checkbox dicentang
+    if (doNotShowAgainCheckbox && doNotShowAgainCheckbox.checked) {
+      localStorage.setItem('hidePolicyModal', 'true');
+    }
   }
 
-  // Event listener to show the modal when the DOM is fully loaded
   document.addEventListener('DOMContentLoaded', () => {
-    // Check if the modal should be hidden based on a previous user choice (example)
-    // if (localStorage.getItem('hideModal') !== 'true') {
-    showModal();
-    // }
+    // Cek apakah user sudah pernah centang "Jangan tampilkan lagi"
+    if (localStorage.getItem('hidePolicyModal') !== 'true') {
+      showModal();
+    }
   });
 
-  // Event listener for the close button
+  // 1. SATU-SATUNYA CARA MENUTUP: Klik tombol "Saya Mengerti"
   closeModalBtn.addEventListener('click', hideModal);
 
-  // Optional: Close modal if clicking outside the content (on the overlay)
-  customModal.addEventListener('click', (event) => {
-    if (event.target === customModal) {
-      hideModal();
+  // 2. CEGAH TUTUP VIA KLIK LUAR: 
+  // Bagian event listener 'click' pada customModal DIHAPUS atau dikosongkan.
+
+  // 3. TAMBAHAN: Cegah tutup via tombol Escape (Keyboard)
+  window.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && customModal.classList.contains('show')) {
+      // Tidak melakukan apa-apa, atau bisa beri peringatan kecil
+      console.log('Modal dikunci. Harap tekan tombol konfirmasi.');
     }
   });
 </script>
