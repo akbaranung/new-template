@@ -3,6 +3,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class M_items extends CI_Model
 {
+	// 
 
 	private $table = 'items';
 
