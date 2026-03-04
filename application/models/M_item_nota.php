@@ -141,8 +141,7 @@ class M_item_nota extends CI_Model
 			$nilai_lama = $item->nilai_persediaan;
 			$stok_lama = $item->stok;
 
-			$nilai_baru = (int) $qty * (int) $harga_beli;
-
+			$nilai_baru = floatval($qty) * floatval($harga_beli);
 			$total_nilai = $nilai_lama + $nilai_baru;
 			$total_stok = $stok_lama + $qty;
 
