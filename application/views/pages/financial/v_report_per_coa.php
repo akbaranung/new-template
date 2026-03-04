@@ -64,9 +64,10 @@
 								<label class="form-label">Keyword</label>
 								<input type="text" name="keyword" class="form-control" placeholder="nomor coa/nominal/keterangan" value="<?= $this->input->get('keyword') ?>">
 							</div>
-							<div class="col-md-2 col-xs-12 d-flex align-items-end gap-1">
-								<button type="submit" class="btn btn-primary btn-sm">Lihat</button>
-								<a href="<?= base_url('financial/coa_report') ?>" class="btn btn-warning text-white btn-sm">Reset</a>
+
+							<div class="col-md-2 col-xs-12">
+								<button type="submit" class="btn btn-primary btn-sm" style="margin-top: 30px;">Lihat</button>
+								<a href="<?= base_url('financial/coa_report') ?>" class="btn btn-warning text-white btn-sm" style="margin-top: 30px;">Reset</a>
 							</div>
 						</div>
 					</form>
