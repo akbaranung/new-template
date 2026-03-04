@@ -149,9 +149,8 @@
 															<?php endif; ?>
 														</td>
 														<?php if ($this->session->userdata('nama_jabatan') == "Super Admin") : ?>
-															<td class="text-center">
-																<button class="btn btn-sm btn-warning text-white" onclick="onEdit_report_per_coa(<?= $a->id ?>)" type="button">Update</button>
-															</td>
+
+															<td class="text-center"><button class="btn btn-sm btn-warning text-white" onclick="onEdit_report_per_coa(<?= $a->id ?>)" type="button">Update</button></td>
 														<?php endif; ?>
 													</tr>
 												<?php
@@ -256,3 +255,132 @@
 		</div>
 	</div>
 </div>
+
+<!-- Update COA Modal -->
+<div class="modal fade" id="updateCoaModal" tabindex="-1" aria-labelledby="updateCoaModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="updateCoaModalLabel">Update COA Entry</h5>
+				<button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">X</button>
+			</div>
+			<form id="updateCoaForm" action="<?= site_url('financial/update_report_per_coa') ?>" method="POST" enctype="multipart/form-data">
+				<div class="modal-body">
+					<div class="row">
+						<input type="hidden" name="id" id="update_id">
+						<div class="col-md-6 col-xs-12 form-group has-feedback">
+							<label class="form-label">Debit</label>
+							<select name="neraca_debit" id="update_neraca_debit" class="form-control" style="width: 100%;" required>
+								<option value="">-- Pilih pos neraca debit</option>
+								<?php foreach ($daftar_coa as $c) : ?>
+									<option value="<?= $c->no_sbb ?>" data-nama="<?= $c->nama_perkiraan ?>" data-posisi="<?= $c->posisi ?>">
+										<?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?>
+									</option>
+								<?php endforeach; ?>
+							</select>
+						</div>
+						<div class="col-md-6 col-xs-12 form-group has-feedback">
+							<label class="form-label">Kredit</label>
+							<select name="neraca_kredit" id="update_neraca_kredit" class="form-control" style="width: 100%;" required>
+								<option value="">-- Pilih pos neraca kredit</option>
+								<?php foreach ($daftar_coa as $c) : ?>
+									<option value="<?= $c->no_sbb ?>" data-nama="<?= $c->nama_perkiraan ?>" data-posisi="<?= $c->posisi ?>">
+										<?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?>
+									</option>
+								<?php endforeach; ?>
+							</select>
+						</div>
+						<div class="col-md-12 col-xs-12 form-group has-feedback">
+							<div id="warningMessage" class="validation-error-alert"></div>
+						</div>
+						<div class="col-md-6 col-xs-12 form-group has-feedback">
+							<label class="form-label">Nominal</label>
+							<input type="text" class="form-control format_angka" name="input_nominal" id="update_input_nominal" placeholder="Nominal" required>
+						</div>
+						<div class="col-md-6 col-xs-12 form-group has-feedback">
+							<label class="form-label">Keterangan</label>
+							<input type="text" class="form-control" name="input_keterangan" id="update_input_keterangan" placeholder="Keterangan" oninput="this.value = this.value.toUpperCase()" required>
+						</div>
+						<div class="col-md-6 col-xs-12 form-group has-feedback">
+							<label class="form-label">Tanggal</label>
+							<input type="date" name="tanggal" id="update_tanggal" value="<?= date('Y-m-d') ?>" class="form-control" required>
+						</div>
+						<div class="col-md-6 col-xs-12 form-group has-feedback">
+							<label class="form-label">Attachment (Image/Excel/Word)</label>
+							<input type="file" class="form-control-file" name="file" id="file">
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-danger" onclick="onDeleteArusKas()">Delete</button>
+					<button type="submit" class="btn btn-primary">Save changes</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+	function formatAngka(input) {
+		let raw = input.value;
+
+		// Pisahkan bagian integer dan desimal (koma sebagai separator)
+		let parts = raw.split(',');
+		let intPart = parts[0].replace(/\./g, '').replace(/[^0-9]/g, '');
+		let decPart = parts.length > 1 ? parts[1].replace(/[^0-9]/g, '').substring(0, 2) : null;
+
+		// Format ribuan dengan titik
+		let formatted = intPart ? parseInt(intPart).toLocaleString('id-ID') : '';
+
+		// Tambah desimal jika ada
+		if (decPart !== null) {
+			formatted += ',' + decPart;
+		}
+
+		input.value = formatted;
+	}
+
+	function getRawAngka(val) {
+		if (!val) return 0;
+		// Format Indonesia: titik = ribuan, koma = desimal
+		let cleaned = val.toString().replace(/\./g, '').replace(',', '.');
+		return parseFloat(cleaned) || 0;
+	}
+
+	$(document).ready(function() {
+
+		// Auto-bind ke semua elemen .format_angka
+		$(document).on('input', '.format_angka', function() {
+			formatAngka(this);
+		});
+
+		// Blokir karakter selain angka dan koma
+		$(document).on('keypress', '.format_angka', function(e) {
+			let char = String.fromCharCode(e.which);
+			let val = $(this).val();
+
+			// Hanya izinkan angka dan koma
+			if (!/[0-9,]/.test(char)) return false;
+
+			// Hanya boleh 1 koma
+			if (char === ',' && val.indexOf(',') !== -1) return false;
+
+			// Max 2 digit setelah koma
+			if (val.indexOf(',') !== -1) {
+				let decPart = val.split(',')[1];
+				if (decPart && decPart.length >= 2) return false;
+			}
+		});
+
+		// Sebelum form submit → convert balik ke format raw (titik desimal)
+		// agar nilai yang dikirim ke server adalah angka murni
+		$('form').on('submit', function() {
+			$(this).find('.format_angka').each(function() {
+				$(this).val(getRawAngka($(this).val()));
+			});
+		});
+
+	});
+</script>
