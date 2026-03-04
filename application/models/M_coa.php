@@ -80,7 +80,7 @@ class M_coa extends CI_Model
 		return $pasiva;
 	}
 
-	public function getCoaReport($no_coa, $from, $to, $keyword = null)
+	public function getCoaReport($no_coa, $from, $to, $keyword = null, $limit = null, $offset = null)
 	{
 		$this->cb->select('*');
 		$this->cb->from('jurnal_neraca');
@@ -107,14 +107,45 @@ class M_coa extends CI_Model
 			$this->cb->or_like('keterangan', $keyword);
 			$this->cb->group_end();
 		}
-		// $this->cb->order_by('tanggal', 'ASC');
+
 		$this->cb->order_by('tanggal', 'DESC');
 		$this->cb->order_by('Id', 'DESC');
-		$query = $this->cb->get();
 
-		$result = $query->result();
+		// ← Hanya apply limit jika diberikan (kalau null = ambil semua, untuk hitung sum)
+		if ($limit !== null) {
+			$this->cb->limit($limit, $offset ?? 0);
+		}
 
-		return $result;
+		return $this->cb->get()->result();
+	}
+
+	public function countCoaReport($no_coa, $from = null, $to = null, $keyword = null)
+	{
+		$this->cb->from('jurnal_neraca');
+		$this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
+
+		if ($from) {
+			$this->cb->where('tanggal >=', $from);
+			$this->cb->where('tanggal <=', $to);
+		}
+
+		if ($no_coa != 'ALL') {
+			$this->cb->group_start();
+			$this->cb->where('akun_debit', $no_coa);
+			$this->cb->or_where('akun_kredit', $no_coa);
+			$this->cb->group_end();
+		}
+
+		if ($keyword) {
+			$this->cb->group_start();
+			$this->cb->like('akun_debit', $keyword);
+			$this->cb->or_like('akun_kredit', $keyword);
+			$this->cb->or_like('jumlah_debit', $keyword);
+			$this->cb->or_like('keterangan', $keyword);
+			$this->cb->group_end();
+		}
+
+		return $this->cb->count_all_results();
 	}
 
 	public function getCoa($no_coa)

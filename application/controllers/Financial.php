@@ -1704,38 +1704,56 @@ class Financial extends CI_Controller
 
 	public function coa_report()
 	{
-		$has_access = $this->M_menu->has_access();
-
-		if (!$has_access) {
-			show_error('Forbidden Access: You do not have permission to view this page.', 403, '403 Forbidden');
-		}
-
-		$nip = $this->session->userdata('nip');
-		// Fetch counts
-		$result = $this->db->query("SELECT COUNT(Id) FROM memo WHERE (nip_kpd LIKE '%$nip%' OR nip_cc LIKE '%$nip%') AND (`read` NOT LIKE '%$nip%');")->row()->{'COUNT(Id)'};
+		$nip     = $this->session->userdata('nip');
+		$result  = $this->db->query("SELECT COUNT(Id) FROM memo WHERE (nip_kpd LIKE '%$nip%' OR nip_cc LIKE '%$nip%') AND (`read` NOT LIKE '%$nip%');")->row()->{'COUNT(Id)'};
 		$result2 = $this->db->query("SELECT COUNT(id) FROM task WHERE (`member` LIKE '%$nip%' or `pic` LIKE '%$nip%') AND activity='1'")->row()->{'COUNT(id)'};
+
 		$data = [
-			'count_inbox' => $result,
+			'count_inbox'  => $result,
 			'count_inbox2' => $result2,
-			'coas' => $this->M_coa->list_coa(),
+			'coas'         => $this->M_coa->list_coa(),
 		];
 
-		$no_coa = $this->input->post('no_coa');
-		$keyword = $this->input->post('keyword');
+		// ← Ganti semua input->post ke input->get
+		$no_coa  = $this->input->get('no_coa');
+		$keyword = $this->input->get('keyword');
+		$from    = $this->input->get('tgl_dari');
+		$to      = $this->input->get('tgl_sampai');
 
 		if ($keyword && $no_coa == "") {
 			$no_coa = "ALL";
 		}
 
 		if ($no_coa) {
-			$this->prepareCoaReport($data, $no_coa, $keyword);
+			$per_page   = ($no_coa == 'ALL') ? 10 : 20;
+			$total_rows = $this->M_coa->countCoaReport($no_coa, $from, $to, $keyword);
+			$page       = max(1, (int)($this->input->get('page') ?? 1));
+			$offset     = ($page - 1) * $per_page;
+
+			$query_string = http_build_query([
+				'no_coa'     => $no_coa  ?? '',
+				'keyword'    => $keyword ?? '',
+				'tgl_dari'   => $from    ?? '',
+				'tgl_sampai' => $to      ?? '',
+			]);
+
+			// ← Hapus semua $config dan $this->pagination - tidak dipakai lagi
+
+			$data['current_page'] = $page;
+			$data['total_pages']  = ceil($total_rows / $per_page);
+			$data['per_page']     = $per_page;
+			$data['total_rows']   = $total_rows;
+			$data['offset']       = $offset;
+			$data['query_string'] = $query_string;
+
+			$this->prepareCoaReport($data, $no_coa, $keyword, $per_page, $offset);
 		} else {
-			$data['title'] = "Report CoA";
-			$data['daftar_coa'] = $this->M_coa->list_coa();
-			$data['pages'] = "pages/financial/v_report_per_coa";
-			$data['utility'] = $this->db->get('utility')->row_array();
+			$data['title']        = "Report CoA";
+			$data['daftar_coa']   = $this->M_coa->list_coa();
+			$data['pages']        = "pages/financial/v_report_per_coa";
+			$data['utility']      = $this->db->get('utility')->row_array();
 			$data['pages_script'] = 'script/financial/s_financial';
-			$data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
+			$data['menus']        = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
 
 			$this->load->view('index', $data);
 		}
@@ -2811,111 +2829,58 @@ class Financial extends CI_Controller
 	}
 
 
-	private function prepareCoaReport(&$data, $no_coa, $keyword = NULL)
+	private function prepareCoaReport(&$data, $no_coa, $keyword = NULL, $limit = 20, $offset = 0)
 	{
-		$from = $this->input->post('tgl_dari');
-		$to = $this->input->post('tgl_sampai');
-		// $keyword = $this->input->post('keyword');
-		$kode_cabang = $this->session->userdata('kode_cabang');
-		// return $this->cb->where('id_cabang', $kode_cabang);
+		$from = $this->input->get('tgl_dari');
+		$to   = $this->input->get('tgl_sampai');
 
-		// Saldo awal periode sebelumnya
-		// $last_periode = new DateTime($from);
-		// $last_periode->modify('-1 month');
-		// $last_periode = $last_periode->format('Y-m');
-		// $coaBefore = $this->cb->where('id_cabang', $kode_cabang)
-		//   ->where('periode', $last_periode)
-		//   ->get('saldo_awal')
-		//   ->row_array();
+		// ← $offset sudah benar dari controller
+		$data['coa'] = $this->M_coa->getCoaReport($no_coa, $from, $to, $keyword, $limit, $offset);
 
-		// $coaBefore = $coaBefore['coa'] ?? 0; // Pastikan tidak error jika NULL
 
-		// $coa = json_decode($coaBefore);
-		// $saldo_awal = null;
+		// Ambil semua data untuk hitung sum yang akurat
+		$all_data = $this->M_coa->getCoaReport($no_coa, $from, $to, $keyword);
 
-		// echo '<pre>';
-		// print_r($coa);
-		// echo '</pre>';
-		// exit;
-		// Iterasi untuk mencari saldo awal
-		// if ($coa) {
-		//   foreach ($coa as $item) {
-		//     if ($item->no_sbb == $no_coa) {
-		//       $saldo_awal = $item->saldo_awal;
-		//       break;
-		//     }
-		//   }
-		// }
-
-		// Hitung transaksi dari 1-14 November
-		// $mid_start = (new DateTime($from))->modify('first day of this month')->format('Y-m-d');
-		// $mid_end = (new DateTime($from))->modify('-1 day')->format('Y-m-d');
-
-		// $transactions_before = $this->M_coa->getCoaReport($no_coa, $mid_start, $mid_end);
-		// foreach ($transactions_before as $trans) {
-		//   if ($trans->akun_debit == $no_coa) {
-		//     $saldo_awal += $trans->jumlah_debit;
-		//   } else {
-		//     $saldo_awal -= $trans->jumlah_kredit;
-		//   }
-		// }
-
-		// Set saldo awal untuk 15 November
-		// $data['saldo_awal'] = ($saldo_awal) ? $saldo_awal : 0;
-		// print_r($saldo_awal);
-		// exit;
-
-		// Hitung transaksi dari 15 November - 31 Desember
-		$data['coa'] = $this->M_coa->getCoaReport($no_coa, $from, $to, $keyword);
-
-		// Hitung net total hanya jika no_coa == ALL dan keyword ada isinya
 		if ($no_coa == "ALL") {
-			$sum_debit = 0;
+			$sum_debit  = 0;
 			$sum_kredit = 0;
 
-			foreach ($data['coa'] as $a) {
+			foreach ($all_data as $a) {
 				$coa_debit  = $this->M_coa->getCoa($a->akun_debit);
 				$coa_kredit = $this->M_coa->getCoa($a->akun_kredit);
 
-				// Kolom Debit
 				if ($coa_debit['posisi'] == 'AKTIVA') {
 					$sum_debit += $a->jumlah_debit;
-				} else { // PASIVA
+				} else {
 					$sum_debit -= $a->jumlah_debit;
 				}
 
-				// Kolom Kredit
 				if ($coa_kredit['posisi'] == 'PASIVA') {
 					$sum_kredit += $a->jumlah_kredit;
-				} else { // AKTIVA
+				} else {
 					$sum_kredit -= $a->jumlah_kredit;
 				}
 			}
 
-			$data['sum_debit'] = $sum_debit;
+			$data['sum_debit']  = $sum_debit;
 			$data['sum_kredit'] = $sum_kredit;
 		} else {
 			$data['sum_debit'] = array_sum(array_map(function ($sum) use ($no_coa) {
 				return $sum->akun_debit == $no_coa ? $sum->jumlah_debit : 0;
-			}, $data['coa']));
+			}, $all_data));
 
 			$data['sum_kredit'] = array_sum(array_map(function ($sum) use ($no_coa) {
 				return $sum->akun_kredit == $no_coa ? $sum->jumlah_kredit : 0;
-			}, $data['coa']));
+			}, $all_data));
 		}
 
-		$data['title'] = "Report CoA " . $no_coa;
-		$data['detail_coa'] = $this->M_coa->getCoa($no_coa);
-		$data['daftar_coa'] = $this->M_coa->list_coa();
-		$data['pages'] = 'pages/financial/v_report_per_coa';
-		$data['utility'] = $this->db->get('utility')->row_array();
+		$data['title']        = "Report CoA " . $no_coa;
+		$data['detail_coa']   = $this->M_coa->getCoa($no_coa);
+		$data['daftar_coa']   = $this->M_coa->list_coa();
+		$data['pages']        = 'pages/financial/v_report_per_coa';
+		$data['utility']      = $this->db->get('utility')->row_array();
 		$data['pages_script'] = 'script/financial/s_financial';
-		$data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
-
-		// echo '<pre>';
-		// print_r($data['coa']);
-		// echo '</pre>';
-		// exit;
+		$data['menus']        = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
 
 		$this->load->view('index', $data);
 	}
