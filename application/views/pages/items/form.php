@@ -28,7 +28,7 @@
 
 <div class="form-group">
 	<label for="nama_item">Nama Barang <span class="text-danger">*</span></label>
-	<input type="text" class="form-control" name="nama_item" id="nama_item" value="<?= isset($item) ? $item->nama_item : '' ?>" placeholder="Masukkan nama barang" required autofocus>
+	<input type="text" class="form-control" name="nama_item" id="nama_item" value="<?= isset($item) ? $item->nama_item : '' ?>" placeholder="Masukkan nama barang" required>
 </div>
 
 <div class="row">
@@ -47,6 +47,7 @@
 		</div>
 	</div>
 </div>
+
 <div class="form-group">
 	<label for="coa_persediaan">COA Persediaan <span class="text-danger">*</span></label>
 	<select class="form-control" name="coa_persediaan" id="coa_persediaan" required>
@@ -61,14 +62,6 @@
 	<small class="text-muted">COA persediaan barang ini untuk pencatatan jurnal otomatis</small>
 </div>
 
-<?php if ($mode == 'add') : ?>
-	<!-- <div class="form-group">
-        <label for="stok">Stok Awal</label>
-        <input type="text" class="form-control" name="stok" id="stok" value="0" placeholder="0">
-        <small class="text-muted">Stok awal barang (opsional, bisa diisi 0 dan tambah via input stok)</small>
-    </div> -->
-<?php endif; ?>
-
 <div class="alert alert-info">
 	<i class="fe fe-info"></i> <strong>Catatan:</strong>
 	<ul class="mb-0 pl-3">
@@ -79,7 +72,21 @@
 	</ul>
 </div>
 
+<!-- ← Select2 CSS & JS (kalau belum ada di parent layout, uncomment ini) -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <script>
-	// Auto focus nama barang
-	$('#nama_item').focus();
+	$(document).ready(function() {
+		// ← Init Select2 untuk COA Persediaan
+		// dropdownParent ke #modalForm supaya dropdown muncul di dalam modal
+		$('#coa_persediaan').select2({
+			placeholder: '-- Pilih COA Persediaan --',
+			allowClear: true,
+			width: '100%',
+			dropdownParent: $('#modalForm')
+		});
+
+		$('#nama_item').focus();
+	});
 </script>
