@@ -8,6 +8,7 @@ class Closing_nota extends CI_Controller
 	{
 		parent::__construct();
 		$this->load->model('M_closing_nota');
+		$this->load->model('M_item_nota');
 		$this->load->model('M_nota');
 		$this->load->model('M_coa');
 		$this->load->library('pagination');
@@ -172,90 +173,95 @@ class Closing_nota extends CI_Controller
 		$this->db->trans_start();
 
 		try {
-			$tanggal = $this->input->post('tanggal');
-			$coa_kas = $this->input->post('coa_kas');
-			$coa_piutang = $this->input->post('coa_piutang');
-			$coa_penjualan = $this->input->post('coa_penjualan');
-			$coa_hpp = $this->input->post('coa_hpp');
-			$coa_persediaan = $this->input->post('coa_persediaan');
+			$tanggal        = $this->input->post('tanggal');
+			$coa_kas        = $this->input->post('coa_kas');        // COA Kas (Debit)
+			$coa_pendapatan = $this->input->post('coa_pendapatan'); // COA Pendapatan (Kredit)
 
-			// Validasi tanggal belum closing
-			if ($this->M_closing_nota->is_closed($tanggal)) {
-				echo json_encode(['status' => 'error', 'message' => 'Tanggal sudah di-closing!']);
+			// Ambil semua nota belum closing
+			$nota_list = $this->M_nota->get_belum_closing($tanggal);
+
+			if (empty($nota_list)) {
+				echo json_encode(['status' => 'error', 'message' => 'Tidak ada nota yang perlu di-closing!']);
 				return;
 			}
 
-			// Get summary
-			$summary = $this->M_nota->get_summary_by_metode($tanggal);
+			// Buat record closing header
+			$total_penjualan = array_sum(array_column((array)$nota_list, 'total_penjualan'));
+			$total_hpp       = array_sum(array_column((array)$nota_list, 'total_hpp'));
+			$total_laba      = $total_penjualan - $total_hpp;
 
-			$total_transaksi = 0;
-			$total_penjualan_cash = 0;
-			$total_penjualan_piutang = 0;
-			$total_penjualan = 0;
-			$total_hpp = 0;
-			$laba_kotor = 0;
-
-			foreach ($summary as $s) {
-				$total_transaksi += $s->total_transaksi;
-				$total_penjualan += $s->total_penjualan;
-				$total_hpp += $s->total_hpp;
-				$laba_kotor += $s->laba_kotor;
-
-				if ($s->metode_bayar == 'cash') {
-					$total_penjualan_cash = $s->total_penjualan;
-				} else {
-					$total_penjualan_piutang = $s->total_penjualan;
-				}
-			}
-
-			// Validasi ada transaksi
-			if ($total_transaksi == 0) {
-				echo json_encode(['status' => 'error', 'message' => 'Tidak ada transaksi untuk di-closing!']);
-				return;
-			}
-
-			// Insert closing_nota
 			$data_closing = [
-				'tanggal' => $tanggal,
-				'total_transaksi' => $total_transaksi,
-				'total_penjualan_cash' => $total_penjualan_cash,
-				'total_penjualan_piutang' => $total_penjualan_piutang,
+				'tanggal'         => $tanggal,
+				'total_transaksi' => count($nota_list),
 				'total_penjualan' => $total_penjualan,
-				'total_hpp' => $total_hpp,
-				'laba_kotor' => $laba_kotor,
-				'id_cabang' => $this->session->userdata('kode_cabang'),
-				'id_company' => $this->session->userdata('user_perusahaan_id'),
-				'created_by' => $this->session->userdata('nip'),
-				'created_at' => date('Y-m-d H:i:s'),
-				'status' => 'closed'
+				'total_hpp'       => $total_hpp,
+				'laba_kotor'      => $total_laba,
+				'id_cabang'       => $this->session->userdata('kode_cabang'),
+				'id_company'      => $this->session->userdata('user_perusahaan_id'),
+				'created_by'      => $this->session->userdata('nip'),
+				'created_at'      => date('Y-m-d H:i:s')
 			];
-			// echo json_encode(['data' => $_POST]);
-			// return;
 
 			$id_closing = $this->M_closing_nota->insert($data_closing);
 
-			// Posting Jurnal 1: Kas (jika ada penjualan cash)
-			if ($total_penjualan_cash > 0) {
-				$keterangan_cash = 'Closing Kasir - ' . date('d/m/Y', strtotime($tanggal)) . ' - Penjualan Cash';
-				$this->posting($coa_kas, $coa_penjualan, $keterangan_cash, $total_penjualan_cash, $tanggal);
-			}
-
-			// Posting Jurnal 2: Piutang (jika ada penjualan piutang)
-			if ($total_penjualan_piutang > 0) {
-				$keterangan_piutang = 'Closing Kasir - ' . date('d/m/Y', strtotime($tanggal)) . ' - Penjualan Piutang';
-				$this->posting($coa_piutang, $coa_penjualan, $keterangan_piutang, $total_penjualan_piutang, $tanggal);
-			}
-
-			// Posting Jurnal 3: HPP
-			if ($total_hpp > 0) {
-				$keterangan_hpp = 'Closing Kasir - ' . date('d/m/Y', strtotime($tanggal)) . ' - HPP';
-				$this->posting($coa_hpp, $coa_persediaan, $keterangan_hpp, $total_hpp, $tanggal);
-			}
-
-			// Update nota jadi is_closed = 1
-			$nota_list = $this->M_nota->get_belum_closing($tanggal);
+			// Update status nota jadi closed
 			foreach ($nota_list as $nota) {
 				$this->M_nota->update_closing($nota->id, $id_closing);
+			}
+
+			// ============================================================
+			// JURNAL BARU: Split per COA Persediaan
+			// ============================================================
+
+			// Kumpulkan HPP per coa_persediaan dari semua nota detail
+			$hpp_per_coa = []; // ['coa_persediaan' => total_hpp]
+
+			foreach ($nota_list as $nota) {
+				$details = $this->M_nota->get_detail($nota->id);
+
+				foreach ($details as $detail) {
+					// Ambil coa_persediaan dari item
+					$item = $this->M_item_nota->get_by_id($detail->id_item);
+					$coa_item_persediaan = $item ? $item->coa_persediaan : null;
+
+					if (empty($coa_item_persediaan)) continue;
+
+					$subtotal_hpp = $detail->qty * $detail->harga_modal;
+
+					if (!isset($hpp_per_coa[$coa_item_persediaan])) {
+						$hpp_per_coa[$coa_item_persediaan] = 0;
+					}
+					$hpp_per_coa[$coa_item_persediaan] += $subtotal_hpp;
+				}
+			}
+
+			// Jurnal 1 per COA Persediaan:
+			// Debit Kas lawan Kredit Persediaan (sebesar HPP per COA)
+			foreach ($hpp_per_coa as $coa_persediaan => $nominal_hpp) {
+				if ($nominal_hpp <= 0) continue;
+
+				$keterangan = 'Closing Kasir ' . $tanggal . ' - HPP [COA: ' . $coa_persediaan . ']';
+				$this->posting(
+					$coa_kas,           // Debit: Kas
+					$coa_persediaan,    // Kredit: Persediaan (per item)
+					$keterangan,
+					$nominal_hpp,
+					$tanggal,
+					'CLOSING-' . date('Ymd') . '-' . $id_closing
+				);
+			}
+
+			// Jurnal 2: Debit Kas lawan Kredit Pendapatan (sebesar Laba)
+			if ($total_laba > 0) {
+				$keterangan_laba = 'Closing Kasir ' . $tanggal . ' - Pendapatan';
+				$this->posting(
+					$coa_kas,           // Debit: Kas
+					$coa_pendapatan,    // Kredit: Pendapatan
+					$keterangan_laba,
+					$total_laba,
+					$tanggal,
+					'CLOSING-' . date('Ymd') . '-' . $id_closing
+				);
 			}
 
 			$this->db->trans_complete();
@@ -264,10 +270,9 @@ class Closing_nota extends CI_Controller
 				echo json_encode(['status' => 'error', 'message' => 'Gagal proses closing!']);
 			} else {
 				echo json_encode([
-					'status' => 'success',
-					'message' => 'Closing kasir berhasil!',
-					'id_closing' => $id_closing,
-					'redirect' => base_url('closing_nota/detail/' . $id_closing)
+					'status'   => 'success',
+					'message'  => 'Closing kasir berhasil diproses!',
+					'redirect' => base_url('closing_nota')
 				]);
 			}
 		} catch (Exception $e) {

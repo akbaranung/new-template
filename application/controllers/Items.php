@@ -9,6 +9,7 @@ class Items extends CI_Controller
 		parent::__construct();
 		$this->cb = $this->load->database('corebank', TRUE);
 		$this->load->model('M_item_nota');
+		$this->load->model('M_coa');
 		$this->load->library('pagination');
 
 		// Check if user is logged in
@@ -101,6 +102,7 @@ class Items extends CI_Controller
 			$data['kode_item'] = $this->M_item_nota->generate_kode();
 		}
 
+		$data['coa_list'] = $this->M_coa->list_coa();
 		$this->load->view('pages/items/form', $data);
 	}
 
@@ -114,10 +116,16 @@ class Items extends CI_Controller
 		$harga_modal = str_replace('.', '', $this->input->post('harga_modal'));
 		$harga_jual = str_replace('.', '', $this->input->post('harga_jual'));
 		// $stok = str_replace(',', '.', $this->input->post('stok'));
+		$coa_persediaan = $this->input->post('coa_persediaan'); // ← BARU
 
 		// Validasi
 		if (empty($nama_item)) {
 			echo json_encode(['status' => 'error', 'message' => 'Nama barang harus diisi!']);
+			return;
+		}
+
+		if (empty($coa_persediaan)) {
+			echo json_encode(['status' => 'error', 'message' => 'COA Persediaan harus dipilih!']);
 			return;
 		}
 
@@ -133,6 +141,7 @@ class Items extends CI_Controller
 			'satuan' => $satuan,
 			'harga_modal' => $harga_modal,
 			'harga_jual' => $harga_jual,
+			'coa_persediaan' => $coa_persediaan, // ← BARU
 			'id_cabang' => $this->session->userdata('kode_cabang'),
 			'id_company' => $this->session->userdata('user_perusahaan_id')
 		];
@@ -144,7 +153,6 @@ class Items extends CI_Controller
 			$message = 'Data barang berhasil diupdate!';
 		} else {
 			// Insert
-			// $data['stok'] = $stok;
 			$data['created_at'] = date('Y-m-d H:i:s');
 			$result = $this->M_item_nota->insert($data);
 			$message = 'Data barang berhasil ditambahkan!';
@@ -187,7 +195,8 @@ class Items extends CI_Controller
 				'satuan' => $item->satuan,
 				'harga_jual' => $item->harga_jual,
 				'harga_modal' => $item->harga_modal,
-				'stok' => $item->stok
+				'stok' => $item->stok,
+				'coa_persediaan' => $item->coa_persediaan,
 			];
 		}
 

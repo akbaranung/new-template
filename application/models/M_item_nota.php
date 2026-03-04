@@ -217,7 +217,7 @@ class M_item_nota extends CI_Model
 	// Get items for dropdown (select2)
 	public function get_for_select2($search = '')
 	{
-		$this->cb->select('id, kode_item, nama_item, satuan, harga_jual, harga_modal, stok');
+		$this->cb->select('id, kode_item, nama_item, satuan, harga_jual, harga_modal, stok, coa_persediaan');
 		$this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
 		$this->cb->where('id_company', $this->session->userdata('user_perusahaan_id'));
 
@@ -232,5 +232,19 @@ class M_item_nota extends CI_Model
 		$this->cb->limit(20);
 
 		return $this->cb->get($this->table)->result();
+	}
+
+	public function update_harga_jual($id_item, $harga_jual)
+	{
+		$data = [
+			'harga_jual' => $harga_jual,
+			'updated_at' => date('Y-m-d H:i:s')
+		];
+
+		$this->cb->where('id', $id_item);
+		$this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
+		$this->cb->where('id_company', $this->session->userdata('user_perusahaan_id'));
+
+		return $this->cb->update($this->table, $data);
 	}
 }

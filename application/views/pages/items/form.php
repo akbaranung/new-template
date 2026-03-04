@@ -1,3 +1,4 @@
+<!-- items/form.php -->
 <input type="hidden" name="id" id="id" value="<?= isset($item) ? $item->Id : '' ?>">
 
 <div class="row">
@@ -45,6 +46,19 @@
 			<small class="text-muted">Harga jual per unit</small>
 		</div>
 	</div>
+</div>
+<div class="form-group">
+	<label for="coa_persediaan">COA Persediaan <span class="text-danger">*</span></label>
+	<select class="form-control" name="coa_persediaan" id="coa_persediaan" required>
+		<option value="">-- Pilih COA Persediaan --</option>
+		<?php foreach ($coa_list as $coa) : ?>
+			<option value="<?= $coa->no_sbb ?>"
+				<?= isset($item) && $item->coa_persediaan == $coa->no_sbb ? 'selected' : '' ?>>
+				<?= $coa->no_sbb ?> - <?= $coa->nama_perkiraan ?>
+			</option>
+		<?php endforeach; ?>
+	</select>
+	<small class="text-muted">COA persediaan barang ini untuk pencatatan jurnal otomatis</small>
 </div>
 
 <?php if ($mode == 'add') : ?>

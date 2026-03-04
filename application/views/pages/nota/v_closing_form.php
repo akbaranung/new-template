@@ -22,7 +22,7 @@
 
 				<!-- Summary Cards -->
 				<div class="row mb-4">
-					<div class="col-md-3">
+					<div class="col-md-4">
 						<div class="card bg-info text-white shadow">
 							<div class="card-body">
 								<div class="d-flex justify-content-between align-items-center">
@@ -36,7 +36,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="col-md-3">
+					<div class="col-md-4">
 						<div class="card bg-success text-white shadow">
 							<div class="card-body">
 								<div class="d-flex justify-content-between align-items-center">
@@ -49,7 +49,7 @@
 							</div>
 						</div>
 					</div>
-					<div class="col-md-3">
+					<div class="col-md-4">
 						<div class="card bg-warning text-white shadow">
 							<div class="card-body">
 								<div class="d-flex justify-content-between align-items-center">
@@ -58,19 +58,6 @@
 										<h4 class="mb-0 text-white">Rp <?= number_format($total_hpp, 0, ',', '.') ?></h4>
 									</div>
 									<i class="fe fe-trending-down fe-3x"></i>
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="col-md-3">
-						<div class="card bg-primary text-white shadow">
-							<div class="card-body">
-								<div class="d-flex justify-content-between align-items-center">
-									<div>
-										<h6 class="mb-0 text-white">Laba Kotor</h6>
-										<h4 class="mb-0 text-white">Rp <?= number_format($laba_kotor, 0, ',', '.') ?></h4>
-									</div>
-									<i class="fe fe-trending-up fe-3x"></i>
 								</div>
 							</div>
 						</div>
@@ -162,89 +149,32 @@
 
 							<div class="alert alert-info">
 								<i class="fe fe-info"></i> <strong>Informasi:</strong><br>
-								Pilih akun COA untuk pencatatan jurnal closing ini. Jurnal akan dibuat secara otomatis.
+								Pilih COA Kas dan COA Pendapatan. COA Persediaan otomatis mengikuti setting per barang.
 							</div>
 
-							<?php if ($total_penjualan_cash > 0) : ?>
-								<div class="form-group">
-									<label for="coa_kas">
-										COA Kas (Debit) <span class="text-danger">*</span>
-									</label>
-									<select class="form-control" name="coa_kas" id="coa_kas" required>
-										<option value="">-- Pilih COA Kas --</option>
-										<?php foreach ($coa_list as $coa) : ?>
-											<option value="<?= $coa->no_sbb ?>"><?= $coa->no_sbb ?> - <?= $coa->nama_perkiraan ?></option>
-										<?php endforeach; ?>
-									</select>
-									<small class="text-muted">
-										Akun kas akan di-debit sebesar Rp <?= number_format($total_penjualan_cash, 0, ',', '.') ?>
-									</small>
-								</div>
-							<?php else : ?>
-								<input type="hidden" name="coa_kas" value="0">
-							<?php endif; ?>
-
-							<?php if ($total_penjualan_piutang > 0) : ?>
-								<div class="form-group">
-									<label for="coa_piutang">
-										COA Piutang (Debit) <span class="text-danger">*</span>
-									</label>
-									<select class="form-control" name="coa_piutang" id="coa_piutang" required>
-										<option value="">-- Pilih COA Piutang --</option>
-										<?php foreach ($coa_list as $coa) : ?>
-											<option value="<?= $coa->no_sbb ?>"><?= $coa->no_sbb ?> - <?= $coa->nama_perkiraan ?></option>
-										<?php endforeach; ?>
-									</select>
-									<small class="text-muted">
-										Akun piutang akan di-debit sebesar Rp <?= number_format($total_penjualan_piutang, 0, ',', '.') ?>
-									</small>
-								</div>
-							<?php else : ?>
-								<input type="hidden" name="coa_piutang" value="0">
-							<?php endif; ?>
-
 							<div class="form-group">
-								<label for="coa_penjualan">
-									COA Penjualan (Kredit) <span class="text-danger">*</span>
-								</label>
-								<select class="form-control" name="coa_penjualan" id="coa_penjualan" required>
-									<option value="">-- Pilih COA Penjualan --</option>
+								<label for="coa_kas">COA Kas (Debit) <span class="text-danger">*</span></label>
+								<select class="form-control" name="coa_kas" id="coa_kas" required>
+									<option value="">-- Pilih COA Kas --</option>
 									<?php foreach ($coa_list as $coa) : ?>
 										<option value="<?= $coa->no_sbb ?>"><?= $coa->no_sbb ?> - <?= $coa->nama_perkiraan ?></option>
 									<?php endforeach; ?>
 								</select>
 								<small class="text-muted">
-									Akun penjualan akan di-kredit sebesar Rp <?= number_format($total_penjualan, 0, ',', '.') ?>
+									Total kas masuk: Rp <?= number_format($total_penjualan, 0, ',', '.') ?>
 								</small>
 							</div>
 
 							<div class="form-group">
-								<label for="coa_hpp">
-									COA HPP/Beban Pokok Penjualan (Debit) <span class="text-danger">*</span>
-								</label>
-								<select class="form-control" name="coa_hpp" id="coa_hpp" required>
-									<option value="">-- Pilih COA HPP --</option>
+								<label for="coa_pendapatan">COA Pendapatan (Kredit) <span class="text-danger">*</span></label>
+								<select class="form-control" name="coa_pendapatan" id="coa_pendapatan" required>
+									<option value="">-- Pilih COA Pendapatan --</option>
 									<?php foreach ($coa_list as $coa) : ?>
 										<option value="<?= $coa->no_sbb ?>"><?= $coa->no_sbb ?> - <?= $coa->nama_perkiraan ?></option>
 									<?php endforeach; ?>
 								</select>
 								<small class="text-muted">
-									Akun HPP akan di-debit sebesar Rp <?= number_format($total_hpp, 0, ',', '.') ?>
-								</small>
-							</div>
-
-							<div class="form-group">
-								<label for="coa_persediaan">
-									COA Persediaan Barang (Kredit) <span class="text-danger">*</span>
-								</label>
-								<select class="form-control" name="coa_persediaan" id="coa_persediaan" required>
-									<option value="">-- Pilih COA Persediaan --</option>
-									<?php foreach ($coa_list as $coa) : ?>
-										<option value="<?= $coa->no_sbb ?>"><?= $coa->no_sbb ?> - <?= $coa->nama_perkiraan ?></option>
-									<?php endforeach; ?>
-								</select>
-								<small class="text-muted">
-									Akun persediaan akan di-kredit sebesar Rp <?= number_format($total_hpp, 0, ',', '.') ?>
+									Total pendapatan (laba): Rp <?= number_format($total_penjualan - $total_hpp, 0, ',', '.') ?>
 								</small>
 							</div>
 
@@ -297,7 +227,9 @@
 <script>
 	$(document).ready(function() {
 
-		// ✅ Init Select2 untuk semua COA
+		initCOASelect2('coa_kas', '-- Pilih COA Kas --');
+		initCOASelect2('coa_pendapatan', '-- Pilih COA Pendapatan --');
+
 		function initCOASelect2(id, placeholder) {
 			$('#' + id).select2({
 				placeholder: placeholder,
@@ -306,157 +238,85 @@
 			});
 		}
 
-		<?php if ($total_penjualan_cash > 0) : ?>
-			initCOASelect2('coa_kas', '-- Pilih COA Kas --');
-		<?php endif; ?>
-
-		<?php if ($total_penjualan_piutang > 0) : ?>
-			initCOASelect2('coa_piutang', '-- Pilih COA Piutang --');
-		<?php endif; ?>
-
-		initCOASelect2('coa_penjualan', '-- Pilih COA Penjualan --');
-		initCOASelect2('coa_hpp', '-- Pilih COA HPP --');
-		initCOASelect2('coa_persediaan', '-- Pilih COA Persediaan --');
-
-		// ✅ Fungsi validasi manual (karena Select2 hide native element)
 		function validateCOA() {
-			<?php if ($total_penjualan_cash > 0) : ?>
-				if (!$('#coa_kas').val()) {
-					alert('Pilih COA Kas terlebih dahulu!');
-					$('#coa_kas').select2('open');
-					return false;
-				}
-			<?php endif; ?>
-
-			<?php if ($total_penjualan_piutang > 0) : ?>
-				if (!$('#coa_piutang').val()) {
-					alert('Pilih COA Piutang terlebih dahulu!');
-					$('#coa_piutang').select2('open');
-					return false;
-				}
-			<?php endif; ?>
-
-			if (!$('#coa_penjualan').val()) {
-				alert('Pilih COA Penjualan terlebih dahulu!');
-				$('#coa_penjualan').select2('open');
+			if (!$('#coa_kas').val()) {
+				alert('Pilih COA Kas terlebih dahulu!');
+				$('#coa_kas').select2('open');
 				return false;
 			}
-
-			if (!$('#coa_hpp').val()) {
-				alert('Pilih COA HPP terlebih dahulu!');
-				$('#coa_hpp').select2('open');
+			if (!$('#coa_pendapatan').val()) {
+				alert('Pilih COA Pendapatan terlebih dahulu!');
+				$('#coa_pendapatan').select2('open');
 				return false;
 			}
-
-			if (!$('#coa_persediaan').val()) {
-				alert('Pilih COA Persediaan terlebih dahulu!');
-				$('#coa_persediaan').select2('open');
-				return false;
-			}
-
 			return true;
 		}
 
-		// Preview Jurnal
+		// Preview — tampilkan summary jurnal (tanpa laba detail)
 		$('#btnPreview').on('click', function() {
-			// ✅ Pakai validasi manual
 			if (!validateCOA()) return;
 
 			const coa_kas = $('#coa_kas option:selected').text();
-			const coa_piutang = $('#coa_piutang option:selected').text();
-			const coa_penjualan = $('#coa_penjualan option:selected').text();
-			const coa_hpp = $('#coa_hpp option:selected').text();
-			const coa_persediaan = $('#coa_persediaan option:selected').text();
+			const coa_pendapatan = $('#coa_pendapatan option:selected').text();
 
-			let html = `
-                <div class="alert alert-info">
-                    <i class="fe fe-info"></i> <strong>Preview Jurnal yang Akan Dibuat:</strong>
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-bordered">
-                        <thead class="thead-light">
-                            <tr>
-                                <th width="50%">Akun</th>
-                                <th width="25%" class="text-right">Debit</th>
-                                <th width="25%" class="text-right">Kredit</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-            `;
-
-			<?php if ($total_penjualan_cash > 0) : ?>
-				html += `
-                    <tr class="table-success">
-                        <td colspan="3"><strong>Jurnal 1: Penjualan Cash</strong></td>
-                    </tr>
-                    <tr>
-                        <td>${coa_kas}</td>
-                        <td class="text-right text-success"><strong>Rp <?= number_format($total_penjualan_cash, 0, ',', '.') ?></strong></td>
-                        <td class="text-right">-</td>
-                    </tr>
-                    <tr>
-                        <td>${coa_penjualan}</td>
-                        <td class="text-right">-</td>
-                        <td class="text-right text-danger"><strong>Rp <?= number_format($total_penjualan_cash, 0, ',', '.') ?></strong></td>
-                    </tr>
-                `;
-			<?php endif; ?>
-
-			<?php if ($total_penjualan_piutang > 0) : ?>
-				html += `
-                    <tr class="table-info">
-                        <td colspan="3"><strong>Jurnal 2: Penjualan Piutang</strong></td>
-                    </tr>
-                    <tr>
-                        <td>${coa_piutang}</td>
-                        <td class="text-right text-success"><strong>Rp <?= number_format($total_penjualan_piutang, 0, ',', '.') ?></strong></td>
-                        <td class="text-right">-</td>
-                    </tr>
-                    <tr>
-                        <td>${coa_penjualan}</td>
-                        <td class="text-right">-</td>
-                        <td class="text-right text-danger"><strong>Rp <?= number_format($total_penjualan_piutang, 0, ',', '.') ?></strong></td>
-                    </tr>
-                `;
-			<?php endif; ?>
-
-			html += `
-                <tr class="table-warning">
-                    <td colspan="3"><strong>Jurnal <?= ($total_penjualan_cash > 0 && $total_penjualan_piutang > 0) ? 3 : (($total_penjualan_cash > 0 || $total_penjualan_piutang > 0) ? 2 : 1) ?>: HPP</strong></td>
-                </tr>
-                <tr>
-                    <td>${coa_hpp}</td>
-                    <td class="text-right text-success"><strong>Rp <?= number_format($total_hpp, 0, ',', '.') ?></strong></td>
-                    <td class="text-right">-</td>
-                </tr>
-                <tr>
-                    <td>${coa_persediaan}</td>
-                    <td class="text-right">-</td>
-                    <td class="text-right text-danger"><strong>Rp <?= number_format($total_hpp, 0, ',', '.') ?></strong></td>
-                </tr>
-                <tr class="table-secondary">
-                    <td class="text-right"><strong>TOTAL:</strong></td>
-                    <td class="text-right"><strong>Rp <?= number_format($total_penjualan + $total_hpp, 0, ',', '.') ?></strong></td>
-                    <td class="text-right"><strong>Rp <?= number_format($total_penjualan + $total_hpp, 0, ',', '.') ?></strong></td>
-                </tr>
-            `;
-
-			html += `</tbody></table></div>`;
+			const html = `
+            <div class="alert alert-info">
+                <i class="fe fe-info"></i> <strong>Jurnal yang akan dibuat:</strong>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead class="thead-light">
+                        <tr>
+                            <th width="50%">Akun</th>
+                            <th width="25%" class="text-right">Debit</th>
+                            <th width="25%" class="text-right">Kredit</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table-info">
+                            <td colspan="3"><strong>Jurnal HPP (per COA Persediaan item)</strong></td>
+                        </tr>
+                        <tr>
+                            <td>${coa_kas}</td>
+                            <td class="text-right text-success"><strong>Rp <?= number_format($total_hpp, 0, ',', '.') ?></strong></td>
+                            <td class="text-right">-</td>
+                        </tr>
+                        <tr>
+                            <td><em>COA Persediaan (otomatis per item)</em></td>
+                            <td class="text-right">-</td>
+                            <td class="text-right text-danger"><strong>Rp <?= number_format($total_hpp, 0, ',', '.') ?></strong></td>
+                        </tr>
+                        <tr class="table-success">
+                            <td colspan="3"><strong>Jurnal Pendapatan</strong></td>
+                        </tr>
+                        <tr>
+                            <td>${coa_kas}</td>
+                            <td class="text-right text-success"><strong>Rp <?= number_format($total_penjualan - $total_hpp, 0, ',', '.') ?></strong></td>
+                            <td class="text-right">-</td>
+                        </tr>
+                        <tr>
+                            <td>${coa_pendapatan}</td>
+                            <td class="text-right">-</td>
+                            <td class="text-right text-danger"><strong>Rp <?= number_format($total_penjualan - $total_hpp, 0, ',', '.') ?></strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="alert alert-warning mt-2">
+                <i class="fe fe-info"></i> Jurnal HPP akan di-split otomatis per COA Persediaan masing-masing item.
+            </div>
+        `;
 
 			$('#previewContent').html(html);
 			$('#modalPreview').modal('show');
 		});
 
-		// Submit Form
+		// Submit
 		$('#formClosing').on('submit', function(e) {
 			e.preventDefault();
-
-			// ✅ Pakai validasi manual
 			if (!validateCOA()) return;
 
-			if (!confirm('Apakah Anda yakin ingin memproses closing?\n\nSetelah closing, nota tidak dapat diubah lagi!')) {
-				return;
-			}
+			if (!confirm('Proses closing? Nota tidak dapat diubah setelah ini!')) return;
 
 			$('#btnProses').prop('disabled', true).html('<i class="fe fe-loader"></i> Memproses...');
 
@@ -475,7 +335,7 @@
 					}
 				},
 				error: function() {
-					alert('Terjadi kesalahan saat proses closing!');
+					alert('Terjadi kesalahan!');
 					$('#btnProses').prop('disabled', false).html('<i class="fe fe-lock"></i> Proses Closing');
 				}
 			});

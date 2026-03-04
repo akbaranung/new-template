@@ -1,4 +1,4 @@
-<!-- v_form_stok_masuk.php -->
+<!--items/v_form_stok_masuk.php -->
 <div class="container-fluid">
 	<div class="row justify-content-center">
 		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
@@ -63,10 +63,11 @@
 								<thead class="thead-light">
 									<tr>
 										<th width="5%">No</th>
-										<th width="35%">Barang <span class="text-danger">*</span></th>
-										<th width="15%">Qty <span class="text-danger">*</span></th>
-										<th width="20%">Harga Modal <span class="text-danger">*</span></th>
-										<th width="20%">Subtotal</th>
+										<th width="30%">Barang <span class="text-danger">*</span></th>
+										<th width="12%">Qty <span class="text-danger">*</span></th>
+										<th width="18%">Harga Modal <span class="text-danger">*</span></th>
+										<th width="18%">Harga Jual <span class="text-danger">*</span></th> <!-- ← BARU -->
+										<th width="12%">Subtotal</th>
 										<th width="5%">
 											<button type="button" class="btn btn-sm btn-success" id="btnAddRow">
 												<i class="fe fe-plus"></i>
@@ -83,10 +84,17 @@
 											</select>
 										</td>
 										<td>
-											<input type="text" class="form-control form-control-sm text-right qty" name="qty[]" placeholder="0" required>
+											<input type="text" class="form-control form-control-sm text-right qty"
+												name="qty[]" placeholder="0" required>
 										</td>
 										<td>
-											<input type="text" class="form-control form-control-sm text-right harga-modal format-rupiah" name="harga_modal[]" placeholder="0" required>
+											<input type="text" class="form-control form-control-sm text-right harga-modal format-rupiah"
+												name="harga_modal[]" placeholder="0" required>
+										</td>
+										<!-- ← BARU -->
+										<td>
+											<input type="text" class="form-control form-control-sm text-right harga-jual-input format-rupiah"
+												name="harga_jual[]" placeholder="0" required>
 										</td>
 										<td>
 											<input type="text" class="form-control form-control-sm text-right subtotal" readonly value="0">
@@ -305,40 +313,40 @@
 		function addRow() {
 			rowCount++;
 			const newRow = `
-                <tr class="item-row">
-                    <td class="text-center row-number">${rowCount}</td>
-                    <td>
-                        <select class="form-control form-control-sm select-item" 
-                                name="id_item[]" required>
-                            <option value="">-- Pilih Barang --</option>
-                        </select>
-                    </td>
-                    <td>
-                        <input type="text" class="form-control form-control-sm text-right qty" 
-                               name="qty[]" placeholder="0" required>
-                    </td>
-                    <td>
-                        <input type="text" class="form-control form-control-sm text-right harga-modal format-rupiah" 
-                               name="harga_modal[]" placeholder="0" required>
-                    </td>
-                    <td>
-                        <input type="text" class="form-control form-control-sm text-right subtotal" 
-                               readonly value="0">
-                    </td>
-                    <td class="text-center">
-                        <button type="button" class="btn btn-sm btn-danger btn-remove-row">
-                            <i class="fe fe-trash-2"></i>
-                        </button>
-                    </td>
-                </tr>
-            `;
+				<tr class="item-row">
+						<td class="text-center row-number">${rowCount}</td>
+						<td>
+							<select class="form-control form-control-sm select-item" 
+										name="id_item[]" required>
+								<option value="">-- Pilih Barang --</option>
+							</select>
+						</td>
+						<td>
+							<input type="text" class="form-control form-control-sm text-right qty" 
+									name="qty[]" placeholder="0" required>
+						</td>
+						<td>
+							<input type="text" class="form-control form-control-sm text-right harga-modal format-rupiah" 
+									name="harga_modal[]" placeholder="0" required>
+						</td>
+						<td>
+							<input type="text" class="form-control form-control-sm text-right harga-jual-input format-rupiah" 
+									name="harga_jual[]" placeholder="0" required>
+						</td>
+						<td>
+							<input type="text" class="form-control form-control-sm text-right subtotal" 
+									readonly value="0">
+						</td>
+						<td class="text-center">
+							<button type="button" class="btn btn-sm btn-danger btn-remove-row">
+								<i class="fe fe-trash-2"></i>
+							</button>
+						</td>
+				</tr>
+			`;
 			$('#itemRows').append(newRow);
-
-			// Initialize Select2 untuk row baru
 			const newSelect = $('#itemRows tr:last .select-item');
 			initSelect2(newSelect);
-
-			// Focus ke select2 yang baru
 			newSelect.select2('open');
 		}
 
@@ -372,12 +380,14 @@
 				const row = $(this).closest('tr');
 
 				if (data.harga_modal) {
-					// Pastikan data.harga_modal adalah number, bukan string dengan desimal
-					let hargaModal = parseFloat(data.harga_modal);
-					row.find('.harga-modal').val(formatRupiah(hargaModal));
+					row.find('.harga-modal').val(formatRupiah(parseFloat(data.harga_modal)));
 				}
 
-				// Focus ke qty
+				// ← BARU: autofill harga jual dari master item
+				if (data.harga_jual) {
+					row.find('.harga-jual-input').val(formatRupiah(parseFloat(data.harga_jual)));
+				}
+
 				row.find('.qty').focus();
 			});
 		}
@@ -387,7 +397,6 @@
 			const qty = parseFloat(row.find('.qty').val().replace(',', '.')) || 0;
 			const hargaModal = parseFloat(row.find('.harga-modal').val().replace(/\./g, '')) || 0;
 			const subtotal = qty * hargaModal;
-
 			row.find('.subtotal').val(formatRupiah(Math.floor(subtotal)));
 		}
 

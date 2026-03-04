@@ -140,6 +140,7 @@ class Stok_masuk extends CI_Controller
 			$metode_bayar = $this->input->post('metode_bayar');
 			$coa_persediaan = $this->input->post('coa_persediaan');
 			$coa_kas_utang = $this->input->post('coa_kas_utang');
+			$harga_juals  = $this->input->post('harga_jual');
 
 			// Detail items
 			$id_items = $this->input->post('id_item');
@@ -157,6 +158,7 @@ class Stok_masuk extends CI_Controller
 			foreach ($id_items as $key => $id_item) {
 				$qty = str_replace(',', '.', $qtys[$key]);
 				$harga_modal = str_replace('.', '', $harga_modals[$key]);
+				$harga_jual  = str_replace('.', '', $harga_juals[$key]);
 				$subtotal = $qty * $harga_modal;
 				$total_nominal += $subtotal;
 			}
@@ -190,6 +192,7 @@ class Stok_masuk extends CI_Controller
 					'id_item' => $id_item,
 					'qty' => $qty,
 					'harga_modal' => $harga_modal,
+					'harga_jual'    => $harga_jual,
 					'subtotal' => $subtotal
 				];
 
@@ -198,8 +201,8 @@ class Stok_masuk extends CI_Controller
 				// Update stok items (tambah)
 				$this->M_item_nota->update_stok_with_average($id_item, $qty, $harga_modal, 'add');
 
-				// Update harga modal items (last price)
-				// $this->M_item_nota->update_harga_modal($id_item, $harga_modal);
+				// Update harga_jual di master item (last price)
+				$this->M_item_nota->update_harga_jual($id_item, $harga_jual);
 			}
 
 			// Posting Jurnal
