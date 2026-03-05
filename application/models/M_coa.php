@@ -379,7 +379,9 @@ class M_coa extends CI_Model
 
 	public function update_saldo_awal($periode, $data)
 	{
-		return $this->cb->where('periode', $periode)->update('saldo_awal', $data);
+		return $this->cb->where('periode', $periode)
+			->where('id_cabang', $this->session->userdata('kode_cabang'))
+			->update('saldo_awal', $data);
 	}
 
 	// Fungsi untuk mendapatkan saldo awal berdasarkan bulan tertentu

@@ -3778,6 +3778,33 @@ class Financial extends CI_Controller
 					'id_company' => $this->session->userdata('user_perusahaan_id')
 				];
 
+				$cek = $this->M_coa->cek_saldo_awal($periode);
+
+				if (!$cek) {
+					$this->M_coa->insert_saldo_awal($data);
+
+					$cabang_data = ['generate_sawal' => 1];
+					$this->cb->where('uid', $this->session->userdata('kode_cabang'));
+					$this->cb->update('t_cabang', $cabang_data);
+
+					$this->session->set_flashdata('swal_message', [
+						'icon'              => 'success',
+						'title'             => 'Berhasil!',
+						'text'              => 'Saldo awal periode ' . format_indo($nextMonth) . ' berhasil ditetapkan',
+						'confirmButtonText' => 'Mengerti',
+					]);
+				} else {
+					// Sudah ada — update saja
+					$this->M_coa->update_saldo_awal($periode, $data);
+
+					$this->session->set_flashdata('swal_message', [
+						'icon'              => 'success',
+						'title'             => 'Diperbarui!',
+						'text'              => 'Saldo awal periode ' . format_indo($nextMonth) . ' sudah diperbarui',
+						'confirmButtonText' => 'Mengerti',
+					]);
+				}
+				
 				$this->M_coa->insert_saldo_awal($data);
 
 				// $utility_data = array(
@@ -4056,7 +4083,18 @@ class Financial extends CI_Controller
 		$id_company = $this->session->userdata('user_perusahaan_id');
 
 		// Step 2: get saldo awal berdasarkan id_company dan periode
-		$coas = $this->cb->select('coa')->where(['id_company' => $id_company, 'periode' => $periode])->get('saldo_awal')->result();
+		// $coas = $this->cb->select('coa')->where(['id_company' => $id_company, 'periode' => $periode])->get('saldo_awal')->result();
+
+		$coas = $this->cb->query("
+			SELECT s.coa 
+			FROM saldo_awal s
+			INNER JOIN (
+				SELECT id_cabang, MAX(id) as max_id
+				FROM saldo_awal
+				WHERE id_company = '$id_company' AND periode = '$periode'
+				GROUP BY id_cabang
+			) latest ON s.id = latest.max_id
+		")->result();
 
 		// Step 3: Gabungkan dan jumlahkan saldo_awal untuk no_sbb yang sama
 		$mergedCoa = [];
