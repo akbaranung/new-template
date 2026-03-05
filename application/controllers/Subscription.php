@@ -182,15 +182,15 @@ class Subscription extends CI_Controller
 
             $link_konfirmasi = base_url('Subscription/proses_bayar_konfirmasi_link/' . $confirmation_detail->id);
 
-            $msg_user_whatsapp = "Halo, " . $detail_perusahaan->nama_perusahaan . "! ✨\n\nPembelian paket premium Anda telah kami terima.\n\nBerikut rincian pesanan Anda:\n\n"
+            $msg_user_whatsapp = "Halo, " . $detail_perusahaan->nama_perusahaan . "! ✨\n\nPemesanan paket premium Anda telah kami terima.\n\nBerikut rincian pesanan Anda:\n\n"
                 . "- Paket: *" . $data['planName'] . "*\n"
                 . "- Jangka Waktu: *" . $data['months'] . "* Bulan\n"
                 . "- Total Tagihan: *Rp. " . $formatted_nominal . "*\n\n"
-                . "Mohon segera lakukan pembayaran melalui:\n\n"
+                . "Pembayaran melalui:\n\n"
                 . "*Bank Syariah Indonesia (BSI)*\n"
                 . "Nomor Rekening: *79 7070 7004*\n"
                 . "Atas Nama: *PT. Baris Kode Indonesia*\n\n"
-                . "Setelah melakukan pembayaran, mohon konfirmasi pembelian paket dengan mengklik link di bawah ini:\n"
+                . "Mohon lakukan pembayaran dalam waktu 24 jam dan konfirmasi pembelian paket dengan mengklik link di bawah ini:\n"
                 . $link_konfirmasi . "\n\n"
                 . "Terima kasih atas kerja sama Anda.\n\n"
                 . "Hormat kami,\n"
