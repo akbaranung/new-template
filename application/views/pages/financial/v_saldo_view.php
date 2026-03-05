@@ -34,7 +34,7 @@
                   </thead>
                   <tbody>
                     <?php
-                    if (isset($coa) && is_iterable($coa)) :
+                    if (isset($coa) && is_iterable($coa) && !empty($coa)) :
                       $no = 1;
                       foreach ($coa as $c) :
                         $query = $this->cb->get_where('v_coa_all', ['no_sbb' => $c->no_sbb]);
