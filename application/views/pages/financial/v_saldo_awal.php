@@ -60,7 +60,7 @@
 											<td class="text-right"><?= $no++ ?>.</td>
 											<td><?= format_indo($c->periode) ?></td>
 											<td><?= $c->keterangan ?></td>
-											<td class="text-center"><a href="<?= base_url('financial/closing/' . $c->periode) ?>" class="btn btn-primary btn-sm">Detail</a></td>
+											<td class="text-center"><a href="<?= base_url('financial/closing/' . $c->periode . '/' . $c->Id) ?>" class="btn btn-primary btn-sm">Detail</a></td>
 										</tr>
 									<?php
 									endforeach;
