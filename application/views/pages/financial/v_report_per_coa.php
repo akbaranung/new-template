@@ -171,7 +171,7 @@
 												<th class="text-right" colspan="2" style="background-color: #e91e63; font-weight: bolder;">Total:</th>
 												<th class="text-right" style="background-color: #e91e63; font-weight: bolder;"><?= rupiah($sum_debit) ?></th>
 												<th class="text-right" style="background-color: #e91e63; font-weight: bolder;"><?= rupiah($sum_kredit) ?></th>
-												<th style="background-color: #e91e63;"></th>
+												<th style="background-color: #e91e63;" colspan="<?= ($this->session->userdata('nama_jabatan') == "Super Admin") ? '2' : '' ?>"></th>
 											</tr>
 											<tr>
 												<th class="text-center">#</th>
@@ -179,6 +179,9 @@
 												<th class="text-center">Debit</th>
 												<th class="text-center">Kredit</th>
 												<th class="text-center">Keterangan</th>
+												<?php if ($this->session->userdata('nama_jabatan') == "Super Admin") : ?>
+													<th class="text-center">Action</th>
+												<?php endif; ?>
 											</tr>
 										</thead>
 										<tbody>
@@ -199,6 +202,10 @@
 															<?= ($a->akun_kredit == $detail_coa['no_sbb']) ? rupiah($a->jumlah_kredit) : $a->akun_kredit . ' - ' . $nama_coa_kredit ?>
 														</td>
 														<td><?= $a->keterangan ?></td>
+														<?php if ($this->session->userdata('nama_jabatan') == "Super Admin") : ?>
+
+															<td class="text-center"><button class="btn btn-sm btn-warning text-white" onclick="onEdit_report_per_coa(<?= $a->id ?>)" type="button">Update</button></td>
+														<?php endif; ?>
 													</tr>
 												<?php
 												endforeach;

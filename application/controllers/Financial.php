@@ -133,6 +133,11 @@ class Financial extends CI_Controller
 				return $item->posisi === 'PASIVA' && $item->table_source === 't_coa_sbb';
 			});
 
+			// echo '<pre>';
+			// print_r($activa);
+			// echo '</pre>';
+			// exit;
+
 			$combinedPasiva = [];
 			foreach ($pasiva as $item) {
 				if (!isset($combinedPasiva[$item->no_sbb])) {
@@ -213,6 +218,11 @@ class Financial extends CI_Controller
 			$data['laba']           = $laba;
 			$data['sum_pasiva']     = $sum_pasiva;
 			$data['neraca']         = $sum_pasiva - $total_activa;
+
+			// echo '<pre>';
+			// print_r($combinedActiva);
+			// echo '</pre>';
+			// exit;
 		} else {
 			$this->session->set_flashdata('message_error', 'Closing bulan ' . format_indo($periode) . ' tidak ditemukan');
 		}
@@ -4092,6 +4102,11 @@ class Financial extends CI_Controller
 			}
 		}
 
+		// echo '<pre>';
+		// print_r($activa);
+		// echo '</pre>';
+		// exit;
+
 		foreach ($filteredCoaAktiva as $item) {
 			if (!isset($combinedActiva[$item['no_sbb']])) {
 				$combinedActiva[$item['no_sbb']] = (object) [
@@ -4233,6 +4248,11 @@ class Financial extends CI_Controller
 		$data['pages_script'] = 'script/financial/s_financial';
 		$data['pages'] = 'pages/financial/v_neraca_consol_by_date';
 		$data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
+
+		// echo '<pre>';
+		// print_r($combinedActiva);
+		// echo '</pre>';
+		// exit;
 
 		if ($button_sbm == "excel") {
 			require_once(APPPATH . 'libraries/PHPExcel/IOFactory.php');

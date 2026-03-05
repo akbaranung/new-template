@@ -208,7 +208,7 @@
 					<span aria-hidden="true">×</span>
 				</button>
 			</div>
-			<form class="form-horizontal form-label-left" method="POST" action="<?= base_url('financial/coa_report') ?>" target="_blank">
+			<form class="form-horizontal form-label-left" method="get" action="<?= base_url('financial/coa_report') ?>" target="_blank">
 				<div class="modal-body">
 					<div class="modal-body">
 						<div class="row">
