@@ -391,6 +391,7 @@ class Subscription extends CI_Controller
         // $now = (new DateTime())->format('Y-m-d H:i:s');
         $now = new DateTime();
 
+
         $expired_time = clone $now;
         $expired_time->modify('+24 hours');
         $expired_status_bayar = $expired_time->format('Y-m-d H:i:s');
