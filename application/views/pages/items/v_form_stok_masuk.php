@@ -43,7 +43,7 @@
 											</label>
 										</div>
 										<div class="form-check form-check-inline">
-											<input class="form-check-input" type="radio" name="metode_bayar" id="metode_kredit" value="kredit">
+											<input class="form-check-input" type="radio" name="metode_bayar" id="metode_kredit" value="kredit" disabled>
 											<label class="form-check-label" for="metode_kredit">
 												<i class="fe fe-credit-card"></i> Kredit
 											</label>
