@@ -108,6 +108,7 @@ class Stok_masuk extends CI_Controller
 
 		$data['title'] = 'Input Stok Barang';
 		$data['no_transaksi'] = $this->M_stok_masuk->generate_no_transaksi();
+		$data['coa_list'] = $this->M_coa->list_coa();
 
 		$data['count_inbox'] = $result;
 		$data['count_inbox2'] = $result2;
@@ -134,80 +135,96 @@ class Stok_masuk extends CI_Controller
 		$this->db->trans_start();
 
 		try {
-			$no_transaksi = $this->input->post('no_transaksi');
-			$tanggal = $this->input->post('tanggal');
-			$supplier = trim($this->input->post('supplier'));
-			$metode_bayar = $this->input->post('metode_bayar');
-			$coa_persediaan = $this->input->post('coa_persediaan');
-			$coa_kas_utang = $this->input->post('coa_kas_utang');
-			$harga_juals  = $this->input->post('harga_jual');
+			$no_transaksi   = $this->input->post('no_transaksi');
+			$tanggal        = $this->input->post('tanggal');
+			$supplier       = trim($this->input->post('supplier'));
+			$metode_bayar   = $this->input->post('metode_bayar');
+			$coa_kas_utang  = $this->input->post('coa_kas_utang'); // ← hanya ini yang dipilih user
+			$harga_juals    = $this->input->post('harga_jual');
 
-			// Detail items
-			$id_items = $this->input->post('id_item');
-			$qtys = $this->input->post('qty');
+			$id_items     = $this->input->post('id_item');
+			$qtys         = $this->input->post('qty');
 			$harga_modals = $this->input->post('harga_modal');
 
-			// Validasi
 			if (empty($id_items) || count($id_items) == 0) {
 				echo json_encode(['status' => 'error', 'message' => 'Item barang harus diisi!']);
 				return;
 			}
 
-			// Hitung total
-			$total_nominal = 0;
-			foreach ($id_items as $key => $id_item) {
-				$qty = str_replace(',', '.', $qtys[$key]);
-				$harga_modal = str_replace('.', '', $harga_modals[$key]);
-				$harga_jual  = str_replace('.', '', $harga_juals[$key]);
-				$subtotal = $qty * $harga_modal;
-				$total_nominal += $subtotal;
+			$allowed_metode = ['cash'];
+			if (!in_array($metode_bayar, $allowed_metode)) {
+				echo json_encode(['status' => 'error', 'message' => 'Metode pembayaran tidak valid!']);
+				return;
 			}
 
-			// Insert header stok_masuk
+			// Hitung total & kumpulkan nominal per coa_persediaan
+			$total_nominal  = 0;
+			$nominal_per_coa = []; // ← ['coa_persediaan' => total_nominal]
+
+			foreach ($id_items as $key => $id_item) {
+				if (empty($id_item)) continue;
+
+				$qty         = str_replace(',', '.', $qtys[$key]);
+				$harga_modal = str_replace('.', '', $harga_modals[$key]);
+				$harga_jual  = str_replace('.', '', $harga_juals[$key]);
+				$subtotal    = $qty * $harga_modal;
+				$total_nominal += $subtotal;
+
+				// Ambil coa_persediaan dari master item
+				$item = $this->M_item_nota->get_by_id($id_item);
+				$coa_persediaan = $item ? $item->coa_persediaan : null;
+
+				if (!empty($coa_persediaan) && $subtotal > 0) {
+					if (!isset($nominal_per_coa[$coa_persediaan])) {
+						$nominal_per_coa[$coa_persediaan] = 0;
+					}
+					$nominal_per_coa[$coa_persediaan] += $subtotal;
+				}
+			}
+
+			// Insert header
 			$data_header = [
-				'no_transaksi' => $no_transaksi,
-				'tanggal' => $tanggal,
-				'supplier' => $supplier,
+				'no_transaksi'  => $no_transaksi,
+				'tanggal'       => $tanggal,
+				'supplier'      => $supplier,
 				'total_nominal' => $total_nominal,
-				'metode_bayar' => $metode_bayar,
-				'id_cabang' => $this->session->userdata('kode_cabang'),
-				'id_company' => $this->session->userdata('user_perusahaan_id'),
-				'created_by' => $this->session->userdata('nip'),
-				'created_at' => date('Y-m-d H:i:s')
+				'metode_bayar'  => $metode_bayar,
+				'id_cabang'     => $this->session->userdata('kode_cabang'),
+				'id_company'    => $this->session->userdata('user_perusahaan_id'),
+				'created_by'    => $this->session->userdata('nip'),
+				'created_at'    => date('Y-m-d H:i:s')
 			];
 
 			$id_stok_masuk = $this->M_stok_masuk->insert($data_header);
 
-			// Insert detail & update stok items
+			// Insert detail & update stok
 			foreach ($id_items as $key => $id_item) {
 				if (empty($id_item)) continue;
 
-				$qty = str_replace(',', '.', $qtys[$key]);
+				$qty         = str_replace(',', '.', $qtys[$key]);
 				$harga_modal = str_replace('.', '', $harga_modals[$key]);
-				$subtotal = $qty * $harga_modal;
+				$harga_jual  = str_replace('.', '', $harga_juals[$key]);
+				$subtotal    = $qty * $harga_modal;
 
-				// Insert detail
 				$data_detail = [
 					'id_stok_masuk' => $id_stok_masuk,
-					'id_item' => $id_item,
-					'qty' => $qty,
-					'harga_modal' => $harga_modal,
+					'id_item'       => $id_item,
+					'qty'           => $qty,
+					'harga_modal'   => $harga_modal,
 					'harga_jual'    => $harga_jual,
-					'subtotal' => $subtotal
+					'subtotal'      => $subtotal
 				];
 
 				$this->M_stok_masuk->insert_detail($data_detail);
-
-				// Update stok items (tambah)
 				$this->M_item_nota->update_stok_with_average($id_item, $qty, $harga_modal, 'add');
-
-				// Update harga_jual di master item (last price)
 				$this->M_item_nota->update_harga_jual($id_item, $harga_jual);
 			}
 
-			// Posting Jurnal
-			$keterangan = 'Input Stok - ' . $no_transaksi . ' - Supplier: ' . $supplier;
-			$this->posting($coa_persediaan, $coa_kas_utang, $keterangan, $total_nominal, $tanggal, $no_transaksi);
+			// Posting jurnal split per coa_persediaan
+			foreach ($nominal_per_coa as $coa_persediaan => $nominal) {
+				$keterangan = 'Input Stok - ' . $no_transaksi . ' - Supplier: ' . $supplier . ' [COA: ' . $coa_persediaan . ']';
+				$this->posting($coa_persediaan, $coa_kas_utang, $keterangan, $nominal, $tanggal, $no_transaksi);
+			}
 
 			$this->db->trans_complete();
 
@@ -215,8 +232,8 @@ class Stok_masuk extends CI_Controller
 				echo json_encode(['status' => 'error', 'message' => 'Gagal menyimpan data!']);
 			} else {
 				echo json_encode([
-					'status' => 'success',
-					'message' => 'Input stok berhasil disimpan!',
+					'status'   => 'success',
+					'message'  => 'Input stok berhasil disimpan!',
 					'redirect' => base_url('stok_masuk')
 				]);
 			}

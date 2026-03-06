@@ -385,11 +385,12 @@ class M_coa extends CI_Model
 	}
 
 	// Fungsi untuk mendapatkan saldo awal berdasarkan bulan tertentu
-	public function get_saldo_awal($bulan)
+	public function get_saldo_awal($bulan, $id)
 	{
 		$this->cb->select('*');
 		$this->cb->from('saldo_awal');
 		$this->cb->where('periode', $bulan);
+		$this->cb->where('Id', $id);
 		$query = $this->cb->get();
 		return $query->row_array();
 	}

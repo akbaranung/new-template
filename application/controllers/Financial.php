@@ -1566,6 +1566,9 @@ class Financial extends CI_Controller
 	{
 		$has_access = $this->M_menu->has_access();
 
+		$slug = $this->uri->segment(3);
+		$id = $this->uri->segment(4);
+
 		if (!$slug) {
 			if (!$has_access) {
 				show_error('Forbidden Access: You do not have permission to view this page.', 403, '403 Forbidden');
@@ -1590,13 +1593,13 @@ class Financial extends CI_Controller
 
 		if ($slug) {
 			$data['title'] = "Detail saldo";
-			$data['saldo'] = $this->M_coa->get_saldo_awal($slug);
+			$data['saldo'] = $this->M_coa->get_saldo_awal($slug, $id);
 			$data['coa'] = json_decode($data['saldo']['coa']);
 			$data['pages'] = 'pages/financial/v_saldo_view';
 			// $this->load->view('saldo_view', $data);
 		} else if ($this->input->post('periode')) {
 			$data['title'] = "Detail saldo";
-			$data['saldo'] = $this->M_coa->get_saldo_awal($this->input->post('periode'));
+			$data['saldo'] = $this->M_coa->get_saldo_awal($this->input->post('periode'), $id);
 			$data['coa'] = json_decode($data['saldo']['coa']);
 			$data['pages'] = 'pages/financial/v_saldo_view';
 			// $this->load->view('saldo_view', $data);
@@ -3804,7 +3807,7 @@ class Financial extends CI_Controller
 						'confirmButtonText' => 'Mengerti',
 					]);
 				}
-				
+
 				$this->M_coa->insert_saldo_awal($data);
 
 				// $utility_data = array(
@@ -4937,7 +4940,7 @@ class Financial extends CI_Controller
 		$data['saldo_awal'] = $saldo_awal_indexed; // Sudah dalam format array dengan key no_sbb
 		// $data['saldo_awal_raw'] = $saldo_awal_data;
 
-		$list_coa = $this->cb->get('v_coa_all')->result();
+		$list_coa = $this->M_coa->list_coa();
 
 		$periode = $tahun . '-' . $bulan;
 
@@ -4951,7 +4954,6 @@ class Financial extends CI_Controller
 
 		$description = 'Buku besar ' . $this->session->userdata('nama_perusahaan') . ' per bulan ' . $a;
 		$data['description'] = $description;
-
 
 		if ($button_sbm == "pdf") {
 

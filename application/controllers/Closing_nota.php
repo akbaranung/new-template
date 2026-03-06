@@ -228,6 +228,8 @@ class Closing_nota extends CI_Controller
 
 					$subtotal_hpp = $detail->qty * $detail->harga_modal;
 
+					if ($subtotal_hpp <= 0) continue; // ← Skip kalau harga_modal 0 atau subtotal_hpp 0
+
 					if (!isset($hpp_per_coa[$coa_item_persediaan])) {
 						$hpp_per_coa[$coa_item_persediaan] = 0;
 					}
