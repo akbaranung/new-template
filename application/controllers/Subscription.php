@@ -388,10 +388,16 @@ class Subscription extends CI_Controller
         // Validate the ID to ensure it's a valid integer
 
         // Set the data to be updated
-        $now = (new DateTime())->format('Y-m-d H:i:s');
+        // $now = (new DateTime())->format('Y-m-d H:i:s');
+        $now = new DateTime();
+
+        $expired_time = clone $now;
+        $expired_time->modify('+24 hours');
+        $expired_status_bayar = $expired_time->format('Y-m-d H:i:s');
+
         $update_data = [
             'status_bayar' => 1,
-            'tanggal_bayar' => $now,
+            'tanggal_bayar' => $expired_status_bayar,
         ];
         $confirmation_detail = $this->db
             ->from('premium_confirmation')
