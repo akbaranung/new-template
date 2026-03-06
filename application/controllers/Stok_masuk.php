@@ -153,6 +153,12 @@ class Stok_masuk extends CI_Controller
 				return;
 			}
 
+			$allowed_metode = ['cash']; // ← tambah 'kredit' nanti kalau fitur sudah siap
+			if (!in_array($metode_bayar, $allowed_metode)) {
+				echo json_encode(['status' => 'error', 'message' => 'Metode pembayaran tidak valid!']);
+				return;
+			}
+
 			// Hitung total
 			$total_nominal = 0;
 			foreach ($id_items as $key => $id_item) {
