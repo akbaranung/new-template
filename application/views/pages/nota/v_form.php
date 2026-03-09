@@ -103,7 +103,7 @@
 											<input type="text" class="form-control form-control-sm text-right qty" name="qty[]" placeholder="0" required>
 										</td>
 										<td>
-											<input type="text" class="form-control form-control-sm text-right harga-jual format-rupiah" name="harga_jual[]" placeholder="0" required>
+											<input type="text" class="form-control form-control-sm text-right harga-jual format-rupiah" name="harga_jual[]" placeholder="0" required readonly>
 										</td>
 										<td>
 											<input type="text" class="form-control form-control-sm text-right subtotal" readonly value="0">
@@ -225,6 +225,7 @@
 			if ($('#itemRows tr').length > 1) {
 				$(this).closest('tr').remove();
 				updateRowNumbers();
+				updateTabIndex();
 				calculateTotal();
 			} else {
 				alert('Minimal harus ada 1 item!');
@@ -430,6 +431,14 @@
 			});
 		});
 
+		function updateTabIndex() {
+			let tabIdx = 1;
+			$('#itemRows tr.item-row').each(function() {
+				$(this).find('.qty').attr('tabindex', tabIdx++);
+				$(this).find('.harga-jual').attr('tabindex', tabIdx++);
+			});
+		}
+
 		function addRow() {
 			rowCount++;
 			const newRow = `
@@ -465,6 +474,7 @@
 			$('#itemRows').append(newRow);
 			const newSelect = $('#itemRows tr:last .select-item');
 			initSelect2(newSelect);
+			updateTabIndex();
 			newSelect.select2('open');
 		}
 
@@ -544,8 +554,12 @@
 
 				qtyInput.prop('disabled', false)
 					.attr('max', stokTersedia)
-					.attr('placeholder', 'Max: ' + stokTersedia.toFixed(2));
-				qtyInput.focus();
+					.attr('placeholder', 'Max: ' + stokTersedia.toFixed(2))
+					.attr('1');
+
+					calculateSubtotal(row);
+					calculateTotal();
+				qtyInput.focus().select();
 			});
 		}
 
