@@ -117,7 +117,7 @@ class M_item_nota extends CI_Model
 	public function update_stok_with_average($id_item, $qty, $harga_beli, $type = 'add')
 	{
 		// Validasi parameter
-		if (empty($id_item) || empty($qty)) {
+		if (empty($id_item) || $qty <= 0) {
 			log_message('error', 'update_stok_with_average: Parameter tidak lengkap');
 			return false;
 		}
@@ -130,30 +130,27 @@ class M_item_nota extends CI_Model
 		if (!$item)
 			return false;
 
-		// Validasi khusus untuk penambahan stok
-		if ($type == 'add' && empty($harga_beli)) {
-			log_message('error', 'update_stok_with_average: Harga beli harus diisi untuk penambahan stok');
-			return false;
-		}
-
 		if ($type == 'add') {
-			// Input Stok (Pembelian)
 			$nilai_lama = $item->nilai_persediaan;
-			$stok_lama = $item->stok;
-
-			$nilai_baru = floatval($qty) * floatval($harga_beli);
-			$total_nilai = $nilai_lama + $nilai_baru;
+			$stok_lama  = $item->stok;
 			$total_stok = $stok_lama + $qty;
 
-			// Hitung average
-			$harga_modal_average = ($total_stok > 0) ? ($total_nilai / $total_stok) : 0;
+			// ← Skenario A: kalau harga_modal = 0, average tidak berubah
+			if (!empty($harga_beli) && floatval($harga_beli) > 0) {
+				$nilai_baru   = floatval($qty) * floatval($harga_beli);
+				$total_nilai  = $nilai_lama + $nilai_baru;
+				$harga_modal_average = ($total_stok > 0) ? ($total_nilai / $total_stok) : 0;
+			} else {
+				// harga_beli = 0 → pakai nilai & harga_modal lama
+				$total_nilai         = $nilai_lama;
+				$harga_modal_average = $item->harga_modal;
+			}
 
-			// Update
 			$data = [
-				'stok' => $total_stok,
-				'harga_modal' => $harga_modal_average,
-				'nilai_persediaan' => $total_nilai,
-				'updated_at' => date('Y-m-d H:i:s')
+				'stok'              => $total_stok,
+				'harga_modal'       => $harga_modal_average,
+				'nilai_persediaan'  => $total_nilai,
+				'updated_at'        => date('Y-m-d H:i:s')
 			];
 		} else {
 			// Pengurangan Stok (Penjualan) - nanti untuk nota
@@ -228,8 +225,11 @@ class M_item_nota extends CI_Model
 		}
 
 		$this->cb->order_by('nama_item', 'ASC');
-		$this->cb->limit(20);
 
+		if ($search == '') {
+			$this->cb->limit(20);
+		}
+		
 		return $this->cb->get($this->table)->result();
 	}
 

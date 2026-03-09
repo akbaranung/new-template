@@ -98,7 +98,7 @@
                                             <input type="text" class="form-control form-control-sm text-right qty" name="qty[]" placeholder="0" required>
                                         </td>
                                         <td>
-                                            <input type="text" class="form-control form-control-sm text-right harga-modal format-rupiah" name="harga_modal[]" placeholder="0" required>
+                                            <input type="text" class="form-control form-control-sm text-right harga-modal format-rupiah" name="harga_modal[]" placeholder="0" value="0">
                                         </td>
                                         <td>
                                             <input type="text" class="form-control form-control-sm text-right harga-jual-input format-rupiah" name="harga_jual[]" placeholder="0" required>

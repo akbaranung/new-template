@@ -128,37 +128,54 @@ class Nota extends CI_Controller
 		$this->load->view('index', $data);
 	}
 
-	// Save nota
+	// save nota
 	public function save()
 	{
 		$this->cb->trans_start();
 
 		try {
-			$no_nota        = $this->input->post('no_nota');
-			$tanggal        = $this->input->post('tanggal') . ' ' . date('H:i:s');
-			$customer       = trim($this->input->post('customer'));
-			$metode_bayar   = $this->input->post('metode_bayar');
+			$no_nota      = $this->input->post('no_nota');
+			$tanggal      = $this->input->post('tanggal') . ' ' . date('H:i:s');
+			$customer     = trim($this->input->post('customer'));
+			$metode_bayar = $this->input->post('metode_bayar');
+			$no_kartu     = trim($this->input->post('no_kartu'));
+
+			// Validasi metode bayar
+			$allowed_metode = ['cash', 'qris', 'card'];
+			if (!in_array($metode_bayar, $allowed_metode)) {
+				echo json_encode(['status' => 'error', 'message' => 'Metode pembayaran tidak valid!']);
+				return;
+			}
+
+			// Validasi no_kartu wajib kalau card
+			if ($metode_bayar === 'card' && empty($no_kartu)) {
+				echo json_encode(['status' => 'error', 'message' => 'No. kartu harus diisi untuk pembayaran Card!']);
+				return;
+			}
 
 			// Detail items
 			$id_items    = $this->input->post('id_item');
 			$qtys        = $this->input->post('qty');
 			$harga_juals = $this->input->post('harga_jual');
 
-			// Validasi
 			if (empty($id_items) || count($id_items) == 0) {
 				echo json_encode(['status' => 'error', 'message' => 'Item barang harus diisi!']);
 				return;
 			}
 
-			// Hitung total
-			$total_penjualan = 0;
-			$total_hpp       = 0;
-
-			// Validasi stok & hitung total
+			// Agregasi qty per id_item untuk validasi stok gabungan
+			$qty_per_item = [];
 			foreach ($id_items as $key => $id_item) {
 				if (empty($id_item)) continue;
+				$qty = floatval(str_replace(',', '.', $qtys[$key]));
+				if (!isset($qty_per_item[$id_item])) {
+					$qty_per_item[$id_item] = 0;
+				}
+				$qty_per_item[$id_item] += $qty;
+			}
 
-				$qty  = str_replace(',', '.', $qtys[$key]);
+			// Validasi stok gabungan per item
+			foreach ($qty_per_item as $id_item => $total_qty) {
 				$item = $this->M_item_nota->get_by_id($id_item);
 
 				if (!$item) {
@@ -166,7 +183,7 @@ class Nota extends CI_Controller
 					return;
 				}
 
-				if ($qty <= 0) {
+				if ($total_qty <= 0) {
 					echo json_encode([
 						'status'  => 'error',
 						'message' => 'Qty untuk ' . $item->nama_item . ' harus lebih dari 0!'
@@ -182,38 +199,49 @@ class Nota extends CI_Controller
 					return;
 				}
 
-				if ($item->stok < $qty) {
+				if ($item->stok < $total_qty) {
 					echo json_encode([
 						'status'  => 'error',
-						'message' => 'Stok ' . $item->nama_item . ' tidak mencukupi! (Tersedia: ' . number_format($item->stok, 2) . ' ' . $item->satuan . ')'
+						'message' => 'Stok ' . $item->nama_item . ' tidak mencukupi! ' .
+							'(Tersedia: ' . number_format($item->stok, 2) . ', ' .
+							'Total diminta: ' . number_format($total_qty, 2) . ' ' . $item->satuan . ')'
 					]);
 					return;
 				}
+			}
 
-				$harga_jual     = str_replace('.', '', $harga_juals[$key]);
-				$subtotal_jual  = $qty * $harga_jual;
-				$subtotal_hpp   = $qty * $item->harga_modal;
+			// Hitung total penjualan & HPP
+			$total_penjualan = 0;
+			$total_hpp       = 0;
 
-				$total_penjualan += $subtotal_jual;
-				$total_hpp       += $subtotal_hpp;
+			foreach ($id_items as $key => $id_item) {
+				if (empty($id_item)) continue;
+
+				$qty        = floatval(str_replace(',', '.', $qtys[$key]));
+				$harga_jual = floatval(str_replace('.', '', $harga_juals[$key]));
+				$item       = $this->M_item_nota->get_by_id($id_item);
+
+				$total_penjualan += $qty * $harga_jual;
+				$total_hpp       += $qty * $item->harga_modal;
 			}
 
 			$laba_kotor = $total_penjualan - $total_hpp;
 
 			// Insert header nota
 			$data_header = [
-				'no_nota'          => $no_nota,
-				'tanggal'          => $tanggal,
-				'customer'         => $customer,
-				'total_penjualan'  => $total_penjualan,
-				'total_hpp'        => $total_hpp,
-				'laba_kotor'       => $laba_kotor,
-				'metode_bayar'     => $metode_bayar,
-				'is_closed'        => 0,
-				'id_cabang'        => $this->session->userdata('kode_cabang'),
-				'id_company'       => $this->session->userdata('user_perusahaan_id'),
-				'created_by'       => $this->session->userdata('nip'),
-				'created_at'       => date('Y-m-d H:i:s')
+				'no_nota'         => $no_nota,
+				'tanggal'         => $tanggal,
+				'customer'        => $customer,
+				'total_penjualan' => $total_penjualan,
+				'total_hpp'       => $total_hpp,
+				'laba_kotor'      => $laba_kotor,
+				'metode_bayar'    => $metode_bayar,
+				'no_kartu'        => ($metode_bayar === 'card') ? $no_kartu : null,
+				'is_closed'       => 0,
+				'id_cabang'       => $this->session->userdata('kode_cabang'),
+				'id_company'      => $this->session->userdata('user_perusahaan_id'),
+				'created_by'      => $this->session->userdata('nip'),
+				'created_at'      => date('Y-m-d H:i:s')
 			];
 
 			$id_nota = $this->M_nota->insert($data_header);
@@ -227,38 +255,33 @@ class Nota extends CI_Controller
 			foreach ($id_items as $key => $id_item) {
 				if (empty($id_item)) continue;
 
-				$qty        = str_replace(',', '.', $qtys[$key]);
-				$harga_jual = str_replace('.', '', $harga_juals[$key]);
-				$item       = $this->M_item_nota->get_by_id($id_item);
+				$qty         = floatval(str_replace(',', '.', $qtys[$key]));
+				$harga_jual  = floatval(str_replace('.', '', $harga_juals[$key]));
+				$item        = $this->M_item_nota->get_by_id($id_item);
 				$harga_modal = $item->harga_modal;
 
 				$subtotal_jual = $qty * $harga_jual;
 				$subtotal_hpp  = $qty * $harga_modal;
 
-				// Insert detail
 				$data_detail = [
-					'id_nota'      => $id_nota,
-					'id_item'      => $id_item,
-					'qty'          => $qty,
-					'harga_jual'   => $harga_jual,
-					'harga_modal'  => $harga_modal,
+					'id_nota'       => $id_nota,
+					'id_item'       => $id_item,
+					'qty'           => $qty,
+					'harga_jual'    => $harga_jual,
+					'harga_modal'   => $harga_modal,
 					'subtotal_jual' => $subtotal_jual,
-					'subtotal_hpp' => $subtotal_hpp
+					'subtotal_hpp'  => $subtotal_hpp
 				];
 				$this->M_nota->insert_detail($data_detail);
 
-				// Simpan data stok SEBELUM update untuk log
 				$stok_before        = $item->stok;
 				$nilai_before       = $item->nilai_persediaan;
 				$harga_modal_before = $item->harga_modal;
 
-				// Update stok (kurang)
 				$this->M_item_nota->update_stok_with_average($id_item, $qty, $harga_modal, 'subtract');
 
-				// Ambil data item SETELAH update untuk log
 				$item_after = $this->M_item_nota->get_by_id($id_item);
 
-				// Insert log stok
 				$log_data = [
 					'id_item'            => $id_item,
 					'qty_before'         => $stok_before,
