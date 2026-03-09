@@ -157,7 +157,7 @@
 	<style>
 		.stok-warning {
 			background-color: #ffc107 !important;
-			color: #000 !important;
+			color: #fff !important;
 		}
 
 		.stok-danger {
@@ -177,6 +177,21 @@
 
 		input.qty.near-max {
 			background-color: #fff3cd;
+		}
+
+		.select2-results__option {
+			padding: 6px 12px !important;
+			cursor: pointer !important;
+		}
+
+		.select2-results__option--highlighted {
+			background-color: #007bff !important;
+			color: #fff !important;
+		}
+
+		.select2-results__option:hover {
+			background-color: #e9f0ff !important;
+			color: #333 !important;
 		}
 	</style>
 </div>
@@ -218,6 +233,10 @@
 
 		$(document).on('keydown', '#tableItems input, #tableItems select', function(e) {
 			if (e.keyCode === 13) {
+
+				if ($('.select2-results__options').is(':visible')) {
+					return;
+				}
 				e.preventDefault();
 
 				const currentRow = $(this).closest('tr');
