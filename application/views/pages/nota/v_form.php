@@ -463,7 +463,7 @@
 				ajax: {
 					url: '<?= base_url("items/get_items") ?>',
 					dataType: 'json',
-					delay: 500,
+					delay: 1000,
 					data: function(params) {
 						return {
 							q: params.term
