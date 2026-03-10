@@ -115,15 +115,6 @@
 										</td>
 									</tr>
 								</tbody>
-								<tfoot>
-									<tr class="bg-primary">
-										<td colspan="5" class="text-right"><strong class="text-white">TOTAL PENJUALAN:</strong></td>
-										<td>
-											<input type="text" class="form-control form-control-sm text-right font-weight-bold" id="grandTotal" readonly value="0">
-										</td>
-										<td></td>
-									</tr>
-								</tfoot>
 							</table>
 						</div>
 
@@ -136,6 +127,49 @@
 								<li>Jurnal akan dibuat saat <strong>Closing Kasir</strong></li>
 							</ul>
 						</div>
+						<hr>
+
+						<!-- Section Diskon -->
+						<div class="row align-items-end mb-3">
+							<div class="col-md-4">
+								<div class="form-group mb-0">
+									<label class="font-weight-bold">Diskon (Opsional)</label>
+									<div class="input-group">
+										<input type="number" class="form-control" id="diskon_nilai" name="diskon_nilai"
+											placeholder="0" min="0" step="any" value="0">
+										<div class="input-group-append">
+											<select class="form-control" id="diskon_tipe" name="diskon_tipe" style="border-radius:0 4px 4px 0;">
+												<option value="persen">%</option>
+												<option value="nominal">Rp</option>
+											</select>
+										</div>
+									</div>
+									<small class="text-muted">Kosongkan atau isi 0 jika tidak ada diskon</small>
+								</div>
+							</div>
+							<div class="col-md-8">
+								<table class="table table-sm mb-0" style="width:auto; float:right;">
+									<tr>
+										<td class="text-right pr-3">Subtotal</td>
+										<td class="text-right" style="min-width:140px;">
+											<input type="text" class="form-control form-control-sm text-right" id="displaySubtotal" readonly value="0">
+										</td>
+									</tr>
+									<tr>
+										<td class="text-right pr-3 text-danger">Diskon</td>
+										<td class="text-right">
+											<input type="text" class="form-control form-control-sm text-right text-danger" id="displayDiskon" readonly value="0">
+										</td>
+									</tr>
+									<tr class="bg-primary">
+										<td class="text-right pr-3"><strong class="text-white">TOTAL</strong></td>
+										<td class="text-right">
+											<input type="text" class="form-control form-control-sm text-right font-weight-bold" id="grandTotal" readonly value="0">
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
 
 						<hr>
 
@@ -144,8 +178,11 @@
 								<a href="<?= base_url('nota') ?>" class="btn btn-secondary">
 									<i class="fe fe-x"></i> Batal
 								</a>
-								<button type="submit" class="btn btn-primary" id="btnSimpan">
+								<!-- <button type="submit" class="btn btn-primary" id="btnSimpan">
 									<i class="fe fe-save"></i> Simpan Nota
+								</button> -->
+								<button type="submit" class="btn btn-success" id="btnSimpan">
+									<i class="fe fe-shopping-cart"></i> Proses Bayar
 								</button>
 							</div>
 						</div>
@@ -365,39 +402,54 @@
 				return;
 			}
 
+			// Validasi stok — agregasi per item-id
 			let stokCukup = true;
 			let pesanError = '';
 
+			const itemAgg = {};
 			$('.item-row').each(function() {
-				const row = $(this);
-				const itemId = row.find('.select-item').val();
+				const itemId = $(this).data('item-id');
 				if (!itemId) return;
 
-				const namaBarang = row.find('.select-item option:selected').text();
-				const stok = parseFloat(row.find('.stok-display').text()) || 0;
-				const qty = parseFloat(row.find('.qty').val().replace(',', '.')) || 0;
+				const stokDB = parseFloat($(this).data('stok-db')) || 0;
+				const qty = parseFloat($(this).find('.qty').val().replace(',', '.')) || 0;
+				const nama = $(this).find('.select-item option:selected').text();
 
-				if (qty <= 0) {
-					stokCukup = false;
-					pesanError += '- ' + namaBarang + ': Qty harus lebih dari 0\n';
-					return;
+				if (!itemAgg[itemId]) {
+					itemAgg[itemId] = {
+						stokDB: stokDB,
+						totalQty: 0,
+						nama: nama
+					};
 				}
-
-				if (stok <= 0) {
-					stokCukup = false;
-					pesanError += '- ' + namaBarang + ': Stok habis!\n';
-					return;
-				}
-
-				if (qty > stok) {
-					stokCukup = false;
-					pesanError += '- ' + namaBarang + ': Stok tidak cukup (Tersedia: ' + stok.toFixed(2) + ', Diminta: ' + qty.toFixed(2) + ')\n';
-					return;
-				}
+				itemAgg[itemId].totalQty += qty;
 			});
 
+			for (const id in itemAgg) {
+				const item = itemAgg[id];
+
+				if (item.totalQty <= 0) {
+					stokCukup = false;
+					pesanError += '- ' + item.nama + ': Qty harus lebih dari 0\n';
+					continue;
+				}
+
+				if (item.stokDB <= 0) {
+					stokCukup = false;
+					pesanError += '- ' + item.nama + ': Stok habis!\n';
+					continue;
+				}
+
+				if (item.totalQty > item.stokDB) {
+					stokCukup = false;
+					pesanError += '- ' + item.nama + ': Stok tidak cukup' +
+						' (Tersedia: ' + item.stokDB.toFixed(2) +
+						', Diminta: ' + item.totalQty.toFixed(2) + ')\n';
+				}
+			}
+
 			if (!stokCukup) {
-				alert('Stok tidak mencukupi untuk:\n' + pesanError);
+				showToast('Stok tidak mencukupi:\n' + pesanError, 'error');
 				return;
 			}
 
@@ -406,7 +458,7 @@
 				return;
 			}
 
-			$('#btnSimpan').prop('disabled', true).html('<i class="fe fe-loader"></i> Menyimpan...');
+			$('#btnSimpan').prop('disabled', true).html('<i class="fe fe-loader"></i> Memproses...');
 
 			$.ajax({
 				url: '<?= base_url("nota/save") ?>',
@@ -415,18 +467,18 @@
 				dataType: 'json',
 				success: function(response) {
 					if (response.status === 'success') {
-						alert(response.message);
+						// Langsung buka struk tanpa alert
 						const printUrl = '<?= base_url("nota/print_nota/") ?>' + response.id_nota;
-						window.open(printUrl, '_blank', 'width=800,height=600');
+						window.open(printUrl, '_blank', 'width=400,height=600');
 						window.location.href = response.redirect;
 					} else {
-						alert(response.message);
-						$('#btnSimpan').prop('disabled', false).html('<i class="fe fe-save"></i> Simpan Nota');
+						showToast(response.message, 'error');
+						$('#btnSimpan').prop('disabled', false).html('<i class="fe fe-shopping-cart"></i> Proses Bayar');
 					}
 				},
 				error: function() {
-					alert('Terjadi kesalahan saat menyimpan data!');
-					$('#btnSimpan').prop('disabled', false).html('<i class="fe fe-save"></i> Simpan Nota');
+					showToast('Terjadi kesalahan saat memproses pembayaran!', 'error');
+					$('#btnSimpan').prop('disabled', false).html('<i class="fe fe-shopping-cart"></i> Proses Bayar');
 				}
 			});
 		});
@@ -555,10 +607,10 @@
 				qtyInput.prop('disabled', false)
 					.attr('max', stokTersedia)
 					.attr('placeholder', 'Max: ' + stokTersedia.toFixed(2))
-					.attr('1');
+					.val('1');
 
-					calculateSubtotal(row);
-					calculateTotal();
+				calculateSubtotal(row);
+				calculateTotal();
 				qtyInput.focus().select();
 			});
 		}
@@ -590,15 +642,41 @@
 		}
 
 		// Hanya hitung total penjualan
+		// Ganti fungsi calculateTotal() yang lama dengan ini:
 		function calculateTotal() {
-			let total = 0;
+			let subtotal = 0;
 			$('.item-row').each(function() {
 				const qty = parseFloat($(this).find('.qty').val().replace(',', '.')) || 0;
 				const hargaJual = parseFloat($(this).find('.harga-jual').val().replace(/\./g, '')) || 0;
-				total += (qty * hargaJual);
+				subtotal += (qty * hargaJual);
 			});
+
+			const diskonNilai = parseFloat($('#diskon_nilai').val()) || 0;
+			const diskonTipe = $('#diskon_tipe').val();
+
+			let diskonAmount = 0;
+			if (diskonTipe === 'persen') {
+				if (diskonNilai > 100) {
+					$('#diskon_nilai').val(100);
+					diskonAmount = subtotal;
+				} else {
+					diskonAmount = subtotal * (diskonNilai / 100);
+				}
+			} else {
+				diskonAmount = Math.min(diskonNilai, subtotal); // diskon nominal max = subtotal
+			}
+
+			const total = Math.max(0, subtotal - diskonAmount);
+
+			$('#displaySubtotal').val(formatRupiah(Math.floor(subtotal)));
+			$('#displayDiskon').val(diskonAmount > 0 ? '- ' + formatRupiah(Math.floor(diskonAmount)) : '0');
 			$('#grandTotal').val(formatRupiah(Math.floor(total)));
 		}
+
+		// Tambah event listener diskon:
+		$('#diskon_nilai, #diskon_tipe').on('input change', function() {
+			calculateTotal();
+		});
 
 		function updateRowNumbers() {
 			$('#itemRows tr').each(function(index) {

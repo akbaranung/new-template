@@ -225,14 +225,35 @@ class Nota extends CI_Controller
 				$total_hpp       += $qty * $item->harga_modal;
 			}
 
-			$laba_kotor = $total_penjualan - $total_hpp;
+			// Setelah loop hitung $total_penjualan & $total_hpp, tambah:
+			$diskon_tipe  = $this->input->post('diskon_tipe');
+			$diskon_nilai = floatval($this->input->post('diskon_nilai'));
+
+			// Whitelist
+			if (!in_array($diskon_tipe, ['persen', 'nominal'])) {
+				$diskon_tipe = 'persen';
+			}
+
+			$diskon_amount = 0;
+			if ($diskon_tipe === 'persen') {
+				$diskon_nilai  = min($diskon_nilai, 100); // max 100%
+				$diskon_amount = $total_penjualan * ($diskon_nilai / 100);
+			} else {
+				$diskon_amount = min($diskon_nilai, $total_penjualan); // max = total
+			}
+
+			$total_setelah_diskon = $total_penjualan - $diskon_amount;
+			$laba_kotor = $total_penjualan - $total_hpp; // laba dari harga normal, tidak terpengaruh diskon
 
 			// Insert header nota
 			$data_header = [
 				'no_nota'         => $no_nota,
 				'tanggal'         => $tanggal,
 				'customer'        => $customer,
-				'total_penjualan' => $total_penjualan,
+				'diskon_tipe'     => $diskon_nilai > 0 ? $diskon_tipe : null,
+				'diskon_nilai'    => $diskon_nilai,
+				'diskon_amount'   => $diskon_amount,
+				'total_penjualan' => $total_setelah_diskon, // simpan total SETELAH diskon
 				'total_hpp'       => $total_hpp,
 				'laba_kotor'      => $laba_kotor,
 				'metode_bayar'    => $metode_bayar,
@@ -358,16 +379,74 @@ class Nota extends CI_Controller
 	// Print nota
 	public function print_nota($id)
 	{
-		$data['nota'] = $this->M_nota->get_by_id($id);
-
+		$data['nota']    = $this->M_nota->get_by_id($id);
 		if (!$data['nota']) {
-			$this->session->set_flashdata('error', 'Data tidak ditemukan!');
 			redirect('nota');
 		}
 
-		$data['detail'] = $this->M_nota->get_detail($id);
+		$data['detail']  = $this->M_nota->get_detail($id);
+		$data['utility'] = $this->db->get('utility')->row_array();
+		$u               = $data['utility'];
 
-		// Load view tanpa template (pure HTML untuk print)
-		$this->load->view('pages/nota/v_print', $data);
+		// Ambil setting struk dari utility
+		$lebar      = !empty($u['struk_lebar_kertas']) ? $u['struk_lebar_kertas'] : '80';
+		$data['setting'] = [
+			'nama_toko'         => !empty($u['struk_nama_toko']) ? $u['struk_nama_toko'] : ($u['nama_perusahaan'] ?? 'NAMA TOKO'),
+			'footer_1'          => !empty($u['struk_footer_1']) ? $u['struk_footer_1'] : 'Terima kasih atas kunjungan Anda',
+			'footer_2'          => !empty($u['struk_footer_2']) ? $u['struk_footer_2'] : 'Barang yang sudah dibeli',
+			'footer_3'          => !empty($u['struk_footer_3']) ? $u['struk_footer_3'] : 'tidak dapat dikembalikan',
+			'show_kasir'        => isset($u['struk_show_kasir'])        ? (int)$u['struk_show_kasir']        : 1,
+			'show_harga_satuan' => isset($u['struk_show_harga_satuan']) ? (int)$u['struk_show_harga_satuan'] : 1,
+			'auto_print'        => isset($u['struk_auto_print'])        ? (int)$u['struk_auto_print']        : 1,
+		];
+
+		$data['struk_css'] = $lebar === '58' ? [
+			'lebar'         => '58mm',
+			'font_size'     => '10px',
+			'font_size_kecil' => '9px',
+			'font_toko'     => '13px',
+			'padding'       => '2mm',
+			'padding_print' => '1mm',
+			'col_nama'      => '50%',
+			'col_qty'       => '15%',
+			'col_harga'     => '35%',
+			'font_total'    => '11px',
+		] : [
+			'lebar'         => '80mm',
+			'font_size'     => '12px',
+			'font_size_kecil' => '11px',
+			'font_toko'     => '16px',
+			'padding'       => '4mm',
+			'padding_print' => '2mm',
+			'col_nama'      => '55%',
+			'col_qty'       => '15%',
+			'col_harga'     => '30%',
+			'font_total'    => '13px',
+		];
+
+		$this->load->view('pages/nota/v_print_struk_nota', $data);
+	}
+
+	public function setting_struk()
+	{
+		if ($this->input->post()) {
+			$data = [
+				'struk_lebar_kertas'       => $this->input->post('struk_lebar_kertas'),
+				'struk_nama_toko'          => trim($this->input->post('struk_nama_toko')),
+				'struk_footer_1'           => trim($this->input->post('struk_footer_1')),
+				'struk_footer_2'           => trim($this->input->post('struk_footer_2')),
+				'struk_footer_3'           => trim($this->input->post('struk_footer_3')),
+				'struk_show_kasir'         => $this->input->post('struk_show_kasir') ? 1 : 0,
+				'struk_show_harga_satuan'  => $this->input->post('struk_show_harga_satuan') ? 1 : 0,
+				'struk_auto_print'         => $this->input->post('struk_auto_print') ? 1 : 0,
+			];
+
+			$this->db->update('utility', $data);
+
+			echo json_encode(['status' => 'success', 'message' => 'Pengaturan struk berhasil disimpan!']);
+			return;
+		}
+
+		echo json_encode(['status' => 'error', 'message' => 'Invalid request!']);
 	}
 }
