@@ -150,7 +150,7 @@
 							<div class="col-md-8">
 								<table class="table table-sm mb-0" style="width:auto; float:right;">
 									<tr>
-										<td class="text-right pr-3">Subtotal</td>
+										<td class="text-right pr-3">Total sebelum diskon</td>
 										<td class="text-right" style="min-width:140px;">
 											<input type="text" class="form-control form-control-sm text-right" id="displaySubtotal" readonly value="0">
 										</td>
