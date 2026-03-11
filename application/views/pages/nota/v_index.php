@@ -56,9 +56,9 @@
 									value="<?= htmlspecialchars($search ?? '') ?>">
 							</div>
 
-							<div class="col-12 col-lg-4 mb-2">
+							<div class="col-12 col-lg-4 mb-2 text-right">
 								<!-- Desktop ≥992px -->
-								<div class="d-none d-lg-flex" style="gap:4px;">
+								<div class="d-none d-lg-flex justify-content-end" style="gap:4px;">
 									<button type="submit" class="btn btn-sm btn-dark">
 										<i class="fe fe-search"></i> Cari
 									</button>
