@@ -618,96 +618,71 @@ class Financial extends CI_Controller
 	private function prepareLabaRugiReportByDateNoSawal($data, $tanggal, $button_sbm = null)
 	{
 		$date = new DateTime($tanggal);
-
 		$date->modify('first day of previous month');
 		$periode = $date->format('Y-m');
 
-		// $cek = $this->M_coa->cek_saldo_awal($periode);
-
-		$data['total_pendapatan'] = 0;
-		$data['sum_biaya'] = 0;
-		$data['sum_pendapatan'] = 0;
-		$data['biaya'] = [];
-		$data['pendapatan'] = [];
-		// if ($cek) {
-		// $coaLastPeriod = json_decode($cek['coa']);
+		$data['total_pendapatan']   = 0;
+		$data['sum_biaya']          = 0;
+		$data['sum_pendapatan']     = 0;
+		$data['biaya']              = [];
+		$data['pendapatan']         = [];
+		$data['grouped_biaya']      = [];
+		$data['grouped_pendapatan'] = [];
 
 		$pendapatan = $this->M_coa->getNeracaByDate('t_coalr_sbb', 'PASIVA', $tanggal, $periode);
-		$beban = $this->M_coa->getNeracaByDate('t_coalr_sbb', 'AKTIVA', $tanggal, $periode);
+		$beban      = $this->M_coa->getNeracaByDate('t_coalr_sbb', 'AKTIVA', $tanggal, $periode);
 
-		// Part Pendapatan
-		// $filteredCoaPendapatan = array_filter($coaLastPeriod, function ($item) {
-		//   return $item->posisi === 'PASIVA' && $item->table_source === 't_coalr_sbb';
-		// });
+		// ── Part Pendapatan ──────────────────────────────────────
 		$combinedPendapatan = [];
-
 		foreach ($pendapatan as $item) {
 			if (!isset($combinedPendapatan[$item->no_sbb])) {
-				$combinedPendapatan[$item->no_sbb] = (object) [
-					'no_sbb' => $item->no_sbb,
-					'saldo_awal' => $item->saldo_awal,
-				];
+				$combinedPendapatan[$item->no_sbb] = (object)['no_sbb' => $item->no_sbb, 'saldo_awal' => $item->saldo_awal];
 			} else {
 				$combinedPendapatan[$item->no_sbb]->saldo_awal += $item->saldo_awal;
 			}
 		}
-		// foreach ($filteredCoaPendapatan as $item) {
-		//   if (!isset($combinedPendapatan[$item->no_sbb])) {
-		//     $combinedPendapatan[$item->no_sbb] = (object) [
-		//       'no_sbb' => $item->no_sbb,
-		//       'saldo_awal' => $item->saldo_awal,
-		//     ];
-		//   } else {
-		//     $combinedPendapatan[$item->no_sbb]->saldo_awal += $item->saldo_awal;
-		//   }
-		// }
+		usort($combinedPendapatan, fn($a, $b) => strcmp($a->no_sbb, $b->no_sbb));
 		$total_pendapatan = array_sum(array_column($combinedPendapatan, 'saldo_awal'));
 
-		// Part Beban
-		// $filteredCoaBeban = array_filter($coaLastPeriod, function ($item) {
-		//   return $item->posisi === 'AKTIVA' && $item->table_source === 't_coalr_sbb';
-		// });
+		$bbPendapatan = [];
+		foreach ($combinedPendapatan as $item) {
+			$key = substr($item->no_sbb, 0, 3);
+			$bbPendapatan[$key] = ($bbPendapatan[$key] ?? 0) + $item->saldo_awal;
+		}
+		$groupedPendapatan = $bbPendapatan;
 
+		// ── Part Beban ───────────────────────────────────────────
 		$combinedBeban = [];
-
 		foreach ($beban as $item) {
 			if (!isset($combinedBeban[$item->no_sbb])) {
-				$combinedBeban[$item->no_sbb] = (object) [
-					'no_sbb' => $item->no_sbb,
-					'saldo_awal' => $item->saldo_awal,
-				];
+				$combinedBeban[$item->no_sbb] = (object)['no_sbb' => $item->no_sbb, 'saldo_awal' => $item->saldo_awal];
 			} else {
 				$combinedBeban[$item->no_sbb]->saldo_awal += $item->saldo_awal;
 			}
 		}
-		// foreach ($filteredCoaBeban as $item) {
-		//   if (!isset($combinedBeban[$item->no_sbb])) {
-		//     $combinedBeban[$item->no_sbb] = (object) [
-		//       'no_sbb' => $item->no_sbb,
-		//       'saldo_awal' => $item->saldo_awal,
-		//     ];
-		//   } else {
-		//     $combinedBeban[$item->no_sbb]->saldo_awal += $item->saldo_awal;
-		//   }
-		// }
+		usort($combinedBeban, fn($a, $b) => strcmp($a->no_sbb, $b->no_sbb));
 		$total_beban = array_sum(array_column($combinedBeban, 'saldo_awal'));
 
-		$data['biaya'] = $combinedBeban;
-		$data['pendapatan'] = $combinedPendapatan;
-		$data['sum_biaya'] = $total_beban;
-		$data['sum_pendapatan'] = $total_pendapatan;
-		$data['total_pendapatan'] = $total_pendapatan - $total_beban;
-		// } else {
-		//   $this->session->set_flashdata('message_error', 'Closing bulan ' . format_indo($periode) . ' tidak ditemukan');
-		// }
+		$bbBeban = [];
+		foreach ($combinedBeban as $item) {
+			$key = substr($item->no_sbb, 0, 3);
+			$bbBeban[$key] = ($bbBeban[$key] ?? 0) + $item->saldo_awal;
+		}
+		$groupedBeban = $bbBeban;
 
-		// print_r($data['total_pendapatan']);
-		// exit;
-		$data['title'] = 'Laba rugi per tanggal ' . format_indo($tanggal);
-		$data['utility'] = $this->db->get('utility')->row_array();
+		$data['biaya']              = $combinedBeban;
+		$data['grouped_biaya']      = $groupedBeban;
+		$data['pendapatan']         = $combinedPendapatan;
+		$data['grouped_pendapatan'] = $groupedPendapatan;
+		$data['sum_biaya']          = $total_beban;
+		$data['sum_pendapatan']     = $total_pendapatan;
+		$data['total_pendapatan']   = $total_pendapatan - $total_beban;
+
+		$data['title']        = 'Laba rugi per tanggal ' . format_indo($tanggal);
+		$data['utility']      = $this->db->get('utility')->row_array();
 		$data['pages_script'] = 'script/financial/s_financial';
-		$data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
-		$data['pages'] = 'pages/financial/v_laba_rugi_by_date';
+		$data['menus']        = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
+		$data['pages']        = 'pages/financial/v_laba_rugi_by_date';
 
 		if ($button_sbm == "excel") {
 			require_once(APPPATH . 'libraries/PHPExcel/IOFactory.php');
@@ -715,28 +690,25 @@ class Financial extends CI_Controller
 			$excel = new PHPExcel();
 			$sheet = $excel->getActiveSheet();
 
-			$excel->getProperties()->setCreator('Bariskode')
+			$excel->getProperties()
+				->setCreator('Bariskode')
 				->setLastModifiedBy('Bariskode')
 				->setTitle("Laba rugi SBB")
 				->setSubject("Laba rugi SBB")
 				->setDescription("Laba rugi SBB per tanggal " . format_indo($tanggal))
 				->setKeywords("Laba rugi SBB");
 
-			// Merge cells untuk header utama
+			// ── Header Excel ─────────────────────────────────────────
 			$sheet->mergeCells('A1:G1');
 			$sheet->mergeCells('A2:C2');
 			$sheet->mergeCells('E2:G2');
 
-			// Isi data header
 			$sheet->setCellValue('A1', 'Laba rugi SBB per tanggal ' . format_indo($tanggal));
-			$sheet->setCellValue('A2', 'BEBAN');
-			$sheet->setCellValue('E2', 'PENDAPATAN');
-			$sheet->setCellValue('B3', 'Total: ');
+			$sheet->setCellValue('B3', 'Total BEBAN: ');
 			$sheet->setCellValue('C3', $total_beban);
-			$sheet->setCellValue('F3', 'Total: ');
+			$sheet->setCellValue('F3', 'Total PENDAPATAN: ');
 			$sheet->setCellValue('G3', $total_pendapatan);
 
-			// Buat sub-header untuk tabel
 			$sheet->setCellValue('A4', 'No. CoA');
 			$sheet->setCellValue('B4', 'Nama CoA');
 			$sheet->setCellValue('C4', 'Nominal');
@@ -744,33 +716,88 @@ class Financial extends CI_Controller
 			$sheet->setCellValue('F4', 'Nama CoA');
 			$sheet->setCellValue('G4', 'Nominal');
 
-			// Tambahkan data Aktiva
-			$numrowActiva = 5;
-			foreach ($combinedBeban as $t) {
+			// ── Data Beban + Subtotal BB ──────────────────────────────
+			$numrowBeban = 5;
+			$bebanList   = array_values($combinedBeban);
+
+			for ($i = 0; $i < count($bebanList); $i++) {
+				$t   = $bebanList[$i];
 				$coa = $this->M_coa->getCoa($t->no_sbb);
-				if ($coa['table_source'] == "t_coalr_sbb" && $coa['posisi'] == 'AKTIVA' && $t->saldo_awal != 0):
-					$sheet->setCellValue('A' . $numrowActiva, $t->no_sbb);
-					$sheet->setCellValue('B' . $numrowActiva, $coa['nama_perkiraan']);
-					$sheet->setCellValue('C' . $numrowActiva, $t->saldo_awal);
-					$numrowActiva++;
-				endif;
+
+				if ($coa['table_source'] != "t_coalr_sbb" || $coa['posisi'] != 'AKTIVA') continue;
+
+				$thisBB = substr($t->no_sbb, 0, 3);
+				$nextBB = isset($bebanList[$i + 1]) ? substr($bebanList[$i + 1]->no_sbb, 0, 3) : null;
+
+				if ($t->saldo_awal != 0) {
+					$sheet->setCellValue('A' . $numrowBeban, $t->no_sbb);
+					$sheet->setCellValue('B' . $numrowBeban, $coa['nama_perkiraan']);
+					$sheet->setCellValue('C' . $numrowBeban, $t->saldo_awal);
+					$numrowBeban++;
+				}
+
+				if ($thisBB !== $nextBB) {
+					$coaBB      = $this->M_coa->getCoaBB($thisBB);
+					$namaBB     = $coaBB ? $coaBB['nama_perkiraan'] : '-';
+					$subtotalBB = $groupedBeban[$thisBB] ?? 0;
+
+					if ($subtotalBB != 0) {
+						$styleSubtotal = [
+							'font' => ['italic' => true, 'color' => ['rgb' => '888888']],
+							'fill' => ['type' => PHPExcel_Style_Fill::FILL_SOLID, 'startcolor' => ['rgb' => 'F0F0F0']],
+						];
+						$sheet->getStyle("A{$numrowBeban}:C{$numrowBeban}")->applyFromArray($styleSubtotal);
+						$sheet->setCellValue('A' . $numrowBeban, $thisBB);
+						$sheet->setCellValue('B' . $numrowBeban, 'Total ' . $namaBB);
+						$sheet->setCellValue('C' . $numrowBeban, $subtotalBB);
+						$numrowBeban++;
+						$numrowBeban++; // baris kosong pemisah
+					}
+				}
 			}
 
-			// Tambahkan data Pasiva
-			$numrowPasiva = 5;
-			foreach ($combinedPendapatan as $t) {
+			// ── Data Pendapatan + Subtotal BB ────────────────────────
+			$numrowPendapatan = 5;
+			$pendapatanList   = array_values($combinedPendapatan);
+
+			for ($i = 0; $i < count($pendapatanList); $i++) {
+				$t   = $pendapatanList[$i];
 				$coa = $this->M_coa->getCoa($t->no_sbb);
-				if ($coa['table_source'] == "t_coalr_sbb" && $coa['posisi'] == 'PASIVA' && $t->saldo_awal != 0):
-					$sheet->setCellValue('E' . $numrowPasiva, $t->no_sbb);
-					$sheet->setCellValue('F' . $numrowPasiva, $coa['nama_perkiraan']);
-					$sheet->setCellValue('G' . $numrowPasiva, $t->saldo_awal);
-					$numrowPasiva++;
-				endif;
+
+				if ($coa['table_source'] != "t_coalr_sbb" || $coa['posisi'] != 'PASIVA') continue;
+
+				$thisBB = substr($t->no_sbb, 0, 3);
+				$nextBB = isset($pendapatanList[$i + 1]) ? substr($pendapatanList[$i + 1]->no_sbb, 0, 3) : null;
+
+				if ($t->saldo_awal != 0) {
+					$sheet->setCellValue('E' . $numrowPendapatan, $t->no_sbb);
+					$sheet->setCellValue('F' . $numrowPendapatan, $coa['nama_perkiraan']);
+					$sheet->setCellValue('G' . $numrowPendapatan, $t->saldo_awal);
+					$numrowPendapatan++;
+				}
+
+				if ($thisBB !== $nextBB) {
+					$coaBB      = $this->M_coa->getCoaBB($thisBB);
+					$namaBB     = $coaBB ? $coaBB['nama_perkiraan'] : '-';
+					$subtotalBB = $groupedPendapatan[$thisBB] ?? 0;
+
+					if ($subtotalBB != 0) {
+						$styleSubtotal = [
+							'font' => ['italic' => true, 'color' => ['rgb' => '888888']],
+							'fill' => ['type' => PHPExcel_Style_Fill::FILL_SOLID, 'startcolor' => ['rgb' => 'F0F0F0']],
+						];
+						$sheet->getStyle("E{$numrowPendapatan}:G{$numrowPendapatan}")->applyFromArray($styleSubtotal);
+						$sheet->setCellValue('E' . $numrowPendapatan, $thisBB);
+						$sheet->setCellValue('F' . $numrowPendapatan, 'Total ' . $namaBB);
+						$sheet->setCellValue('G' . $numrowPendapatan, $subtotalBB);
+						$numrowPendapatan++;
+						$numrowPendapatan++; // baris kosong pemisah
+					}
+				}
 			}
 
-			// Set auto size untuk semua kolom
-			foreach (range('A', 'G') as $columnID) {
-				$sheet->getColumnDimension($columnID)->setAutoSize(true);
+			foreach (range('A', 'G') as $col) {
+				$sheet->getColumnDimension($col)->setAutoSize(true);
 			}
 
 			header('Content-Type: application/vnd.ms-excel');
