@@ -95,7 +95,7 @@ class Nota extends CI_Controller
 		$data['count_inbox'] = $result;
 		$data['count_inbox2'] = $result2;
 		$data['pages'] = "pages/nota/v_index";
-		$data['utility'] = $this->db->get('utility')->row_array();
+		$data['utility'] = $this->db->where('Id', $this->session->userdata('user_perusahaan_id'))->get('utility')->row_array();
 		$data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip')); 
 		
 		$id_cabang            = $this->session->userdata('kode_cabang');
@@ -125,7 +125,7 @@ class Nota extends CI_Controller
 		$data['count_inbox'] = $result;
 		$data['count_inbox2'] = $result2;
 		$data['pages'] = "pages/nota/v_form";
-		$data['utility'] = $this->db->get('utility')->row_array();
+		$data['utility'] = $this->db->where('Id', $this->session->userdata('user_perusahaan_id'))->get('utility')->row_array();
 		$data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
 
 		$this->load->view('index', $data);
@@ -373,7 +373,7 @@ class Nota extends CI_Controller
 		$data['count_inbox'] = $result;
 		$data['count_inbox2'] = $result2;
 		$data['pages'] = "pages/nota/v_detail";
-		$data['utility'] = $this->db->get('utility')->row_array();
+		$data['utility'] = $this->db->where('Id', $this->session->userdata('user_perusahaan_id'))->get('utility')->row_array();
 		$data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
 
 		$this->load->view('index', $data);
@@ -388,7 +388,7 @@ class Nota extends CI_Controller
 		}
 
 		$data['detail']  = $this->M_nota->get_detail($id);
-		$data['utility'] = $this->db->get('utility')->row_array();
+		$data['utility'] = $this->db->where('Id', $this->session->userdata('user_perusahaan_id'))->get('utility')->row_array();
 
 		$id_cabang = $this->session->userdata('kode_cabang');
 		$s = $this->get_struk_setting($data['utility'], $id_cabang);

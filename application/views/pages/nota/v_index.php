@@ -1,7 +1,7 @@
 <!-- nota/v_index.php -->
 <div class="container-fluid">
-	<div class="row justify-content-center">
-		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
+	<div class="row">
+		<div class="col-12">
 			<h1 class="page-title">Nota Penjualan</h1>
 
 			<?php if ($this->session->flashdata('success')) : ?>
@@ -18,7 +18,6 @@
 				</div>
 			<?php endif; ?>
 
-			<!-- Alert Nota Belum Closing -->
 			<?php
 			$nota_belum_closing_today = $this->M_nota->get_belum_closing(date('Y-m-d'));
 			if (!empty($nota_belum_closing_today)) :
@@ -36,72 +35,95 @@
 
 			<div class="card shadow mb-4">
 				<div class="card-body">
+
 					<!-- Search & Filter -->
 					<form method="GET" action="<?= base_url('nota') ?>">
-						<div class="row mb-3">
-							<div class="col-md-2">
-								<div class="form-group">
-									<input type="date" name="tanggal_dari" class="form-control" placeholder="Tanggal Dari" value="<?= htmlspecialchars($tanggal_dari ?? '') ?>">
+						<div class="row align-items-center mb-3">
+
+							<div class="col-3 col-lg-2 mb-2">
+								<input type="date" name="tanggal_dari" class="form-control form-control-sm"
+									value="<?= htmlspecialchars($tanggal_dari ?? '') ?>">
+							</div>
+
+							<div class="col-3 col-lg-2 mb-2">
+								<input type="date" name="tanggal_sampai" class="form-control form-control-sm"
+									value="<?= htmlspecialchars($tanggal_sampai ?? '') ?>">
+							</div>
+
+							<div class="col-6 col-lg-4 mb-2">
+								<input type="text" name="search" id="search" class="form-control form-control-sm"
+									placeholder="Cari No. Nota atau Customer..."
+									value="<?= htmlspecialchars($search ?? '') ?>">
+							</div>
+
+							<div class="col-12 col-lg-4 mb-2">
+								<!-- Desktop ≥992px -->
+								<div class="d-none d-lg-flex" style="gap:4px;">
+									<button type="submit" class="btn btn-sm btn-dark">
+										<i class="fe fe-search"></i> Cari
+									</button>
+									<a href="<?= base_url('nota') ?>" class="btn btn-sm btn-pink text-white">
+										<i class="fe fe-refresh-cw"></i> Reset
+									</a>
+									<a href="<?= base_url('nota/form') ?>" class="btn btn-sm btn-primary text-white">
+										<i class="fe fe-plus"></i> New
+									</a>
+									<button type="button" class="btn btn-sm btn-secondary"
+										data-toggle="modal" data-target="#modalSettingStruk">
+										<i class="fe fe-settings"></i> Settings
+									</button>
+								</div>
+
+								<!-- Mobile/Tablet <992px -->
+								<div class="d-flex d-lg-none" style="gap:4px;">
+									<button type="submit" class="btn btn-sm btn-dark flex-fill">
+										<i class="fe fe-search"></i> Cari
+									</button>
+									<a href="<?= base_url('nota') ?>" class="btn btn-sm btn-pink text-white flex-fill">
+										<i class="fe fe-refresh-cw"></i> Reset
+									</a>
+									<a href="<?= base_url('nota/form') ?>" class="btn btn-sm btn-primary text-white flex-fill">
+										<i class="fe fe-plus"></i> New
+									</a>
+									<button type="button" class="btn btn-sm btn-secondary px-3 flex-shrink-0"
+										data-toggle="modal" data-target="#modalSettingStruk">
+										<i class="fe fe-settings"></i> Settings
+									</button>
 								</div>
 							</div>
-							<div class="col-md-2">
-								<div class="form-group">
-									<input type="date" name="tanggal_sampai" class="form-control" placeholder="Tanggal Sampai" value="<?= htmlspecialchars($tanggal_sampai ?? '') ?>">
-								</div>
-							</div>
-							<div class="col-md-4">
-								<div class="form-group">
-									<input type="text" name="search" id="search" class="form-control" placeholder="Cari No. Nota atau Customer..." value="<?= htmlspecialchars($search ?? '') ?>">
-								</div>
-							</div>
-							<div class="col-md-4">
-								<button type="submit" class="btn btn-dark">
-									<i class="fe fe-search"></i> Cari
-								</button>
-								<a href="<?= base_url('nota') ?>" class="btn btn-pink text-white">
-									<i class="fe fe-refresh-cw"></i> Reset
-								</a>
-								<a href="<?= base_url('nota/form') ?>" class="btn btn-primary text-white">
-									<i class="fe fe-plus"></i> Buat Nota
-								</a>
-								<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modalSettingStruk">
-									<i class="fe fe-settings"></i> Settings
-								</button>
-							</div>
+
 						</div>
 					</form>
 
 					<!-- Table -->
 					<div class="table-responsive">
-						<table class="table table-sm table-striped table-bordered table-hover" style="width:100%">
+						<table class="table table-sm table-striped table-bordered table-hover w-100">
 							<thead class="thead-dark">
 								<tr>
-									<th width="5%">No</th>
+									<th width="4%">No</th>
 									<th width="13%">No. Nota</th>
-									<th width="12%">Tanggal</th>
+									<th width="11%">Tanggal</th>
 									<th>Customer</th>
-									<th width="8%" class="text-center">Item</th>
+									<th width="6%" class="text-center">Item</th>
 									<th width="13%" class="text-right">Total</th>
-									<th width="10%" class="text-right">Laba</th>
-									<th width="10%" class="text-center">Metode</th>
-									<th width="8%" class="text-center">Status</th>
+									<th width="11%" class="text-right">Laba</th>
+									<th width="9%" class="text-center">Metode</th>
+									<th width="7%" class="text-center">Status</th>
 									<th width="8%" class="text-center">Aksi</th>
 								</tr>
 							</thead>
 							<tbody>
-								<?php
-								if (!empty($nota)) {
+								<?php if (!empty($nota)) : ?>
+									<?php
 									$no = (isset($_GET['per_page']) ? $_GET['per_page'] : 0) + 1;
 									foreach ($nota as $n) :
 										$badge_metode = $n->metode_bayar == 'cash' ? 'badge-primary' : 'badge-info';
 										$badge_status = $n->is_closed == 1 ? 'badge-secondary' : 'badge-pink';
-										$status_text = $n->is_closed == 1 ? 'CLOSED' : 'OPEN';
-								?>
+										$status_text  = $n->is_closed == 1 ? 'CLOSED' : 'OPEN';
+									?>
 										<tr>
 											<td class="text-center"><?= $no++ ?></td>
-											<td>
-												<strong><?= $n->no_nota ?></strong>
-											</td>
+											<td><strong><?= $n->no_nota ?></strong></td>
 											<td><?= date('d/m/Y H:i', strtotime($n->tanggal)) ?></td>
 											<td><?= $n->customer ?: '-' ?></td>
 											<td class="text-center">
@@ -111,33 +133,27 @@
 												<strong>Rp <?= number_format($n->total_penjualan, 0, ',', '.') ?></strong>
 											</td>
 											<td class="text-right">
-												<span class="text-primary">
-													Rp <?= number_format($n->laba_kotor, 0, ',', '.') ?>
-												</span>
+												<span class="text-primary">Rp <?= number_format($n->laba_kotor, 0, ',', '.') ?></span>
 											</td>
 											<td class="text-center">
-												<span class="badge <?= $badge_metode ?>">
-													<?= strtoupper($n->metode_bayar) ?>
-												</span>
+												<span class="badge <?= $badge_metode ?>"><?= strtoupper($n->metode_bayar) ?></span>
 											</td>
 											<td class="text-center">
-												<span class="badge <?= $badge_status ?>">
-													<?= $status_text ?>
-												</span>
+												<span class="badge <?= $badge_status ?>"><?= $status_text ?></span>
 											</td>
 											<td class="text-center">
 												<a href="<?= base_url('nota/detail/' . $n->id) ?>" class="btn btn-sm btn-primary" title="Detail">
 													<i class="fe fe-eye"></i>
 												</a>
-												<a href="<?= base_url('nota/detail/' . $n->id) ?>" class="btn btn-sm btn-pink" title="Print nota">
+												<a href="<?= base_url('nota/print_nota/' . $n->id) ?>" class="btn btn-sm btn-pink"
+													title="Print nota" target="_blank"
+													onclick="return window.open(this.href,'_blank','width=400,height=600'), false;">
 													<i class="fe fe-printer"></i>
 												</a>
 											</td>
 										</tr>
-									<?php
-									endforeach;
-								} else {
-									?>
+									<?php endforeach; ?>
+								<?php else : ?>
 									<tr>
 										<td colspan="10" class="text-center">
 											<div class="alert alert-info mb-0">
@@ -145,8 +161,7 @@
 											</div>
 										</td>
 									</tr>
-								<?php
-								} ?>
+								<?php endif; ?>
 							</tbody>
 						</table>
 					</div>
@@ -155,9 +170,7 @@
 					<?php if (!empty($nota)) : ?>
 						<div class="row mt-3">
 							<div class="col-md-6">
-								<p class="text-muted">
-									Menampilkan data nota penjualan
-								</p>
+								<p class="text-muted small">Menampilkan data nota penjualan</p>
 							</div>
 							<div class="col-md-6 text-right">
 								<?= $pagination ?>
@@ -181,7 +194,6 @@
 			</div>
 			<div class="modal-body">
 				<form id="formSettingStruk">
-
 					<div class="form-group">
 						<label class="font-weight-bold">Ukuran Kertas</label>
 						<div>
@@ -197,7 +209,6 @@
 							</div>
 						</div>
 					</div>
-
 					<div class="form-group">
 						<label class="font-weight-bold">Nama Toko di Struk</label>
 						<input type="text" class="form-control" name="struk_nama_toko"
@@ -205,7 +216,6 @@
 							placeholder="Kosongkan untuk pakai nama perusahaan">
 						<small class="text-muted">Kosongkan untuk otomatis pakai nama perusahaan dari utility</small>
 					</div>
-
 					<div class="form-group">
 						<label class="font-weight-bold">Teks Footer</label>
 						<input type="text" class="form-control mb-1" name="struk_footer_1"
@@ -218,7 +228,6 @@
 							value="<?= htmlspecialchars($struk_cabang['footer_3'] ?? 'tidak dapat dikembalikan') ?>"
 							placeholder="Baris 3">
 					</div>
-
 					<div class="form-group">
 						<label class="font-weight-bold">Tampilan</label>
 						<div class="form-check">
@@ -237,7 +246,6 @@
 							<label class="form-check-label" for="autoPrint">Auto print saat struk dibuka</label>
 						</div>
 					</div>
-
 				</form>
 			</div>
 			<div class="modal-footer">
@@ -250,9 +258,7 @@
 	</div>
 </div>
 
-
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-
 <script>
 	$('#btnSaveSetting').on('click', function() {
 		const btn = $(this);
@@ -273,7 +279,7 @@
 						showConfirmButton: false
 					}).then(function() {
 						$('#modalSettingStruk').modal('hide');
-						location.reload(); // reload supaya nilai terbaru tampil di modal
+						location.reload();
 					});
 				} else {
 					Swal.fire('Gagal', response.message, 'error');
