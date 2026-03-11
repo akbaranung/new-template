@@ -65,7 +65,7 @@
 									<i class="fe fe-plus"></i> Buat Nota
 								</a>
 								<button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modalSettingStruk">
-									<i class="fe fe-settings"></i> Pengaturan Struk
+									<i class="fe fe-settings"></i> Settings
 								</button>
 							</div>
 						</div>
@@ -187,12 +187,12 @@
 						<div>
 							<div class="form-check form-check-inline">
 								<input class="form-check-input" type="radio" name="struk_lebar_kertas" value="80"
-									<?= ($utility['struk_lebar_kertas'] ?? '80') == '80' ? 'checked' : '' ?>>
+									<?= ($struk_cabang['lebar_kertas'] ?? '80') == '80' ? 'checked' : '' ?>>
 								<label class="form-check-label">80mm</label>
 							</div>
 							<div class="form-check form-check-inline">
 								<input class="form-check-input" type="radio" name="struk_lebar_kertas" value="58"
-									<?= ($utility['struk_lebar_kertas'] ?? '80') == '58' ? 'checked' : '' ?>>
+									<?= ($struk_cabang['lebar_kertas'] ?? '80') == '58' ? 'checked' : '' ?>>
 								<label class="form-check-label">58mm</label>
 							</div>
 						</div>
@@ -201,7 +201,7 @@
 					<div class="form-group">
 						<label class="font-weight-bold">Nama Toko di Struk</label>
 						<input type="text" class="form-control" name="struk_nama_toko"
-							value="<?= htmlspecialchars($utility['struk_nama_toko'] ?? '') ?>"
+							value="<?= htmlspecialchars($struk_cabang['nama_toko'] ?? '') ?>"
 							placeholder="Kosongkan untuk pakai nama perusahaan">
 						<small class="text-muted">Kosongkan untuk otomatis pakai nama perusahaan dari utility</small>
 					</div>
@@ -209,13 +209,13 @@
 					<div class="form-group">
 						<label class="font-weight-bold">Teks Footer</label>
 						<input type="text" class="form-control mb-1" name="struk_footer_1"
-							value="<?= htmlspecialchars($utility['struk_footer_1'] ?? 'Terima kasih atas kunjungan Anda') ?>"
+							value="<?= htmlspecialchars($struk_cabang['footer_1'] ?? 'Terima kasih atas kunjungan Anda') ?>"
 							placeholder="Baris 1">
 						<input type="text" class="form-control mb-1" name="struk_footer_2"
-							value="<?= htmlspecialchars($utility['struk_footer_2'] ?? 'Barang yang sudah dibeli') ?>"
+							value="<?= htmlspecialchars($struk_cabang['footer_2'] ?? 'Barang yang sudah dibeli') ?>"
 							placeholder="Baris 2">
 						<input type="text" class="form-control" name="struk_footer_3"
-							value="<?= htmlspecialchars($utility['struk_footer_3'] ?? 'tidak dapat dikembalikan') ?>"
+							value="<?= htmlspecialchars($struk_cabang['footer_3'] ?? 'tidak dapat dikembalikan') ?>"
 							placeholder="Baris 3">
 					</div>
 
@@ -223,17 +223,17 @@
 						<label class="font-weight-bold">Tampilan</label>
 						<div class="form-check">
 							<input class="form-check-input" type="checkbox" name="struk_show_kasir" value="1" id="showKasir"
-								<?= ($utility['struk_show_kasir'] ?? 1) ? 'checked' : '' ?>>
+								<?= ($struk_cabang['show_kasir'] ?? 1) ? 'checked' : '' ?>>
 							<label class="form-check-label" for="showKasir">Tampilkan nama kasir</label>
 						</div>
 						<div class="form-check">
 							<input class="form-check-input" type="checkbox" name="struk_show_harga_satuan" value="1" id="showHargaSatuan"
-								<?= ($utility['struk_show_harga_satuan'] ?? 1) ? 'checked' : '' ?>>
+								<?= ($struk_cabang['show_harga_satuan'] ?? 1) ? 'checked' : '' ?>>
 							<label class="form-check-label" for="showHargaSatuan">Tampilkan harga satuan (qty x harga)</label>
 						</div>
 						<div class="form-check">
 							<input class="form-check-input" type="checkbox" name="struk_auto_print" value="1" id="autoPrint"
-								<?= ($utility['struk_auto_print'] ?? 1) ? 'checked' : '' ?>>
+								<?= ($struk_cabang['auto_print'] ?? 1) ? 'checked' : '' ?>>
 							<label class="form-check-label" for="autoPrint">Auto print saat struk dibuka</label>
 						</div>
 					</div>

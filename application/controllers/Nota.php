@@ -96,7 +96,10 @@ class Nota extends CI_Controller
 		$data['count_inbox2'] = $result2;
 		$data['pages'] = "pages/nota/v_index";
 		$data['utility'] = $this->db->get('utility')->row_array();
-		$data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
+		$data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip')); 
+		
+		$id_cabang            = $this->session->userdata('kode_cabang');
+		$data['struk_cabang'] = $this->get_struk_setting($data['utility'], $id_cabang);
 
 		$this->load->view('index', $data);
 	}
@@ -386,42 +389,44 @@ class Nota extends CI_Controller
 
 		$data['detail']  = $this->M_nota->get_detail($id);
 		$data['utility'] = $this->db->get('utility')->row_array();
-		$u               = $data['utility'];
 
-		// Ambil setting struk dari utility
-		$lebar      = !empty($u['struk_lebar_kertas']) ? $u['struk_lebar_kertas'] : '80';
+		$id_cabang = $this->session->userdata('kode_cabang');
+		$s = $this->get_struk_setting($data['utility'], $id_cabang);
+
+		// nama_toko fallback ke nama_perusahaan kalau kosong
 		$data['setting'] = [
-			'nama_toko'         => !empty($u['struk_nama_toko']) ? $u['struk_nama_toko'] : ($u['nama_perusahaan'] ?? 'NAMA TOKO'),
-			'footer_1'          => !empty($u['struk_footer_1']) ? $u['struk_footer_1'] : 'Terima kasih atas kunjungan Anda',
-			'footer_2'          => !empty($u['struk_footer_2']) ? $u['struk_footer_2'] : 'Barang yang sudah dibeli',
-			'footer_3'          => !empty($u['struk_footer_3']) ? $u['struk_footer_3'] : 'tidak dapat dikembalikan',
-			'show_kasir'        => isset($u['struk_show_kasir'])        ? (int)$u['struk_show_kasir']        : 1,
-			'show_harga_satuan' => isset($u['struk_show_harga_satuan']) ? (int)$u['struk_show_harga_satuan'] : 1,
-			'auto_print'        => isset($u['struk_auto_print'])        ? (int)$u['struk_auto_print']        : 1,
+			'nama_toko'         => !empty($s['nama_toko']) ? $s['nama_toko'] : ($data['utility']['nama_perusahaan'] ?? 'NAMA TOKO'),
+			'footer_1'          => $s['footer_1'],
+			'footer_2'          => $s['footer_2'],
+			'footer_3'          => $s['footer_3'],
+			'show_kasir'        => (int)$s['show_kasir'],
+			'show_harga_satuan' => (int)$s['show_harga_satuan'],
+			'auto_print'        => (int)$s['auto_print'],
 		];
 
+		$lebar = $s['lebar_kertas'];
 		$data['struk_css'] = $lebar === '58' ? [
-			'lebar'         => '58mm',
-			'font_size'     => '10px',
+			'lebar'          => '58mm',
+			'font_size'      => '10px',
 			'font_size_kecil' => '9px',
-			'font_toko'     => '13px',
-			'padding'       => '2mm',
-			'padding_print' => '1mm',
-			'col_nama'      => '50%',
-			'col_qty'       => '15%',
-			'col_harga'     => '35%',
-			'font_total'    => '11px',
+			'font_toko'      => '13px',
+			'padding'        => '2mm',
+			'padding_print'  => '1mm',
+			'col_nama'       => '50%',
+			'col_qty'        => '15%',
+			'col_harga'      => '35%',
+			'font_total'     => '11px',
 		] : [
-			'lebar'         => '80mm',
-			'font_size'     => '12px',
+			'lebar'          => '80mm',
+			'font_size'      => '12px',
 			'font_size_kecil' => '11px',
-			'font_toko'     => '16px',
-			'padding'       => '4mm',
-			'padding_print' => '2mm',
-			'col_nama'      => '55%',
-			'col_qty'       => '15%',
-			'col_harga'     => '30%',
-			'font_total'    => '13px',
+			'font_toko'      => '16px',
+			'padding'        => '4mm',
+			'padding_print'  => '2mm',
+			'col_nama'       => '55%',
+			'col_qty'        => '15%',
+			'col_harga'      => '30%',
+			'font_total'     => '13px',
 		];
 
 		$this->load->view('pages/nota/v_print_struk_nota', $data);
@@ -429,24 +434,75 @@ class Nota extends CI_Controller
 
 	public function setting_struk()
 	{
-		if ($this->input->post()) {
-			$data = [
-				'struk_lebar_kertas'       => $this->input->post('struk_lebar_kertas'),
-				'struk_nama_toko'          => trim($this->input->post('struk_nama_toko')),
-				'struk_footer_1'           => trim($this->input->post('struk_footer_1')),
-				'struk_footer_2'           => trim($this->input->post('struk_footer_2')),
-				'struk_footer_3'           => trim($this->input->post('struk_footer_3')),
-				'struk_show_kasir'         => $this->input->post('struk_show_kasir') ? 1 : 0,
-				'struk_show_harga_satuan'  => $this->input->post('struk_show_harga_satuan') ? 1 : 0,
-				'struk_auto_print'         => $this->input->post('struk_auto_print') ? 1 : 0,
-			];
-
-			$this->db->update('utility', $data);
-
-			echo json_encode(['status' => 'success', 'message' => 'Pengaturan struk berhasil disimpan!']);
+		if (!$this->input->post()) {
+			echo json_encode(['status' => 'error', 'message' => 'Invalid request!']);
 			return;
 		}
 
-		echo json_encode(['status' => 'error', 'message' => 'Invalid request!']);
+		$id_cabang = $this->session->userdata('kode_cabang');
+		$utility   = $this->db->get('utility')->row_array();
+
+		// Baca JSON existing, kalau kosong/invalid mulai dari array kosong
+		$struk_setting = [];
+		if (!empty($utility['struk_setting'])) {
+			$decoded = json_decode($utility['struk_setting'], true);
+			if (json_last_error() === JSON_ERROR_NONE) {
+				$struk_setting = $decoded;
+			}
+		}
+
+		// Update hanya untuk cabang yang sedang login
+		$struk_setting[$id_cabang] = [
+			'lebar_kertas'      => $this->input->post('struk_lebar_kertas'),
+			'nama_toko'         => trim($this->input->post('struk_nama_toko')),
+			'footer_1'          => trim($this->input->post('struk_footer_1')),
+			'footer_2'          => trim($this->input->post('struk_footer_2')),
+			'footer_3'          => trim($this->input->post('struk_footer_3')),
+			'show_kasir'        => $this->input->post('struk_show_kasir')        ? 1 : 0,
+			'show_harga_satuan' => $this->input->post('struk_show_harga_satuan') ? 1 : 0,
+			'auto_print'        => $this->input->post('struk_auto_print')        ? 1 : 0,
+		];
+
+		$this->db->where('Id', $this->session->userdata('user_perusahaan_id'))->update('utility', ['struk_setting' => json_encode($struk_setting)]);
+
+		echo json_encode(['status' => 'success', 'message' => 'Pengaturan struk cabang berhasil disimpan!']);
+	}
+
+	private function get_struk_setting($utility, $id_cabang)
+	{
+		$default = [
+			'lebar_kertas'      => '80',
+			'nama_toko'         => '',
+			'footer_1'          => 'Terima kasih atas kunjungan Anda',
+			'footer_2'          => 'Barang yang sudah dibeli',
+			'footer_3'          => 'tidak dapat dikembalikan',
+			'show_kasir'        => 1,
+			'show_harga_satuan' => 1,
+			'auto_print'        => 1,
+		];
+
+		// Layer 2: kolom lama sebagai fallback global
+		$global = [
+			'lebar_kertas'      => $utility['struk_lebar_kertas']      ?? $default['lebar_kertas'],
+			'nama_toko'         => $utility['struk_nama_toko']          ?? $default['nama_toko'],
+			'footer_1'          => $utility['struk_footer_1']           ?? $default['footer_1'],
+			'footer_2'          => $utility['struk_footer_2']           ?? $default['footer_2'],
+			'footer_3'          => $utility['struk_footer_3']           ?? $default['footer_3'],
+			'show_kasir'        => isset($utility['struk_show_kasir'])        ? (int)$utility['struk_show_kasir']        : $default['show_kasir'],
+			'show_harga_satuan' => isset($utility['struk_show_harga_satuan']) ? (int)$utility['struk_show_harga_satuan'] : $default['show_harga_satuan'],
+			'auto_print'        => isset($utility['struk_auto_print'])        ? (int)$utility['struk_auto_print']        : $default['auto_print'],
+		];
+
+		// Layer 1: JSON per-cabang
+		if (!empty($utility['struk_setting'])) {
+			$json = json_decode($utility['struk_setting'], true);
+			if (json_last_error() === JSON_ERROR_NONE && isset($json[$id_cabang])) {
+				$cabang_setting = $json[$id_cabang];
+				// Merge: per-cabang override global, global override default
+				return array_merge($global, $cabang_setting);
+			}
+		}
+
+		return $global;
 	}
 }
