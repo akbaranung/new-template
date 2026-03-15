@@ -106,7 +106,7 @@
 									<th>Customer</th>
 									<th width="6%" class="text-center">Item</th>
 									<th width="13%" class="text-right">Total</th>
-									<th width="11%" class="text-right">Laba</th>
+									<!-- <th width="11%" class="text-right">Laba</th> -->
 									<th width="9%" class="text-center">Metode</th>
 									<th width="7%" class="text-center">Status</th>
 									<th width="8%" class="text-center">Aksi</th>
@@ -132,9 +132,9 @@
 											<td class="text-right">
 												<strong>Rp <?= number_format($n->total_penjualan, 0, ',', '.') ?></strong>
 											</td>
-											<td class="text-right">
+											<!-- <td class="text-right">
 												<span class="text-primary">Rp <?= number_format($n->laba_kotor, 0, ',', '.') ?></span>
-											</td>
+											</td> -->
 											<td class="text-center">
 												<span class="badge <?= $badge_metode ?>"><?= strtoupper($n->metode_bayar) ?></span>
 											</td>

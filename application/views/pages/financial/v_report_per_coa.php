@@ -84,7 +84,7 @@
 											<?php if ($this->input->get('keyword') !== "") : ?>
 												<tr>
 													<th class="text-right" colspan="3" style="background-color: #e91e63; font-weight: bolder;">Total:</th>
-													<th class="text-right" style="background-color: #e91e63; font-weight: bolder;"><?= rupiah($sum_debit) ?></th>
+													<th class="text-right" style="background-color: #e91e63; font-weight: bolder;"><?= rupiah($sum_kredit) ?></th>
 													<th class="text-right" style="background-color: #e91e63; font-weight: bolder;"><?= rupiah($sum_kredit) ?></th>
 													<th colspan="3" style="background-color: #e91e63;"></th>
 												</tr>
