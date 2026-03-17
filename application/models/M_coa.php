@@ -808,9 +808,10 @@ class M_coa extends CI_Model
 		$this->cb->from('jurnal_neraca');
 		$this->cb->where('tanggal >=', "$periode-01");
 		$this->cb->where('tanggal <=', "$periode-31");
-		$this->cb->group_start();
+
 		$this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
 		$this->cb->where('id_company', $id_company);
+		$this->cb->group_start();
 		$this->cb->where('akun_debit', $no_coa);
 		$this->cb->or_where('akun_kredit', $no_coa);
 		$this->cb->group_end();
