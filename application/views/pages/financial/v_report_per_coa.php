@@ -43,8 +43,9 @@
 							<div class="col-md-3 col-xs-12">
 								<label class="form-label">No. CoA</label>
 								<select name="no_coa" id="no_coa" class="form-control select2">
-									<option value="">:: Pilih nomor coa</option>
-									<option <?= ($this->input->get('no_coa') == 'ALL') ? "selected" : "" ?> value="ALL">ALL COA</option>
+									<!-- <option value="">:: Pilih nomor coa</option> -->
+									<!-- <option <?= ($this->input->get('no_coa') == 'ALL') ? "selected" : "" ?> value="ALL">ALL COA</option> -->
+									<option <?= (empty($this->input->get('no_coa')) || $this->input->get('no_coa') == 'ALL') ? "selected" : "" ?> value="ALL">ALL COA</option>
 									<?php foreach ($coas as $c) : ?>
 										<option <?= ($this->input->get('no_coa') == $c->no_sbb) ? "selected" : "" ?> value="<?= $c->no_sbb ?>">
 											<?= $c->no_sbb ?> - <?= $c->nama_perkiraan ?>
