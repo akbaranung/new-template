@@ -4957,7 +4957,7 @@ class Financial extends CI_Controller
 
 		$bulan_saldo_awal = $tahun_before . '-' . $bulan_before;
 
-		$saldo_awal = $this->cb->where('periode', $bulan_saldo_awal)->get('saldo_awal')->row_array();
+		$saldo_awal = $this->cb->where('periode', $bulan_saldo_awal)->where('id_cabang', $this->session->userdata('kode_cabang'))->get('saldo_awal')->row_array();
 		$saldo_awal_data = $saldo_awal ? json_decode($saldo_awal['coa']) : [];
 
 		$saldo_awal_indexed = [];
