@@ -125,7 +125,7 @@ class M_nota extends CI_Model
 	// Get nota belum closing (untuk closing kasir)
 	public function get_belum_closing($tanggal)
 	{
-		$this->cb->where('DATE(tanggal)', $tanggal);
+		// $this->cb->where('DATE(tanggal)', $tanggal);
 		$this->cb->where('is_closed', 0);
 		$this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
 		$this->cb->where('id_company', $this->session->userdata('user_perusahaan_id'));
@@ -159,7 +159,7 @@ class M_nota extends CI_Model
             SUM(total_hpp) as total_hpp,
             SUM(laba_kotor) as laba_kotor
         ');
-		$this->cb->where('DATE(tanggal)', $tanggal);
+		// $this->cb->where('DATE(tanggal)', $tanggal);
 		$this->cb->where('is_closed', 0);
 		$this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
 		$this->cb->where('id_company', $this->session->userdata('user_perusahaan_id'));
