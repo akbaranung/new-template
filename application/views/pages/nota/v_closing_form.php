@@ -107,7 +107,9 @@
 										<th>Customer</th>
 										<th class="text-right">Total</th>
 										<th class="text-right">HPP</th>
-										<th class="text-right">Laba</th>
+										<?php if ($this->session->userdata('level_jabatan') == '99'): ?>
+											<th class="text-right">Laba</th>
+										<?php endif; ?>
 										<th class="text-center">Metode</th>
 									</tr>
 								</thead>
@@ -124,7 +126,10 @@
 											<td><?= $n->customer ?: '-' ?></td>
 											<td class="text-right">Rp <?= number_format($n->total_penjualan, 0, ',', '.') ?></td>
 											<td class="text-right">Rp <?= number_format($n->total_hpp, 0, ',', '.') ?></td>
+											<?php if ($this->session->userdata('level_jabatan') == '99'): ?>
 											<td class="text-right text-success">Rp <?= number_format($n->laba_kotor, 0, ',', '.') ?></td>
+											<?php
+											endif;	?>
 											<td class="text-center">
 												<span class="badge <?= $badge_metode ?>">
 													<?= strtoupper($n->metode_bayar) ?>
