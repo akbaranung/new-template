@@ -4,7 +4,7 @@
 		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
 			<div class="d-flex justify-content-between align-items-center mb-3">
 				<h1 class="page-title">Detail Closing Kasir</h1>
-				<a href="<?= base_url('closing_kasir') ?>" class="btn btn-secondary">
+				<a href="<?= base_url('closing_nota') ?>" class="btn btn-secondary">
 					<i class="fe fe-arrow-left"></i> Kembali
 				</a>
 			</div>
