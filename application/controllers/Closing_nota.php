@@ -125,9 +125,14 @@ class Closing_nota extends CI_Controller
 		$data['tanggal'] = $tanggal;
 		$data['total_transaksi'] = 0;
 		$data['total_penjualan_cash'] = 0;
+		$data['total_penjualan_qris'] = 0;
+		$data['total_penjualan_card'] = 0;
 		$data['total_penjualan_piutang'] = 0;
 		$data['total_penjualan'] = 0;
 		$data['total_hpp'] = 0;
+		$data['total_hpp_cash'] = 0;
+		$data['total_hpp_qris'] = 0;
+		$data['total_hpp_card'] = 0;
 		$data['laba_kotor'] = 0;
 
 		foreach ($summary as $s) {
@@ -138,8 +143,16 @@ class Closing_nota extends CI_Controller
 
 			if ($s->metode_bayar == 'cash') {
 				$data['total_penjualan_cash'] = $s->total_penjualan;
+				$data['total_hpp_cash'] += $s->total_hpp;
+			} else if ($s->metode_bayar == 'qris') {
+				$data['total_penjualan_qris'] = $s->total_penjualan;
+				$data['total_hpp_qris'] += $s->total_hpp;
+			} else if ($s->metode_bayar == 'card') {
+				$data['total_penjualan_card'] = $s->total_penjualan;
+				$data['total_hpp_card'] += $s->total_hpp;
 			} else {
 				$data['total_penjualan_piutang'] = $s->total_penjualan;
+				$data['total_hpp'] += $s->total_hpp;
 			}
 		}
 
@@ -175,6 +188,8 @@ class Closing_nota extends CI_Controller
 		try {
 			$tanggal        = $this->input->post('tanggal');
 			$coa_kas        = $this->input->post('coa_kas');        // COA Kas (Debit)
+			$coa_qris       = $this->input->post('coa_qris');        // COA Qris (Debit)
+			$coa_card        = $this->input->post('coa_card');        // COA Card (Debit)
 			$coa_pendapatan = $this->input->post('coa_pendapatan'); // COA Pendapatan (Kredit)
 
 			// Ambil semua nota belum closing
@@ -213,58 +228,131 @@ class Closing_nota extends CI_Controller
 			// JURNAL BARU: Split per COA Persediaan
 			// ============================================================
 
-			// Kumpulkan HPP per coa_persediaan dari semua nota detail
-			$hpp_per_coa = []; // ['coa_persediaan' => total_hpp]
-
+			$data_closing = [];
 			foreach ($nota_list as $nota) {
+				$jenis_bayar = $nota->metode_bayar;
 				$details = $this->M_nota->get_detail($nota->id);
 
 				foreach ($details as $detail) {
-					// Ambil coa_persediaan dari item
 					$item = $this->M_item_nota->get_by_id($detail->id_item);
 					$coa_item_persediaan = $item ? $item->coa_persediaan : null;
 
 					if (empty($coa_item_persediaan)) continue;
 
 					$subtotal_hpp = $detail->qty * $detail->harga_modal;
+					$laba_item = ($detail->qty * $detail->harga_jual) - $subtotal_hpp;
+					if ($subtotal_hpp <= 0) continue;
 
-					if ($subtotal_hpp <= 0) continue; // ← Skip kalau harga_modal 0 atau subtotal_hpp 0
-
-					if (!isset($hpp_per_coa[$coa_item_persediaan])) {
-						$hpp_per_coa[$coa_item_persediaan] = 0;
+					// Inisialisasi array bertingkat jika belum ada
+					if (!isset($data_closing[$jenis_bayar][$coa_item_persediaan])) {
+						$data_closing[$jenis_bayar][$coa_item_persediaan] = [
+							'hpp' => 0,
+							'laba' => 0
+						];
 					}
-					$hpp_per_coa[$coa_item_persediaan] += $subtotal_hpp;
+
+					$data_closing[$jenis_bayar][$coa_item_persediaan]['hpp'] += $subtotal_hpp;
+					$data_closing[$jenis_bayar][$coa_item_persediaan]['laba'] += $laba_item;
 				}
 			}
 
-			// Jurnal 1 per COA Persediaan:
-			// Debit Kas lawan Kredit Persediaan (sebesar HPP per COA)
-			foreach ($hpp_per_coa as $coa_persediaan => $nominal_hpp) {
-				if ($nominal_hpp <= 0) continue;
+			foreach ($data_closing as $jenis => $per_coa) {
 
-				$keterangan = 'Closing Kasir ' . $tanggal . ' - HPP [COA: ' . $coa_persediaan . ']';
-				$this->posting(
-					$coa_kas,           // Debit: Kas
-					$coa_persediaan,    // Kredit: Persediaan (per item)
-					$keterangan,
-					$nominal_hpp,
-					$tanggal,
-					'CLOSING-' . date('Ymd') . '-' . $id_closing
-				);
+				// Tentukan COA Kas berdasarkan jenis bayar (Mapping)
+				// Anda bisa menyesuaikan logic mapping ini sesuai database/kebutuhan
+				if ($jenis == 'cash') {
+					$coa_kas_tujuan = $coa_kas;
+				}
+
+				if ($jenis == 'card') {
+					$coa_kas_tujuan = $coa_card;
+				}
+
+				if ($jenis == 'qris') {
+					$coa_kas_tujuan = $coa_qris;
+				}
+
+				foreach ($per_coa as $coa_persediaan => $nilai) {
+					if ($nilai['hpp'] <= 0) continue;
+
+					$keterangan = "Closing Kasir $tanggal - HPP [COA: $coa_persediaan]";
+
+					$this->posting(
+						$coa_kas_tujuan,    // Debit: Kas sesuai jenis bayar
+						$coa_persediaan,    // Kredit: Persediaan
+						$keterangan,
+						$nilai['hpp'],
+						$tanggal,
+						'CLOSING-' . date('Ymd') . '-' . $id_closing
+					);
+
+					if ($nilai['laba'] > 0) {
+						$ket_laba = "Closing Kasir $tanggal - Pendapatan ($jenis) [Asal COA: $coa_pendapatan]";
+						$this->posting(
+							$coa_kas_tujuan,    // Debit: Kas (Sesuai Jenis)
+							$coa_pendapatan,    // Kredit: Pendapatan
+							$ket_laba,
+							$nilai['laba'],
+							$tanggal,
+							'CLOSING-' . date('Ymd') . '-' . $id_closing
+						);
+					}
+				}
 			}
 
-			// Jurnal 2: Debit Kas lawan Kredit Pendapatan (sebesar Laba)
-			if ($total_laba > 0) {
-				$keterangan_laba = 'Closing Kasir ' . $tanggal . ' - Pendapatan';
-				$this->posting(
-					$coa_kas,           // Debit: Kas
-					$coa_pendapatan,    // Kredit: Pendapatan
-					$keterangan_laba,
-					$total_laba,
-					$tanggal,
-					'CLOSING-' . date('Ymd') . '-' . $id_closing
-				);
-			}
+			// Kumpulkan HPP per coa_persediaan dari semua nota detail
+			// $hpp_per_coa = []; // ['coa_persediaan' => total_hpp]
+
+			// foreach ($nota_list as $nota) {
+			// 	$details = $this->M_nota->get_detail($nota->id);
+
+			// 	foreach ($details as $detail) {
+			// 		// Ambil coa_persediaan dari item
+			// 		$item = $this->M_item_nota->get_by_id($detail->id_item);
+			// 		$coa_item_persediaan = $item ? $item->coa_persediaan : null;
+
+			// 		if (empty($coa_item_persediaan)) continue;
+
+			// 		$subtotal_hpp = $detail->qty * $detail->harga_modal;
+
+			// 		if ($subtotal_hpp <= 0) continue; // ← Skip kalau harga_modal 0 atau subtotal_hpp 0
+
+			// 		if (!isset($hpp_per_coa[$coa_item_persediaan])) {
+			// 			$hpp_per_coa[$coa_item_persediaan] = 0;
+			// 		}
+			// 		$hpp_per_coa[$coa_item_persediaan] += $subtotal_hpp;
+			// 	}
+			// 	$hpp_per_coa['jenis'] = $nota->metode_bayar;
+			// }
+
+			// // Jurnal 1 per COA Persediaan:
+			// // Debit Kas lawan Kredit Persediaan (sebesar HPP per COA)
+			// foreach ($hpp_per_coa as $coa_persediaan => $nominal_hpp) {
+			// 	if ($nominal_hpp <= 0) continue;
+
+			// 	$keterangan = 'Closing Kasir ' . $tanggal . ' - HPP [COA: ' . $coa_persediaan . ']';
+			// 	$this->posting(
+			// 		$coa_kas,           // Debit: Kas
+			// 		$coa_persediaan,    // Kredit: Persediaan (per item)
+			// 		$keterangan,
+			// 		$nominal_hpp,
+			// 		$tanggal,
+			// 		'CLOSING-' . date('Ymd') . '-' . $id_closing
+			// 	);
+			// }
+
+			// // Jurnal 2: Debit Kas lawan Kredit Pendapatan (sebesar Laba)
+			// if ($total_laba > 0) {
+			// 	$keterangan_laba = 'Closing Kasir ' . $tanggal . ' - Pendapatan';
+			// 	$this->posting(
+			// 		$coa_kas,           // Debit: Kas
+			// 		$coa_pendapatan,    // Kredit: Pendapatan
+			// 		$keterangan_laba,
+			// 		$total_laba,
+			// 		$tanggal,
+			// 		'CLOSING-' . date('Ymd') . '-' . $id_closing
+			// 	);
+			// }
 
 			$this->db->trans_complete();
 

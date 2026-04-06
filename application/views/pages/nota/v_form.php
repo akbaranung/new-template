@@ -510,7 +510,7 @@
 					</td>
 					<td>
 						<input type="text" class="form-control form-control-sm text-right harga-jual format-rupiah"
-							name="harga_jual[]" placeholder="0" required>
+							name="harga_jual[]" placeholder="0" readonly required>
 					</td>
 					<td>
 						<input type="text" class="form-control form-control-sm text-right subtotal"

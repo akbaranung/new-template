@@ -71,19 +71,27 @@
 					</div>
 					<div class="card-body">
 						<div class="row">
-							<div class="col-md-6">
-								<div class="card border-success">
+							<div class="col-md-4">
+								<div class="card border-info">
 									<div class="card-body">
-										<h6 class="text-success"><i class="fe fe-dollar-sign"></i> Penjualan Cash</h6>
-										<h3 class="text-success">Rp <?= number_format($total_penjualan_cash, 0, ',', '.') ?></h3>
+										<h6 class="text-info"><i class="fe fe-dollar-sign"></i> Penjualan Cash</h6>
+										<h3 class="text-info">Rp <?= number_format($total_penjualan_cash, 0, ',', '.') ?></h3>
 									</div>
 								</div>
 							</div>
-							<div class="col-md-6">
-								<div class="card border-info">
+							<div class="col-md-4">
+								<div class="card border-success">
 									<div class="card-body">
-										<h6 class="text-info"><i class="fe fe-credit-card"></i> Penjualan Piutang</h6>
-										<h3 class="text-info">Rp <?= number_format($total_penjualan_piutang, 0, ',', '.') ?></h3>
+										<h6 class="text-success"><i class="fe fe-credit-card"></i> Penjualan Card</h6>
+										<h3 class="text-success">Rp <?= number_format($total_penjualan_card, 0, ',', '.') ?></h3>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-4">
+								<div class="card border-warning">
+									<div class="card-body">
+										<h6 class="text-warning"><i class="fe fe-credit-card"></i> Penjualan Qris</h6>
+										<h3 class="text-warning">Rp <?= number_format($total_penjualan_qris, 0, ',', '.') ?></h3>
 									</div>
 								</div>
 							</div>
@@ -127,7 +135,7 @@
 											<td class="text-right">Rp <?= number_format($n->total_penjualan, 0, ',', '.') ?></td>
 											<td class="text-right">Rp <?= number_format($n->total_hpp, 0, ',', '.') ?></td>
 											<?php if ($this->session->userdata('level_jabatan') == '99'): ?>
-											<td class="text-right text-success">Rp <?= number_format($n->laba_kotor, 0, ',', '.') ?></td>
+												<td class="text-right text-success">Rp <?= number_format($n->laba_kotor, 0, ',', '.') ?></td>
 											<?php
 											endif;	?>
 											<td class="text-center">
@@ -157,18 +165,50 @@
 								Pilih COA Kas dan COA Pendapatan. COA Persediaan otomatis mengikuti setting per barang.
 							</div>
 
-							<div class="form-group">
-								<label for="coa_kas">COA Kas (Debit) <span class="text-danger">*</span></label>
-								<select class="form-control" name="coa_kas" id="coa_kas" required>
-									<option value="">-- Pilih COA Kas --</option>
-									<?php foreach ($coa_list as $coa) : ?>
-										<option value="<?= $coa->no_sbb ?>"><?= $coa->no_sbb ?> - <?= $coa->nama_perkiraan ?></option>
-									<?php endforeach; ?>
-								</select>
-								<small class="text-muted">
-									Total kas masuk: Rp <?= number_format($total_penjualan, 0, ',', '.') ?>
-								</small>
-							</div>
+							<?php if ($total_penjualan_cash > 0) : ?>
+								<div class="form-group">
+									<label for="coa_kas">COA Kas (Debit) <span class="text-danger">*</span></label>
+									<select class="form-control" name="coa_kas" id="coa_kas" required>
+										<option value="">-- Pilih COA Kas --</option>
+										<?php foreach ($coa_list as $coa) : ?>
+											<option value="<?= $coa->no_sbb ?>"><?= $coa->no_sbb ?> - <?= $coa->nama_perkiraan ?></option>
+										<?php endforeach; ?>
+									</select>
+									<small class="text-muted">
+										Total kas masuk: Rp <?= number_format($total_penjualan_cash, 0, ',', '.') ?>
+									</small>
+								</div>
+							<?php endif ?>
+
+							<?php if ($total_penjualan_qris > 0) : ?>
+								<div class="form-group">
+									<label for="coa_qris">COA Qris (Debit) <span class="text-danger">*</span></label>
+									<select class="form-control" name="coa_qris" id="coa_qris" required>
+										<option value="">-- Pilih COA Qris --</option>
+										<?php foreach ($coa_list as $coa) : ?>
+											<option value="<?= $coa->no_sbb ?>"><?= $coa->no_sbb ?> - <?= $coa->nama_perkiraan ?></option>
+										<?php endforeach; ?>
+									</select>
+									<small class="text-muted">
+										Total qris masuk: Rp <?= number_format($total_penjualan_qris, 0, ',', '.') ?>
+									</small>
+								</div>
+							<?php endif ?>
+
+							<?php if ($total_penjualan_card > 0) : ?>
+								<div class="form-group">
+									<label for="coa_card">COA Card (Debit) <span class="text-danger">*</span></label>
+									<select class="form-control" name="coa_card" id="coa_card" required>
+										<option value="">-- Pilih COA Card --</option>
+										<?php foreach ($coa_list as $coa) : ?>
+											<option value="<?= $coa->no_sbb ?>"><?= $coa->no_sbb ?> - <?= $coa->nama_perkiraan ?></option>
+										<?php endforeach; ?>
+									</select>
+									<small class="text-muted">
+										Total card masuk : Rp <?= number_format($total_penjualan_card, 0, ',', '.') ?>
+									</small>
+								</div>
+							<?php endif ?>
 
 							<div class="form-group">
 								<label for="coa_pendapatan">COA Pendapatan (Kredit) <span class="text-danger">*</span></label>
@@ -233,6 +273,8 @@
 	$(document).ready(function() {
 
 		initCOASelect2('coa_kas', '-- Pilih COA Kas --');
+		initCOASelect2('coa_qris', '-- Pilih COA Qris --');
+		initCOASelect2('coa_card', '-- Pilih COA Card --');
 		initCOASelect2('coa_pendapatan', '-- Pilih COA Pendapatan --');
 
 		function initCOASelect2(id, placeholder) {
@@ -262,6 +304,8 @@
 			if (!validateCOA()) return;
 
 			const coa_kas = $('#coa_kas option:selected').text();
+			const coa_qris = $('#coa_qris option:selected').text();
+			const coa_card = $('#coa_card option:selected').text();
 			const coa_pendapatan = $('#coa_pendapatan option:selected').text();
 
 			const html = `
@@ -281,24 +325,68 @@
                         <tr class="table-info">
                             <td colspan="3"><strong>Jurnal HPP (per COA Persediaan item)</strong></td>
                         </tr>
+						<?php if ($total_penjualan_cash > 0) : ?>
                         <tr>
                             <td>${coa_kas}</td>
-                            <td class="text-right text-success"><strong>Rp <?= number_format($total_hpp, 0, ',', '.') ?></strong></td>
+                            <td class="text-right text-success"><strong>Rp <?= number_format($total_hpp_cash, 0, ',', '.') ?></strong></td>
                             <td class="text-right">-</td>
                         </tr>
                         <tr>
                             <td><em>COA Persediaan (otomatis per item)</em></td>
                             <td class="text-right">-</td>
-                            <td class="text-right text-danger"><strong>Rp <?= number_format($total_hpp, 0, ',', '.') ?></strong></td>
+                            <td class="text-right text-danger"><strong>Rp <?= number_format($total_hpp_cash, 0, ',', '.') ?></strong></td>
                         </tr>
+						<?php endif ?>
+						<?php if ($total_penjualan_qris > 0) : ?>
+                        <tr>
+                            <td>${coa_qris}</td>
+                            <td class="text-right text-success"><strong>Rp <?= number_format($total_hpp_qris, 0, ',', '.') ?></strong></td>
+                            <td class="text-right">-</td>
+                        </tr>
+                        <tr>
+                            <td><em>COA Persediaan (otomatis per item)</em></td>
+                            <td class="text-right">-</td>
+                            <td class="text-right text-danger"><strong>Rp <?= number_format($total_hpp_qris, 0, ',', '.') ?></strong></td>
+                        </tr>
+						<?php endif ?>
+						<?php if ($total_penjualan_card > 0) : ?>
+                        <tr>
+                            <td>${coa_card}</td>
+                            <td class="text-right text-success"><strong>Rp <?= number_format($total_hpp_card, 0, ',', '.') ?></strong></td>
+                            <td class="text-right">-</td>
+                        </tr>
+                        <tr>
+                            <td><em>COA Persediaan (otomatis per item)</em></td>
+                            <td class="text-right">-</td>
+                            <td class="text-right text-danger"><strong>Rp <?= number_format($total_hpp_card, 0, ',', '.') ?></strong></td>
+                        </tr>
+						<?php endif ?>
+
                         <tr class="table-success">
                             <td colspan="3"><strong>Jurnal Pendapatan</strong></td>
                         </tr>
+						<?php if ($total_penjualan_cash > 0) : ?>
                         <tr>
                             <td>${coa_kas}</td>
-                            <td class="text-right text-success"><strong>Rp <?= number_format($total_penjualan - $total_hpp, 0, ',', '.') ?></strong></td>
+                            <td class="text-right text-success"><strong>Rp <?= number_format($total_penjualan_cash - $total_hpp_cash, 0, ',', '.') ?></strong></td>
                             <td class="text-right">-</td>
                         </tr>
+						<?php endif ?>
+
+						<?php if ($total_penjualan_qris > 0) : ?>
+                        <tr>
+                            <td>${coa_qris}</td>
+                            <td class="text-right text-success"><strong>Rp <?= number_format($total_penjualan_qris - $total_hpp_qris, 0, ',', '.') ?></strong></td>
+                            <td class="text-right">-</td>
+                        </tr>
+						<?php endif ?>
+						<?php if ($total_penjualan_card > 0) : ?>
+                        <tr>
+                            <td>${coa_card}</td>
+                            <td class="text-right text-success"><strong>Rp <?= number_format($total_penjualan_card - $total_hpp_card, 0, ',', '.') ?></strong></td>
+                            <td class="text-right">-</td>
+                        </tr>
+						<?php endif ?>
                         <tr>
                             <td>${coa_pendapatan}</td>
                             <td class="text-right">-</td>
