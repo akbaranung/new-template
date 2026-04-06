@@ -320,7 +320,7 @@
 			<!-- Action Buttons -->
 			<div class="row mb-4">
 				<div class="col-md-12 text-right">
-					<a href="<?= base_url('closing_kasir') ?>" class="btn btn-secondary">
+					<a href="<?= base_url('closing_nota') ?>" class="btn btn-secondary">
 						<i class="fe fe-arrow-left"></i> Kembali ke Daftar
 					</a>
 					<button type="button" class="btn btn-primary" onclick="window.print()">

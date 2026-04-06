@@ -286,11 +286,30 @@
 		}
 
 		function validateCOA() {
-			if (!$('#coa_kas').val()) {
-				alert('Pilih COA Kas terlebih dahulu!');
-				$('#coa_kas').select2('open');
-				return false;
-			}
+			<?php if ($total_penjualan_cash > 0) : ?>
+				if (!$('#coa_kas').val()) {
+					alert('Pilih COA Kas terlebih dahulu!');
+					$('#coa_kas').select2('open');
+					return false;
+				}
+			<?php endif ?>
+
+			<?php if ($total_penjualan_qris > 0) : ?>
+				if (!$('#coa_qris').val()) {
+					alert('Pilih COA Qris terlebih dahulu!');
+					$('#coa_qris').select2('open');
+					return false;
+				}
+			<?php endif ?>
+
+			<?php if ($total_penjualan_card > 0) : ?>
+				if (!$('#coa_card').val()) {
+					alert('Pilih COA card terlebih dahulu!');
+					$('#coa_card').select2('open');
+					return false;
+				}
+			<?php endif ?>
+
 			if (!$('#coa_pendapatan').val()) {
 				alert('Pilih COA Pendapatan terlebih dahulu!');
 				$('#coa_pendapatan').select2('open');

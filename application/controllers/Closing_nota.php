@@ -19,6 +19,7 @@ class Closing_nota extends CI_Controller
 		}
 
 		$this->cb = $this->load->database('corebank', TRUE);
+		date_default_timezone_set('Asia/Jakarta');
 	}
 
 	// Halaman utama list closing
@@ -241,7 +242,8 @@ class Closing_nota extends CI_Controller
 
 					$subtotal_hpp = $detail->qty * $detail->harga_modal;
 					$laba_item = ($detail->qty * $detail->harga_jual) - $subtotal_hpp;
-					if ($subtotal_hpp <= 0) continue;
+
+					// if ($subtotal_hpp <= 0) continue;
 
 					// Inisialisasi array bertingkat jika belum ada
 					if (!isset($data_closing[$jenis_bayar][$coa_item_persediaan])) {
@@ -273,18 +275,19 @@ class Closing_nota extends CI_Controller
 				}
 
 				foreach ($per_coa as $coa_persediaan => $nilai) {
-					if ($nilai['hpp'] <= 0) continue;
+					if ($nilai['hpp'] > 0) {
+						$keterangan = "Closing Kasir $tanggal - HPP [COA: $coa_persediaan]";
 
-					$keterangan = "Closing Kasir $tanggal - HPP [COA: $coa_persediaan]";
+						$this->posting(
+							$coa_kas_tujuan,    // Debit: Kas sesuai jenis bayar
+							$coa_persediaan,    // Kredit: Persediaan
+							$keterangan,
+							$nilai['hpp'],
+							$tanggal,
+							'CLOSING-' . date('Ymd') . '-' . $id_closing
+						);
+					}
 
-					$this->posting(
-						$coa_kas_tujuan,    // Debit: Kas sesuai jenis bayar
-						$coa_persediaan,    // Kredit: Persediaan
-						$keterangan,
-						$nilai['hpp'],
-						$tanggal,
-						'CLOSING-' . date('Ymd') . '-' . $id_closing
-					);
 
 					if ($nilai['laba'] > 0) {
 						$ket_laba = "Closing Kasir $tanggal - Pendapatan ($jenis) [Asal COA: $coa_pendapatan]";
