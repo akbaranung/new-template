@@ -707,7 +707,7 @@ Mohon untuk memproses pembayaran segera.";
                     $kuota_invoice = 5000;
                     $kuota_memo = 1000;
                     $kuota_pengajuan_biaya = 5000;
-                    $kuota_user = 30;
+                    $kuota_user = 25;
                     $kuota_cabang = 5;
                 } else if ($confirmation_detail->paket == "Raja Sultan") {
                     $kuota_invoice = 10000;
