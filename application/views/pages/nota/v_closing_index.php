@@ -84,9 +84,9 @@
 									<th width="12%">Tanggal</th>
 									<th width="10%" class="text-center">Total Nota</th>
 									<th width="15%" class="text-right">Penjualan Cash</th>
-									<th width="15%" class="text-right">Penjualan Piutang</th>
+									<th width="15%" class="text-right">Penjualan Qris</th>
+									<th width="15%" class="text-right">Penjualan Card</th>
 									<th width="13%" class="text-right">Total Penjualan</th>
-									<th width="13%" class="text-right">Laba Kotor</th>
 									<th width="10%" class="text-center">Aksi</th>
 								</tr>
 							</thead>
@@ -95,6 +95,24 @@
 								if (!empty($closing)) {
 									$no = (isset($_GET['per_page']) ? $_GET['per_page'] : 0) + 1;
 									foreach ($closing as $c) :
+										$notas = $this->cb->select('total_penjualan,metode_bayar')->from('nota')->where('id_closing', $c->id)->get()->result();
+										$nota_cash = 0;
+										$nota_qris = 0;
+										$nota_card = 0;
+
+										foreach ($notas as $nota) {
+											if ($nota->metode_bayar == 'cash') {
+												$nota_cash += $nota->total_penjualan;
+											}
+
+											if ($nota->metode_bayar == 'qris') {
+												$nota_qris += $nota->total_penjualan;
+											}
+
+											if ($nota->metode_bayar == 'card') {
+												$nota_card += $nota->total_penjualan;
+											}
+										}
 								?>
 										<tr>
 											<td class="text-center"><?= $no++ ?></td>
@@ -111,18 +129,16 @@
 												</span>
 											</td>
 											<td class="text-right">
-												Rp <?= number_format($c->total_penjualan_cash, 0, ',', '.') ?>
+												Rp <?= number_format($nota_cash, 0, ',', '.') ?>
 											</td>
 											<td class="text-right">
-												Rp <?= number_format($c->total_penjualan_piutang, 0, ',', '.') ?>
+												Rp <?= number_format($nota_qris, 0, ',', '.') ?>
+											</td>
+											<td class="text-right">
+												Rp <?= number_format($nota_card, 0, ',', '.') ?>
 											</td>
 											<td class="text-right">
 												<strong>Rp <?= number_format($c->total_penjualan, 0, ',', '.') ?></strong>
-											</td>
-											<td class="text-right">
-												<span class="text-success">
-													<strong>Rp <?= number_format($c->laba_kotor, 0, ',', '.') ?></strong>
-												</span>
 											</td>
 											<td class="text-center">
 												<a href="<?= base_url('closing_nota/detail/' . $c->id) ?>" class="btn btn-sm btn-info" title="Detail">

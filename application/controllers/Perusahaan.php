@@ -266,8 +266,6 @@ class Perusahaan extends CI_Controller
   }
   public function edit_user($id)
   {
-
-
     $this->cb = $this->load->database('corebank', TRUE);
     $this->db->from('users')->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
     $this->db->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));

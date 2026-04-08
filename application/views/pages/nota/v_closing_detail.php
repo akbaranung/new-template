@@ -48,22 +48,51 @@
 							</table>
 						</div>
 						<div class="col-md-6">
+							<?php
+							$notas = $this->cb->select('total_penjualan,metode_bayar')->from('nota')->where('id_closing', $closing->id)->get()->result();
+							$nota_cash = 0;
+							$nota_qris = 0;
+							$nota_card = 0;
+
+							foreach ($notas as $nota) {
+								if ($nota->metode_bayar == 'cash') {
+									$nota_cash += $nota->total_penjualan;
+								}
+
+								if ($nota->metode_bayar == 'qris') {
+									$nota_qris += $nota->total_penjualan;
+								}
+
+								if ($nota->metode_bayar == 'card') {
+									$nota_card += $nota->total_penjualan;
+								}
+							}
+							?>
 							<table class="table table-borderless table-sm">
 								<tr>
 									<td width="40%"><strong>Penjualan Cash</strong></td>
 									<td width="5%">:</td>
 									<td>
 										<h6 class="mb-0 text-success">
-											Rp <?= number_format($closing->total_penjualan_cash, 0, ',', '.') ?>
+											Rp <?= number_format($nota_cash, 0, ',', '.') ?>
 										</h6>
 									</td>
 								</tr>
 								<tr>
-									<td><strong>Penjualan Piutang</strong></td>
-									<td>:</td>
+									<td width="40%"><strong>Penjualan Qris</strong></td>
+									<td width="5%">:</td>
 									<td>
-										<h6 class="mb-0 text-info">
-											Rp <?= number_format($closing->total_penjualan_piutang, 0, ',', '.') ?>
+										<h6 class="mb-0 text-success">
+											Rp <?= number_format($nota_qris, 0, ',', '.') ?>
+										</h6>
+									</td>
+								</tr>
+								<tr>
+									<td width="40%"><strong>Penjualan Card</strong></td>
+									<td width="5%">:</td>
+									<td>
+										<h6 class="mb-0 text-success">
+											Rp <?= number_format($nota_card, 0, ',', '.') ?>
 										</h6>
 									</td>
 								</tr>
@@ -71,9 +100,9 @@
 									<td><strong>Total Penjualan</strong></td>
 									<td>:</td>
 									<td>
-										<h5 class="mb-0 text-success">
+										<h6 class="mb-0 text-success">
 											Rp <?= number_format($closing->total_penjualan, 0, ',', '.') ?>
-										</h5>
+										</h6>
 									</td>
 								</tr>
 							</table>
@@ -99,36 +128,38 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-4">
-					<div class="card bg-warning text-white shadow">
-						<div class="card-body">
-							<div class="d-flex justify-content-between align-items-center">
-								<div>
-									<h6 class="mb-0 text-white">Total HPP</h6>
-									<h3 class="mb-0 text-white">
-										Rp <?= number_format($closing->total_hpp, 0, ',', '.') ?>
-									</h3>
+				<?php if ($is_admin_nota) : ?>
+					<div class="col-md-4">
+						<div class="card bg-warning text-white shadow">
+							<div class="card-body">
+								<div class="d-flex justify-content-between align-items-center">
+									<div>
+										<h6 class="mb-0 text-white">Total HPP</h6>
+										<h3 class="mb-0 text-white">
+											Rp <?= number_format($closing->total_hpp, 0, ',', '.') ?>
+										</h3>
+									</div>
+									<i class="fe fe-trending-down fe-3x"></i>
 								</div>
-								<i class="fe fe-trending-down fe-3x"></i>
 							</div>
 						</div>
 					</div>
-				</div>
-				<div class="col-md-4">
-					<div class="card bg-primary text-white shadow">
-						<div class="card-body">
-							<div class="d-flex justify-content-between align-items-center">
-								<div>
-									<h6 class="mb-0 text-white">Laba Kotor</h6>
-									<h3 class="mb-0 text-white">
-										Rp <?= number_format($closing->laba_kotor, 0, ',', '.') ?>
-									</h3>
+					<div class="col-md-4">
+						<div class="card bg-primary text-white shadow">
+							<div class="card-body">
+								<div class="d-flex justify-content-between align-items-center">
+									<div>
+										<h6 class="mb-0 text-white">Laba Kotor</h6>
+										<h3 class="mb-0 text-white">
+											Rp <?= number_format($closing->laba_kotor, 0, ',', '.') ?>
+										</h3>
+									</div>
+									<i class="fe fe-trending-up fe-3x"></i>
 								</div>
-								<i class="fe fe-trending-up fe-3x"></i>
 							</div>
 						</div>
 					</div>
-				</div>
+				<?php endif ?>
 			</div>
 
 			<!-- Daftar Nota yang Di-closing -->
@@ -147,8 +178,10 @@
 									<th>Customer</th>
 									<th width="10%" class="text-center">Item</th>
 									<th class="text-right">Total Penjualan</th>
-									<th class="text-right">HPP</th>
-									<th class="text-right">Laba</th>
+									<?php if ($is_admin_nota) : ?>
+										<th class="text-right">HPP</th>
+										<th class="text-right">Laba</th>
+									<?php endif ?>
 									<th class="text-center">Metode</th>
 									<th class="text-center">Aksi</th>
 								</tr>
@@ -157,8 +190,10 @@
 								<?php
 								if (!empty($nota_list)) {
 									$no = 1;
+
 									foreach ($nota_list as $n) :
-										$badge_metode = $n->metode_bayar == 'cash' ? 'badge-success' : 'badge-info';
+										$badge_metode = $n->metode_bayar == 'cash' ? 'badge-success' : ($n->metode_bayar == 'qris' ? 'badge-info' : 'badge-warning');
+
 								?>
 										<tr>
 											<td class="text-center"><?= $no++ ?></td>
@@ -171,12 +206,14 @@
 											<td class="text-right">
 												Rp <?= number_format($n->total_penjualan, 0, ',', '.') ?>
 											</td>
-											<td class="text-right">
-												Rp <?= number_format($n->total_hpp, 0, ',', '.') ?>
-											</td>
-											<td class="text-right text-success">
-												Rp <?= number_format($n->laba_kotor, 0, ',', '.') ?>
-											</td>
+											<?php if ($is_admin_nota) : ?>
+												<td class="text-right">
+													Rp <?= number_format($n->total_hpp, 0, ',', '.') ?>
+												</td>
+												<td class="text-right text-success">
+													Rp <?= number_format($n->laba_kotor, 0, ',', '.') ?>
+												</td>
+											<?php endif ?>
 											<td class="text-center">
 												<span class="badge <?= $badge_metode ?>">
 													<?= strtoupper($n->metode_bayar) ?>
@@ -207,18 +244,137 @@
 				</div>
 			</div>
 
-			<!-- Jurnal yang Tercatat -->
-			<div class="card shadow mb-4">
-				<div class="card-header bg-success text-white">
-					<h5 class="mb-0 text-white"><i class="fe fe-book"></i> Jurnal Akuntansi</h5>
-				</div>
-				<div class="card-body">
-					<div class="alert alert-success">
-						<i class="fe fe-check-circle"></i> <strong>Status:</strong> Jurnal sudah tercatat pada tanggal <?= date('d/m/Y', strtotime($closing->tanggal)) ?>
-					</div>
 
-					<?php if ($closing->total_penjualan_cash > 0) : ?>
-						<h6 class="mt-4"><strong>Jurnal 1: Penjualan Cash</strong></h6>
+			<?php if ($is_admin_nota) :
+				$cash = 0;
+				$qris = 0;
+				$card = 0;
+				$hpp_cash = 0;
+				$hpp_qris = 0;
+				$hpp_card = 0;
+
+				foreach ($nota_list as $n) {
+					if ($n->metode_bayar == 'cash') {
+						$cash += $n->total_penjualan;
+						$hpp_cash += $n->total_hpp;
+					}
+
+					if ($n->metode_bayar == 'qris') {
+						$qris += $n->total_penjualan;
+						$hpp_qris += $n->total_hpp;
+					}
+
+					if ($n->metode_bayar == 'card') {
+						$card += $n->total_penjualan;
+						$hpp_card += $n->total_hpp;
+					}
+				}
+
+			?>
+				<!-- Jurnal yang Tercatat -->
+				<div class="card shadow mb-4">
+					<div class="card-header bg-success text-white">
+						<h5 class="mb-0 text-white"><i class="fe fe-book"></i> Jurnal Akuntansi</h5>
+					</div>
+					<div class="card-body">
+						<div class="alert alert-success">
+							<i class="fe fe-check-circle"></i> <strong>Status:</strong> Jurnal sudah tercatat pada tanggal <?= date('d/m/Y', strtotime($closing->tanggal)) ?>
+						</div>
+
+						<?php if ($cash > 0) : ?>
+							<h6 class="mt-4"><strong>Penjualan Cash</strong></h6>
+							<div class="table-responsive">
+								<table class="table table-bordered table-sm">
+									<thead class="thead-light">
+										<tr>
+											<th width="50%">Akun</th>
+											<th width="25%" class="text-right">Debit</th>
+											<th width="25%" class="text-right">Kredit</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td><strong>Kas</strong></td>
+											<td class="text-right text-success">
+												<strong>Rp <?= number_format($hpp_cash, 0, ',', '.') ?></strong>
+											</td>
+											<td class="text-right">-</td>
+										</tr>
+										<tr>
+											<td><strong>Persediaan</strong></td>
+											<td class="text-right">-</td>
+											<td class="text-right text-danger">
+												<strong>Rp <?= number_format($hpp_cash, 0, ',', '.') ?></strong>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						<?php endif; ?>
+
+						<?php if ($qris >= 0) : ?>
+							<h6 class="mt-4"><strong>Penjualan Qris</strong></h6>
+							<div class="table-responsive">
+								<table class="table table-bordered table-sm">
+									<thead class="thead-light">
+										<tr>
+											<th width="50%">Akun</th>
+											<th width="25%" class="text-right">Debit</th>
+											<th width="25%" class="text-right">Kredit</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td><strong>Qris</strong></td>
+											<td class="text-right text-success">
+												<strong>Rp <?= number_format($hpp_qris, 0, ',', '.') ?></strong>
+											</td>
+											<td class="text-right">-</td>
+										</tr>
+										<tr>
+											<td><strong>Persediaan</strong></td>
+											<td class="text-right">-</td>
+											<td class="text-right text-danger">
+												<strong>Rp <?= number_format($hpp_qris, 0, ',', '.') ?></strong>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						<?php endif; ?>
+
+						<?php if ($card >= 0) : ?>
+							<h6 class="mt-4"><strong>Penjualan Card</strong></h6>
+							<div class="table-responsive">
+								<table class="table table-bordered table-sm">
+									<thead class="thead-light">
+										<tr>
+											<th width="50%">Akun</th>
+											<th width="25%" class="text-right">Debit</th>
+											<th width="25%" class="text-right">Kredit</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td><strong>Card</strong></td>
+											<td class="text-right text-success">
+												<strong>Rp <?= number_format($hpp_card, 0, ',', '.') ?></strong>
+											</td>
+											<td class="text-right">-</td>
+										</tr>
+										<tr>
+											<td><strong>Persediaan</strong></td>
+											<td class="text-right">-</td>
+											<td class="text-right text-danger">
+												<strong>Rp <?= number_format($hpp_card, 0, ',', '.') ?></strong>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						<?php endif; ?>
+
+						<h6 class="mt-4"><strong>Jurnal Pendapatan</strong></h6>
 						<div class="table-responsive">
 							<table class="table table-bordered table-sm">
 								<thead class="thead-light">
@@ -229,93 +385,55 @@
 									</tr>
 								</thead>
 								<tbody>
+									<?php if ($cash >= 0) : ?>
+										<tr>
+											<td><strong>Cash</strong></td>
+											<td class="text-right text-success">
+												<strong>Rp <?= number_format($cash - $hpp_cash, 0, ',', '.') ?></strong>
+											</td>
+											<td class="text-right">-</td>
+										</tr>
+									<?php endif ?>
+
+									<?php if ($qris >= 0) : ?>
+										<tr>
+											<td><strong>Qris</strong></td>
+											<td class="text-right text-success">
+												<strong>Rp <?= number_format($qris - $hpp_qris, 0, ',', '.') ?></strong>
+											</td>
+											<td class="text-right">-</td>
+										</tr>
+									<?php endif ?>
+
+									<?php if ($card >= 0) : ?>
+										<tr>
+											<td><strong>Card</strong></td>
+											<td class="text-right text-success">
+												<strong>Rp <?= number_format($card - $hpp_card, 0, ',', '.') ?></strong>
+											</td>
+											<td class="text-right">-</td>
+										</tr>
+									<?php endif ?>
 									<tr>
-										<td><strong>Kas</strong></td>
-										<td class="text-right text-success">
-											<strong>Rp <?= number_format($closing->total_penjualan_cash, 0, ',', '.') ?></strong>
-										</td>
-										<td class="text-right">-</td>
-									</tr>
-									<tr>
-										<td><strong>Penjualan</strong></td>
+										<td><strong>Pendapatan</strong></td>
 										<td class="text-right">-</td>
 										<td class="text-right text-danger">
-											<strong>Rp <?= number_format($closing->total_penjualan_cash, 0, ',', '.') ?></strong>
+											<strong>Rp <?= number_format($closing->total_penjualan - $closing->total_hpp, 0, ',', '.') ?></strong>
 										</td>
 									</tr>
 								</tbody>
 							</table>
 						</div>
-					<?php endif; ?>
 
-					<?php if ($closing->total_penjualan_piutang > 0) : ?>
-						<h6 class="mt-4"><strong>Jurnal 2: Penjualan Piutang</strong></h6>
-						<div class="table-responsive">
-							<table class="table table-bordered table-sm">
-								<thead class="thead-light">
-									<tr>
-										<th width="50%">Akun</th>
-										<th width="25%" class="text-right">Debit</th>
-										<th width="25%" class="text-right">Kredit</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td><strong>Piutang</strong></td>
-										<td class="text-right text-success">
-											<strong>Rp <?= number_format($closing->total_penjualan_piutang, 0, ',', '.') ?></strong>
-										</td>
-										<td class="text-right">-</td>
-									</tr>
-									<tr>
-										<td><strong>Penjualan</strong></td>
-										<td class="text-right">-</td>
-										<td class="text-right text-danger">
-											<strong>Rp <?= number_format($closing->total_penjualan_piutang, 0, ',', '.') ?></strong>
-										</td>
-									</tr>
-								</tbody>
-							</table>
+						<div class="mt-3">
+							<p class="mb-1"><strong>Keterangan:</strong></p>
+							<p class="text-muted mb-0">
+								Closing Kasir - <?= date('d/m/Y', strtotime($closing->tanggal)) ?>
+							</p>
 						</div>
-					<?php endif; ?>
-
-					<h6 class="mt-4"><strong>Jurnal 3: HPP (Harga Pokok Penjualan)</strong></h6>
-					<div class="table-responsive">
-						<table class="table table-bordered table-sm">
-							<thead class="thead-light">
-								<tr>
-									<th width="50%">Akun</th>
-									<th width="25%" class="text-right">Debit</th>
-									<th width="25%" class="text-right">Kredit</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td><strong>HPP / Beban Pokok Penjualan</strong></td>
-									<td class="text-right text-success">
-										<strong>Rp <?= number_format($closing->total_hpp, 0, ',', '.') ?></strong>
-									</td>
-									<td class="text-right">-</td>
-								</tr>
-								<tr>
-									<td><strong>Persediaan Barang</strong></td>
-									<td class="text-right">-</td>
-									<td class="text-right text-danger">
-										<strong>Rp <?= number_format($closing->total_hpp, 0, ',', '.') ?></strong>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-
-					<div class="mt-3">
-						<p class="mb-1"><strong>Keterangan:</strong></p>
-						<p class="text-muted mb-0">
-							Closing Kasir - <?= date('d/m/Y', strtotime($closing->tanggal)) ?>
-						</p>
 					</div>
 				</div>
-			</div>
+			<?php endif ?>
 
 			<!-- Action Buttons -->
 			<div class="row mb-4">

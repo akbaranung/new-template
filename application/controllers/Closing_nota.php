@@ -243,8 +243,6 @@ class Closing_nota extends CI_Controller
 					$subtotal_hpp = $detail->qty * $detail->harga_modal;
 					$laba_item = ($detail->qty * $detail->harga_jual) - $subtotal_hpp;
 
-					// if ($subtotal_hpp <= 0) continue;
-
 					// Inisialisasi array bertingkat jika belum ada
 					if (!isset($data_closing[$jenis_bayar][$coa_item_persediaan])) {
 						$data_closing[$jenis_bayar][$coa_item_persediaan] = [
@@ -302,60 +300,6 @@ class Closing_nota extends CI_Controller
 					}
 				}
 			}
-
-			// Kumpulkan HPP per coa_persediaan dari semua nota detail
-			// $hpp_per_coa = []; // ['coa_persediaan' => total_hpp]
-
-			// foreach ($nota_list as $nota) {
-			// 	$details = $this->M_nota->get_detail($nota->id);
-
-			// 	foreach ($details as $detail) {
-			// 		// Ambil coa_persediaan dari item
-			// 		$item = $this->M_item_nota->get_by_id($detail->id_item);
-			// 		$coa_item_persediaan = $item ? $item->coa_persediaan : null;
-
-			// 		if (empty($coa_item_persediaan)) continue;
-
-			// 		$subtotal_hpp = $detail->qty * $detail->harga_modal;
-
-			// 		if ($subtotal_hpp <= 0) continue; // ← Skip kalau harga_modal 0 atau subtotal_hpp 0
-
-			// 		if (!isset($hpp_per_coa[$coa_item_persediaan])) {
-			// 			$hpp_per_coa[$coa_item_persediaan] = 0;
-			// 		}
-			// 		$hpp_per_coa[$coa_item_persediaan] += $subtotal_hpp;
-			// 	}
-			// 	$hpp_per_coa['jenis'] = $nota->metode_bayar;
-			// }
-
-			// // Jurnal 1 per COA Persediaan:
-			// // Debit Kas lawan Kredit Persediaan (sebesar HPP per COA)
-			// foreach ($hpp_per_coa as $coa_persediaan => $nominal_hpp) {
-			// 	if ($nominal_hpp <= 0) continue;
-
-			// 	$keterangan = 'Closing Kasir ' . $tanggal . ' - HPP [COA: ' . $coa_persediaan . ']';
-			// 	$this->posting(
-			// 		$coa_kas,           // Debit: Kas
-			// 		$coa_persediaan,    // Kredit: Persediaan (per item)
-			// 		$keterangan,
-			// 		$nominal_hpp,
-			// 		$tanggal,
-			// 		'CLOSING-' . date('Ymd') . '-' . $id_closing
-			// 	);
-			// }
-
-			// // Jurnal 2: Debit Kas lawan Kredit Pendapatan (sebesar Laba)
-			// if ($total_laba > 0) {
-			// 	$keterangan_laba = 'Closing Kasir ' . $tanggal . ' - Pendapatan';
-			// 	$this->posting(
-			// 		$coa_kas,           // Debit: Kas
-			// 		$coa_pendapatan,    // Kredit: Pendapatan
-			// 		$keterangan_laba,
-			// 		$total_laba,
-			// 		$tanggal,
-			// 		'CLOSING-' . date('Ymd') . '-' . $id_closing
-			// 	);
-			// }
 
 			$this->db->trans_complete();
 
@@ -450,6 +394,10 @@ class Closing_nota extends CI_Controller
 	// Detail closing
 	public function detail($id)
 	{
+		$has_access = $this->M_menu->has_access();
+		$access_menu_all = $this->M_menu->get_allowed_routes($this->session->userdata('nip'));
+
+		$data['is_admin_nota'] = in_array('nota/admin_nota', $access_menu_all);
 		$data['title'] = 'Detail Closing Kasir';
 		$data['closing'] = $this->M_closing_nota->get_by_id($id);
 

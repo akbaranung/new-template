@@ -75,18 +75,19 @@
 										</h5>
 									</td>
 								</tr>
-								<tr>
-									<td><strong>Total HPP</strong></td>
-									<td>:</td>
-									<td>
-										<h6 class="mb-0 text-pink">
-											Rp <?= number_format($nota->total_hpp, 0, ',', '.') ?>
-										</h6>
-									</td>
-								</tr>
 								<?php
-								if ($this->session->userdata('level_jabatan') == '99') {
+								if ($is_admin_nota) {
 								?>
+									<tr>
+										<td><strong>Total HPP</strong></td>
+										<td>:</td>
+										<td>
+											<h6 class="mb-0 text-pink">
+												Rp <?= number_format($nota->total_hpp, 0, ',', '.') ?>
+											</h6>
+										</td>
+									</tr>
+
 									<tr>
 										<td><strong>Laba Kotor</strong></td>
 										<td>:</td>
@@ -126,6 +127,60 @@
 				</div>
 			</div>
 
+			<!-- Summary Card -->
+			<div class="row mb-4">
+				<div class="col-md-4">
+					<div class="card bg-primary text-white shadow">
+						<div class="card-body">
+							<div class="d-flex justify-content-between align-items-center">
+								<div>
+									<h6 class="mb-0 text-white">Total Penjualan</h6>
+									<h3 class="mb-0 text-white">
+										Rp <?= number_format($nota->total_penjualan, 0, ',', '.') ?>
+									</h3>
+								</div>
+								<i class="fe fe-dollar-sign fe-3x"></i>
+							</div>
+						</div>
+					</div>
+				</div>
+				<?php
+				if ($is_admin_nota): ?>
+					<div class="col-md-4">
+						<div class="card bg-pink text-white shadow">
+							<div class="card-body">
+								<div class="d-flex justify-content-between align-items-center">
+									<div>
+										<h6 class="mb-0 text-white">Total HPP</h6>
+										<h3 class="mb-0 text-white">
+											Rp <?= number_format($nota->total_hpp, 0, ',', '.') ?>
+										</h3>
+									</div>
+									<i class="fe fe-trending-down fe-3x"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-md-4">
+						<div class="card bg-dark text-white shadow">
+							<div class="card-body">
+								<div class="d-flex justify-content-between align-items-center">
+									<div>
+										<h6 class="mb-0 text-white">Laba Kotor</h6>
+										<h3 class="mb-0 text-white">
+											Rp <?= number_format($nota->laba_kotor, 0, ',', '.') ?>
+										</h3>
+									</div>
+									<i class="fe fe-trending-up fe-3x"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+				<?php
+				endif; ?>
+			</div>
+
 			<!-- Detail Items -->
 			<div class="card shadow mb-4">
 				<div class="card-header bg-pink text-white">
@@ -142,9 +197,11 @@
 									<th width="8%" class="text-center">Satuan</th>
 									<th width="10%" class="text-right">Qty</th>
 									<th width="13%" class="text-right">Harga Jual</th>
-									<th width="13%" class="text-right">HPP</th>
+									<?php if ($is_admin_nota): ?>
+										<th width="13%" class="text-right">HPP</th>
+									<?php endif; ?>
 									<th width="15%" class="text-right">Subtotal</th>
-									<?php if ($this->session->userdata('level_jabatan') == '99'): ?>
+									<?php if ($is_admin_nota): ?>
 										<th width="12%" class="text-right">Laba</th>
 									<?php endif; ?>
 								</tr>
@@ -169,13 +226,15 @@
 											<td class="text-right">
 												Rp <?= number_format($d->harga_jual, 0, ',', '.') ?>
 											</td>
-											<td class="text-right">
-												Rp <?= number_format($d->harga_modal, 0, ',', '.') ?>
-											</td>
+											<?php if ($is_admin_nota): ?>
+												<td class="text-right">
+													Rp <?= number_format($d->harga_modal, 0, ',', '.') ?>
+												</td>
+											<?php endif; ?>
 											<td class="text-right">
 												<strong>Rp <?= number_format($d->subtotal_jual, 0, ',', '.') ?></strong>
 											</td>
-											<?php if ($this->session->userdata('level_jabatan') == '99'): ?>
+											<?php if ($is_admin_nota): ?>
 												<td class="text-right">
 													<span class="text-success">
 														Rp <?= number_format($laba_item, 0, ',', '.') ?>
@@ -191,13 +250,14 @@
 										<td class="text-right">
 											<strong><?= number_format($total_qty, 2, ',', '.') ?></strong>
 										</td>
-										<td colspan="2"></td>
+
+										<td colspan="<?= $is_admin_nota ? '2' : '' ?>"></td>
 										<td class="text-right">
 											<h5 class="mb-0 text-success">
 												<strong>Rp <?= number_format($nota->total_penjualan, 0, ',', '.') ?></strong>
 											</h5>
 										</td>
-										<?php if ($this->session->userdata('level_jabatan') == '99'): ?>
+										<?php if ($is_admin_nota): ?>
 											<td class="text-right">
 												<h5 class="mb-0 text-primary">
 													<strong>Rp <?= number_format($nota->laba_kotor, 0, ',', '.') ?></strong>
@@ -222,132 +282,6 @@
 					</div>
 				</div>
 			</div>
-
-			<!-- Summary Card -->
-			<div class="row mb-4">
-				<div class="col-md-4">
-					<div class="card bg-primary text-white shadow">
-						<div class="card-body">
-							<div class="d-flex justify-content-between align-items-center">
-								<div>
-									<h6 class="mb-0 text-white">Total Penjualan</h6>
-									<h3 class="mb-0 text-white">
-										Rp <?= number_format($nota->total_penjualan, 0, ',', '.') ?>
-									</h3>
-								</div>
-								<i class="fe fe-dollar-sign fe-3x"></i>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-4">
-					<div class="card bg-pink text-white shadow">
-						<div class="card-body">
-							<div class="d-flex justify-content-between align-items-center">
-								<div>
-									<h6 class="mb-0 text-white">Total HPP</h6>
-									<h3 class="mb-0 text-white">
-										Rp <?= number_format($nota->total_hpp, 0, ',', '.') ?>
-									</h3>
-								</div>
-								<i class="fe fe-trending-down fe-3x"></i>
-							</div>
-						</div>
-					</div>
-				</div>
-				<?php
-				if ($this->session->userdata('level_jabatan') == '99'): ?>
-					<div class="col-md-4">
-						<div class="card bg-dark text-white shadow">
-							<div class="card-body">
-								<div class="d-flex justify-content-between align-items-center">
-									<div>
-										<h6 class="mb-0 text-white">Laba Kotor</h6>
-										<h3 class="mb-0 text-white">
-											Rp <?= number_format($nota->laba_kotor, 0, ',', '.') ?>
-										</h3>
-									</div>
-									<i class="fe fe-trending-up fe-3x"></i>
-								</div>
-							</div>
-						</div>
-					</div>
-				<?php
-				endif; ?>
-			</div>
-
-			<!-- Info Jurnal -->
-			<?php if ($nota->is_closed == 0) : ?>
-				<div class="card shadow mb-4">
-					<div class="card-header bg-dark text-white">
-						<h5 class="mb-0 text-white"><i class="fe fe-alert-circle"></i> Status Jurnal</h5>
-					</div>
-					<div class="card-body">
-						<div class="alert alert-warning">
-							<i class="fe fe-info"></i> <strong>Informasi:</strong>
-							<p class="mb-0">
-								Nota ini belum di-closing. Jurnal akuntansi akan dibuat saat proses <strong>Closing Kasir</strong>.
-							</p>
-						</div>
-					</div>
-				</div>
-			<?php else : ?>
-				<div class="card shadow mb-4">
-					<div class="card-header bg-primary text-white">
-						<h5 class="mb-0 text-white"><i class="fe fe-book"></i> Jurnal Akuntansi</h5>
-					</div>
-					<div class="card-body">
-						<div class="alert alert-success">
-							<i class="fe fe-check-circle"></i> <strong>Status:</strong> Jurnal sudah tercatat saat closing kasir.
-						</div>
-						<p class="mb-2"><strong>Preview Jurnal:</strong></p>
-						<div class="table-responsive">
-							<table class="table table-bordered table-sm">
-								<thead class="thead-light">
-									<tr>
-										<th width="50%">Akun</th>
-										<th width="25%" class="text-right">Debit</th>
-										<th width="25%" class="text-right">Kredit</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td><strong><?= $nota->metode_bayar == 'cash' ? 'Kas' : 'Piutang' ?></strong></td>
-										<td class="text-right text-success">
-											<strong>Rp <?= number_format($nota->total_penjualan, 0, ',', '.') ?></strong>
-										</td>
-										<td class="text-right">-</td>
-									</tr>
-									<tr>
-										<td><strong>Penjualan</strong></td>
-										<td class="text-right">-</td>
-										<td class="text-right text-danger">
-											<strong>Rp <?= number_format($nota->total_penjualan, 0, ',', '.') ?></strong>
-										</td>
-									</tr>
-									<tr>
-										<td><strong>HPP (Harga Pokok Penjualan)</strong></td>
-										<td class="text-right text-success">
-											<strong>Rp <?= number_format($nota->total_hpp, 0, ',', '.') ?></strong>
-										</td>
-										<td class="text-right">-</td>
-									</tr>
-									<tr>
-										<td><strong>Persediaan Barang</strong></td>
-										<td class="text-right">-</td>
-										<td class="text-right text-danger">
-											<strong>Rp <?= number_format($nota->total_hpp, 0, ',', '.') ?></strong>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-						<small class="text-muted">
-							* Jurnal ini dibuat bersamaan dengan nota lain pada tanggal yang sama saat closing kasir.
-						</small>
-					</div>
-				</div>
-			<?php endif; ?>
 
 			<!-- Action Buttons -->
 			<div class="row mb-4">

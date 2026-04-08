@@ -349,6 +349,11 @@ class Nota extends CI_Controller
 	// Detail nota
 	public function detail($id)
 	{
+		$has_access = $this->M_menu->has_access();
+		$access_menu_all = $this->M_menu->get_allowed_routes($this->session->userdata('nip'));
+
+		$data['is_admin_nota'] = in_array('nota/admin_nota', $access_menu_all);
+
 		$data['title'] = 'Detail Nota Penjualan';
 		$data['nota'] = $this->M_nota->get_by_id($id);
 
