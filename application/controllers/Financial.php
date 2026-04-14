@@ -1765,7 +1765,8 @@ class Financial extends CI_Controller
 		}
 
 		if ($no_coa) {
-			$per_page   = ($no_coa == 'ALL') ? 10 : 20;
+			$per_page = $keyword ? 100 : 20;
+
 			$total_rows = $this->M_coa->countCoaReport($no_coa, $from, $to, $keyword);
 			$page       = max(1, (int)($this->input->get('page') ?? 1));
 			$offset     = ($page - 1) * $per_page;
