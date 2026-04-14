@@ -273,6 +273,9 @@
 				<button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">X</button>
 			</div>
 			<form id="updateCoaForm" action="<?= site_url('financial/update_report_per_coa') ?>" method="POST" enctype="multipart/form-data">
+				// Di view
+				<input type="hidden" name="redirect_to" value="<?= current_url() . '?' . http_build_query($_GET) ?>">
+				<input type="hidden" name="redirect_to" value="<?= current_url() . (count($_GET) ? '?' . http_build_query($_GET) : '') ?>">
 				<div class="modal-body">
 					<div class="row">
 						<input type="hidden" name="id" id="update_id">

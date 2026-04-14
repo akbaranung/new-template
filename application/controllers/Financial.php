@@ -6591,7 +6591,7 @@ class Financial extends CI_Controller
 					// $this->load->view('upload_form', $error);
 					$this->session->set_flashdata('message_error', "The file is not permitted (allowed types: " . implode(', ', $allowed_types) . ") or exceeds the maximum size ({$max_size_kb} KB).");
 
-					redirect('financial/coa_report');
+					$this->safe_redirect($this->input->post('redirect_to'));
 
 					return; // Stop execution
 				}
@@ -6609,7 +6609,7 @@ class Financial extends CI_Controller
 					$this->session->set_flashdata('message_error', 'Error reading file content during conversion.');
 
 					// $this->load->view('financial_entry');
-					redirect('financial/coa_report');
+					$this->safe_redirect($this->input->post('redirect_to'));
 
 					return;
 				}
@@ -6633,7 +6633,12 @@ class Financial extends CI_Controller
 		$this->cb->update('jurnal_neraca', $data_update, array('id' => $this->input->post('id')));
 		$this->session->set_flashdata('message_name', "Berhasil Update Arus Kas");
 
-		redirect('financial/coa_report');
+		$redirect_to = $this->input->post('redirect_to');
+		if ($redirect_to) {
+			$this->safe_redirect($redirect_to);
+		} else {
+			redirect('financial/coa_report');
+		}
 	}
 	public function hapus_arus_kas()
 	{
@@ -7019,5 +7024,17 @@ class Financial extends CI_Controller
 		$html = $this->load->view('pages/financial/v_project_print', $data, true);
 
 		$this->pdfgenerator->generate($html, $file_pdf, $paper, $orientation);
+	}
+
+	// Bikin helper function di controller atau MY_Controller
+	private function safe_redirect($url, $fallback = 'financial/coa_report')
+	{
+		// Pastikan URL masih di domain yang sama (relative URL atau same host)
+		$base = base_url();
+		if (empty($url) || strpos($url, $base) !== 0) {
+			redirect($fallback);
+		} else {
+			redirect($url);
+		}
 	}
 }
