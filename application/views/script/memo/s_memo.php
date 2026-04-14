@@ -261,6 +261,35 @@
         } else {
           // Premium user: editor remains fully functional (no readOnly, no event listeners)
         }
+
+        editor.on('paste', function(evt) {
+          let html = evt.data.dataValue;
+
+          // Cek apakah ada tabel dalam konten yang di-paste
+          if (html.indexOf('<table') !== -1) {
+            let div = document.createElement('div');
+            div.innerHTML = html;
+
+            let tables = div.getElementsByTagName('table');
+            for (let i = 0; i < tables.length; i++) {
+              // 1. Paksa border attribute ke 2
+              tables[i].setAttribute('border', '2');
+
+              // 2. Bersihkan inline style yang merusak dari Excel
+              tables[i].style.borderCollapse = 'collapse';
+              tables[i].style.border = '2px solid black';
+              tables[i].style.width = '100%';
+
+              // 3. Paksa semua cell (td/th) agar memiliki border yang terlihat
+              let cells = tables[i].querySelectorAll('td, th');
+              for (let j = 0; j < cells.length; j++) {
+                cells[j].style.border = '1px solid black'; // Border dalam biasanya cukup 1px agar rapi
+                cells[j].style.padding = '5px';
+              }
+            }
+            evt.data.dataValue = div.innerHTML;
+          }
+        });
       });
     }
 
