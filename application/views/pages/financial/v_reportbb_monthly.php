@@ -67,7 +67,7 @@
 
                                     if ($transaction) {
                                         $has_transaction = true; ?>
-                                        <thead>
+                                        <thead class="thead-dark">
                                             <tr class="headings">
                                                 <th style="width: 15%"><?= $lc->no_sbb ?></th>
                                                 <th style="width: 40%"><?= strtoupper($lc->nama_perkiraan) ?></th>

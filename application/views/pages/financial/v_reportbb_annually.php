@@ -1,7 +1,7 @@
 <div class="container-fluid">
 	<div class="row justify-content-center">
 		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
-			<h1 class="page-title">Buku besar per tahun <?= ($per_tahun) ?></h1>
+			<h3 class="page-title"><?= ($description) ?></h3>
 			<div class="card shadow mb-4">
 				<div class="card-body">
 					<div class="row mb-3">
