@@ -461,19 +461,6 @@ class Subscription extends CI_Controller
                 $tanggal_selesai_formatted = strtr($tanggal_selesai_english, $indonesian_months);
                 $formatted_nominal = number_format($confirmation_detail->nominal, 0, ',', '.');
 
-
-                //                 $msg = "Pembayaran telah dilakukan oleh user,
-                // Rincian:
-                // - Perusahaan: *$detail_perusahaan->nama_perusahaan* (ID: *$detail_perusahaan->Id*)
-                // - Nama Paket: *" . $confirmation_detail->paket . "*
-                // - Total Bulan: *" . $confirmation_detail->total_bulan . "*
-                // - Tanggal Mulai: *" . $tanggal_mulai_formatted . "*
-                // - Tanggal Selesai: *" . $tanggal_selesai_formatted . "*
-                // - Nominal: *Rp. " . $formatted_nominal . "*
-
-                // Mohon untuk memproses pembayaran segera.";
-
-
                 $msg = "Pembayaran telah dilakukan oleh user,
 Rincian:
 - Perusahaan: *$detail_perusahaan->nama_perusahaan* (ID: *$detail_perusahaan->Id*)
@@ -601,6 +588,15 @@ Mohon untuk memproses pembayaran segera.";
             $row[] = $formatted_start_date;
             $row[] = $formatted_end_date;
             $row[] = $formatted_nominal;
+
+            // $button_update = '<button class="btn btn-warning text-white" data-toggle="modal" data-id="' . $cat->id . '" data-target="#edit_modal" type="button" style="color: white;">Edit</button>';
+            $button_update = '<button class="btn btn-warning text-white" data-toggle="modal" data-id="' . $cat->id . '" data-target="#edit_modal" type="button" style="color: white;" onclick="onEdit(' . $cat->id . ')">Edit</button>';
+
+            if ($cat->status_bayar == 0 && $cat->approval == 0 && $cat->expired_status_bayar < $now) {
+                $button_aktifasi_expired = '<button class="btn btn-success text-white" type="button" style="color: white;" onclick="onAktifasiExpired(' . $cat->id . ')">Aktifasi/Expired</button>';
+            } else {
+                $button_aktifasi_expired = '';
+            }
             if ($cat->status_bayar == 1 && $cat->approval == 0) {
                 $button_konfirmasi = '
                       <button class="btn btn-primary text-white" data-toggle="modal" data-id="' . $cat->id . '" data-target="#approval_modal" type="button" style="color: white;">Approval</button>';
@@ -623,7 +619,7 @@ Mohon untuk memproses pembayaran segera.";
                 }
             }
             $row[] = $status;
-            $row[] = $button_konfirmasi;
+            $row[] = $button_update . ' ' . $button_aktifasi_expired . ' ' . $button_konfirmasi;
 
             $data[] = $row;
         }
@@ -635,6 +631,68 @@ Mohon untuk memproses pembayaran segera.";
             "data" => $data,
         );
         echo json_encode($output);
+    }
+
+    public function edit_premium($id)
+    {
+        $this->db->select('*');
+        $this->db->from('premium_confirmation');
+        $this->db->where('id', $id);
+        $data = $this->db->get()->row();
+        $response = [
+            'data' => $data // This will contain the COA object/array
+        ];
+        echo json_encode($response);
+    }
+
+    public function update_premium()
+    {
+        $id = $this->input->post('id_edit');
+        if (!$id) {
+            echo json_encode(['status' => 'error', 'message' => 'ID tidak ditemukan']);
+            return;
+        }
+
+        $tanggal_mulai = $this->input->post('tanggal_mulai');
+        if ($tanggal_mulai) {
+            $tanggal_mulai = str_replace('T', ' ', trim($tanggal_mulai));
+            if (strlen($tanggal_mulai) === 16) {
+                $tanggal_mulai .= ':00';
+            }
+        }
+
+        $updateData = [
+            'paket' => $this->input->post('paket'),
+            'total_bulan' => $this->input->post('total_bulan'),
+            'tanggal_mulai' => $tanggal_mulai,
+            'tanggal_selesai' => $this->input->post('tanggal_selesai'),
+        ];
+
+        $this->db->where('id', $id);
+        if ($this->db->update('premium_confirmation', $updateData)) {
+            echo json_encode(['status' => 'success', 'message' => 'Data berhasil diperbarui']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Gagal memperbarui data']);
+        }
+    }
+
+    public function reactivate_expired()
+    {
+        $id = $this->input->post('id');
+        if (!$id || !is_numeric($id)) {
+            echo json_encode(['status' => 'error', 'message' => 'ID tidak valid']);
+            return;
+        }
+
+        $expired_status_bayar = (new DateTime())->modify('+24 hours')->format('Y-m-d H:i:s');
+        $this->db->where('id', $id);
+        $this->db->update('premium_confirmation', ['expired_status_bayar' => $expired_status_bayar]);
+
+        if ($this->db->affected_rows() > 0) {
+            echo json_encode(['status' => 'success', 'message' => 'Expired status diperpanjang 24 jam dari sekarang']);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Gagal memperbarui expired status']);
+        }
     }
 
     public function update_confirmation_premium()

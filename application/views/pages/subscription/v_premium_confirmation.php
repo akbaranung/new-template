@@ -105,3 +105,46 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="edit_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Edit Premium</h4>
+      </div>
+      <div class="modal-body">
+        <form id="edit_form">
+          <div class="row">
+            <input type="hidden" name="id_edit" id="id_edit">
+            <div class="form-group ml-3">
+              <label class="form-label">Paket</label>
+              <select name="paket" id="upd_paket" class="form-control w-100 ">
+                <option selected disabled>:: Pilih Opsi </option>
+                <option value="Bangsawan Muda">Bangsawan Muda</option>
+                <option value="Kesatria Sejati">Kesatria Sejati</option>
+                <option value="Raja Sultan">Raja Sultan</option>
+              </select>
+            </div>
+            <div class="form-group ml-3">
+              <label class="form-label">Durasi (Bulan)</label>
+              <input type="number" name="total_bulan" id="upd_total_bulan" class="form-control">
+            </div>
+            <div class="form-group ml-3">
+              <label class="form-label">Tanggal Mulai</label>
+              <input type="datetime-local" name="tanggal_mulai" id="upd_tanggal_mulai" class="form-control">
+            </div>
+            <div class="form-group ml-3">
+              <label class="form-label">Tanggal Selesai</label>
+              <input type="date" name="tanggal_selesai" id="upd_tanggal_selesai" class="form-control">
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="confirm_update()">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
