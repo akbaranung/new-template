@@ -590,13 +590,15 @@ Mohon untuk memproses pembayaran segera.";
             $row[] = $formatted_nominal;
 
             // $button_update = '<button class="btn btn-warning text-white" data-toggle="modal" data-id="' . $cat->id . '" data-target="#edit_modal" type="button" style="color: white;">Edit</button>';
-            $button_update = '<button class="btn btn-warning text-white" data-toggle="modal" data-id="' . $cat->id . '" data-target="#edit_modal" type="button" style="color: white;" onclick="onEdit(' . $cat->id . ')">Edit</button>';
+            $button_update = '<button class="btn btn-success text-white btn-sm" data-toggle="modal" data-id="' . $cat->id . '" data-target="#edit_modal" type="button" style="color: white;" onclick="onEdit(' . $cat->id . ')"><i class="fe fe-edit"></i></button>';
 
             if ($cat->status_bayar == 0 && $cat->approval == 0 && $cat->expired_status_bayar < $now) {
-                $button_aktifasi_expired = '<button class="btn btn-success text-white" type="button" style="color: white;" onclick="onAktifasiExpired(' . $cat->id . ')">Aktifasi/Expired</button>';
+                $button_aktifasi_expired = '<button class="btn btn-primary text-white" type="button" style="color: white;" onclick="onAktifasiExpired(' . $cat->id . ')"><i class="fe fe-refresh-cw"></i></button>';
+                // $button_aktifasi_expired = '';
             } else {
                 $button_aktifasi_expired = '';
             }
+
             if ($cat->status_bayar == 1 && $cat->approval == 0) {
                 $button_konfirmasi = '
                       <button class="btn btn-primary text-white" data-toggle="modal" data-id="' . $cat->id . '" data-target="#approval_modal" type="button" style="color: white;">Approval</button>';
@@ -640,7 +642,8 @@ Mohon untuk memproses pembayaran segera.";
         $this->db->where('id', $id);
         $data = $this->db->get()->row();
         $response = [
-            'data' => $data // This will contain the COA object/array
+            'data' => $data, // This will contain the COA object/array
+            'now' => (new DateTime())->format('Y-m-d H:i:s')
         ];
         echo json_encode($response);
     }
