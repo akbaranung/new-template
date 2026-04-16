@@ -593,8 +593,8 @@ Mohon untuk memproses pembayaran segera.";
             $button_update = '<button class="btn btn-success text-white btn-sm" data-toggle="modal" data-id="' . $cat->id . '" data-target="#edit_modal" type="button" style="color: white;" onclick="onEdit(' . $cat->id . ')"><i class="fe fe-edit"></i></button>';
 
             if ($cat->status_bayar == 0 && $cat->approval == 0 && $cat->expired_status_bayar < $now) {
-                $button_aktifasi_expired = '<button class="btn btn-primary text-white" type="button" style="color: white;" onclick="onAktifasiExpired(' . $cat->id . ')"><i class="fe fe-refresh-cw"></i></button>';
-                // $button_aktifasi_expired = '';
+                // $button_aktifasi_expired = '<button class="btn btn-primary text-white" type="button" style="color: white;" onclick="onAktifasiExpired(' . $cat->id . ')"><i class="fe fe-refresh-cw"></i></button>';
+                $button_aktifasi_expired = '';
             } else {
                 $button_aktifasi_expired = '';
             }

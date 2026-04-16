@@ -306,6 +306,12 @@
                 $('#upd_total_bulan').val(data.total_bulan);
                 $('#upd_tanggal_mulai').val(formatDateTimeLocal(data.tanggal_mulai));
                 $('#upd_tanggal_selesai').val(data.tanggal_selesai ? data.tanggal_selesai.split(' ')[0] : '');
+                if (data.expired_status_bayar < response.now) {
+                    $("#btn-reaktif").removeClass('d-none').click(function() {
+                        onAktifasiExpired(data.id);
+                    });
+                }
+
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 alert('Error get data from ajax');

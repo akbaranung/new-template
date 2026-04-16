@@ -151,8 +151,8 @@
         </form>
       </div>
       <div class="modal-footer">
+        <button type="button" class="btn btn-success text-white d-none" id="btn-reaktif">Re-Aktif</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <!-- <button type="button" class="btn btn-success" onclick="confirm_update()">Save</button> -->
         <button type="button" class="btn btn-primary" onclick="confirm_update()">Save</button>
       </div>
     </div>
