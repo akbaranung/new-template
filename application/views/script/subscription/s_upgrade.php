@@ -316,7 +316,7 @@
                             showConfirmButton: false,
                             title: 'Berhasil!',
                             text: data.message,
-                            timer: 1500
+                            timer: 5000
                         }).then(() => {
                             setTimeout(() => {
 

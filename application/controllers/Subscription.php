@@ -204,7 +204,7 @@ class Subscription extends CI_Controller
 
             echo json_encode([
                 'status'  => 'success',
-                'message' => 'Anda sudah melakukan Proses Pembayaran dengan Paket :' . $confirmation_detail->paket,
+                'message' => 'Anda sudah pernah melakukan Proses Pembayaran dengan Paket :' . $confirmation_detail->paket,
                 'id_pembayaran' => $confirmation_detail->id,
                 'confirmation_detail' => $confirmation_detail,
                 'whatsapp_send' => $whatsapp_send,
