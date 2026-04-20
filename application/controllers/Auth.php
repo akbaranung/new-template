@@ -675,6 +675,7 @@ class Auth extends CI_Controller
     $data_user = $this->db->get()->row();
     if ($data_user->token == null || $data_user->token == '') {
       $this->session->set_flashdata('success', 'Anda sudah verifikasi.');
+      $this->session->unset_userdata('is_token');
       redirect('auth/register_perusahaan');
     } else if (!$this->session->userdata('is_token')) {
       redirect('auth/register_perusahaan');
