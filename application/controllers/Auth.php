@@ -670,13 +670,20 @@ class Auth extends CI_Controller
 
   public function verifikasi_akun()
   {
+    $this->db->from('users');
+    $this->db->where('id', $this->session->userdata('user_user_id'));
+    $data_user = $this->db->get()->row();
+    if ($data_user->token == null || $data_user->token == '') {
+      $this->session->set_flashdata('success', 'Anda sudah verifikasi.');
+      redirect('auth/register_perusahaan');
+    } else if (!$this->session->userdata('is_token')) {
+      redirect('auth/register_perusahaan');
+    }
     // if (!$this->session->userdata('isLogin')) {
     //   redirect('auth');
     // }
 
-    if (!$this->session->userdata('is_token')) {
-      redirect('auth/register_perusahaan');
-    }
+
     $data['title'] = 'Verifikasi Akun';
     $data['utility'] = $this->db->get('utility')->row_array();
     $data['pages'] = 'pages/auth/v_verifikasi_akun';
@@ -735,6 +742,11 @@ class Auth extends CI_Controller
     $this->db->from('users');
     $this->db->where('id', $this->session->userdata('user_user_id'));
     $data_user = $this->db->get()->row();
+
+    if ($data_user->token == null || $data_user->token == '') {
+      $this->session->set_flashdata('success', 'Anda sudah verifikasi.');
+      redirect('auth/register_perusahaan');
+    }
 
     if ($data_user->token == $this->input->post('token')) {
       $edit_data = [
