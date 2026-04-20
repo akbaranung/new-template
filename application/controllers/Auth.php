@@ -244,7 +244,10 @@ class Auth extends CI_Controller
 
       $id_string = implode(',', $ids);
       $this->load->helper('numeric_token'); // Load helper
-      $token = generate_numeric_token(5);
+      $token = null;
+      do {
+        $token = generate_numeric_token(5);
+      } while (empty($token) || $token === '');
 
 
       $data = array(
@@ -683,15 +686,28 @@ class Auth extends CI_Controller
   public function kirim_ulang_token()
   {
 
+    // $user = $this->db->from('users')->where('id', $this->session->userdata('user_user_id'))->get()->row();
+    // $msg = "Kode verifikasi Akun *Bariskode* Anda adalah *$user->token*, Gunakan Token Saat Login untuk pertama kali. Jangan bagikan kode ini kepada siapa pun.";
+
+    $this->load->helper('numeric_token'); // Load helper
+    $token = null;
+    do {
+      $token = generate_numeric_token(5);
+    } while (empty($token) || $token === '');
+
     $user = $this->db->from('users')->where('id', $this->session->userdata('user_user_id'))->get()->row();
-    $msg = "Kode verifikasi Akun *Bariskode* Anda adalah *$user->token*, Gunakan Token Saat Login untuk pertama kali. Jangan bagikan kode ini kepada siapa pun.";
+
+    // Update the database with the new token
+    $this->db->where('id', $this->session->userdata('user_user_id'));
+    $this->db->update('users', ['token' => $token]);
+
+    $msg = "Kode verifikasi Akun *Bariskode* Anda adalah *$token*, Gunakan Token Saat Login untuk pertama kali. Jangan bagikan kode ini kepada siapa pun.";
 
     if ($this->api_whatsapp->wa_notif($msg, $user->phone)) {
       echo json_encode(['success' => true, 'message' => 'Berhasil Mengirim Pesan ke nomor ' . $this->censor_phone_number($user->phone) . '.']);
     } else {
       echo json_encode(['success' => false, 'message' => 'Gagal Mengirip Pesan, silahkan coba lagi.']);
     }
-    // echo json_encode(['success' => false, 'message' => 'Gagal Mengirip Pesan, silahkan coba lagi.']);
   }
 
   private function censor_phone_number($phone)
