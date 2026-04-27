@@ -758,32 +758,47 @@ Mohon untuk memproses pembayaran segera.";
             if ($approval == 1) {
                 // $confirmation_detail = $this->db->from('premium_confirmation')->where('Id', $id)->get()->row();
                 // $perusahaan_detail = $this->db->from('premium_confirmation')->where('Id', $id)->get()->row();
-                if ($confirmation_detail->paket == "Bangsawan Muda") {
+                if ($confirmation_detail->paket == "Saudagar Kaya") {
+                    $nama_paket = "Saudagar Kaya";
+                    $kuota_invoice = 1000;
+                    $kuota_memo = 100;
+                    $kuota_pengajuan_biaya = 1000;
+                    $kuota_user = 5;
+                    $kuota_cabang = 1;
+                    $is_premium = 0;
+                } else if ($confirmation_detail->paket == "Bangsawan Muda") {
+                    $nama_paket = "Bangsawan Muda";
                     $kuota_invoice = 3000;
                     $kuota_memo = 500;
                     $kuota_pengajuan_biaya = 3000;
                     $kuota_user = 10;
                     $kuota_cabang = 2;
+                    $is_premium = 1;
                 } else if ($confirmation_detail->paket == "Kesatria Sejati") {
+                    $nama_paket = "Kesatria Sejati";
                     $kuota_invoice = 5000;
                     $kuota_memo = 1000;
                     $kuota_pengajuan_biaya = 5000;
                     $kuota_user = 25;
                     $kuota_cabang = 5;
+                    $is_premium = 1;
                 } else if ($confirmation_detail->paket == "Raja Sultan") {
+                    $nama_paket = "Raja Sultan";
                     $kuota_invoice = 10000;
                     $kuota_memo = 3000;
                     $kuota_pengajuan_biaya = 10000;
                     $kuota_user = 50;
                     $kuota_cabang = 10;
+                    $is_premium = 1;
                 }
                 $edit_data_perusahaan = [
+                    "nama_paket" => $nama_paket,
                     "kuota_invoice" => $kuota_invoice,
                     "kuota_memo" => $kuota_memo,
                     "kuota_pengajuan_biaya" => $kuota_pengajuan_biaya,
                     "kuota_user" => $kuota_user,
                     "kuota_cabang" => $kuota_cabang,
-                    "is_premium" => 1,
+                    "is_premium" => $is_premium,
                     "start_day" => $start_date,
                     "expired_day" => $expired_date,
                     // "start_date" => $confirmation_detail->tanggal_selesai,

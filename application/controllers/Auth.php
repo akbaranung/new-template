@@ -141,6 +141,15 @@ class Auth extends CI_Controller
           $this->session->set_userdata('nama_akronim', $setting->nama_akronim);
           $is_premium_boolean = (bool)$setting->is_premium;
           $this->session->set_userdata('is_premium', $is_premium_boolean);
+
+          if ($setting->is_premium == 0 && $setting->nama_paket == "Saudagar Kaya") {
+            $this->session->set_userdata('is_penjualan', true);
+          } else if ($setting->is_premium == 1) {
+            $this->session->set_userdata('is_penjualan', true);
+          } else {
+            $this->session->set_userdata('is_penjualan', false);
+          }
+
           $response = [
             'success' => TRUE,
             'msg' => 'Berhasil Masuk!',

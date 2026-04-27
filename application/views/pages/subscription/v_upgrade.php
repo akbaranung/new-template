@@ -295,6 +295,7 @@
 
         <!-- </div> -->
         <div class="row pt-2 justify-content-center">
+
             <div class="col-lg-3 nopadding">
                 <div class="pricing-box mt-4 noborderradius-right" id="pricing-1">
                     <i class="mdi mdi-account h1"></i>
@@ -315,6 +316,8 @@
                             Jurnal Arus Kas</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
                             Manajemen Penugasan (Tello)</p>
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
+                            Invoice Penjualan</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>3000</b>
                             Invoice / Bulan</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>500</b>
@@ -332,13 +335,14 @@
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> Fitur
                             <b>Premium</b>
                         </p>
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Penjualan</b></p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Digital Memo</b></p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Cuti Online</b></p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Absen Online (by Face Recognition & Geo-Location)</b></p>
                         <!-- <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Surat-menyurat</b></p> -->
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Manajemen Aset & Otomasi Penyusutan</b></p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Notifikasi Whatsapp</b></p>
-                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Fitur-fitur Premium Lainnya</b></p>
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Fitur-fitur Premium Paket Sebelumnya</b></p>
                     </div>
 
 
@@ -371,6 +375,8 @@
                             Jurnal Arus Kas</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
                             Manajemen Penugasan (Tello)</p>
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
+                            Invoice Penjualan</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>5000</b>
                             Invoice / Bulan</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>1000</b>
@@ -384,13 +390,14 @@
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> Fitur
                             <b>Premium</b>
                         </p>
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Penjualan</b></p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Digital Memo</b></p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Cuti Online</b></p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Absen Online (by Face Recognition & Geo-Location)</b></p>
                         <!-- <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Surat-menyurat</b></p> -->
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Manajemen Aset & Otomasi Penyusutan</b></p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Notifikasi Whatsapp</b></p>
-                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Fitur-fitur Premium Lainnya</b></p>
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Fitur-fitur Premium Paket Sebelumnya</b></p>
                     </div>
 
 
@@ -422,6 +429,8 @@
                             Jurnal Arus Kas</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
                             Manajemen Penugasan (Tello)</p>
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
+                            Invoice Penjualan</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>10000</b>
                             Invoice / Bulan</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>3000</b>
@@ -435,13 +444,14 @@
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> Fitur
                             <b>Premium</b>
                         </p>
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Penjualan</b></p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Digital Memo</b></p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Cuti Online</b></p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Absen Online (by Face Recognition & Geo-Location)</b></p>
                         <!-- <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Surat-menyurat</b></p> -->
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Manajemen Aset & Otomasi Penyusutan</b></p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Notifikasi Whatsapp</b></p>
-                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Fitur-fitur Premium Lainnya</b></p>
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Fitur-fitur Premium Paket Sebelumnya</b></p>
                     </div>
 
                     <div class="mt-4 pt-3">
@@ -476,6 +486,8 @@
                             Jurnal Arus Kas</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
                             Manajemen Penugasan (Tello)</p>
+                            <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
+                            Invoice Penjualan</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>25000</b>
                             Invoice / Bulan</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>10000</b>
@@ -493,7 +505,7 @@
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Absen Online (by Face Recognition & Geo-Location)</b></p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Surat-menyurat</b></p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Manajemen Aset & Otomasi Penyusutan</b></p>
-                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Fitur-fitur Premium Lainnya</b></p> -->
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Fitur-fitur Premium Paket Sebelumnya</b></p> -->
                     </div>
 
 
@@ -505,6 +517,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="col-lg-3 nopadding mt-5">
                 <div class="pricing-box mt-4">
                     <i class="mdi mdi-account h1"></i>
@@ -527,6 +540,8 @@
                             Jurnal Arus Kas</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
                             Manajemen Penugasan (Tello)</p>
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
+                            Invoice Penjualan</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>1000</b>
                             Invoice / Bulan</p>
                         <!-- <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>1000</b>
@@ -540,6 +555,7 @@
                         <p class="mb-2"><i class="fa-solid fa-xmark fa-lg text-danger f-18 mr-2"></i>Fitur
                             <b>Premium</b>
                         </p>
+                        <p class="mb-2"><i class="fa-solid fa-xmark fa-lg text-danger f-18 mr-2" style="color: #3ad29f;"></i> <b>Penjualan</b></p>
                         <p class="mb-2"><i class="fa-solid fa-xmark fa-lg text-danger f-18 mr-2" style="color: #3ad29f;"></i> <b>Digital Memo</b></p>
                         <p class="mb-2"><i class="fa-solid fa-xmark fa-lg text-danger f-18 mr-2" style="color: #3ad29f;"></i> <b>Cuti Online</b></p>
                         <p class="mb-2"><i class="fa-solid fa-xmark fa-lg text-danger f-18 mr-2" style="color: #3ad29f;"></i> <b>Absen Online (by Face Recognition & Geo-Location)</b></p>
@@ -558,6 +574,67 @@
                     <div class="mt-4 pt-3">
                         <a href="" class="btn btn-primary btn-rounded pilih-donasi-btn">Donasi</a>
                         <!-- <a href="" class="btn btn-primary btn-rounded">Ambil Takhta Ini</a> -->
+                        <!-- <a href="" class="btn btn-primary btn-rounded">Dapatkan Mahkota</a> -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 nopadding mt-5">
+                <div class="pricing-box mt-4">
+                    <i class="mdi mdi-account h1"></i>
+                    <!-- <h4 class="f-20">Paket Kesatria Perintis (Dasar Gratis)</h4> -->
+                    <h4 class="f-20">Saudagar Kaya</h4>
+
+
+                    <!-- <p class="mt-4 pt-2 text-muted">Semper urna veal tempus pharetra elit habisse platea dictumst. </p> -->
+                    <!-- <p class="mt-4 pt-2 text-muted">Dirancang untuk para bangsawan muda yang mencari landasan kokoh. Dapatkan kendali penuh atas wilayah kecil Anda dan bangunlah kekuatan.</p> -->
+                    <div class="pricing-plan pt-2">
+                        <span class="plan text-bariskode">IDR. 100K</span>
+                        <p class="text-muted mb-0">Per Bulan</p>
+                    </div>
+
+                    <div class="mt-1 pt-2">
+                        <p class="mb-2 f-18">Fitur</p>
+
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
+                            Jurnal Arus Kas</p>
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
+                            Manajemen Penugasan (Tello)</p>
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
+                            Invoice Penjualan</p>
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
+                            Item</p>
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>1000</b>
+                            Invoice / Bulan</p>
+                        <!-- <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>1000</b>
+                            Digital Memorandum / Bulan</p> -->
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>1000</b>
+                            Pengajuan Multi Layer Approval / Bulan</p>
+                        <!-- <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>1000</b>
+                            Nota Penjualan / Bulan</p> -->
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> Jumlah Cabang <b>1</b></p>
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>5</b> User</p>
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg f-18 mr-2" style="color: #3ad29f;"></i> <b>Penjualan</b></p>
+                        <p class="mb-2"><i class="fa-solid fa-xmark text-danger fa-lg f-18 mr-2" style="color: #3ad29f;"></i>Fitur
+                            <b>Premium</b>
+                        </p>
+                        <p class="mb-2"><i class="fa-solid fa-xmark text-danger fa-lg f-18 mr-2" style="color: #3ad29f;"></i> <b>Digital Memo</b></p>
+                        <p class="mb-2"><i class="fa-solid fa-xmark text-danger fa-lg f-18 mr-2" style="color: #3ad29f;"></i> <b>Cuti Online</b></p>
+                        <p class="mb-2"><i class="fa-solid fa-xmark text-danger fa-lg f-18 mr-2" style="color: #3ad29f;"></i> <b>Absen Online (by Face Recognition & Geo-Location)</b></p>
+                        <!-- <p class="mb-2"><i class="fa-solid fa-check fa-lg f-18 mr-2" style="color: #3ad29f;"></i> <b>Surat-menyurat</b></p> -->
+                        <p class="mb-2"><i class="fa-solid fa-xmark text-danger fa-lg f-18 mr-2" style="color: #3ad29f;"></i> <b>Manajemen Aset & Otomasi Penyusutan</b></p>
+                        <p class="mb-2"><i class="fa-solid fa-xmark text-danger fa-lg f-18 mr-2" style="color: #3ad29f;"></i> <b>Fitur-fitur Premium Lainnya</b></p>
+                    </div>
+
+
+
+                    <!-- <div class="mt-4 pt-3"> -->
+                    <!-- <a href="" class="btn btn-primary btn-rounded">Pilih Tahta</a> -->
+                    <!-- <a href="" class="btn btn-primary btn-rounded">Ambil Takhta Ini</a> -->
+                    <!-- <a href="" class="btn btn-primary btn-rounded">Dapatkan Mahkota</a> -->
+                    <!-- </div> -->
+                    <div class="mt-4 pt-3">
+                        <a href="" class="btn btn-primary btn-rounded pilih-tahta-btn" data-plan="4" data-price="100000">Pilih Tahta</a>
+                        <!-- <a href="" class=" btn btn-primary btn-rounded">Ambil Takhta Ini</a> -->
                         <!-- <a href="" class="btn btn-primary btn-rounded">Dapatkan Mahkota</a> -->
                     </div>
                 </div>

@@ -129,6 +129,13 @@
                 $menu_onclick_attr = "onclick=\"Swal.fire('Fitur Premium', 'Fitur ini hanya tersedia untuk pengguna premium.', 'info'); return false;\"";
               }
             }
+
+            if ($this->session->userdata('is_penjualan') == false && $menu->menu_name == "Nota Penjualan") {
+              $menu_url = '#'; // Change URL to a placeholder
+              $menu_disabled_class = 'disabled-link'; // Add a class for styling/JS
+              $menu_onclick_attr = "onclick=\"Swal.fire('Fitur Penjualan', 'Fitur ini hanya tersedia untuk pengguna Saudagar Kaya atau Premium.', 'info'); return false;\"";
+            }
+
             ?>
 
             <?php if (empty($menu->submenus)): ?>
