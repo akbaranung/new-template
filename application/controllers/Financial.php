@@ -3837,7 +3837,7 @@ class Financial extends CI_Controller
 					]);
 				}
 
-				$this->M_coa->insert_saldo_awal($data);
+				// $this->M_coa->insert_saldo_awal($data);
 
 				// $utility_data = array(
 				//   'generate_sawal' => 1,

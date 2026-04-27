@@ -436,7 +436,6 @@ class M_coa extends CI_Model
 
 	public function cek_saldo_awal($bulan)
 	{
-		$this->apply_cabang_filter();
 		return $this->cb->where('periode', $bulan)->where('id_cabang', $this->session->userdata('kode_cabang'))->get('saldo_awal')->row_array();
 	}
 
@@ -808,7 +807,6 @@ class M_coa extends CI_Model
 		$this->cb->from('jurnal_neraca');
 		$this->cb->where('tanggal >=', "$periode-01");
 		$this->cb->where('tanggal <=', "$periode-31");
-
 		$this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
 		$this->cb->where('id_company', $id_company);
 		$this->cb->group_start();
