@@ -127,6 +127,7 @@ class M_nota extends CI_Model
 	{
 		// $this->cb->where('DATE(tanggal)', $tanggal);
 		$this->cb->where('is_closed', 0);
+		$this->cb->where('created_by', $this->session->userdata('username'));
 		$this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
 		$this->cb->where('id_company', $this->session->userdata('user_perusahaan_id'));
 		$this->cb->order_by('tanggal', 'ASC');
