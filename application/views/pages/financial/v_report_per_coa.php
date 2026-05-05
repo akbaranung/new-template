@@ -82,14 +82,20 @@
 
 									<table class="table table-sm table-bordered">
 										<thead class="thead-dark">
-											<?php if ($this->input->get('keyword') !== "") : ?>
+											<!-- <?php if ($this->input->get('keyword') !== "") : ?>
 												<tr>
 													<th class="text-right" colspan="3" style="background-color: #e91e63; font-weight: bolder;">Total:</th>
 													<th class="text-right" style="background-color: #e91e63; font-weight: bolder;"><?= rupiah($sum_kredit) ?></th>
 													<th class="text-right" style="background-color: #e91e63; font-weight: bolder;"><?= rupiah($sum_kredit) ?></th>
 													<th colspan="3" style="background-color: #e91e63;"></th>
 												</tr>
-											<?php endif; ?>
+											<?php endif; ?> -->
+												<tr>
+													<th class="text-right" colspan="3" style="background-color: #e91e63; font-weight: bolder;">Total:</th>
+													<th class="text-right" style="background-color: #e91e63; font-weight: bolder;"><?= rupiah($sum_kredit) ?></th>
+													<th class="text-right" style="background-color: #e91e63; font-weight: bolder;"><?= rupiah($sum_kredit) ?></th>
+													<th colspan="3" style="background-color: #e91e63;"></th>
+												</tr>
 											<tr>
 												<th class="text-center">#</th>
 												<th class="text-center">Tanggal</th>
@@ -273,7 +279,7 @@
 				<button type="button" class="btn-close" data-dismiss="modal" aria-label="Close">X</button>
 			</div>
 			<form id="updateCoaForm" action="<?= site_url('financial/update_report_per_coa') ?>" method="POST" enctype="multipart/form-data">
-				// Di view
+				
 				<input type="hidden" name="redirect_to" value="<?= current_url() . '?' . http_build_query($_GET) ?>">				
 				<div class="modal-body">
 					<div class="row">
