@@ -4,7 +4,7 @@
   }
 </style>
 <div class="row align-items-center h-100 w-100 m-0">
-  <form class="col-lg-4 col-md-7 col-10 mx-auto" action="<?= site_url('auth/cek_token') ?>" method="post">
+  <form class="col-lg-4 col-md-7 col-12 mx-auto" action="<?= site_url('auth/cek_token') ?>" method="post">
     <div class="card shadow p-4">
       <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="<?= base_url('/') ?>">
         <img src="<?= base_url('assets') ?>/images/logo.png" alt="logo" class="w-100">

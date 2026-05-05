@@ -21,9 +21,9 @@
   }
 </style>
 <div class="row align-items-center h-100 w-100 m-0">
-  <div class="col-lg-12 col-md-4 col-11 mx-auto">
+  <div class="col-lg-12 col-md-4 col-12 mx-auto">
     <div class="row">
-      <div class="col-lg-4 col-md-7 col-10 mx-auto">
+      <div class="col-lg-4 col-md-7 col-11 mx-auto">
         <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="<?= base_url('/') ?>">
           <img src="<?= base_url('assets') ?>/images/logo.png" alt="logo" class="w-100">
         </a>
@@ -56,11 +56,11 @@
       </div>
     </div>
   </div>
-  <form class="col-lg-4 col-md-7 col-10 mx-auto" action="<?= site_url('auth/process_registrasi_cabang') ?>" method="post">
+  <form class="col-lg-4 col-md-7 col-12 mx-auto" action="<?= site_url('auth/process_registrasi_cabang') ?>" method="post">
     <div class="card shadow p-4">
       <div class="row">
         <!-- END: Progress Bar Integration -->
-        <div class="col-lg-12 col-md-4 col-10 mx-auto">
+        <div class="col-lg-12 col-md-4 col-12 mx-auto">
 
           <!-- New input fields for company data -->
           <div class="form-group text-left">

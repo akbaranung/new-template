@@ -49,7 +49,7 @@
 </style>
 
 <div class="row align-items-center h-100 w-100 m-0">
-  <form class="col-lg-4 col-md-7 col-10 mx-auto" action="<?= site_url('auth/login') ?>" method="post">
+  <form class="col-lg-4 col-md-7 col-12 mx-auto" action="<?= site_url('auth/login') ?>" method="post">
     <!-- <form class="col-lg-3 col-md-4 col-10 mx-auto" id="login_username" method="POSTx"> -->
 
     <div class="card shadow p-4">
