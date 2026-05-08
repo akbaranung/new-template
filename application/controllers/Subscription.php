@@ -771,8 +771,8 @@ Mohon untuk memproses pembayaran segera.";
                     $kuota_invoice = 3000;
                     $kuota_memo = 500;
                     $kuota_pengajuan_biaya = 3000;
-                    $kuota_user = 10;
-                    $kuota_cabang = 2;
+                    $kuota_user = 15;
+                    $kuota_cabang = 3;
                     $is_premium = 1;
                 } else if ($confirmation_detail->paket == "Kesatria Sejati") {
                     $nama_paket = "Kesatria Sejati";
