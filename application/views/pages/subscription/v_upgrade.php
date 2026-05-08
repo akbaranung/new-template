@@ -544,7 +544,7 @@
                         <!-- <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>1000</b>
                             Nota Penjualan / Bulan</p> -->
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> Jumlah Cabang <b>1</b></p>
-                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>5</b> User</p>
+                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>1</b> User</p>
                         <p class="mb-2"><i class="fa-solid fa-xmark fa-lg text-danger" style="color: #3ad29f;"></i> <b>Unlimited</b>
                             Nota Penjualan</p>
                         <p class="mb-2"><i class="fa-solid fa-xmark fa-lg text-danger" style="color: #3ad29f;"></i> <b>1000</b>
