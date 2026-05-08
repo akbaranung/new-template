@@ -11,6 +11,10 @@ class Home extends CI_Controller
 
     $this->load->model(['M_coa']);
     $this->cb = $this->load->database('corebank', TRUE);
+    $this->cb->from('t_cabang');
+    $this->cb->where('uid', $this->session->userdata('kode_cabang'));
+    $cabang_now = $this->cb->get()->row();
+    $cek_saldo_awal = $cabang_now->generate_sawal;
 
     if ($this->session->userdata('isLogin') == FALSE) {
       $this->session->set_flashdata('error', 'Your session has expired');
@@ -25,6 +29,8 @@ class Home extends CI_Controller
       if ($total_user < 5) {
         redirect('perusahaan/user');
       }
+    } else if ($cek_saldo_awal == 0) {
+      redirect('financial_first/force_make_coa_sbb');
     }
   }
 

@@ -106,7 +106,7 @@
     $cabang_now = $this->cb->get()->row();
     $cek_saldo_awal = $cabang_now->generate_sawal;
 
-    if (!$is_premium_user || ($total_user >= 5 && $cek_saldo_awal == 1)) {
+    if (!$is_premium_user && $cek_saldo_awal == 1 || ($total_user >= 5 && $cek_saldo_awal == 1)) {
     ?>
       <ul class="navbar-nav flex-fill w-100 mb-2">
         <?php if ($menus): ?>
