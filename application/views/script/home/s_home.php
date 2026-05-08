@@ -192,7 +192,7 @@
     }
 
     // Initialize gauge4 with its own PHP variables
-    var gauge4 = initializeGauge("gauge4", <?= $total_user ?>, <?= $perusahaan->kuota_user ?>);
+    var gauge4 = initializeGauge("gauge4", <?= $total_user ?>, <?= $this->session->userdata('is_premium') == 1 ? $perusahaan->kuota_user : 1 ?>);
     if (gauge4) {
         // A self-calling function to animate gauge1 (if desired, based on your original code)
         (function animateGauge4() {

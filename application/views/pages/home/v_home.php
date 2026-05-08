@@ -111,7 +111,7 @@
                 <div class="row align-items-center">
                   <div class="col-md-6 col-12 gauge-text-div">
                     <p class="small mb-0 text-primary"><b>User</b></p>
-                    <h5 class="mb-0 text-pink text-kuota"><?= $total_user ?>/<?= $perusahaan->kuota_user ?></h5>
+                    <h5 class="mb-0 text-pink text-kuota"><?= $total_user ?>/<?= $this->session->userdata('is_premium') == 1 ? $perusahaan->kuota_user : 1 ?></h5>
                   </div>
                   <div class="col-md-6 gauge-div">
                     <div id="gauge4" class="gauge-container"></div>

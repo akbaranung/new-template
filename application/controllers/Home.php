@@ -17,7 +17,7 @@ class Home extends CI_Controller
       redirect('auth');
     } else if (!$this->session->userdata('nama_perusahaan')) {
       redirect('auth');
-    } else if (!$this->session->userdata('is_premium')) {
+    } else if ($this->session->userdata('is_premium')) {
       $this->db->from('users');
       $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
       $this->db->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
@@ -38,7 +38,7 @@ class Home extends CI_Controller
 
     $max_users_for_100_percent = 4; // Define your maximum limit
     // $max_users_for_100_percent = 5; // Define your maximum limit
-    if ($total_user < $max_users_for_100_percent) {
+    if ($this->session->userdata('is_premium') == 1 && $total_user < $max_users_for_100_percent) {
       redirect('perusahaan/user');
     }
     $nip = $this->session->userdata('nip');

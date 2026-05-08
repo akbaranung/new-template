@@ -106,12 +106,15 @@
     $cabang_now = $this->cb->get()->row();
     $cek_saldo_awal = $cabang_now->generate_sawal;
 
-    if ($total_user >= 5 && $cek_saldo_awal == 1) {
+    if (!$is_premium_user || ($total_user >= 5 && $cek_saldo_awal == 1)) {
     ?>
       <ul class="navbar-nav flex-fill w-100 mb-2">
         <?php if ($menus): ?>
           <?php foreach ($menus as $menu): ?>
             <?php
+            if ($is_premium_user == 0 && $menu->controller == "perusahaan") {
+              continue; // Skip perusahaan menu for non-premium users
+            }
             $menu_url = $menu->url;
             $menu_mahkota = '';
             $menu_disabled_class = '';

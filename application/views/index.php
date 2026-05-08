@@ -93,7 +93,9 @@
       // $this->cb->from('t_cabang');
 
       // if ($total_user < 4 || $cek_coa_cabang == 0) {
-      if ($total_user < 4 || $cek_saldo_awal == 0) {
+      if ($this->session->userdata('is_premium') == 0) {
+        // $this->load->view('layouts/tutorial.php');
+      } else if ($this->session->userdata('is_premium') == 1 && ($total_user < 4 || $cek_saldo_awal == 0)) {
         $this->load->view('layouts/tutorial.php');
       }
       ?>
