@@ -317,7 +317,7 @@
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
                             Manajemen Penugasan (Tello)</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
-                            Invoice Penjualan</p>
+                            Nota Penjualan</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>3000</b>
                             Invoice / Bulan</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>500</b>
@@ -335,7 +335,6 @@
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> Fitur
                             <b>Premium</b>
                         </p>
-                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Penjualan</b></p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Digital Memo</b></p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Cuti Online</b></p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Absen Online (by Face Recognition & Geo-Location)</b></p>
@@ -376,7 +375,7 @@
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
                             Manajemen Penugasan (Tello)</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
-                            Invoice Penjualan</p>
+                            Nota Penjualan</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>5000</b>
                             Invoice / Bulan</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>1000</b>
@@ -390,7 +389,6 @@
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> Fitur
                             <b>Premium</b>
                         </p>
-                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Penjualan</b></p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Digital Memo</b></p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Cuti Online</b></p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Absen Online (by Face Recognition & Geo-Location)</b></p>
@@ -430,7 +428,7 @@
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
                             Manajemen Penugasan (Tello)</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
-                            Invoice Penjualan</p>
+                            Nota Penjualan</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>10000</b>
                             Invoice / Bulan</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>3000</b>
@@ -444,7 +442,6 @@
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> Fitur
                             <b>Premium</b>
                         </p>
-                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Penjualan</b></p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Digital Memo</b></p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Cuti Online</b></p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Absen Online (by Face Recognition & Geo-Location)</b></p>
@@ -487,7 +484,7 @@
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
                             Manajemen Penugasan (Tello)</p>
                             <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
-                            Invoice Penjualan</p>
+                            Nota Penjualan</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>25000</b>
                             Invoice / Bulan</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>10000</b>
@@ -540,8 +537,8 @@
                             Jurnal Arus Kas</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
                             Manajemen Penugasan (Tello)</p>
-                        <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
-                            Invoice Penjualan</p>
+                        <p class="mb-2"><i class="fa-solid fa-xmark text-danger fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
+                            Nota Penjualan</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>1000</b>
                             Invoice / Bulan</p>
                         <!-- <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>1000</b>
@@ -555,7 +552,6 @@
                         <p class="mb-2"><i class="fa-solid fa-xmark fa-lg text-danger f-18 mr-2"></i>Fitur
                             <b>Premium</b>
                         </p>
-                        <p class="mb-2"><i class="fa-solid fa-xmark fa-lg text-danger f-18 mr-2" style="color: #3ad29f;"></i> <b>Penjualan</b></p>
                         <p class="mb-2"><i class="fa-solid fa-xmark fa-lg text-danger f-18 mr-2" style="color: #3ad29f;"></i> <b>Digital Memo</b></p>
                         <p class="mb-2"><i class="fa-solid fa-xmark fa-lg text-danger f-18 mr-2" style="color: #3ad29f;"></i> <b>Cuti Online</b></p>
                         <p class="mb-2"><i class="fa-solid fa-xmark fa-lg text-danger f-18 mr-2" style="color: #3ad29f;"></i> <b>Absen Online (by Face Recognition & Geo-Location)</b></p>
@@ -600,7 +596,7 @@
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
                             Manajemen Penugasan (Tello)</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
-                            Invoice Penjualan</p>
+                            Nota Penjualan</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
                             Item</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>1000</b>
@@ -613,7 +609,6 @@
                             Nota Penjualan / Bulan</p> -->
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> Jumlah Cabang <b>1</b></p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>5</b> User</p>
-                        <p class="mb-2"><i class="fa-solid fa-check fa-lg f-18 mr-2" style="color: #3ad29f;"></i> <b>Penjualan</b></p>
                         <p class="mb-2"><i class="fa-solid fa-xmark text-danger fa-lg f-18 mr-2" style="color: #3ad29f;"></i>Fitur
                             <b>Premium</b>
                         </p>
