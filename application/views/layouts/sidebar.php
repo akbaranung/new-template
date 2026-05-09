@@ -42,8 +42,9 @@
         </a>
       </li>
       <?php
-
-      if ($this->session->userdata('username') == "bariskode") {
+      $username = $this->session->userdata('username');
+      $user_id = $this->session->userdata('user_user_id');
+      if ($username == "bariskode" || $username === "bariskode" || $user_id == 1 || $user_id === 1 || $user_id == "1") {
       ?>
         <li class="nav-item dropdown <?= ($current_uri == 'Subscription' || $current_uri == 'Report' || $current_uri == '') ? 'active' : '' ?>">
           <a href="#adminListCollapse"
@@ -53,7 +54,6 @@
             <i class="fe fe-home fe-16"></i>
             <span class="ml-3 item-text">Administrator</span>
           </a>
-
           <ul class="collapse list-unstyled pl-4 w-100" id="adminListCollapse">
             <li class="nav-item">
               <a class="nav-link pl-3" href="<?= site_url('Subscription/premium_confirmation') ?>">
