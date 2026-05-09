@@ -794,6 +794,7 @@ class Perusahaan extends CI_Controller
       "nomor_rekening" => $this->input->post('nomor_rekening'),
       "nama_bank" => $this->input->post('nama_bank'),
       "alamat_perusahaan" => $this->input->post('alamat_perusahaan'),
+      "header_invoice" => $this->input->post('header_invoice'),
       "nama_akronim" => $this->input->post('nama_akronim'),
       "nama_coa_ppn_keluaran" => $this->input->post('coa_ppn_keluaran_nama_perkiraan'),
       "nomor_coa_ppn_keluaran" => $this->input->post('coa_ppn_keluaran_no_sbb'),

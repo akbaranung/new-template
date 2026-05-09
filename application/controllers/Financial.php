@@ -2042,7 +2042,9 @@ class Financial extends CI_Controller
 			'status_pendapatan' => '1',
 			'slug' => $slug,
 			'id_cabang' => $this->session->userdata('kode_cabang'),
-			'id_company' => $this->session->userdata('user_perusahaan_id')
+			'id_company' => $this->session->userdata('user_perusahaan_id'),
+			'no_po'  => $this->input->post('no_po') ?: null,
+			'tgl_po' => $this->input->post('tgl_po') ?: null,
 		];
 
 		$this->cb->trans_begin();
@@ -2203,7 +2205,9 @@ class Financial extends CI_Controller
 			'nominal_pendapatan' => $nominal_pendapatan,
 			// 'status_pendapatan' => isset($status_pendapatan) ? $status_pendapatan : '0'
 			'opsi_termin' => isset($opsi_termin) ? $opsi_termin : '0',
-			'status_pendapatan' => '1'
+			'status_pendapatan' => '1',
+			'no_po'  => $this->input->post('no_po') ?: null,
+			'tgl_po' => $this->input->post('tgl_po') ?: null,
 		];
 
 		$this->cb->trans_begin();
@@ -4030,7 +4034,7 @@ class Financial extends CI_Controller
 			'nama_customer' => strtoupper($nama_customer),
 			'alamat_customer' => $this->input->post('alamat_customer'),
 			'telepon_customer' => $this->input->post('telepon_customer'),
-			// 'status_customer' => $this->input->post('status_customer'),
+			'no_npwp' => $this->input->post('no_npwp'),
 			'slug' => $slug,
 			'id_cabang' => $this->session->userdata('kode_cabang'),
 			'id_company' => $this->session->userdata('user_perusahaan_id')

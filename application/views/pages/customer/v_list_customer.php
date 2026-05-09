@@ -186,6 +186,10 @@
               <label for="telepon_customer" class="form-label">No. Kontak</label>
               <input type="text" name="telepon_customer" id="telepon_customer" class="form-control" placeholder="Masukkan nomor kontak customer...">
             </div>
+            <div class="col-12 mt-3">
+              <label for="no_npwp" class="form-label">No. NPWP</label>
+              <input type="text" name="no_npwp" id="no_npwp" class="form-control" placeholder="Masukkan nomor npwp customer (opsional)...">
+            </div>
           </div>
         </div>
         <div class="modal-footer">

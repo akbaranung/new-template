@@ -139,6 +139,8 @@ class Auth extends CI_Controller
           $this->session->set_userdata('nama_ppn', $setting->nama_ppn);
           $this->session->set_userdata('ppn', $setting->besaran_ppn);
           $this->session->set_userdata('nama_akronim', $setting->nama_akronim);
+          $this->session->set_userdata('no_skp', $setting->no_skp);
+          $this->session->set_userdata('header_invoice', $setting->header_invoice);
           $is_premium_boolean = (bool)$setting->is_premium;
           $this->session->set_userdata('is_premium', $is_premium_boolean);
 
