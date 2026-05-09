@@ -112,9 +112,7 @@
         <?php if ($menus): ?>
           <?php foreach ($menus as $menu): ?>
             <?php
-            if ($is_premium_user == 0 && $menu->controller == "perusahaan") {
-              continue; // Skip perusahaan menu for non-premium users
-            }
+
             $menu_url = $menu->url;
             $menu_mahkota = '';
             $menu_disabled_class = '';
@@ -158,8 +156,11 @@
                   <span class="ml-3 item-text"><?= $menu->menu_name ?> <?= $menu_mahkota ?> </span>
                 </a>
                 <ul class="collapse <?= ($controller == $menu->controller) ? 'show' : '' ?> list-unstyled pl-4 w-100" id="<?= $menu->url ?>">
-                  <?php foreach ($menu->submenus as $submenu): ?>
-                    <?php
+                  <?php foreach ($menu->submenus as $submenu):
+                    if ($is_premium_user == 0 && $submenu->menu_name == "User") {
+                      continue; // Skip perusahaan menu for non-premium users
+                    }
+
                     $submenu_url = $submenu->url;
                     $submenu_mahkota = '';
                     $submenu_disabled_class = '';
@@ -174,7 +175,7 @@
                         $submenu_onclick_attr = "onclick=\"Swal.fire('Fitur Premium', 'Fitur ini hanya tersedia untuk pengguna premium.', 'info'); return false;\"";
                       }
                     }
-                    ?>
+                  ?>
                     <li class="nav-item">
                       <a class="nav-link <?= ($current_uri == $submenu->url) ? 'active' : '' ?> pl-3 <?= $submenu_disabled_class ?>"
                         href="<?= site_url($submenu_url) ?>" <?= $submenu_onclick_attr ?>>
