@@ -183,7 +183,7 @@
 		/* ── Summary ── */
 		.summary-table {
 			width: 100%;
-			margin-top: 10px;
+			margin-top: 75px;
 			;
 		}
 
