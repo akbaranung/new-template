@@ -26,8 +26,13 @@ class Home extends CI_Controller
       $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
       $this->db->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
       $total_user = $this->db->get()->num_rows(); // Get the number of rows
-      if ($total_user < 5) {
+
+      if ($cek_saldo_awal == 0) {
+        redirect('financial_first/force_make_coa_sbb');
+      } else if ($total_user < 5) {
         redirect('perusahaan/user');
+      } else {
+        redirect('home');
       }
     } else if ($cek_saldo_awal == 0) {
       redirect('financial_first/force_make_coa_sbb');

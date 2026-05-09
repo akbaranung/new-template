@@ -152,12 +152,34 @@
         <div class="progress-container mx-auto">
           <div class="progress" id="progress"></div>
           <?php
+          if ($cek_saldo_awal == 0) {
+            $button_now = base_url('financial_first/force_make_coa_sbb');
+            // $label = "COA"
+          ?>
+            <a href="<?= $button_now ?>" style="text-decoration: none;">
+              <!-- <div class="circle-current" data-label="Setting COA Dan SAWAL" style="background-color: #e81f63; color:white;"> -->
+              <div class="circle-current" data-label="COA" style="background-color: #e81f63; color:white;">
+                <div class="fe fe-chevrons-down"></div>
+              </div>
+            </a>
+          <?php
+            // } else if ($cek_coa_cabang == 0) {
+          } else {
+          ?>
+            <a href="#">
+              <div class="circle-success active" data-label="COA">
+                <div class="triangle-right-success"></div>
+              </div>
+            </a>
+            <?php
+          }
+
           $i = 1;
           $active_href = 0;
           foreach ($roles as $value => $label) {
             if (isset($user_counts[$label]) && $user_counts[$label] >= 1) {
               // $active_fishbone = 'active';
-          ?>
+            ?>
               <a href="#" style="text-decoration: none;">
                 <div class="circle-success active" data-label="<?= $label ?>" style="background-color: #3f51b5; color:white;">
                   <div class="fe fe-user-check"></div>
@@ -166,9 +188,7 @@
             <?php
               $i++;
               continue;
-            }
-
-            if ($active_href == 0) {
+            } else if ($active_href == 0) {
               $active_href = 1;
               $button_now = base_url('perusahaan/add_user/' . $value . '/' . $label);
 
@@ -180,46 +200,16 @@
                 </div>
               </a>
             <?php
-            } else {
-            ?>
+
+            } else { ?>
               <a href="#">
                 <div class="circle" data-label="<?= $label ?>">
                   <div class="triangle-right-secondary"></div>
                 </div>
               </a>
-            <?php
+          <?php
             }
             $i++;
-          }
-
-          if ($total_user >= $max_users_for_100_percent && $cek_saldo_awal == 0) {
-            $button_now = base_url('financial_first/force_make_coa_sbb');
-            // $label = "COA"
-            ?>
-            <a href="<?= $button_now ?>" style="text-decoration: none;">
-              <!-- <div class="circle-current" data-label="Setting COA Dan SAWAL" style="background-color: #e81f63; color:white;"> -->
-              <div class="circle-current" data-label="COA" style="background-color: #e81f63; color:white;">
-                <div class="fe fe-chevrons-down"></div>
-              </div>
-            </a>
-          <?php
-            // } else if ($cek_coa_cabang == 0) {
-          } else if ($cek_saldo_awal == 0) {
-          ?>
-            <a href="#">
-              <div class="circle" data-label="COA">
-                <div class="triangle-right-secondary"></div>
-              </div>
-            </a>
-          <?php
-          } else {
-          ?>
-            <a href="#">
-              <div class="circle-success active" data-label="COA">
-                <div class="triangle-right-success"></div>
-              </div>
-            </a>
-          <?php
           }
 
           ?>
