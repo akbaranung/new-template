@@ -31,8 +31,6 @@ class Home extends CI_Controller
         redirect('financial_first/force_make_coa_sbb');
       } else if ($total_user < 5) {
         redirect('perusahaan/user');
-      } else {
-        redirect('home');
       }
     } else if ($cek_saldo_awal == 0) {
       redirect('financial_first/force_make_coa_sbb');

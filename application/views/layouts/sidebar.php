@@ -44,7 +44,7 @@
       <?php
       $username = $this->session->userdata('username');
       $user_id = $this->session->userdata('user_user_id');
-      if ($username == "bariskode" || $username === "bariskode" || $user_id == 1 || $user_id === 1 || $user_id == "1") {
+      if ($username == "bariskode" || $username == "Bariskode" || $user_id == 1 || $user_id === 1 || $user_id == "1") {
       ?>
         <li class="nav-item dropdown <?= ($current_uri == 'Subscription' || $current_uri == 'Report' || $current_uri == '') ? 'active' : '' ?>">
           <a href="#adminListCollapse"
