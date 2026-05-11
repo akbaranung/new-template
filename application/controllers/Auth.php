@@ -71,9 +71,10 @@ class Auth extends CI_Controller
     $this->form_validation->set_rules('password', 'password', 'required');
 
     if ($this->form_validation->run() == FALSE) {
+      $errors = $this->form_validation->error_array();
       $response = [
         'success' => false,
-        'msg' => array_values($this->form_validation->error_array())[0]
+        'msg' => !empty($errors) ? array_values($errors)[0] : 'Validasi gagal.'
       ];
     } else {
       $cek = $this->M_login->ambilPengguna($username, 1);
