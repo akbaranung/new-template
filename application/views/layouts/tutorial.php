@@ -141,7 +141,7 @@
         }
       }
 
-      if ($max_users_for_100_percent == $total_user && $cek_coa_cabang == 0) { ?>
+      if ($cek_coa_cabang == 0) { ?>
         <h5 class="card-title mb-0"><strong>Ayo buat COA Sekarang</strong></h5>
 
       <?php
