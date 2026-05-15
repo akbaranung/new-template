@@ -158,6 +158,35 @@
         return null; // Return null if element not found
     }
 
+    function initializeGaugeNonPercentage(elementId, gaugeValue, gaugeMax) {
+        var svgElement = document.getElementById(elementId);
+        if (svgElement) {
+            return Gauge(svgElement, {
+                max: gaugeMax,
+                dialStartAngle: -90,
+                dialEndAngle: -90.001, // Creates a full circle
+                value: gaugeValue,
+                showValue: true,
+                label: function(value) {
+                    return Math.round(value) + '/' + gaugeMax;
+                },
+                color: function(value) {
+                    // Set color based on percentage of the max value
+                    if (value < (0.10 * gaugeMax)) { // Less than 10% of max
+                        return base.primaryColor;
+                    } else if (value < (0.40 * gaugeMax)) { // Less than 40% of max
+                        return base.primaryColor;
+                    } else if (value < (0.60 * gaugeMax)) { // Less than 60% of max
+                        return base.warningColor;
+                    } else { // 60% or more of max
+                        return base.dangerColor;
+                    }
+                }
+            });
+        }
+        return null; // Return null if element not found
+    }
+
 
     // Initialize gauge1
     gauge1 = initializeGauge("gauge1", gauge1Value, gauge1Max);
@@ -215,24 +244,24 @@
         })();
     }
 
-    var gauge7 = initializeGauge("gauge7", <?= $total_invoice_closed ?>, <?= $total_invoice ?: 1 ?>);
+    var gauge7 = initializeGaugeNonPercentage("gauge7", <?= $total_invoice_open ?>, <?= $total_invoice ?: 1 ?>);
     var invoiceOpenText = document.getElementById('invoiceOpenText');
     if (gauge7) {
         (function animateGauge7() {
-            // invoiceOpenText.textContent = `Open :   <?= $total_invoice_open ?>`;
-            gauge7.setValue(<?= $total_invoice_closed ?>);
-            gauge7.setValueAnimated(<?= $total_invoice_closed ?>, 1);
+            // invoiceOpenText.textContent = `Open :   <?= $total_invoice_closed ?>`;
+            gauge7.setValue(<?= $total_invoice_open ?>);
+            gauge7.setValueAnimated(<?= $total_invoice_open ?>, 1);
             window.setTimeout(animateGauge7, 6000);
         })();
     }
 
-    var gauge8 = initializeGauge("gauge8", <?= $total_nota_closed ?>, <?= $total_nota ?: 1 ?>);
+    var gauge8 = initializeGaugeNonPercentage("gauge8", <?= $total_invoice_open ?>, <?= $total_nota ?: 1 ?>);
     var notaOpenText = document.getElementById('notaOpenText');
     if (gauge8) {
         (function animateGauge8() {
-            // notaOpenText.textContent = `Open :   <?= $total_nota_open ?>`;
-            gauge8.setValue(<?= $total_nota_closed ?>);
-            gauge8.setValueAnimated(<?= $total_nota_closed ?>, 1);
+            // notaOpenText.textContent = `Open :   <?= $total_nota_closed ?>`;
+            gauge8.setValue(<?= $total_invoice_open ?>);
+            gauge8.setValueAnimated(<?= $total_invoice_open ?>, 1);
             window.setTimeout(animateGauge8, 6000);
         })();
     }

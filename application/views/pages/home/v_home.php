@@ -166,7 +166,7 @@
                   <div class="row align-items-center">
                     <div class="col-md-6 col-12 gauge-text-div">
                       <p class="small mb-0 text-primary"><b>Invoice Closed</b></p>
-                      <h5 class="mb-0 text-pink text-kuota"><?= $total_invoice ?>/<?= $total_invoice_closed ?></h5>
+                      <!-- <h5 class="mb-0 text-pink text-kuota"><?= $total_invoice ?>/<?= $total_invoice_closed ?></h5> -->
                       <span class="small text-mute" id="invoiceOpenText"></span> <!-- Displays "X days remaining" -->
                     </div>
                     <div class="col-md-6 gauge-div">
@@ -182,7 +182,7 @@
                   <div class="row align-items-center">
                     <div class="col-md-6 col-12 gauge-text-div">
                       <p class="small mb-0 text-primary"><b>Nota Closed</b></p>
-                      <h5 class="mb-0 text-pink text-kuota"><?= $total_nota ?>/<?= $total_nota_closed ?></h5>
+                      <!-- <h5 class="mb-0 text-pink text-kuota"><?= $total_nota ?>/<?= $total_nota_closed ?></h5> -->
                       <span class="small text-mute" id="notaOpenText"></span> <!-- Displays "X days remaining" -->
                     </div>
                     <div class="col-md-6 gauge-div">
