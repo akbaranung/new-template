@@ -168,7 +168,7 @@
                 value: gaugeValue,
                 showValue: true,
                 label: function(value) {
-                    return Math.round(value) + '/' + gaugeMax;
+                    return gaugeMax + '/' + Math.round(value);
                 },
                 color: function(value) {
                     // Set color based on percentage of the max value
@@ -244,7 +244,7 @@
         })();
     }
 
-    var gauge7 = initializeGaugeNonPercentage("gauge7", <?= $total_invoice_open ?>, <?= $total_invoice ?: 1 ?>);
+    var gauge7 = initializeGauge("gauge7", <?= $total_invoice_open ?>, <?= $total_invoice ?: 1 ?>);
     var invoiceOpenText = document.getElementById('invoiceOpenText');
     if (gauge7) {
         (function animateGauge7() {
@@ -255,7 +255,7 @@
         })();
     }
 
-    var gauge8 = initializeGaugeNonPercentage("gauge8", <?= $total_nota_open ?>, <?= $total_nota ?: 1 ?>);
+    var gauge8 = initializeGauge("gauge8", <?= $total_nota_open ?>, <?= $total_nota ?: 1 ?>);
     var notaOpenText = document.getElementById('notaOpenText');
     if (gauge8) {
         (function animateGauge8() {
