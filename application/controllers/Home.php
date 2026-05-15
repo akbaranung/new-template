@@ -100,11 +100,45 @@ class Home extends CI_Controller
     // $this->db->where('nama_jabatan !=', 'Super Admin');
     $total_user = $this->db->get()->num_rows(); // Get the number of rows
 
+    // CARI TOTAL INVOICE
+    $this->cb->from('invoice');
+    $this->cb->where('id_company', $this->session->userdata('user_perusahaan_id'));
+    $total_invoice = $this->cb->get()->num_rows(); // Get the number of rows
+
+    // CARI TOTAL INVOICE CLOSED
+    $this->cb->from('invoice');
+    $this->cb->where('id_company', $this->session->userdata('user_perusahaan_id'));
+    $this->cb->where('status_bayar =', '1');
+    $this->cb->where('status_void =', '0');
+    $total_invoice_closed = $this->cb->get()->num_rows();
+
+
+    // CARI TOTAL NOTA
+    $this->cb->from('nota');
+    $this->cb->where('id_company', $this->session->userdata('user_perusahaan_id'));
+    $total_nota = $this->cb->get()->num_rows(); // Get the number of rows
+
+    // CARI TOTAL NOTA CLOSED
+    $this->cb->from('nota');
+    $this->cb->where('id_company', $this->session->userdata('user_perusahaan_id'));
+    $this->cb->where('is_closed', 1);
+    $total_nota_closed = $this->cb->get()->num_rows(); // Get the number of rows
+
+
     $data['total_memo'] = $total_memo;
     $data['total_invoice'] = $total_invoice;
     $data['total_pengajuan'] = $total_pengajuan;
     $data['total_cabang'] = $total_cabang;
     $data['total_user'] = $total_user;
+
+    $data['total_invoice'] = $total_invoice;
+    $data['total_invoice_closed'] = $total_invoice_closed;
+    $data['total_invoice_open'] = $total_invoice - $total_invoice_closed;
+
+
+    $data['total_nota'] = $total_nota;
+    $data['total_nota_closed'] = $total_nota_closed;
+    $data['total_nota_open'] = $total_nota - $total_nota_closed;
 
 
     $this->db->from('utility');

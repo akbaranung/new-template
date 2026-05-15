@@ -137,7 +137,9 @@
                 label: function(value) {
                     // return Math.round(100 * value) / gaugeMax;
                     // return Math.round(100 * value) / gaugeMax + '%';
-                    return ((value / gaugeMax) * 100).toFixed(2) + '%';
+                    // return ((value / gaugeMax) * 100).toFixed(2) + '%';
+                    return Math.round((value / gaugeMax) * 100) + '%';
+
                 },
                 color: function(value) {
                     // Set color based on percentage of the max value
@@ -213,6 +215,48 @@
         })();
     }
 
+    var gauge7 = initializeGauge("gauge7", <?= $total_invoice_closed ?>, <?= $total_invoice ?: 1 ?>);
+    var invoiceOpenText = document.getElementById('invoiceOpenText');
+    if (gauge7) {
+        (function animateGauge7() {
+            // invoiceOpenText.textContent = `Open :   <?= $total_invoice_open ?>`;
+            gauge7.setValue(<?= $total_invoice_closed ?>);
+            gauge7.setValueAnimated(<?= $total_invoice_closed ?>, 1);
+            window.setTimeout(animateGauge7, 6000);
+        })();
+    }
+
+    var gauge8 = initializeGauge("gauge8", <?= $total_nota_closed ?>, <?= $total_nota ?: 1 ?>);
+    var notaOpenText = document.getElementById('notaOpenText');
+    if (gauge8) {
+        (function animateGauge8() {
+            // notaOpenText.textContent = `Open :   <?= $total_nota_open ?>`;
+            gauge8.setValue(<?= $total_nota_closed ?>);
+            gauge8.setValueAnimated(<?= $total_nota_closed ?>, 1);
+            window.setTimeout(animateGauge8, 6000);
+        })();
+    }
+
+    function tglIndoSoft(dateStr) {
+        const now = new Date();
+        now.setHours(0, 0, 0, 0);
+        const target = new Date(dateStr);
+        target.setHours(0, 0, 0, 0);
+        const days = Math.round((target - now) / (1000 * 60 * 60 * 24));
+
+        if (days === 0) return 'Hari ini';
+        if (days === 1) return 'Besok';
+        if (days === -1) return 'Kemarin';
+        if (days > 1 && days <= 30) return `${days} hari lagi`;
+        if (days < -1 && days >= -30) return `${Math.abs(days)} hari yang lalu`;
+
+        const months = Math.round(Math.abs(days) / 30);
+        if (Math.abs(days) <= 365) return days > 0 ? `${months} bulan lagi` : `${months} bulan yang lalu`;
+
+        const years = Math.round(Math.abs(days) / 365);
+        return days > 0 ? `${years} tahun lagi` : `${years} tahun yang lalu`;
+    }
+
     // Function to initialize and configure the premium expiration gauge
     function initializePremiumExpirationGauge(elementId, startDateStr, endDateStr) {
         var svgElement = document.getElementById(elementId);
@@ -251,7 +295,7 @@
                 // Calculate percentage remaining relative to total duration
                 percentageRemaining = (daysRemaining / totalDurationDays) * 100;
                 // premiumStatusText.textContent = `Expires on: ${endDate.toLocaleDateString()}`;
-                premiumStatusText.textContent = `<?= tgl_indo(date('Y-m-d', strtotime($perusahaan->expired_day ?? 0))) ?>`;
+                premiumStatusText.textContent = tglIndoSoft(`<?= date('Y-m-d', strtotime($perusahaan->expired_day ?? 0)) ?>`);
                 // Use Math.ceil to round up days remaining, as even a fraction of a day means it's still "today"
                 premiumDaysRemainingText.textContent = `${Math.ceil(daysRemaining)} hari tersisa`;
             }
