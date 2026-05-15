@@ -255,13 +255,13 @@
         })();
     }
 
-    var gauge8 = initializeGaugeNonPercentage("gauge8", <?= $total_invoice_open ?>, <?= $total_nota ?: 1 ?>);
+    var gauge8 = initializeGaugeNonPercentage("gauge8", <?= $total_nota_open ?>, <?= $total_nota ?: 1 ?>);
     var notaOpenText = document.getElementById('notaOpenText');
     if (gauge8) {
         (function animateGauge8() {
             // notaOpenText.textContent = `Open :   <?= $total_nota_closed ?>`;
-            gauge8.setValue(<?= $total_invoice_open ?>);
-            gauge8.setValueAnimated(<?= $total_invoice_open ?>, 1);
+            gauge8.setValue(<?= $total_nota_open ?>);
+            gauge8.setValueAnimated(<?= $total_nota_open ?>, 1);
             window.setTimeout(animateGauge8, 6000);
         })();
     }

@@ -103,6 +103,7 @@ class Home extends CI_Controller
     // CARI TOTAL INVOICE
     $this->cb->from('invoice');
     $this->cb->where('id_company', $this->session->userdata('user_perusahaan_id'));
+    $this->cb->where('status_void =', '0');
     $total_invoice = $this->cb->get()->num_rows(); // Get the number of rows
 
     // CARI TOTAL INVOICE CLOSED
