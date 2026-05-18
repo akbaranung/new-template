@@ -2298,6 +2298,235 @@ class Financial extends CI_Controller
 		redirect('financial/invoice');
 	}
 
+	public function create_invoice_penjualan()
+	{
+		$nip = $this->session->userdata('nip');
+		$sql = "SELECT COUNT(Id) FROM memo WHERE (nip_kpd LIKE '%$nip%' OR nip_cc LIKE '%$nip%') AND (`read` NOT LIKE '%$nip%');";
+		$query = $this->db->query($sql);
+		$res2 = $query->result_array();
+		$result = $res2[0]['COUNT(Id)'];
+
+		$sql2 = "SELECT COUNT(id) FROM task WHERE (`member` LIKE '%$nip%' or `pic` like '%$nip%') and activity='1'";
+		$query2 = $this->db->query($sql2);
+		$res2 = $query2->result_array();
+		$result2 = $res2[0]['COUNT(id)'];
+
+		$data = [
+			'title' => 'Create Invoice',
+			// 'no_invoice' => $no_inv,
+			'customers' => $this->M_customer->list_customer(),
+			'pendapatan' => $this->M_coa->getCoaByCode('1'),
+			'persediaan' => $this->M_coa->getCoaByCode('4'),
+			'count_inbox' => $result,
+			'count_inbox2' => $result2,
+		];
+
+		$data['title'] = "Create Invoice";
+		$data['pages'] = "pages/financial/v_create_invoice_penjualan";
+		$data['utility'] = $this->db->get('utility')->row_array();
+		$data['pages_script'] = 'script/financial/s_financial';
+		$data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
+
+		$this->cb->from('invoice');
+		$this->cb->join('t_cabang', 't_cabang.uid = invoice.id_cabang');
+		$this->cb->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
+		$this->cb->where('MONTH(invoice.created_at)', date('m'));
+		$this->cb->where('YEAR(invoice.created_at)', date('Y'));
+		$total_invoice = $this->cb->get()->num_rows(); // Get the number of rows
+
+		$this->db->from('utility');
+		$this->db->where('Id', $this->session->userdata('user_perusahaan_id'));
+		$perusahaan = $this->db->get()->row(); // Get the number of rows
+
+		$limit_invoice = $perusahaan->kuota_invoice;
+		if ($total_invoice >= $limit_invoice) {
+			$this->session->set_flashdata('swal_message', [
+				'icon' => 'info', // Tetap gunakan 'info' atau 'question' untuk kesan informatif
+				'title' => 'Singgasana Menunggu Anda!', // Judul yang menarik dan bertema
+				'text' => 'Batas jumlah arsip keuangan (invoice) dalam perbendaharaan kerajaan Anda telah tercapai. Tambah kapasitas perbendaharaan dan kelola lebih banyak dokumen penting dengan menaikkan derajat kekuasaan Anda.',
+				'confirmButtonText' => 'Klaim Takhta Sekarang!', // Kalimat persuasif untuk tombol
+				'showCancelButton' => true,
+				'cancelButtonText' => 'Tunda Penobatan', // Opsi yang lucu dan sesuai tema
+				'redirectUrl' => base_url('subscription/upgrade')
+			]);
+			redirect('financial/invoice');
+		}
+
+		$this->load->view('index', $data);
+	}
+
+	public function store_invoice_penjualan()
+	{
+		$id_user     = $this->session->userdata('nip');
+		$tgl_invoice = $this->input->post('tgl_invoice');
+		$ppn         = $this->input->post('ppn');
+		$opsi_termin = $this->input->post('opsi_termin');
+		$opsi_pph    = $this->input->post('opsi_pph');
+		$coa_debit   = $this->input->post('coa_debit');
+		$coa_kredit  = $this->input->post('coa_kredit');
+		$keterangan  = trim($this->input->post('keterangan'));
+
+		$nominal            = $this->convertToNumberWithComma($this->input->post('nominal'));
+		$besaran_ppn        = $this->convertToNumberWithComma($this->input->post('besaran_ppn'));
+		$besaran_pph        = $this->convertToNumberWithComma($this->input->post('besaran_pph'));
+		$nominal_bayar      = $this->convertToNumberWithComma($this->input->post('nominal_bayar'));
+		$total_nonpph       = $this->convertToNumberWithComma($this->input->post('total_nonpph'));
+		$total_denganpph    = $this->convertToNumberWithComma($this->input->post('total_denganpph'));
+		$nominal_pendapatan = $this->convertToNumberWithComma($this->input->post('nominal_pendapatan'));
+
+		$pph = isset($opsi_pph) ? '0.02' : 0;
+
+		// ── Generate no invoice ──
+		$tahun       = substr($tgl_invoice, 0, 4);
+		$max_num     = $this->M_invoice->select_max($tahun);
+		$bilangan    = ($max_num['max']) ? $max_num['max'] + 1 : 1;
+		$month       = substr($tgl_invoice, 5, 2);
+		$year        = substr($tgl_invoice, 2, 2);
+		$no_inv      = sprintf("%04d", $bilangan);
+		$kode_cabang = sprintf("%02d", $this->session->userdata('kode_cabang'));
+		$kop_invoice = $this->session->userdata('nama_akronim') . "-" . $kode_cabang;
+		$slug        = $no_inv . '/' . strtoupper($kop_invoice) . '/' . intToRoman($month) . '/' . $year;
+
+		// ── Data header invoice ──
+		$invoice_data = [
+			'no_invoice'         => $no_inv,
+			'tanggal_invoice'    => $tgl_invoice,
+			'created_by'         => $id_user,
+			'keterangan'         => $keterangan,
+			'id_customer'        => $this->input->post('customer'),
+			'subtotal'           => $nominal,
+			'diskon'             => '0',
+			'besaran_diskon'     => '0',
+			'ppn'                => $ppn,
+			'besaran_ppn'        => $besaran_ppn,
+			'opsi_pph23'         => isset($opsi_pph) ? $opsi_pph : '0',
+			'opsi_ppn'           => '0',
+			'pph'                => $pph,
+			'besaran_pph'        => $besaran_pph,
+			'total_nonpph'       => $total_nonpph,
+			'total_denganpph'    => $total_denganpph,
+			'coa_debit'          => $coa_debit,
+			'coa_kredit'         => $coa_kredit,
+			'nominal_bayar'      => $nominal_bayar,
+			'nominal_pendapatan' => $nominal_pendapatan,
+			'jenis_invoice'      => 'khusus',
+			'opsi_termin'        => isset($opsi_termin) ? $opsi_termin : '0',
+			'status_pendapatan'  => '1',
+			'slug'               => $slug,
+			'id_cabang'          => $this->session->userdata('kode_cabang'),
+			'id_company'         => $this->session->userdata('user_perusahaan_id'),
+			'no_po'              => $this->input->post('no_po') ?: null,
+			'tgl_po'             => $this->input->post('tgl_po') ?: null,
+			'metode_bayar'       => $this->input->post('metode_bayar'),
+			'tgl_jatuh_tempo'    => $this->input->post('tgl_jatuh_tempo'),
+		];
+
+		// ── Ambil data item dari POST ──
+		$id_items      = $this->input->post('id_item');
+		$nama_items    = $this->input->post('item');       // hidden field nama item
+		$jumlahs       = $this->input->post('jumlah');
+		$harga_satuans = $this->input->post('total');      // harga satuan dari hidden field
+		$total_amounts = $this->input->post('total_amount');
+
+		if (empty($id_items) || !is_array($id_items)) {
+			$this->session->set_flashdata('message_error', 'Item invoice tidak boleh kosong.');
+			redirect('financial/create_invoice_item');
+		}
+
+		// ── Validasi stok gabungan per item (server-side) ──
+		$qty_per_item = [];
+		foreach ($id_items as $key => $id_item) {
+			if (empty($id_item)) continue;
+			$qty = floatval(str_replace(',', '.', str_replace(',', '', $jumlahs[$key])));
+			$qty_per_item[$id_item] = ($qty_per_item[$id_item] ?? 0) + $qty;
+		}
+
+		foreach ($qty_per_item as $id_item => $total_qty) {
+			$item = $this->M_item_nota->get_by_id($id_item);
+
+			if (!$item) {
+				$this->session->set_flashdata('message_error', 'Item tidak ditemukan.');
+				redirect('financial/create_invoice_item');
+			}
+
+			if ($total_qty <= 0) {
+				$this->session->set_flashdata('message_error', 'Qty untuk ' . $item->nama_item . ' harus lebih dari 0.');
+				redirect('financial/create_invoice_item');
+			}
+
+			if ($item->stok < $total_qty) {
+				$this->session->set_flashdata(
+					'message_error',
+					'Stok ' . $item->nama_item . ' tidak cukup. ' .
+						'Tersedia: ' . number_format($item->stok, 2) . ', Diminta: ' . number_format($total_qty, 2)
+				);
+				redirect('financial/create_invoice_item');
+			}
+		}
+
+		// ── Mulai transaksi DB ──
+		$this->cb->trans_begin();
+
+		$id_invoice = $this->M_invoice->insert($invoice_data);
+
+		if (!$id_invoice) {
+			$this->cb->trans_rollback();
+			$this->session->set_flashdata('message_error', 'Gagal membuat invoice.');
+			redirect('financial/invoice');
+		}
+
+		// ── Insert detail invoice + kurangi stok ──
+		$detail_data = [];
+
+		foreach ($id_items as $i => $id_item) {
+			if (empty($id_item)) continue;
+
+			$qty         = floatval(str_replace(',', '', $jumlahs[$i]));
+			$harga       = floatval(str_replace(',', '', $harga_satuans[$i]));
+			$total_amount = floatval(str_replace(',', '', $total_amounts[$i]));
+			$nama_item   = strtoupper(trim($nama_items[$i]));
+
+			$detail_data[] = [
+				'id_invoice'  => $id_invoice,
+				'id_item'     => $id_item,
+				'item'        => $nama_item,
+				'qty'         => $qty,
+				'total'       => $harga,        // harga satuan
+				'total_amount' => $total_amount,
+				'created_by'  => $id_user,
+				'id_cabang'   => $this->session->userdata('kode_cabang'),
+				'id_company'  => $this->session->userdata('user_perusahaan_id'),
+			];
+
+			// Kurangi stok + catat stok_log per item
+			$kurang = $this->M_item_nota->kurangi_stok_invoice($id_item, $qty, $id_invoice, $slug, $id_user);
+
+			if (!$kurang) {
+				$this->cb->trans_rollback();
+				$this->session->set_flashdata('message_error', 'Gagal mengurangi stok item: ' . $nama_item);
+				redirect('financial/invoice');
+			}
+		}
+
+		if (!empty($detail_data)) {
+			$insert_detail = $this->M_invoice->insert_batch($detail_data);
+
+			if ($insert_detail === FALSE) {
+				$this->cb->trans_rollback();
+				$this->session->set_flashdata('message_error', 'Gagal menyimpan detail invoice.');
+				redirect('financial/invoice');
+			}
+		}
+
+		// ── Posting jurnal (reuse function existing) ──
+		$this->posting($coa_debit, $coa_kredit, $keterangan, $total_denganpph, $tgl_invoice, $id_invoice);
+
+		$this->cb->trans_commit();
+
+		$this->session->set_flashdata('message_name', 'Invoice berhasil dibuat: ' . $slug);
+		redirect('financial/invoice');
+	}
+
 	public function outstanding()
 	{
 
@@ -2873,6 +3102,174 @@ class Financial extends CI_Controller
 		$this->pdfgenerator->generate($html, $file_pdf, $paper, $orientation);
 	}
 
+	public function download_rekap_invoice()
+	{
+		$dari_tanggal   = $this->input->post('dari_tanggal');
+		$sampai_tanggal = $this->input->post('sampai_tanggal');
+		$customer_id    = $this->input->post('customer_id');
+		$status_bayar   = $this->input->post('status_bayar');
+
+		// Ambil data dari model
+		$invoices = $this->M_invoice->rekap_invoice($dari_tanggal, $sampai_tanggal, $customer_id, $status_bayar);
+
+		// Load PHPExcel
+		require_once(APPPATH . 'libraries/PHPExcel/IOFactory.php');
+
+		$excel = new PHPExcel();
+		$sheet = $excel->getActiveSheet();
+		$sheet->setTitle('Rekap Invoice');
+
+		$excel->getProperties()
+			->setCreator('Sistem')
+			->setTitle('Rekap Invoice')
+			->setSubject('Rekap Invoice')
+			->setDescription('Rekap Invoice periode ' . $dari_tanggal . ' s/d ' . $sampai_tanggal);
+
+		// ── Header judul ──
+		$sheet->mergeCells('A1:N1');
+		$sheet->setCellValue('A1', 'REKAP INVOICE');
+		$sheet->getStyle('A1')->getFont()->setBold(true)->setSize(13);
+		$sheet->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+		$sheet->mergeCells('A2:N2');
+		$label_customer = $customer_id ? '' : 'Semua Customer';
+		$label_status   = ($status_bayar === '') ? 'Semua Status' : ($status_bayar == '1' ? 'Lunas' : 'Belum Lunas');
+		$sheet->setCellValue('A2', 'Periode: ' . format_indo($dari_tanggal) . ' s/d ' . format_indo($sampai_tanggal) . '   |   Customer: ' . $label_customer . '   |   Status: ' . $label_status);
+		$sheet->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
+
+		// ── Header kolom ──
+		$headers = [
+			'A' => 'No.',
+			'B' => 'No. Invoice',
+			'C' => 'Tanggal Invoice',
+			'D' => 'No. PO',
+			'E' => 'Tgl. PO',
+			'F' => 'Customer',
+			'G' => 'Keterangan',
+			'H' => 'Subtotal',
+			'I' => 'PPN',
+			'J' => 'Total Non-PPh',
+			'K' => 'PPh 23',
+			'L' => 'Total dgn PPh',
+			'M' => 'Status Bayar',
+			'N' => 'Metode Bayar',
+		];
+
+		$header_row = 4;
+		foreach ($headers as $col => $label) {
+			$sheet->setCellValue($col . $header_row, $label);
+		}
+
+		// Style header kolom
+		$header_range = 'A' . $header_row . ':N' . $header_row;
+		$sheet->getStyle($header_range)->applyFromArray([
+			'font'      => ['bold' => true, 'color' => ['rgb' => 'FFFFFF']],
+			'fill'      => ['type' => PHPExcel_Style_Fill::FILL_SOLID, 'startcolor' => ['rgb' => '2d6a4f']],
+			'alignment' => ['horizontal' => PHPExcel_Style_Alignment::HORIZONTAL_CENTER],
+			'borders'   => [
+				'allborders' => ['style' => PHPExcel_Style_Border::BORDER_THIN, 'color' => ['rgb' => 'AAAAAA']],
+			],
+		]);
+
+		// ── Isi data ──
+		$row        = $header_row + 1;
+		$no         = 1;
+		$grand_subtotal     = 0;
+		$grand_ppn          = 0;
+		$grand_total_nonpph = 0;
+		$grand_pph          = 0;
+		$grand_total_pph    = 0;
+
+		if ($invoices) {
+			foreach ($invoices as $i) {
+				$status_label = ($i['status_void'] == '1') ? 'Void' : (($i['status_bayar'] == '1') ? 'Lunas' : 'Belum Lunas');
+
+				$sheet->setCellValue('A' . $row, $no++);
+				$sheet->setCellValue('B' . $row, $i['no_invoice']);
+				$sheet->setCellValue('C' . $row, $i['tanggal_invoice']);
+				$sheet->setCellValue('D' . $row, $i['no_po'] ?? '');
+				$sheet->setCellValue('E' . $row, $i['tgl_po'] ?? '');
+				$sheet->setCellValue('F' . $row, $i['nama_customer']);
+				$sheet->setCellValue('G' . $row, $i['keterangan']);
+				$sheet->setCellValue('H' . $row, (float)$i['subtotal']);
+				$sheet->setCellValue('I' . $row, (float)$i['besaran_ppn']);
+				$sheet->setCellValue('J' . $row, (float)$i['total_nonpph']);
+				$sheet->setCellValue('K' . $row, (float)$i['besaran_pph']);
+				$sheet->setCellValue('L' . $row, (float)$i['total_denganpph']);
+				$sheet->setCellValue('M' . $row, $status_label);
+				$sheet->setCellValue('N' . $row, $i['metode_bayar'] ?? '');
+
+				// Zebra stripe
+				if ($no % 2 == 0) {
+					$sheet->getStyle('A' . $row . ':N' . $row)->applyFromArray([
+						'fill' => ['type' => PHPExcel_Style_Fill::FILL_SOLID, 'startcolor' => ['rgb' => 'F2F2F2']],
+					]);
+				}
+
+				// Akumulasi grand total
+				$grand_subtotal     += (float)$i['subtotal'];
+				$grand_ppn          += (float)$i['besaran_ppn'];
+				$grand_total_nonpph += (float)$i['total_nonpph'];
+				$grand_pph          += (float)$i['besaran_pph'];
+				$grand_total_pph    += (float)$i['total_denganpph'];
+
+				// Format angka kolom H-L
+				$number_format = '#,##0';
+				foreach (['H', 'I', 'J', 'K', 'L'] as $col) {
+					$sheet->getStyle($col . $row)->getNumberFormat()->setFormatCode($number_format);
+				}
+
+				// Border tipis tiap baris
+				$sheet->getStyle('A' . $row . ':N' . $row)->applyFromArray([
+					'borders' => [
+						'allborders' => ['style' => PHPExcel_Style_Border::BORDER_THIN, 'color' => ['rgb' => 'DDDDDD']],
+					],
+				]);
+
+				$row++;
+			}
+		}
+
+		// ── Baris Grand Total ──
+		$total_row = $row;
+		$sheet->mergeCells('A' . $total_row . ':G' . $total_row);
+		$sheet->setCellValue('A' . $total_row, 'GRAND TOTAL');
+		$sheet->setCellValue('H' . $total_row, $grand_subtotal);
+		$sheet->setCellValue('I' . $total_row, $grand_ppn);
+		$sheet->setCellValue('J' . $total_row, $grand_total_nonpph);
+		$sheet->setCellValue('K' . $total_row, $grand_pph);
+		$sheet->setCellValue('L' . $total_row, $grand_total_pph);
+
+		$sheet->getStyle('A' . $total_row . ':N' . $total_row)->applyFromArray([
+			'font' => ['bold' => true],
+			'fill' => ['type' => PHPExcel_Style_Fill::FILL_SOLID, 'startcolor' => ['rgb' => 'D8F3DC']],
+			'borders' => [
+				'allborders' => ['style' => PHPExcel_Style_Border::BORDER_THIN, 'color' => ['rgb' => 'AAAAAA']],
+			],
+		]);
+
+		foreach (['H', 'I', 'J', 'K', 'L'] as $col) {
+			$sheet->getStyle($col . $total_row)->getNumberFormat()->setFormatCode('#,##0');
+		}
+
+		// ── Auto size kolom ──
+		foreach (range('A', 'N') as $col) {
+			$sheet->getColumnDimension($col)->setAutoSize(true);
+		}
+
+		// ── Output ──
+		$filename = 'Rekap_Invoice_' . $dari_tanggal . '_sd_' . $sampai_tanggal . '.xls';
+
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename="' . $filename . '"');
+		header('Cache-Control: max-age=0');
+		header('Cache-Control: cache, must-revalidate');
+		header('Pragma: public');
+
+		$objWriter = PHPExcel_IOFactory::createWriter($excel, 'Excel5');
+		$objWriter->save('php://output');
+		exit;
+	}
 
 	private function prepareCoaReport(&$data, $no_coa, $keyword = NULL, $limit = 20, $offset = 0)
 	{

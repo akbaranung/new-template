@@ -256,7 +256,7 @@
 			font-size: 9pt;
 			font-weight: bold;
 			color: #2d2d2d;
-			margin-bottom: 50px;
+			margin-bottom: 30px;
 			/* ruang TTD */
 		}
 
@@ -465,7 +465,16 @@
 					<td style="width: 45%; vertical-align: top; text-align: center;">
 						<p class="pesan-title"><?= $this->session->userdata('nama_perusahaan') ?></p>
 						<hr class="light">
-						<p class="ttd-company" style="margin-top: 6px; margin-bottom: 50px;">&nbsp;</p>
+						<p class="ttd-company" style="margin-top: 6px; margin-bottom: 8px;">&nbsp;</p>
+
+						<?php if (!empty($user['ttd']) && file_exists(FCPATH . $user['ttd'])) : ?>
+							<img src="<?= base_url($user['ttd']) ?>"
+								style="max-height: 70px; max-width: 180px; object-fit: contain; margin-bottom: 8px;"
+								alt="TTD">
+						<?php else : ?>
+							<div style="height: 70px;"></div>
+						<?php endif; ?>
+
 						<div class="ttd-line"></div>
 						<p class="ttd-name"><?= $user['nama'] ?></p>
 						<p class="ttd-jabatan"><?= $this->session->userdata('nama_jabatan') ?></p>

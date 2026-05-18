@@ -12,6 +12,10 @@
 					<div class="row mb-3">
 						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
 							<a href="<?= site_url('financial/create_invoice') ?>" class="btn btn-primary">Create Inv.</a>
+							<a href="<?= site_url('financial/create_invoice_penjualan') ?>" class="btn btn-pink">Create Inv. Penjualan</a>
+							<button type="button" class="btn btn-success text-white" data-toggle="modal" data-target="#modalRekapExcel">
+								<i class="fe fe-download me-1"></i> Rekap Excel
+							</button>
 
 							<span style="float:right; ">
 								<b>
@@ -397,3 +401,64 @@
 		</div> <!-- .col-12 -->
 	</div> <!-- .row -->
 </div> <!-- .container-fluid -->
+<div class="modal fade" id="modalRekapExcel" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-dialog modal-md">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">
+					<i class="fe fe-file-text me-1"></i> Download Rekap Invoice
+				</h5>
+				<button type="button" class="close" data-dismiss="modal">
+					<span>&times;</span>
+				</button>
+			</div>
+			<form action="<?= base_url('financial/download_rekap_invoice') ?>" method="POST" target="_blank">
+				<div class="modal-body">
+					<div class="row g-3">
+						<div class="col-md-6">
+							<div class="form-group">
+								<label class="form-label">Dari Tanggal <span class="text-danger">*</span></label>
+								<input type="date" name="dari_tanggal" class="form-control"
+									value="<?= date('Y-m-01') ?>" required>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="form-group">
+								<label class="form-label">Sampai Tanggal <span class="text-danger">*</span></label>
+								<input type="date" name="sampai_tanggal" class="form-control"
+									value="<?= date('Y-m-d') ?>" required>
+							</div>
+						</div>
+						<div class="col-12">
+							<div class="form-group">
+								<label class="form-label">Customer</label>
+								<select name="customer_id" class="form-control select2" style="width:100%">
+									<option value="">:: Semua Customer</option>
+									<?php foreach ($customers as $c) : ?>
+										<option value="<?= $c->id ?>"><?= $c->nama_customer ?></option>
+									<?php endforeach; ?>
+								</select>
+							</div>
+						</div>
+						<div class="col-12">
+							<div class="form-group">
+								<label class="form-label">Status Bayar</label>
+								<select name="status_bayar" class="form-control">
+									<option value="">:: Semua Status</option>
+									<option value="0">Belum Lunas</option>
+									<option value="1">Lunas</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+					<button type="submit" class="btn btn-success">
+						<i class="fe fe-download me-1"></i> Download Excel
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

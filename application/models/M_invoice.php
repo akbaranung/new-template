@@ -359,4 +359,29 @@ class M_invoice extends CI_Model
 		$this->cb->order_by('s.tanggal_terbang', 'ASC');
 		return $this->cb->get()->result_array();
 	}
+
+	public function rekap_invoice($dari_tanggal, $sampai_tanggal, $customer_id = null, $status_bayar = null)
+	{
+		$kode_cabang = $this->session->userdata('kode_cabang');
+
+		$this->cb->select('a.*, c.nama_customer');
+		$this->cb->from('invoice a');
+		$this->cb->join('customer c', 'a.id_customer = c.id', 'left');
+		$this->cb->where('a.id_cabang', $kode_cabang);
+		$this->cb->where('a.tanggal_invoice >=', $dari_tanggal);
+		$this->cb->where('a.tanggal_invoice <=', $sampai_tanggal);
+
+		if ($customer_id) {
+			$this->cb->where('a.id_customer', $customer_id);
+		}
+
+		if ($status_bayar !== null && $status_bayar !== '') {
+			$this->cb->where('a.status_bayar', $status_bayar);
+		}
+
+		$this->cb->order_by('a.tanggal_invoice', 'ASC');
+		$this->cb->order_by('a.no_invoice', 'ASC');
+
+		return $this->cb->get()->result_array();
+	}
 }

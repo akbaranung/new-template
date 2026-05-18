@@ -1,15 +1,17 @@
+<!-- invoice penjualan item dari DB -->
+<!-- file: pages/financial/v_create_invoice_item.php -->
 <div class="container-fluid">
 	<div class="row justify-content-center">
 		<div class="col-12">
 
 			<div class="d-flex align-items-center justify-content-between mb-4">
-				<h1 class="page-title mb-0">Buat Invoice</h1>
+				<h1 class="page-title mb-0">Buat Invoice (Item)</h1>
 				<a href="<?= base_url('financial/invoice') ?>" class="btn btn-sm btn-warning text-white">
 					<i class="fe fe-arrow-left me-1"></i> Back
 				</a>
 			</div>
 
-			<form method="POST" action="<?= base_url('financial/store_invoice/khusus') ?>" id="formInvoice">
+			<form method="POST" action="<?= base_url('financial/store_invoice_penjualan') ?>" id="formInvoice">
 				<div class="row g-4 align-items-start">
 
 					<!-- ══════════════════════════════ FORM (kiri) ══════════════════════════════ -->
@@ -72,30 +74,49 @@
 								<p class="section-label">
 									<i class="fe fe-list me-1"></i> Item Invoice
 								</p>
-								<table class="table table-sm table-bordered mb-0" id="tabelItem">
-									<thead class="table-light">
-										<tr>
-											<th style="width:42%; color:#6c757d;">Keterangan</th>
-											<th style="width:13%; color:#6c757d;">Jumlah</th>
-											<th style="width:18%; color:#6c757d;">Nominal</th>
-											<th style="width:18%; color:#6c757d;">Amount</th>
-											<th style="width:9%; color:#6c757d; text-align:center;">#</th>
-										</tr>
-									</thead>
-									<tbody id="tbody">
-										<tr class="baris">
-											<td><input type="text" class="form-control form-control-sm uppercase" name="item[]"></td>
-											<td><input type="text" class="form-control form-control-sm" name="jumlah[]" value="0"></td>
-											<td><input type="text" class="form-control form-control-sm" name="total[]" value="0"></td>
-											<td><input type="text" class="form-control form-control-sm" name="total_amount[]" value="0" readonly></td>
-											<td class="text-center align-middle">
-												<button type="button" class="btn btn-danger btn-sm hapusRow d-none">
-													<i class="fe fe-trash"></i>
-												</button>
-											</td>
-										</tr>
-									</tbody>
-								</table>
+								<div class="table-responsive">
+									<table class="table table-sm table-bordered mb-0" id="tabelItem">
+										<thead class="table-light">
+											<tr>
+												<th style="width:35%; color:#6c757d;">Item</th>
+												<th style="width:8%; color:#6c757d; text-align:center;">Stok</th>
+												<th style="width:12%; color:#6c757d;">Qty</th>
+												<th style="width:18%; color:#6c757d;">Harga Jual</th>
+												<th style="width:18%; color:#6c757d;">Amount</th>
+												<th style="width:9%; color:#6c757d; text-align:center;">#</th>
+											</tr>
+										</thead>
+										<tbody id="tbody">
+											<tr class="baris">
+												<td>
+													<select class="form-control form-control-sm select-item" name="id_item[]" required>
+														<option value="">-- Pilih Item --</option>
+													</select>
+													<!-- hidden fields per baris -->
+													<input type="hidden" name="item[]" class="nama-item">
+													<input type="hidden" name="total[]" class="harga-satuan" value="0">
+												</td>
+												<td class="text-center align-middle">
+													<span class="badge badge-info stok-display">0</span>
+												</td>
+												<td>
+													<input type="text" class="form-control form-control-sm jumlah" name="jumlah[]" value="0">
+												</td>
+												<td>
+													<input type="text" class="form-control form-control-sm harga-jual-display" value="0" readonly>
+												</td>
+												<td>
+													<input type="text" class="form-control form-control-sm" name="total_amount[]" value="0" readonly>
+												</td>
+												<td class="text-center align-middle">
+													<button type="button" class="btn btn-danger btn-sm hapusRow d-none">
+														<i class="fe fe-trash"></i>
+													</button>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
 								<button type="button" id="addRow" class="btn btn-sm btn-outline-secondary mt-2">
 									<i class="fe fe-plus me-1"></i> Tambah baris
 								</button>
@@ -154,7 +175,7 @@
 									</div>
 								</div>
 
-								<!-- Hidden fields kalkulasi untuk dikirim ke server -->
+								<!-- Hidden fields kalkulasi -->
 								<input type="hidden" name="nominal" id="nominal" value="0">
 								<input type="hidden" name="besaran_ppn" id="besaran_ppn" value="0">
 								<input type="hidden" name="besaran_pph" id="besaran_pph" value="0">
@@ -234,7 +255,18 @@
 		color: #6c757d;
 		margin-bottom: 0.75rem;
 	}
+
+	.stok-danger {
+		background-color: #dc3545 !important;
+		color: #fff !important;
+	}
+
+	.stok-warning {
+		background-color: #ffc107 !important;
+		color: #fff !important;
+	}
 </style>
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -244,20 +276,25 @@
 		return parts.join(",");
 	}
 
+	function formatRupiah(angka) {
+		let number = Math.floor(parseFloat(angka));
+		if (isNaN(number)) number = 0;
+		return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+	}
+
 	$(document).ready(function() {
 
-		/* ── [BARU] Sync customer ke info card ── */
+		/* ── Sync customer ke info card ── */
 		$('#customer').on('change', function() {
 			var label = $(this).find('option:selected').text();
 			$('#ic-customer').text($(this).val() ? label : '—');
 		});
 
-		/* ── [BARU] Update tampilan info card ── */
+		/* ── Update info card ── */
 		function updateInfoCard() {
 			var fmt = function(val) {
 				return 'Rp ' + Math.round(val).toLocaleString('id-ID');
 			};
-
 			var subtotal = parseInt($('#nominal').val().replace(/\,/g, '') || 0);
 			var ppnPct = parseFloat($('#ppn').val()) || 0;
 			var besaranPpn = parseInt($('#besaran_ppn').val().replace(/\,/g, '') || 0);
@@ -282,84 +319,44 @@
 			}
 		}
 
-		/* ── Existing: format input jumlah & total saat diketik ── */
-		$(document).on('change click keyup input paste', 'input[name="jumlah[]"], input[name="total[]"]', function(event) {
-			$(this).val(function(index, value) {
-				return value.replace(/(?!\.)\D/g, "")
-					.replace(/(?<=\..*)\./g, "")
-					.replace(/(?<=\.\d\d).*/g, "")
-					.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-			});
-
-			var row = $(this).closest('.baris');
-			hitungTotal(row);
-			updateTotalBelanja();
-			updateTotal();
-		});
-
-		function hitungTotal(row) {
-			var total = row.find('input[name="total[]"]').val().replace(/\,/g, '');
-			var jumlah = row.find('input[name="jumlah[]"]').val().replace(/\,/g, '');
-
-			total = (total) || 0;
-			jumlah = (jumlah) || 0;
-
-			var total_amount = Number(total) * Number(jumlah);
-			row.find('input[name="total_amount[]"]').val(formatNumber(total_amount.toFixed(0)));
-			updateTotalBelanja();
+		/* ── Hitung amount per baris ── */
+		function hitungAmountBaris(row) {
+			var jumlah = parseFloat(row.find('.jumlah').val().replace(/\,/g, '')) || 0;
+			var harga = parseFloat(row.find('.harga-satuan').val().replace(/\,/g, '')) || 0;
+			var amount = jumlah * harga;
+			row.find('input[name="total_amount[]"]').val(formatNumber(amount.toFixed(0)));
 		}
 
+		/* ── Update subtotal semua baris → #nominal ── */
 		function updateTotalBelanja() {
 			var total_pos_fix = 0;
-			$(".baris").each(function() {
-				var total = parseFloat($(this).find('input[name="total_amount[]"]').val().replace(/\,/g, ''));
-				if (!isNaN(total)) {
-					total_pos_fix += total;
-				}
+			$('.baris').each(function() {
+				var v = parseFloat($(this).find('input[name="total_amount[]"]').val().replace(/\,/g, ''));
+				if (!isNaN(v)) total_pos_fix += v;
 			});
 			$('#nominal').val(formatNumber(total_pos_fix));
 		}
 
-		/* ── Existing: hapus row ── */
-		$(document).on('click', '.hapusRow', function() {
-			$(this).closest('.baris').remove();
-			updateTotalBelanja();
-			updateTotal();
-		});
-
-		/* ── Existing: trigger updateTotal ── */
-		$('#ppn').on('change', function() {
-			updateTotal();
-		});
-		$('#opsi_pph').on('change', function() {
-			updateTotal();
-		});
-
-		/* ── Existing: kalkulasi utama ── */
+		/* ── Kalkulasi utama (dari existing JS) ── */
 		function updateTotal() {
-			var ppn = parseFloat($('#ppn').val());
+			var ppn = parseFloat($('#ppn').val()) || 0;
 			var pph = 0.02;
-			var besaranpph = parseFloat($('#besaran_pph').val()) || 0;
+			var besaranpph = 0;
 
 			var subtotal = 0;
 			$('.baris').each(function() {
-				var totalBaris = parseInt($(this).find('input[name="total_amount[]"]').val().replace(/\,/g, '') || 0);
-				subtotal += totalBaris;
+				subtotal += parseInt($(this).find('input[name="total_amount[]"]').val().replace(/\,/g, '') || 0);
 			});
 
-			var total = subtotal;
-
 			if ($('#opsi_pph').is(':checked')) {
-				besaranpph = total * pph;
-			} else {
-				besaranpph = 0;
+				besaranpph = subtotal * pph;
 			}
 
-			var besaranppn = total * ppn;
-			var total_nonpph = total + besaranppn;
-			var total_denganpph = total + besaranppn - besaranpph;
-			var pendapatan = total - besaranpph;
-			var nominal_bayar = total + besaranppn - besaranpph;
+			var besaranppn = subtotal * ppn;
+			var total_nonpph = subtotal + besaranppn;
+			var total_denganpph = subtotal + besaranppn - besaranpph;
+			var pendapatan = subtotal - besaranpph;
+			var nominal_bayar = subtotal + besaranppn - besaranpph;
 
 			$('#besaran_ppn').val(formatNumber(besaranppn.toFixed(0)));
 			$('#besaran_pph').val(formatNumber(besaranpph.toFixed(0)));
@@ -368,54 +365,188 @@
 			$('#nominal_pendapatan').val(formatNumber(pendapatan.toFixed(0)));
 			$('#nominal_bayar').val(formatNumber(nominal_bayar.toFixed(0)));
 
-			/* [BARU] Setelah hidden fields diupdate, refresh info card */
 			updateInfoCard();
 		}
 
-		/* ── Existing: tambah baris (dengan validasi Swal dari existing) ── */
-		var rowCount = 1;
+		/* ── Event: input qty ── */
+		$(document).on('change click keyup input paste', 'input.jumlah', function() {
+			$(this).val(function(i, v) {
+				return v.replace(/(?!\.)\D/g, "")
+					.replace(/(?<=\..*)\./g, "")
+					.replace(/(?<=\.\d\d).*/g, "")
+					.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+			});
+			var row = $(this).closest('.baris');
+			hitungAmountBaris(row);
+			updateTotalBelanja();
+			updateTotal();
+		});
 
-		$('#addRow').on('click', function() {
-			var previousRow = $('.baris').last();
-			var inputs = previousRow.find('input[type="text"], input[type="datetime-local"]');
-			var isEmpty = false;
+		/* ── Event: PPN & PPh toggle ── */
+		$('#ppn').on('change', function() {
+			updateTotal();
+		});
+		$('#opsi_pph').on('change', function() {
+			updateTotal();
+		});
 
-			inputs.each(function() {
-				if ($(this).val().trim() === '' && $(this).attr('name') !== 'total_amount[]') {
-					isEmpty = true;
-					return false;
+		/* ── Init Select2 AJAX per baris ── */
+		function initSelectItem(selectEl) {
+			selectEl.select2({
+				placeholder: '-- Cari Item --',
+				allowClear: true,
+				width: '100%',
+				minimumInputLength: 3,
+				language: {
+					inputTooShort: function() {
+						return 'Ketik minimal 3 karakter...';
+					}
+				},
+				ajax: {
+					url: '<?= base_url("items/get_items") ?>',
+					dataType: 'json',
+					delay: 400,
+					data: function(params) {
+						return {
+							q: params.term
+						};
+					},
+					processResults: function(data) {
+						return {
+							results: data.results
+						};
+					},
+					cache: true
 				}
 			});
 
-			if (isEmpty) {
+			/* Saat item dipilih → isi harga & stok */
+			selectEl.on('select2:select', function(e) {
+				var data = e.params.data;
+				var row = $(this).closest('.baris');
+
+				var stok = parseFloat(data.stok) || 0;
+				var harga = parseFloat(data.harga_jual) || 0;
+				var namaItem = data.text;
+
+				/* Isi hidden & display fields */
+				row.find('.nama-item').val(namaItem);
+				row.find('.harga-satuan').val(harga);
+				row.find('.harga-jual-display').val(formatRupiah(harga));
+				row.find('.stok-display').text(stok.toFixed(2))
+					.removeClass('stok-danger stok-warning badge-secondary')
+					.addClass(stok <= 0 ? 'stok-danger' : (stok <= 5 ? 'stok-warning' : 'badge-info'));
+
+				/* Simpan stok ke data attribute untuk validasi qty */
+				row.data('stok-db', stok);
+				row.data('id-item', data.id);
+
+				/* Reset qty, fokus */
+				row.find('.jumlah').val('1').focus().select();
+				hitungAmountBaris(row);
+				updateTotalBelanja();
+				updateTotal();
+			});
+
+			/* Clear → reset baris */
+			selectEl.on('select2:clear', function() {
+				var row = $(this).closest('.baris');
+				row.find('.nama-item').val('');
+				row.find('.harga-satuan').val('0');
+				row.find('.harga-jual-display').val('0');
+				row.find('.stok-display').text('0').removeClass('stok-danger stok-warning').addClass('badge-info');
+				row.find('.jumlah').val('0');
+				row.find('input[name="total_amount[]"]').val('0');
+				row.removeData('stok-db').removeData('id-item');
+				updateTotalBelanja();
+				updateTotal();
+			});
+		}
+
+		/* Init baris pertama */
+		initSelectItem($('.baris:first .select-item'));
+
+		/* ── Tambah baris ── */
+		$('#addRow').on('click', function() {
+			var previousRow = $('.baris').last();
+
+			/* Validasi baris sebelumnya sudah terisi */
+			var itemVal = previousRow.find('.select-item').val();
+			var qtyVal = parseFloat(previousRow.find('.jumlah').val().replace(/\,/g, '')) || 0;
+
+			if (!itemVal) {
 				Swal.fire({
 					icon: 'error',
 					title: 'Oops...',
-					text: 'Mohon isi semua input pada baris sebelumnya terlebih dahulu!',
+					text: 'Pilih item pada baris sebelumnya terlebih dahulu!'
+				});
+				return;
+			}
+			if (qtyVal <= 0) {
+				Swal.fire({
+					icon: 'error',
+					title: 'Oops...',
+					text: 'Isi qty pada baris sebelumnya terlebih dahulu!'
 				});
 				return;
 			}
 
-			var newRow = previousRow.clone();
-			newRow.find('input').val('');
-			newRow.find('input[name="total[]"]').val('0');
-			newRow.find('input[name="jumlah[]"]').val('0');
+			var newRow = previousRow.clone(false); /* clone tanpa event */
+			/* Reset isi baris baru */
+			newRow.find('.select-item').val(null);
+			newRow.find('.nama-item').val('');
+			newRow.find('.harga-satuan').val('0');
+			newRow.find('.harga-jual-display').val('0');
+			newRow.find('.stok-display').text('0').removeClass('stok-danger stok-warning').addClass('badge-info');
+			newRow.find('.jumlah').val('0');
 			newRow.find('input[name="total_amount[]"]').val('0');
-			newRow.find('input[type="checkbox"]').prop('checked', false);
 			newRow.find('.hapusRow').removeClass('d-none');
+			newRow.removeData('stok-db').removeData('id-item');
 
-			previousRow.after(newRow);
-			rowCount++;
+			$('#tbody').append(newRow);
+
+			/* Re-init select2 pada baris baru */
+			initSelectItem(newRow.find('.select-item'));
 		});
 
-		/* ── Existing: hapus row (class .hapusRow dari clone) ── */
+		/* ── Hapus baris ── */
 		$(document).on('click', '.hapusRow', function() {
 			$(this).closest('.baris').remove();
 			updateTotalBelanja();
 			updateTotal();
 		});
 
-		/* Init */
+		/* ── Validasi stok sebelum submit ── */
+		$('#formInvoice').on('submit', function(e) {
+			var stokError = [];
+
+			$('.baris').each(function() {
+				var itemId = $(this).data('id-item');
+				if (!itemId) return;
+
+				var stokDB = parseFloat($(this).data('stok-db')) || 0;
+				var qty = parseFloat($(this).find('.jumlah').val().replace(/\,/g, '')) || 0;
+				var namaItem = $(this).find('.nama-item').val();
+
+				if (qty > stokDB) {
+					stokError.push(namaItem + ' (Stok: ' + stokDB.toFixed(2) + ', Diminta: ' + qty.toFixed(2) + ')');
+				}
+			});
+
+			if (stokError.length > 0) {
+				e.preventDefault();
+				Swal.fire({
+					icon: 'error',
+					title: 'Stok Tidak Cukup',
+					html: '<ul class="text-left">' + stokError.map(function(s) {
+						return '<li>' + s + '</li>';
+					}).join('') + '</ul>'
+				});
+				return false;
+			}
+		});
+
+		/* Init kalkulasi */
 		updateTotal();
 	});
 </script>
