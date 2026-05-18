@@ -246,4 +246,62 @@ class M_item_nota extends CI_Model
 
 		return $this->cb->update($this->table, $data);
 	}
+
+	public function kurangi_stok_invoice($id_item, $qty, $ref_id, $no_ref, $created_by)
+	{
+		$this->cb->where('id', $id_item);
+		$this->cb->where('id_cabang', $this->session->userdata('kode_cabang'));
+		$this->cb->where('id_company', $this->session->userdata('user_perusahaan_id'));
+		$item = $this->cb->get($this->table)->row();
+
+		if (!$item) return false;
+
+		$stok_before  = $item->stok;
+		$nilai_before = $item->nilai_persediaan;
+		$harga_modal  = $item->harga_modal;
+
+		$stok_baru  = $stok_before - $qty;
+		$nilai_berkurang = $qty * $harga_modal;
+		$nilai_baru = max(0, $nilai_before - $nilai_berkurang);
+
+		if ($stok_baru < 0) {
+			log_message('error', 'kurangi_stok_invoice: stok tidak mencukupi untuk item ' . $id_item);
+			return false;
+		}
+
+		// Update stok & nilai_persediaan item
+		$update = $this->cb->where('id', $id_item)
+			->where('id_cabang', $this->session->userdata('kode_cabang'))
+			->where('id_company', $this->session->userdata('user_perusahaan_id'))
+			->update($this->table, [
+				'stok'             => $stok_baru,
+				'nilai_persediaan' => $nilai_baru,
+				'updated_at'       => date('Y-m-d H:i:s'),
+			]);
+
+		if (!$update) return false;
+
+		// Catat ke stok_log
+		$log = [
+			'id_item'            => $id_item,
+			'qty_before'         => $stok_before,
+			'qty_after'          => $stok_baru,
+			'qty_change'         => -$qty,
+			'nilai_before'       => $nilai_before,
+			'nilai_after'        => $nilai_baru,
+			'harga_modal_before' => $harga_modal,
+			'harga_modal_after'  => $harga_modal,   // harga_modal tidak berubah saat penjualan
+			'type'               => 'penjualan',
+			'ref_table'          => 'invoice',
+			'ref_id'             => $ref_id,
+			'no_ref'             => $no_ref,
+			'keterangan'         => 'Penjualan via invoice',
+			'id_cabang'          => $this->session->userdata('kode_cabang'),
+			'id_company'         => $this->session->userdata('user_perusahaan_id'),
+			'created_by'         => $created_by,
+			'created_at'         => date('Y-m-d H:i:s'),
+		];
+
+		return $this->cb->insert('stok_log', $log);
+	}
 }

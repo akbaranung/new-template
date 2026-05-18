@@ -4,741 +4,744 @@ defined('BASEPATH') or exit('No direct script access allowed');
 class Task extends CI_Controller
 {
 
-  public function __construct()
-  {
-
-    parent::__construct();
-    $this->load->model(['M_task']);
-
-    if ($this->session->userdata('isLogin') == FALSE) {
-      redirect('home');
-    }
-
-    date_default_timezone_set('Asia/Jakarta');
-  }
-
-  public function index()
-  {
-    $has_access = $this->M_menu->has_access();
-
-    if (!$has_access) {
-      show_error('Forbidden Access: You do not have permission to view this page.', 403, '403 Forbidden');
-    }
-
-    $keyword = htmlspecialchars($this->input->get('search') ?? '', ENT_QUOTES, 'UTF-8');
-    //pagination settings
-    $config['base_url'] = site_url('app/inbox');
-    $config['total_rows'] = $this->M_task->task_count($this->session->userdata('nip'), $keyword);
-    $config['per_page'] = "20";
-    $config["uri_segment"] = 3;
-    $config["num_links"] = 10;
-    $config['enable_query_strings'] = TRUE;
-    $config['page_query_string'] = TRUE;
-    $config['use_page_numbers'] = TRUE;
-    $config['reuse_query_string'] = TRUE;
-    $config['query_string_segment'] = 'page';
-
-    // integrate bootstrap pagination
-    $config['full_tag_open'] = '<ul class="pagination justify-content-end">';
-    $config['full_tag_close'] = '</ul>';
-    $config['first_link'] = true;
-    $config['last_link'] = true;
-    $config['first_tag_open'] = '<li class="page-item">';
-    $config['first_tag_close'] = '</li>';
-    $config['prev_link'] = 'Previous';
-    $config['prev_tag_open'] = '<li class="page-item">';
-    $config['prev_tag_close'] = '</li>';
-    $config['next_link'] = 'Next';
-    $config['next_tag_open'] = '<li class="page-item">';
-    $config['next_tag_close'] = '</li>';
-    $config['last_tag_open'] = '<li class="page-item">';
-    $config['last_tag_close'] = '</li>';
-    $config['cur_tag_open'] = '<li class="page-item active"><a class="page-link" href="#">';
-    $config['cur_tag_close'] = '</a></li>';
-    $config['num_tag_open'] = '<li class="page-item">';
-    $config['num_tag_close'] = '</li>';
-    $config['attributes'] = array('class' => 'page-link');
-
-    // initialize pagination
-    $this->pagination->initialize($config);
-    $data['page'] = ($this->input->get('page')) ? (($this->input->get('page') - 1) * $config['per_page']) : 0;
-    $data['data_task'] = $this->M_task->task_get($config["per_page"], $data['page'], $this->session->userdata('nip'), $keyword);
-    $data['pagination'] = $this->pagination->create_links();
-
-    $data['title'] = 'Task List';
-    $data['utility'] = $this->db->get('utility')->row_array();
-    $data['pages_script'] = 'script/task/s_task';
-    $data['pages'] = 'pages/tello/v_task';
-    $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
-
-    $this->load->view('index', $data);
-  }
-
-  public function task_view($id = null)
-  {
-    $data['task'] = $this->M_task->task_get_detail($id);
-    $cek_detail = $this->db->select('id_detail')->from('task_detail')->where('id_task', $id)->get()->num_rows();
-
-    if (empty($data['task'])) {
-      show_error('Unauthorize Privilage!', 401, 'Access Denied');
-    }
-
-    if ($cek_detail == true) {
-      $this->db->select('*');
-      $this->db->from('users as a');
-      $this->db->where('b.id_task', $id);
-      $this->db->join('task_detail as b', 'a.nip = b.responsible');
-      $this->db->order_by('activity', 'ASC');
-      $this->db->order_by('date_created', 'DESC');
-      $data['task_detail'] = $this->db->get()->result();
-
-      $data['title'] = 'Card List';
-      $data['utility'] = $this->db->get('utility')->row_array();
-      $data['pages_script'] = 'script/task/s_task';
-      $data['pages'] = 'pages/tello/v_task_card';
-      $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
-      $this->load->view('index', $data);
-    } else {
-      $this->session->set_flashdata('warning', 'Card/detail task belum tersedia! Buat terlebih dahulu!');
-      redirect('task/detail_task/' . $id);
-    }
-  }
-
-  public function save_task()
-  {
-    $id_task = $this->input->post('id_task');
-    $task_name = $this->input->post('judul');
-    $member = $this->input->post('member[]');
-    $activity = $this->input->post('activity');
-    $description = $this->input->post('description');
-
-    // Set rules form validation
-    $this->form_validation->set_rules('judul', 'Task name', 'required|trim', array('required' => '%s wajib diisi!'));
-    $this->form_validation->set_rules('member[]', 'Member', 'required', array('required' => '%s wajib dipilih!'));
-
-    if ($this->form_validation->run() == FALSE) {
-      $response = [
-        'success' => false,
-        'msg' => array_values($this->form_validation->error_array())[0]
-      ];
-    } else {
-      $member_task = '';
-      $i = 0;
-      foreach ($member as $m) {
-        $member_task .= $m . ';';
-        $get_member[] = $this->db->get_where('users', ['nip' => $m])->row_array();
-        $phone_member[] = $get_member[$i]['phone'];
-      }
-
-      if ($id_task) {
-        $update_task = [
-          'name' => $task_name,
-          'member' => $member_task,
-          'activity' => $activity,
-          'comment' => $description,
-          'pic' => $this->session->userdata('nip')
-        ];
-        $this->db->where('id', $id_task);
-        $this->db->update('task', $update_task);
-
-        $response = [
-          'success' => true,
-          'msg' => 'Task berhasil diubah!',
-        ];
-      } else {
-        $save_task = [
-          'name' => $task_name,
-          'member' => $member_task,
-          'activity' => $activity,
-          'comment' => $description,
-          'pic' => $this->session->userdata('nip')
-        ];
-
-        $this->db->insert('task', $save_task);
-        $last_id = $this->db->insert_id();
-
-        $response = [
-          'success' => true,
-          'msg' => 'Task berhasil dibuat! selanjutnya buat card atau detail task!',
-        ];
-      }
-
-
-
-      // Send wa
-      $nama_session = $this->session->userdata('nama');
-      $msg = "There's a new task\nTask Name : *$task_name*\n\nCreated By :  *$nama_session*";
-
-      foreach ($phone_member as $p) {
-        if ($this->session->userdata('is_premium')) {
-          $this->api_whatsapp->wa_notif($msg, $p);
-        }
-      }
-    }
-
-    echo json_encode($response);
-  }
-
-  public function edit_task($id)
-  {
-    $data['task'] = $this->db->select('*')->from('task')->where('id', $id)->get()->row();
-
-    if (empty($data['task'])) {
-      show_error('Unauthorize Privilage!', 401, 'Access Denied');
-    }
-
-    $data['member'] = explode(';', $data['task']->member);
-    $data['sendto'] = $this->M_task->sendto($this->session->userdata('level_jabatan'), $this->session->userdata('bagian'));
-
-    $data['title'] = 'Edit Task';
-    $data['utility'] = $this->db->get('utility')->row_array();
-    $data['pages_script'] = 'script/task/s_task';
-    $data['pages'] = 'pages/tello/v_task_edit';
-    $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
-    $this->load->view('index', $data);
-  }
-
-  public function detail_task($id)
-  {
-    $data['title'] = 'Create Card Task';
-    $data['utility'] = $this->db->get('utility')->row_array();
-    $data['pages_script'] = 'script/task/s_task';
-    $data['pages'] = 'pages/tello/v_create_card';
-    $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
-
-    $get_task = $this->db->select('member')->from('task')->where('Id', $id)->get()->row_array();
-    $nip_member = explode(';', $get_task['member']);
-
-    $this->db->where_in('nip', $nip_member);
-    $data['member'] = $this->db->get('users')->result();
-
-    $this->load->view('index', $data);
-  }
-
-  public function save_task_detail($id = null)
-  {
-    $task = $this->db->get_where('task', ['id' => $id])->row_array();
-
-    $card_name = $this->input->post('judul');
-    $responsible = $this->input->post('responsible');
-    $description = $this->input->post('description');
-    $start = $this->input->post('start');
-    $end = $this->input->post('end');
-    $activity = $this->input->post('activity');
-
-    $is_premium = $this->session->userdata('is_premium'); // Assuming this is how you get it
-    // Check if the 'attach' key exists in $_FILES array
-    if (isset($_FILES['attach'])) {
-      // If it exists, it means the browser attempted to send file data for 'attach'.
-      // Now, we need to check if there's actually a file name (for 'multiple' inputs)
-      // $_FILES['attach']['name'][0] checks the name of the first file in the array.
-      // If the input was NOT multiple, you would just check !empty($_FILES['attach']['name'])
-      if (!empty($_FILES['attach']['name'][0])) {
-        // If the user is premium, process the file
-        if ($is_premium) {
-          $files = $_FILES['attach']['name'][0]; // Safely access the file name of the first file
-          // Your code to handle the uploaded file(s) goes here.
-          // Remember, for multiple files, $_FILES['attach']['name'] will be an array of names.
-          // You might want to loop through them:
-          // foreach ($_FILES['attach']['name'] as $key => $value) {
-          //     $fileName = $value;
-          //     $tmpName = $_FILES['attach']['tmp_name'][$key];
-          //     // Process $fileName and $tmpName
-          // }
-
-          // Log or confirm file processing
-          log_message('info', 'File uploaded: ' . $files);
-        } else {
-          // Non-premium user attempted to upload a file (bypassed client-side)
-          log_message('warning', 'Non-premium user tried to upload an attachment. Blocked server-side.');
-          // You might want to redirect or show an error here
-          // $this->session->set_flashdata('error', 'You need premium to upload files.');
-          // redirect('your/page');
-          $files = null; // Or handle as required
-        }
-      } else {
-        // 'attach' key exists, but no file was actually selected (e.g., user opened dialog and cancelled)
-        log_message('info', 'Form submitted, "attach" field present but no file selected.');
-        $files = null; // No file to process
-      }
-    } else {
-      // The 'attach' key does NOT exist in $_FILES at all.
-      // This happens if the input was client-side disabled OR if the form was submitted without enctype="multipart/form-data".
-      log_message('info', '"attach" field not present in $_FILES array. Likely disabled or incorrect form enctype.');
-      $files = null; // No file to process
-    }
-    $this->form_validation->set_rules('judul', 'Card name', 'required|trim', array('required' => '%s wajib diisi!'));
-    $this->form_validation->set_rules('responsible', 'Responsible', 'required', array('required' => '%s wajib dipilih!'));
-    $this->form_validation->set_rules('start', 'Start date', 'required', array('required' => '%s wajib diisi!'));
-    $this->form_validation->set_rules('end', 'End date', 'required', array('required' => '%s wajib diisi!'));
-    $this->form_validation->set_rules('activity', 'Activity', 'required', array('required' => '%s wajib dipilih!'));
-
-    if ($this->form_validation->run() == FALSE) {
-      $response = [
-        'success' => false,
-        'msg' => array_values($this->form_validation->error_array())[0]
-      ];
-    } else {
-      // Menghitung file yang diupload
-      if ($is_premium) {
-        $filesCount = count($files);
-        $uploadedFiles = [];
-        $errors = [];
-        $uploadedFileName = [];
-
-        $hasFile = false;
-        for ($i = 0; $i < $filesCount; $i++) {
-          if ($files[$i] != '') {
-            $hasFile = true;
-            break;
-          }
-        }
-      } else {
-        $hasFile = false;
-      }
-
-
-      if ($hasFile) {
-        $totalSize = 0;
-        for ($i = 0; $i < $filesCount; $i++) {
-          $totalSize += $_FILES['attach']['size'][$i];
-        }
-
-        if ($totalSize > 15 * 1024 * 1024) {
-          $response = [
-            'success' => FALSE,
-            'msg' => 'toal ukuran file tidak boleh lebih dari 15MB.'
-          ];
-          return;
-        }
-
-        for ($i = 0; $i < $filesCount; $i++) {
-          $_FILES['file']['name']     = $_FILES['attach']['name'][$i];
-          $_FILES['file']['type']     = $_FILES['attach']['type'][$i];
-          $_FILES['file']['tmp_name'] = $_FILES['attach']['tmp_name'][$i];
-          $_FILES['file']['error']    = $_FILES['attach']['error'][$i];
-          $_FILES['file']['size']     = $_FILES['attach']['size'][$i];
-
-          $config['upload_path']   = './upload/task_comment';
-          $config['allowed_types'] = '*';
-          $config['max_size']      = 2048;
-          // $config['encrypt_name']  = TRUE;
-
-          $file_extension = pathinfo($_FILES['attach']['name'][$i], PATHINFO_EXTENSION);
-          $custom_file_name = 'Kode_Cabang_' . $this->session->userdata('kode_cabang') . '_Task_attachment_' . time() . '_' . $i . '.' . $file_extension;
-          $config['file_name'] = $custom_file_name;
-          $config['encrypt_name']  = FALSE; // Set to FALSE to use your custom file_name
-
-          $this->upload->initialize($config);
-
-          if ($this->upload->do_upload('file')) {
-            $uploadData = $this->upload->data();
-            $uploadedFiles[] = $uploadData['full_path'];
-            $uploadedFileName[] = $uploadData['file_name'];
-          } else {
-            $errors[] = $this->upload->display_errors();
-            break; // Stop dan batal jika ada gagal
-          }
-        }
-
-        // Hapus file jika gagal
-        if (!empty($errors)) {
-          foreach ($uploadedFiles as $filePath) {
-            if (file_exists($filePath)) {
-              unlink($filePath);
-            }
-          }
-          $response = [
-            'success' => FALSE,
-            'msg' => 'Error : ' . $errors[0]
-          ];
-          echo json_encode($response);
-          return;
-        } else {
-          $attach = implode(';', $uploadedFileName);
-          $insert = [
-            "id_task" => $id,
-            "task_name" => $card_name,
-            "responsible" => $responsible,
-            "description" => $description,
-            "start_date" => $start,
-            "due_date" => $end,
-            "activity" => $activity,
-            "attachment" => $attach,
-            "read" => 0,
-          ];
-
-          $this->db->insert('task_detail', $insert);
-
-          //Send notif wa
-          $nama_session = $this->session->userdata('nama');
-          $user = $this->db->select('phone')->from('users')->where('nip', $responsible)->get()->row_array();
-          $msg = "There's a new card\nTask Name:*$task[name]*\nCard Name : *$card_name*\n\nCreated By :  *$nama_session*";
-
-          if ($this->session->userdata('is_premium')) {
-            $this->api_whatsapp->wa_notif($msg, $user['phone']);
-          }
-
-          $response = [
-            'success' => true,
-            'msg' => 'Card Berhasil Dibuat!'
-          ];
-        }
-      } else {
-        $insert = [
-          "id_task" => $id,
-          "task_name" => $card_name,
-          "responsible" => $responsible,
-          "description" => $description,
-          "start_date" => $start,
-          "due_date" => $end,
-          "activity" => $activity,
-          "read" => 0,
-        ];
-
-        $this->db->insert('task_detail', $insert);
-
-        //Send notif wa
-        $nama_session = $this->session->userdata('nama');
-        $user = $this->db->select('phone')->from('users')->where('nip', $responsible)->get()->row_array();
-        $msg = "There's a new card\nTask Name:*$task[name]*\nCard Name : *$card_name*\n\nCreated By :  *$nama_session*";
-        if ($this->session->userdata('is_premium')) {
-          $this->api_whatsapp->wa_notif($msg, $user['phone']);
-        }
-
-        $response = [
-          'success' => true,
-          'msg' => 'Card Berhasil Dibuat!'
-        ];
-      }
-    }
-
-    echo json_encode($response);
-  }
-
-  public function card_view($id = null)
-  {
-    $data['title'] = 'Card Detail';
-    $data['utility'] = $this->db->get('utility')->row_array();
-    $data['pages_script'] = 'script/task/s_task';
-    $data['pages'] = 'pages/tello/v_card_detail';
-    $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
-
-    $data['detail_task'] = $this->db->select('a.*, b.*, c.nama')->from('task_detail a')->join('task b', 'b.id = a.id_task', 'left')->join('users c', 'c.nip = a.responsible')->where('a.id_detail', $id)->get()->row_array();
-
-    $data['task_comment_member'] = $this->db->select('a.*, b.*')->from('users a')->join('task_detail_comment b', 'a.nip = b.member')->where('b.id_task_detail', $id)->order_by('date_created', 'desc')->get()->result();
-
-    $this->db->select('*,c.activity as status_task,b.activity,b.comment as comment,b.date_created');
-    $this->db->where('b.id_detail', $id);
-    $this->db->from('users as a');
-    $this->db->join('task_detail as b', 'a.nip=b.responsible');
-    $this->db->join('task as c', 'b.id_task=c.id');
-    $data['task_comment'] = $this->db->get()->row_array();
-
-    if (!$data['detail_task']) {
-      show_error('Forbidden Access: You do not have permission to view this page.', 403, '403 Forbidden');
-    }
-
-    // Update Read Task Detail
-    $nip = $this->session->userdata('nip');
-    $sql = "SELECT task_detail.read FROM task_detail WHERE id_detail ='$id'";
-    $query = $this->db->query($sql);
-    $result = $query->row();
-    $kalimat = $result->read;
-
-    if ($result) {
-      $kalimat1 = $kalimat . ' ' . $nip;
-      $data_update1    = array(
-        'read'    => $kalimat1
-      );
-      $this->db->where('id_detail', $id);
-      $this->db->update('task_detail', $data_update1);
-    }
-
-    $this->load->view('index', $data);
-  }
-
-  public function card_edit($id)
-  {
-    $data['title'] = 'Edit Card';
-    $data['utility'] = $this->db->get('utility')->row_array();
-    $data['pages_script'] = 'script/task/s_task';
-    $data['pages'] = 'pages/tello/v_edit_card';
-    $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
-
-    $get_task = $this->db->select('member')->from('task')->where('Id', $id)->get()->row_array();
-    $nip_member = explode(';', $get_task['member']);
-
-    $this->db->where_in('nip', $nip_member);
-    $data['member'] = $this->db->get('users')->result();
-
-    $data['detail_task'] = $this->db->get_where('task_detail', ['id_detail' => $this->uri->segment(4)])->row();
-
-    $this->load->view('index', $data);
-  }
-
-  public function save_detail_task()
-  {
-    $nip_session = $this->session->userdata('nip');
-    $user_session = $this->db->get_where('users', ['nip' => $nip_session])->row();
-    $id_task = $this->input->post('id_task');
-    $id_card = $this->input->post('id_card');
-    $cardname = $this->input->post('project-name');
-    $responsible = $this->input->post('responsible');
-    $description = $this->input->post('description');
-    $start = $this->input->post('start');
-    $end = $this->input->post('end');
-    $activity = $this->input->post('activity');
-
-    $this->form_validation->set_rules('project-name', 'Nama card', 'required|trim', ['required' => "%s harus diisi!"]);
-    $this->form_validation->set_rules('responsible', 'Responsible', 'required', ['required' => "%s harus diisi!"]);
-    $this->form_validation->set_rules('description', 'Description', 'required|trim', ['required' => "%s harus diisi!"]);
-    $this->form_validation->set_rules('start', 'Tanggal mulai', 'required', ['required' => "%s harus diisi!"]);
-    $this->form_validation->set_rules('end', 'Tanggal selesai', 'required', ['required' => "%s harus diisi!"]);
-    $this->form_validation->set_rules('activity', 'Activity', 'required', ['required' => "%s harus diisi!"]);
-
-    if ($this->form_validation->run() == FALSE) {
-      $response = [
-        'success' => false,
-        'msg' => array_values($this->form_validation->error_array())[0]
-      ];
-    } else {
-      $this->db->trans_start();
-      $update = [
-        "task_name" => $cardname,
-        "responsible" => $responsible,
-        "description" => $description,
-        "start_date" => $start,
-        "due_date" => $end,
-        "activity" => $activity,
-        "read" => 0,
-      ];
-      $this->db->where('id_detail', $id_card);
-      $this->db->update('task_detail', $update);
-
-      // update task 
-      $this->db->where('id', $id_task);
-      $this->db->update('task', ['read' => 0]);
-
-      $this->db->trans_complete();
-      if ($this->db->trans_status() === FALSE) {
-        $this->db->trans_rollback();
-      } else {
-        $this->db->trans_commit();
-        $response = [
-          'success' => true,
-          'msg' => 'Data card berhasil diubah!',
-          'reload' => site_url('task/task_view/' . $id_task)
-        ];
-      }
-    }
-
-    echo json_encode($response);
-  }
-
-  public function activity_comment()
-  {
-    $id = $this->input->post('id_detail');
-    $comment = $this->input->post('comment');
-
-    if (!empty($_FILES['file']['name'])) {
-      $files = $_FILES['file']['name'];
-    } else {
-      $files = [];
-    }
-
-    $this->form_validation->set_rules('comment',  'Comment', 'required');
-
-    if ($this->form_validation->run() == FALSE) {
-      $response = [
-        'success' => false,
-        'msg' => array_values($this->form_validation->error_array())[0]
-      ];
-    } else {
-      $filesCount = count($files);
-      $uploadedFiles = [];
-      $errors = [];
-      $uploadedFileName = [];
-
-      $hasFile = false;
-      for ($i = 0; $i < $filesCount; $i++) {
-        if ($files[$i] != '') {
-          $hasFile = true;
-          break;
-        }
-      }
-
-      if ($hasFile) {
-        $totalSize = 0;
-        for ($i = 0; $i < $filesCount; $i++) {
-          $totalSize += $_FILES['file']['size'][$i];
-        }
-
-        if ($totalSize > 15 * 1024 * 1024) {
-          $response = [
-            'success' => FALSE,
-            'msg' => 'toal ukuran file tidak boleh lebih dari 15MB.'
-          ];
-          return;
-        }
-
-        for ($i = 0; $i < $filesCount; $i++) {
-          $_FILES['file_temp']['name']     = $_FILES['file']['name'][$i];
-          $_FILES['file_temp']['type']     = $_FILES['file']['type'][$i];
-          $_FILES['file_temp']['tmp_name'] = $_FILES['file']['tmp_name'][$i];
-          $_FILES['file_temp']['error']    = $_FILES['file']['error'][$i];
-          $_FILES['file_temp']['size']     = $_FILES['file']['size'][$i];
-
-          $config['upload_path']   = './upload/task_comment';
-          $config['allowed_types'] = '*';
-          $config['max_size']      = 2048;
-          // $config['encrypt_name']  = TRUE;
-
-          $file_extension = pathinfo($_FILES['attach']['name'][$i], PATHINFO_EXTENSION);
-          $custom_file_name = 'Kode_Cabang_' . $this->session->userdata('kode_cabang') . '_memo_attachment_' . time() . '_' . $i . '.' . $file_extension;
-          $config['file_name'] = $custom_file_name;
-          $config['encrypt_name']  = FALSE; // Set to FALSE to use your custom file_name
-
-          $this->upload->initialize($config);
-
-          if ($this->upload->do_upload('file_temp')) {
-            $uploadData = $this->upload->data();
-            $uploadedFiles[] = $uploadData['full_path'];
-            $uploadedFileName[] = $uploadData['file_name'];
-          } else {
-            $errors[] = $this->upload->display_errors();
-            break; // Stop dan batal jika ada gagal
-          }
-        }
-
-        // Hapus file jika gagal
-        if (!empty($errors)) {
-          foreach ($uploadedFiles as $filePath) {
-            if (file_exists($filePath)) {
-              unlink($filePath);
-            }
-          }
-          $response = [
-            'success' => FALSE,
-            'msg' => 'Error : ' . $errors[0]
-          ];
-          echo json_encode($response);
-          return;
-        } else {
-          $attach = implode(';', $uploadedFileName);
-          $attach_name = implode(';', $files);
-          $insert = [
-            "id_task_detail" => $id,
-            "comment_member" => $comment,
-            "attachment" => $attach,
-            "attachment_name" => $attach_name,
-            "member" => $this->session->userdata('nip')
-          ];
-
-          $this->db->insert('task_detail_comment', $insert);
-
-          // update task detail
-          $this->db->set('read', '0');
-          $this->db->where('id_detail', $id);
-          $this->db->update('task_detail');
-
-          //Update Task
-          $task_detail = $this->db->get_where('task_detail', ['id_detail' => $id])->row();
-          $task = $this->db->get_where('task', ['id' => $task_detail->id_task])->row();
-
-          $this->db->set('read', '0');
-          $this->db->where('id', $task->id);
-          $this->db->update('task');
-
-          // // //Send notif wa
-          // $nama_session = $this->session->userdata('nama');
-          // $user = $this->db->select('phone')->from('users')->where('nip', $responsible)->get()->row_array();
-          // $msg = "There's a new card\nTask Name:*$task[name]*\nCard Name : *$card_name*\n\nCreated By :  *$nama_session*";
-
-          // if ($this->session->userdata('is_premium')) {
-          //   $this->api_whatsapp->wa_notif($msg, $user['phone']);
-          // }
-
-          $response = [
-            'success' => true,
-            'msg' => 'Success add activity!'
-          ];
-        }
-      } else {
-        $insert = [
-          "id_task_detail" => $id,
-          "comment_member" => $comment,
-          "member" => $this->session->userdata('nip')
-        ];
-
-        $this->db->insert('task_detail_comment', $insert);
-
-        // update task detail
-        $this->db->set('read', '0');
-        $this->db->where('id_detail', $id);
-        $this->db->update('task_detail');
-
-        //Update Task
-        $task_detail = $this->db->get_where('task_detail', ['id_detail' => $id])->row();
-        $task = $this->db->get_where('task', ['id' => $task_detail->id_task])->row();
-
-        $this->db->set('read', '0');
-        $this->db->where('id', $task->id);
-        $this->db->update('task');
-
-        $response = [
-          'success' => true,
-          'msg' => 'Success add activity!'
-        ];
-      }
-
-      $id_detail = $this->input->post('id_detail');
-      $get_task_detail = $this->db->query("SELECT * FROM task as a left join task_detail as b on(a.id=b.id_task) where b.id_detail='$id_detail'")->row_array();
-      $phone_x = explode(';', $get_task_detail['member']);
-      foreach ($phone_x as $k) { //member card kirim ke wa
-        $get_user = $this->db->get_where('users', ['nip' => $k])->row_array();
-        if ($get_user) {
-          $task_name = $get_task_detail['task_name'];
-          $comment = $this->input->post("commentt");
-          $nama_session = $this->session->userdata('nama');
-          $msg = "There's a new comment\nCard Name : *$task_name*\nComment : *$comment*\n\nComment from :  *$nama_session*";
-          if ($this->session->userdata('is_premium')) {
-            $this->api_whatsapp->wa_notif($msg, $get_user['phone']);
-          }
-        }
-      }
-    }
-
-    echo json_encode($response);
-  }
-
-  public function search_user_task()
-  {
-    $search = $this->input->get('q');
-    $page = (int) $this->input->get('page');
-    $limit = 10;
-    $offset = ($page - 1) * $limit;
-
-    $users = $this->M_task->search_user_task($search, $limit + 1, $offset);
-
-    $results = [];
-    $more = false;
-
-    if (count($users) > $limit) {
-      $more = true;
-      array_pop($users); // Remove the extra item
-    }
-
-    foreach ($users as $user) {
-      $results[] = [
-        'id' => $user->nip,
-        'text' => $user->nama
-      ];
-    }
-
-    echo json_encode([
-      'items' => $results,
-      'more' => $more
-    ]);
-  }
+	public function __construct()
+	{
+
+		parent::__construct();
+		$this->load->model(['M_task']);
+
+		if ($this->session->userdata('isLogin') == FALSE) {
+			redirect('home');
+		}
+
+		date_default_timezone_set('Asia/Jakarta');
+	}
+
+	public function index()
+	{
+		$has_access = $this->M_menu->has_access();
+
+		if (!$has_access) {
+			show_error('Forbidden Access: You do not have permission to view this page.', 403, '403 Forbidden');
+		}
+
+		$keyword = htmlspecialchars($this->input->get('search') ?? '', ENT_QUOTES, 'UTF-8');
+		//pagination settings
+		$config['base_url'] = site_url('app/inbox');
+		$config['total_rows'] = $this->M_task->task_count($this->session->userdata('nip'), $keyword);
+		$config['per_page'] = "20";
+		$config["uri_segment"] = 3;
+		$config["num_links"] = 10;
+		$config['enable_query_strings'] = TRUE;
+		$config['page_query_string'] = TRUE;
+		$config['use_page_numbers'] = TRUE;
+		$config['reuse_query_string'] = TRUE;
+		$config['query_string_segment'] = 'page';
+
+		// integrate bootstrap pagination
+		$config['full_tag_open'] = '<ul class="pagination justify-content-end">';
+		$config['full_tag_close'] = '</ul>';
+		$config['first_link'] = true;
+		$config['last_link'] = true;
+		$config['first_tag_open'] = '<li class="page-item">';
+		$config['first_tag_close'] = '</li>';
+		$config['prev_link'] = 'Previous';
+		$config['prev_tag_open'] = '<li class="page-item">';
+		$config['prev_tag_close'] = '</li>';
+		$config['next_link'] = 'Next';
+		$config['next_tag_open'] = '<li class="page-item">';
+		$config['next_tag_close'] = '</li>';
+		$config['last_tag_open'] = '<li class="page-item">';
+		$config['last_tag_close'] = '</li>';
+		$config['cur_tag_open'] = '<li class="page-item active"><a class="page-link" href="#">';
+		$config['cur_tag_close'] = '</a></li>';
+		$config['num_tag_open'] = '<li class="page-item">';
+		$config['num_tag_close'] = '</li>';
+		$config['attributes'] = array('class' => 'page-link');
+
+		// initialize pagination
+		$this->pagination->initialize($config);
+		$data['page'] = ($this->input->get('page')) ? (($this->input->get('page') - 1) * $config['per_page']) : 0;
+		$data['data_task'] = $this->M_task->task_get($config["per_page"], $data['page'], $this->session->userdata('nip'), $keyword);
+		$data['pagination'] = $this->pagination->create_links();
+
+		$data['title'] = 'Task List';
+		$data['utility'] = $this->db->get('utility')->row_array();
+		$data['pages_script'] = 'script/task/s_task';
+		$data['pages'] = 'pages/tello/v_task';
+		$data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
+
+		$this->load->view('index', $data);
+	}
+
+	public function task_view($id = null)
+	{
+		$data['task'] = $this->M_task->task_get_detail($id);
+		$cek_detail = $this->db->select('id_detail')->from('task_detail')->where('id_task', $id)->get()->num_rows();
+
+		if (empty($data['task'])) {
+			show_error('Unauthorize Privilage!', 401, 'Access Denied');
+		}
+
+		if ($cek_detail == true) {
+			$this->db->select('*');
+			$this->db->from('users as a');
+			$this->db->where('b.id_task', $id);
+			$this->db->join('task_detail as b', 'a.nip = b.responsible');
+			$this->db->order_by('activity', 'ASC');
+			$this->db->order_by('date_created', 'DESC');
+			$data['task_detail'] = $this->db->get()->result();
+
+			$data['title'] = 'Card List';
+			$data['utility'] = $this->db->get('utility')->row_array();
+			$data['pages_script'] = 'script/task/s_task';
+			$data['pages'] = 'pages/tello/v_task_card';
+			$data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
+			$this->load->view('index', $data);
+		} else {
+			$this->session->set_flashdata('warning', 'Card/detail task belum tersedia! Buat terlebih dahulu!');
+			redirect('task/detail_task/' . $id);
+		}
+	}
+
+	public function save_task()
+	{
+		$id_task = $this->input->post('id_task');
+		$task_name = $this->input->post('judul');
+		$member = $this->input->post('member[]');
+		$activity = $this->input->post('activity');
+		$description = $this->input->post('description');
+
+		// Set rules form validation
+		$this->form_validation->set_rules('judul', 'Task name', 'required|trim', array('required' => '%s wajib diisi!'));
+		$this->form_validation->set_rules('member[]', 'Member', 'required', array('required' => '%s wajib dipilih!'));
+
+		if ($this->form_validation->run() == FALSE) {
+			$response = [
+				'success' => false,
+				'msg' => array_values($this->form_validation->error_array())[0]
+			];
+		} else {
+			$member_task = '';
+			$i = 0;
+			foreach ($member as $m) {
+				$member_task .= $m . ';';
+				$get_member[] = $this->db->get_where('users', ['nip' => $m])->row_array();
+				$phone_member[] = $get_member[$i]['phone'];
+			}
+
+			if ($id_task) {
+				$update_task = [
+					'name' => $task_name,
+					'member' => $member_task,
+					'activity' => $activity,
+					'comment' => $description,
+					'pic' => $this->session->userdata('nip')
+				];
+				$this->db->where('id', $id_task);
+				$this->db->update('task', $update_task);
+
+				$response = [
+					'success' => true,
+					'msg' => 'Task berhasil diubah!',
+				];
+			} else {
+				$save_task = [
+					'name' => $task_name,
+					'member' => $member_task,
+					'activity' => $activity,
+					'comment' => $description,
+					'pic' => $this->session->userdata('nip')
+				];
+
+				$this->db->insert('task', $save_task);
+				$last_id = $this->db->insert_id();
+
+				$response = [
+					'success' => true,
+					'msg' => 'Task berhasil dibuat! selanjutnya buat card atau detail task!',
+				];
+			}
+
+
+
+			// Send wa
+			$nama_session = $this->session->userdata('nama');
+			$msg = "There's a new task\nTask Name : *$task_name*\n\nCreated By :  *$nama_session*";
+
+			foreach ($phone_member as $p) {
+				if ($this->session->userdata('is_premium')) {
+					$this->api_whatsapp->wa_notif($msg, $p);
+				}
+			}
+		}
+
+		echo json_encode($response);
+	}
+
+	public function edit_task($id)
+	{
+		$data['task'] = $this->db->select('*')->from('task')->where('id', $id)->get()->row();
+
+		if (empty($data['task'])) {
+			show_error('Unauthorize Privilage!', 401, 'Access Denied');
+		}
+
+		$data['member'] = explode(';', $data['task']->member);
+		$data['sendto'] = $this->M_task->sendto($this->session->userdata('level_jabatan'), $this->session->userdata('bagian'));
+
+		$data['title'] = 'Edit Task';
+		$data['utility'] = $this->db->get('utility')->row_array();
+		$data['pages_script'] = 'script/task/s_task';
+		$data['pages'] = 'pages/tello/v_task_edit';
+		$data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
+		$this->load->view('index', $data);
+	}
+
+	public function detail_task($id)
+	{
+		$data['title'] = 'Create Card Task';
+		$data['utility'] = $this->db->get('utility')->row_array();
+		$data['pages_script'] = 'script/task/s_task';
+		$data['pages'] = 'pages/tello/v_create_card';
+		$data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
+
+		$get_task = $this->db->select('member')->from('task')->where('Id', $id)->get()->row_array();
+		$nip_member = explode(';', $get_task['member']);
+
+		$this->db->where_in('nip', $nip_member);
+		$data['member'] = $this->db->get('users')->result();
+
+		$this->load->view('index', $data);
+	}
+
+	public function save_task_detail($id = null)
+	{
+		$task = $this->db->get_where('task', ['id' => $id])->row_array();
+
+		$card_name = $this->input->post('judul');
+		$responsible = $this->input->post('responsible');
+		$description = $this->input->post('description');
+		$start = $this->input->post('start');
+		$end = $this->input->post('end');
+		$activity = $this->input->post('activity');
+
+		$is_premium = $this->session->userdata('is_premium'); // Assuming this is how you get it
+		// Check if the 'attach' key exists in $_FILES array
+		if (isset($_FILES['attach'])) {
+			// If it exists, it means the browser attempted to send file data for 'attach'.
+			// Now, we need to check if there's actually a file name (for 'multiple' inputs)
+			// $_FILES['attach']['name'][0] checks the name of the first file in the array.
+			// If the input was NOT multiple, you would just check !empty($_FILES['attach']['name'])
+			if (!empty($_FILES['attach']['name'][0])) {
+				// If the user is premium, process the file
+				if ($is_premium) {
+					$files = $_FILES['attach']['name'][0]; // Safely access the file name of the first file
+					// Your code to handle the uploaded file(s) goes here.
+					// Remember, for multiple files, $_FILES['attach']['name'] will be an array of names.
+					// You might want to loop through them:
+					// foreach ($_FILES['attach']['name'] as $key => $value) {
+					//     $fileName = $value;
+					//     $tmpName = $_FILES['attach']['tmp_name'][$key];
+					//     // Process $fileName and $tmpName
+					// }
+
+					// Log or confirm file processing
+					log_message('info', 'File uploaded: ' . $files);
+				} else {
+					// Non-premium user attempted to upload a file (bypassed client-side)
+					log_message('warning', 'Non-premium user tried to upload an attachment. Blocked server-side.');
+					// You might want to redirect or show an error here
+					// $this->session->set_flashdata('error', 'You need premium to upload files.');
+					// redirect('your/page');
+					$files = null; // Or handle as required
+				}
+			} else {
+				// 'attach' key exists, but no file was actually selected (e.g., user opened dialog and cancelled)
+				log_message('info', 'Form submitted, "attach" field present but no file selected.');
+				$files = null; // No file to process
+			}
+		} else {
+			// The 'attach' key does NOT exist in $_FILES at all.
+			// This happens if the input was client-side disabled OR if the form was submitted without enctype="multipart/form-data".
+			log_message('info', '"attach" field not present in $_FILES array. Likely disabled or incorrect form enctype.');
+			$files = null; // No file to process
+		}
+		$this->form_validation->set_rules('judul', 'Card name', 'required|trim', array('required' => '%s wajib diisi!'));
+		$this->form_validation->set_rules('responsible', 'Responsible', 'required', array('required' => '%s wajib dipilih!'));
+		$this->form_validation->set_rules('start', 'Start date', 'required', array('required' => '%s wajib diisi!'));
+		$this->form_validation->set_rules('end', 'End date', 'required', array('required' => '%s wajib diisi!'));
+		$this->form_validation->set_rules('activity', 'Activity', 'required', array('required' => '%s wajib dipilih!'));
+
+		if ($this->form_validation->run() == FALSE) {
+			$response = [
+				'success' => false,
+				'msg' => array_values($this->form_validation->error_array())[0]
+			];
+		} else {
+			// Menghitung file yang diupload
+			if ($is_premium) {
+				$filesCount = 0;
+				if ($files) {
+					$filesCount = count($files);
+				}
+				$uploadedFiles = [];
+				$errors = [];
+				$uploadedFileName = [];
+
+				$hasFile = false;
+				for ($i = 0; $i < $filesCount; $i++) {
+					if ($files[$i] != '') {
+						$hasFile = true;
+						break;
+					}
+				}
+			} else {
+				$hasFile = false;
+			}
+
+
+			if ($hasFile) {
+				$totalSize = 0;
+				for ($i = 0; $i < $filesCount; $i++) {
+					$totalSize += $_FILES['attach']['size'][$i];
+				}
+
+				if ($totalSize > 15 * 1024 * 1024) {
+					$response = [
+						'success' => FALSE,
+						'msg' => 'toal ukuran file tidak boleh lebih dari 15MB.'
+					];
+					return;
+				}
+
+				for ($i = 0; $i < $filesCount; $i++) {
+					$_FILES['file']['name']     = $_FILES['attach']['name'][$i];
+					$_FILES['file']['type']     = $_FILES['attach']['type'][$i];
+					$_FILES['file']['tmp_name'] = $_FILES['attach']['tmp_name'][$i];
+					$_FILES['file']['error']    = $_FILES['attach']['error'][$i];
+					$_FILES['file']['size']     = $_FILES['attach']['size'][$i];
+
+					$config['upload_path']   = './upload/task_comment';
+					$config['allowed_types'] = '*';
+					$config['max_size']      = 2048;
+					// $config['encrypt_name']  = TRUE;
+
+					$file_extension = pathinfo($_FILES['attach']['name'][$i], PATHINFO_EXTENSION);
+					$custom_file_name = 'Kode_Cabang_' . $this->session->userdata('kode_cabang') . '_Task_attachment_' . time() . '_' . $i . '.' . $file_extension;
+					$config['file_name'] = $custom_file_name;
+					$config['encrypt_name']  = FALSE; // Set to FALSE to use your custom file_name
+
+					$this->upload->initialize($config);
+
+					if ($this->upload->do_upload('file')) {
+						$uploadData = $this->upload->data();
+						$uploadedFiles[] = $uploadData['full_path'];
+						$uploadedFileName[] = $uploadData['file_name'];
+					} else {
+						$errors[] = $this->upload->display_errors();
+						break; // Stop dan batal jika ada gagal
+					}
+				}
+
+				// Hapus file jika gagal
+				if (!empty($errors)) {
+					foreach ($uploadedFiles as $filePath) {
+						if (file_exists($filePath)) {
+							unlink($filePath);
+						}
+					}
+					$response = [
+						'success' => FALSE,
+						'msg' => 'Error : ' . $errors[0]
+					];
+					echo json_encode($response);
+					return;
+				} else {
+					$attach = implode(';', $uploadedFileName);
+					$insert = [
+						"id_task" => $id,
+						"task_name" => $card_name,
+						"responsible" => $responsible,
+						"description" => $description,
+						"start_date" => $start,
+						"due_date" => $end,
+						"activity" => $activity,
+						"attachment" => $attach,
+						"read" => 0,
+					];
+
+					$this->db->insert('task_detail', $insert);
+
+					//Send notif wa
+					$nama_session = $this->session->userdata('nama');
+					$user = $this->db->select('phone')->from('users')->where('nip', $responsible)->get()->row_array();
+					$msg = "There's a new card\nTask Name:*$task[name]*\nCard Name : *$card_name*\n\nCreated By :  *$nama_session*";
+
+					if ($this->session->userdata('is_premium')) {
+						$this->api_whatsapp->wa_notif($msg, $user['phone']);
+					}
+
+					$response = [
+						'success' => true,
+						'msg' => 'Card Berhasil Dibuat!'
+					];
+				}
+			} else {
+				$insert = [
+					"id_task" => $id,
+					"task_name" => $card_name,
+					"responsible" => $responsible,
+					"description" => $description,
+					"start_date" => $start,
+					"due_date" => $end,
+					"activity" => $activity,
+					"read" => 0,
+				];
+
+				$this->db->insert('task_detail', $insert);
+
+				//Send notif wa
+				$nama_session = $this->session->userdata('nama');
+				$user = $this->db->select('phone')->from('users')->where('nip', $responsible)->get()->row_array();
+				$msg = "There's a new card\nTask Name:*$task[name]*\nCard Name : *$card_name*\n\nCreated By :  *$nama_session*";
+				if ($this->session->userdata('is_premium')) {
+					$this->api_whatsapp->wa_notif($msg, $user['phone']);
+				}
+
+				$response = [
+					'success' => true,
+					'msg' => 'Card Berhasil Dibuat!'
+				];
+			}
+		}
+
+		echo json_encode($response);
+	}
+
+	public function card_view($id = null)
+	{
+		$data['title'] = 'Card Detail';
+		$data['utility'] = $this->db->get('utility')->row_array();
+		$data['pages_script'] = 'script/task/s_task';
+		$data['pages'] = 'pages/tello/v_card_detail';
+		$data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
+
+		$data['detail_task'] = $this->db->select('a.*, b.*, c.nama')->from('task_detail a')->join('task b', 'b.id = a.id_task', 'left')->join('users c', 'c.nip = a.responsible')->where('a.id_detail', $id)->get()->row_array();
+
+		$data['task_comment_member'] = $this->db->select('a.*, b.*')->from('users a')->join('task_detail_comment b', 'a.nip = b.member')->where('b.id_task_detail', $id)->order_by('date_created', 'desc')->get()->result();
+
+		$this->db->select('*,c.activity as status_task,b.activity,b.comment as comment,b.date_created');
+		$this->db->where('b.id_detail', $id);
+		$this->db->from('users as a');
+		$this->db->join('task_detail as b', 'a.nip=b.responsible');
+		$this->db->join('task as c', 'b.id_task=c.id');
+		$data['task_comment'] = $this->db->get()->row_array();
+
+		if (!$data['detail_task']) {
+			show_error('Forbidden Access: You do not have permission to view this page.', 403, '403 Forbidden');
+		}
+
+		// Update Read Task Detail
+		$nip = $this->session->userdata('nip');
+		$sql = "SELECT task_detail.read FROM task_detail WHERE id_detail ='$id'";
+		$query = $this->db->query($sql);
+		$result = $query->row();
+		$kalimat = $result->read;
+
+		if ($result) {
+			$kalimat1 = $kalimat . ' ' . $nip;
+			$data_update1    = array(
+				'read'    => $kalimat1
+			);
+			$this->db->where('id_detail', $id);
+			$this->db->update('task_detail', $data_update1);
+		}
+
+		$this->load->view('index', $data);
+	}
+
+	public function card_edit($id)
+	{
+		$data['title'] = 'Edit Card';
+		$data['utility'] = $this->db->get('utility')->row_array();
+		$data['pages_script'] = 'script/task/s_task';
+		$data['pages'] = 'pages/tello/v_edit_card';
+		$data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
+
+		$get_task = $this->db->select('member')->from('task')->where('Id', $id)->get()->row_array();
+		$nip_member = explode(';', $get_task['member']);
+
+		$this->db->where_in('nip', $nip_member);
+		$data['member'] = $this->db->get('users')->result();
+
+		$data['detail_task'] = $this->db->get_where('task_detail', ['id_detail' => $this->uri->segment(4)])->row();
+
+		$this->load->view('index', $data);
+	}
+
+	public function save_detail_task()
+	{
+		$nip_session = $this->session->userdata('nip');
+		$user_session = $this->db->get_where('users', ['nip' => $nip_session])->row();
+		$id_task = $this->input->post('id_task');
+		$id_card = $this->input->post('id_card');
+		$cardname = $this->input->post('project-name');
+		$responsible = $this->input->post('responsible');
+		$description = $this->input->post('description');
+		$start = $this->input->post('start');
+		$end = $this->input->post('end');
+		$activity = $this->input->post('activity');
+
+		$this->form_validation->set_rules('project-name', 'Nama card', 'required|trim', ['required' => "%s harus diisi!"]);
+		$this->form_validation->set_rules('responsible', 'Responsible', 'required', ['required' => "%s harus diisi!"]);
+		$this->form_validation->set_rules('description', 'Description', 'required|trim', ['required' => "%s harus diisi!"]);
+		$this->form_validation->set_rules('start', 'Tanggal mulai', 'required', ['required' => "%s harus diisi!"]);
+		$this->form_validation->set_rules('end', 'Tanggal selesai', 'required', ['required' => "%s harus diisi!"]);
+		$this->form_validation->set_rules('activity', 'Activity', 'required', ['required' => "%s harus diisi!"]);
+
+		if ($this->form_validation->run() == FALSE) {
+			$response = [
+				'success' => false,
+				'msg' => array_values($this->form_validation->error_array())[0]
+			];
+		} else {
+			$this->db->trans_start();
+			$update = [
+				"task_name" => $cardname,
+				"responsible" => $responsible,
+				"description" => $description,
+				"start_date" => $start,
+				"due_date" => $end,
+				"activity" => $activity,
+				"read" => 0,
+			];
+			$this->db->where('id_detail', $id_card);
+			$this->db->update('task_detail', $update);
+
+			// update task 
+			$this->db->where('id', $id_task);
+			$this->db->update('task', ['read' => 0]);
+
+			$this->db->trans_complete();
+			if ($this->db->trans_status() === FALSE) {
+				$this->db->trans_rollback();
+			} else {
+				$this->db->trans_commit();
+				$response = [
+					'success' => true,
+					'msg' => 'Data card berhasil diubah!',
+					'reload' => site_url('task/task_view/' . $id_task)
+				];
+			}
+		}
+
+		echo json_encode($response);
+	}
+
+	public function activity_comment()
+	{
+		$id = $this->input->post('id_detail');
+		$comment = $this->input->post('comment');
+
+		if (!empty($_FILES['file']['name'])) {
+			$files = $_FILES['file']['name'];
+		} else {
+			$files = [];
+		}
+
+		$this->form_validation->set_rules('comment',  'Comment', 'required');
+
+		if ($this->form_validation->run() == FALSE) {
+			$response = [
+				'success' => false,
+				'msg' => array_values($this->form_validation->error_array())[0]
+			];
+		} else {
+			$filesCount = count($files);
+			$uploadedFiles = [];
+			$errors = [];
+			$uploadedFileName = [];
+
+			$hasFile = false;
+			for ($i = 0; $i < $filesCount; $i++) {
+				if ($files[$i] != '') {
+					$hasFile = true;
+					break;
+				}
+			}
+
+			if ($hasFile) {
+				$totalSize = 0;
+				for ($i = 0; $i < $filesCount; $i++) {
+					$totalSize += $_FILES['file']['size'][$i];
+				}
+
+				if ($totalSize > 15 * 1024 * 1024) {
+					$response = [
+						'success' => FALSE,
+						'msg' => 'toal ukuran file tidak boleh lebih dari 15MB.'
+					];
+					return;
+				}
+
+				for ($i = 0; $i < $filesCount; $i++) {
+					$_FILES['file_temp']['name']     = $_FILES['file']['name'][$i];
+					$_FILES['file_temp']['type']     = $_FILES['file']['type'][$i];
+					$_FILES['file_temp']['tmp_name'] = $_FILES['file']['tmp_name'][$i];
+					$_FILES['file_temp']['error']    = $_FILES['file']['error'][$i];
+					$_FILES['file_temp']['size']     = $_FILES['file']['size'][$i];
+
+					$config['upload_path']   = './upload/task_comment';
+					$config['allowed_types'] = '*';
+					$config['max_size']      = 2048;
+					// $config['encrypt_name']  = TRUE;
+
+					$file_extension = pathinfo($_FILES['attach']['name'][$i], PATHINFO_EXTENSION);
+					$custom_file_name = 'Kode_Cabang_' . $this->session->userdata('kode_cabang') . '_memo_attachment_' . time() . '_' . $i . '.' . $file_extension;
+					$config['file_name'] = $custom_file_name;
+					$config['encrypt_name']  = FALSE; // Set to FALSE to use your custom file_name
+
+					$this->upload->initialize($config);
+
+					if ($this->upload->do_upload('file_temp')) {
+						$uploadData = $this->upload->data();
+						$uploadedFiles[] = $uploadData['full_path'];
+						$uploadedFileName[] = $uploadData['file_name'];
+					} else {
+						$errors[] = $this->upload->display_errors();
+						break; // Stop dan batal jika ada gagal
+					}
+				}
+
+				// Hapus file jika gagal
+				if (!empty($errors)) {
+					foreach ($uploadedFiles as $filePath) {
+						if (file_exists($filePath)) {
+							unlink($filePath);
+						}
+					}
+					$response = [
+						'success' => FALSE,
+						'msg' => 'Error : ' . $errors[0]
+					];
+					echo json_encode($response);
+					return;
+				} else {
+					$attach = implode(';', $uploadedFileName);
+					$attach_name = implode(';', $files);
+					$insert = [
+						"id_task_detail" => $id,
+						"comment_member" => $comment,
+						"attachment" => $attach,
+						"attachment_name" => $attach_name,
+						"member" => $this->session->userdata('nip')
+					];
+
+					$this->db->insert('task_detail_comment', $insert);
+
+					// update task detail
+					$this->db->set('read', '0');
+					$this->db->where('id_detail', $id);
+					$this->db->update('task_detail');
+
+					//Update Task
+					$task_detail = $this->db->get_where('task_detail', ['id_detail' => $id])->row();
+					$task = $this->db->get_where('task', ['id' => $task_detail->id_task])->row();
+
+					$this->db->set('read', '0');
+					$this->db->where('id', $task->id);
+					$this->db->update('task');
+
+					// // //Send notif wa
+					// $nama_session = $this->session->userdata('nama');
+					// $user = $this->db->select('phone')->from('users')->where('nip', $responsible)->get()->row_array();
+					// $msg = "There's a new card\nTask Name:*$task[name]*\nCard Name : *$card_name*\n\nCreated By :  *$nama_session*";
+
+					// if ($this->session->userdata('is_premium')) {
+					//   $this->api_whatsapp->wa_notif($msg, $user['phone']);
+					// }
+
+					$response = [
+						'success' => true,
+						'msg' => 'Success add activity!'
+					];
+				}
+			} else {
+				$insert = [
+					"id_task_detail" => $id,
+					"comment_member" => $comment,
+					"member" => $this->session->userdata('nip')
+				];
+
+				$this->db->insert('task_detail_comment', $insert);
+
+				// update task detail
+				$this->db->set('read', '0');
+				$this->db->where('id_detail', $id);
+				$this->db->update('task_detail');
+
+				//Update Task
+				$task_detail = $this->db->get_where('task_detail', ['id_detail' => $id])->row();
+				$task = $this->db->get_where('task', ['id' => $task_detail->id_task])->row();
+
+				$this->db->set('read', '0');
+				$this->db->where('id', $task->id);
+				$this->db->update('task');
+
+				$response = [
+					'success' => true,
+					'msg' => 'Success add activity!'
+				];
+			}
+
+			$id_detail = $this->input->post('id_detail');
+			$get_task_detail = $this->db->query("SELECT * FROM task as a left join task_detail as b on(a.id=b.id_task) where b.id_detail='$id_detail'")->row_array();
+			$phone_x = explode(';', $get_task_detail['member']);
+			foreach ($phone_x as $k) { //member card kirim ke wa
+				$get_user = $this->db->get_where('users', ['nip' => $k])->row_array();
+				if ($get_user) {
+					$task_name = $get_task_detail['task_name'];
+					$comment = $this->input->post("commentt");
+					$nama_session = $this->session->userdata('nama');
+					$msg = "There's a new comment\nCard Name : *$task_name*\nComment : *$comment*\n\nComment from :  *$nama_session*";
+					if ($this->session->userdata('is_premium')) {
+						$this->api_whatsapp->wa_notif($msg, $get_user['phone']);
+					}
+				}
+			}
+		}
+
+		echo json_encode($response);
+	}
+
+	public function search_user_task()
+	{
+		$search = $this->input->get('q');
+		$page = (int) $this->input->get('page');
+		$limit = 10;
+		$offset = ($page - 1) * $limit;
+
+		$users = $this->M_task->search_user_task($search, $limit + 1, $offset);
+
+		$results = [];
+		$more = false;
+
+		if (count($users) > $limit) {
+			$more = true;
+			array_pop($users); // Remove the extra item
+		}
+
+		foreach ($users as $user) {
+			$results[] = [
+				'id' => $user->nip,
+				'text' => $user->nama
+			];
+		}
+
+		echo json_encode([
+			'items' => $results,
+			'more' => $more
+		]);
+	}
 }

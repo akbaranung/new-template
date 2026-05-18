@@ -436,68 +436,102 @@ class Perusahaan extends CI_Controller
     }
   }
 
-  public function proccess_edit_user($id)
-  {
-    $edit_data = [
-      "nama" => $this->input->post('nama'),
-      "username" => $this->input->post('username'),
-      "status" => $this->input->post('status'),
-      "email" => $this->input->post('email'),
-      "phone" => $this->input->post('phone'),
-      "kd_agent" => $this->input->post('kd_agent'),
-      // "nip" => $this->input->post('nip'),
-      "nip" => $this->input->post('username'),
-      "level_jabatan" => $this->input->post('level_jabatan'),
-      "tmt" => $this->input->post('tmt'),
-      "bagian" => $this->input->post('bagian'),
-      "nama_jabatan" => $this->input->post('nama_jabatan'),
-      "supervisi" => $this->input->post('supervisi'),
-      "cuti" => $this->input->post('cuti'),
-      "id_lokasi_presensi" => $this->input->post('lokasi_presensi'),
-      "id_cabang" => $this->input->post('cabang'),
-      "jam_masuk" => $this->input->post('jam_masuk'),
-      "jam_keluar" => $this->input->post('jam_keluar'),
-      "akses_export_absensi_list" => $this->input->post('akses_export_absensi_list'),
-    ];
-    $this->db->where('id', $id);
-    $this->db->update('users', $edit_data);
+	public function proccess_edit_user($id)
+	{
+		// Ambil data user lama untuk keperluan path TTD
+		$user_lama = $this->db->get_where('users', ['id' => $id])->row();
 
-    $user_id = $this->input->post('user_id');
-    $nip = $this->input->post('username');
-    $selected_menu_ids = $this->input->post('menu_ids'); // This will be an array of selected menu IDs
+		// --- Handle upload TTD ---
+		$ttd_path = $user_lama->ttd ?? null; // default: pakai path lama
 
-    if (empty($selected_menu_ids)) {
-      $menu_id_string = ''; // No access
-    } else {
-      // Ensure unique IDs and convert to comma-separated string
-      $menu_id_string = implode(',', array_unique($selected_menu_ids));
-    }
+		if (!empty($_FILES['ttd']['name'])) {
+			$upload_dir = FCPATH . 'assets/uploads/ttd/';
 
-    // Save the access
-    if ($this->M_user_access->save_user_access($nip, $menu_id_string)) {
-      // $this->session->set_flashdata('success', 'User menu access updated successfully!');
-      // echo 'Berhasil';
-      $this->session->set_flashdata('swal_message', [
-        'icon' => 'success', // or 'success', 'warning', 'info', 'question'
-        'title' => 'Berhasil!',
-        'text' => 'Berhasil Mengubah data!',
-        'timer' => 3000, // SweetAlert2 will close after 3 seconds (3000 milliseconds)
-        'timerProgressBar' => true, // Shows a progress bar for the timer
-      ]);
-    } else {
-      // $this->session->set_flashdata('error', 'Failed to update user menu access. Please try again.');
-      // echo 'Tidak';
-      $this->session->set_flashdata('swal_message', [
-        'icon' => 'error', // or 'success', 'warning', 'info', 'question'
-        'title' => 'Gagal!',
-        'text' => 'Gagal Mengubah data, silahkan coba lagi',
-        'timer' => 3000, // SweetAlert2 will close after 3 seconds (3000 milliseconds)
-        'timerProgressBar' => true, // Shows a progress bar for the timer
-      ]);
-    }
+			// Buat folder kalau belum ada
+			if (!is_dir($upload_dir)) {
+				mkdir($upload_dir, 0755, TRUE);
+			}
 
-    redirect('perusahaan/user');
-  }
+			// Validasi ekstensi manual
+			$ext      = strtolower(pathinfo($_FILES['ttd']['name'], PATHINFO_EXTENSION));
+			$allowed  = ['jpg', 'jpeg', 'png'];
+
+			if (!in_array($ext, $allowed)) {
+				$this->session->set_flashdata('ttd_error', 'Format file tidak didukung. Gunakan JPG atau PNG.');
+			} elseif ($_FILES['ttd']['size'] > 500 * 1024) {
+				$this->session->set_flashdata('ttd_error', 'Ukuran file melebihi 500KB.');
+			} else {
+				$file_name = 'ttd_' . $this->input->post('username') . '.' . $ext;
+				$full_path = $upload_dir . $file_name;
+				$new_path  = 'assets/uploads/ttd/' . $file_name;
+
+				if (move_uploaded_file($_FILES['ttd']['tmp_name'], $full_path)) {
+					// Hapus file lama kalau ekstensinya beda
+					if (!empty($user_lama->ttd) && file_exists(FCPATH . $user_lama->ttd) && $user_lama->ttd !== $new_path) {
+						@unlink(FCPATH . $user_lama->ttd);
+					}
+					$ttd_path = $new_path;
+				} else {
+					$this->session->set_flashdata('ttd_error', 'Gagal mengupload TTD. Coba lagi.');
+				}
+			}
+		}
+		// --- End Handle upload TTD ---
+
+		$edit_data = [
+			"nama"                      => $this->input->post('nama'),
+			"username"                  => $this->input->post('username'),
+			"status"                    => $this->input->post('status'),
+			"email"                     => $this->input->post('email'),
+			"phone"                     => $this->input->post('phone'),
+			"kd_agent"                  => $this->input->post('kd_agent'),
+			"nip"                       => $this->input->post('username'),
+			"level_jabatan"             => $this->input->post('level_jabatan'),
+			"tmt"                       => $this->input->post('tmt'),
+			"bagian"                    => $this->input->post('bagian'),
+			"nama_jabatan"              => $this->input->post('nama_jabatan'),
+			"supervisi"                 => $this->input->post('supervisi'),
+			"cuti"                      => $this->input->post('cuti'),
+			"id_lokasi_presensi"        => $this->input->post('lokasi_presensi'),
+			"id_cabang"                 => $this->input->post('cabang'),
+			"jam_masuk"                 => $this->input->post('jam_masuk'),
+			"jam_keluar"                => $this->input->post('jam_keluar'),
+			"akses_export_absensi_list" => $this->input->post('akses_export_absensi_list'),
+			"ttd"                       => $ttd_path,
+		];
+
+		$this->db->where('id', $id);
+		$this->db->update('users', $edit_data);
+
+		$nip               = $this->input->post('username');
+		$selected_menu_ids = $this->input->post('menu_ids');
+
+		if (empty($selected_menu_ids)) {
+			$menu_id_string = '';
+		} else {
+			$menu_id_string = implode(',', array_unique($selected_menu_ids));
+		}
+
+		if ($this->M_user_access->save_user_access($nip, $menu_id_string)) {
+			$this->session->set_flashdata('swal_message', [
+				'icon'             => 'success',
+				'title'            => 'Berhasil!',
+				'text'             => 'Berhasil Mengubah data!',
+				'timer'            => 3000,
+				'timerProgressBar' => true,
+			]);
+		} else {
+			$this->session->set_flashdata('swal_message', [
+				'icon'             => 'error',
+				'title'            => 'Gagal!',
+				'text'             => 'Gagal Mengubah data, silahkan coba lagi',
+				'timer'            => 3000,
+				'timerProgressBar' => true,
+			]);
+		}
+
+		redirect('perusahaan/user');
+	}
 
   public function hapus_user()
   {
