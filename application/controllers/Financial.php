@@ -1860,7 +1860,7 @@ class Financial extends CI_Controller
 			'coa' => $this->M_coa->list_coa(),
 			// 'coa_kas' => $this->M_coa->getCoaByCode('1201'),
 			'coa_kas' => $this->M_coa->getCoaByCode('1'),
-			'coa_pendapatan' => $this->M_coa->getCoaByCode('410'),
+			'coa_pendapatan' => $this->M_coa->getCoaByCode('40'),
 			'keyword' => $keyword,
 			'title' => "Invoice",
 			'customers' => $this->M_customer->list_customer(''),
