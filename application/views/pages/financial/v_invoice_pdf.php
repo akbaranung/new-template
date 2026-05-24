@@ -326,11 +326,11 @@
 								<?php endif; ?>
 								<tr>
 									<td class="invoice-meta-label" style="padding-right: 12px;">Metode Bayar</td>
-									<td class="invoice-meta-value"><?= strtoupper($invoice['metode_bayar']) ?></td>
+									<td class="invoice-meta-value"><?= ($invoice['metode_bayar']) ? strtoupper($invoice['metode_bayar']) : '-' ?></td>
 								</tr>
 								<tr>
 									<td class="invoice-meta-label" style="padding-right: 12px;">Tgl. Jatuh Tempo</td>
-									<td class="invoice-meta-value"><?= format_indo($invoice['tgl_jatuh_tempo']) ?></td>
+									<td class="invoice-meta-value"><?= ($invoice['tgl_jatuh_tempo']) ? format_indo($invoice['tgl_jatuh_tempo']) : '-' ?></td>
 								</tr>
 							</tbody>
 						</table>
