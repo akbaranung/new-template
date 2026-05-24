@@ -597,8 +597,8 @@ class Task extends CI_Controller
 					$config['max_size']      = 2048;
 					// $config['encrypt_name']  = TRUE;
 
-					$file_extension = pathinfo($_FILES['attach']['name'][$i], PATHINFO_EXTENSION);
-					$custom_file_name = 'Kode_Cabang_' . $this->session->userdata('kode_cabang') . '_memo_attachment_' . time() . '_' . $i . '.' . $file_extension;
+					$file_extension = pathinfo($_FILES['file']['name'][$i], PATHINFO_EXTENSION);
+					$custom_file_name = 'Kode_Cabang_' . $this->session->userdata('kode_cabang') . '_activity_task_' . time() . '_' . $i . '.' . $file_extension;
 					$config['file_name'] = $custom_file_name;
 					$config['encrypt_name']  = FALSE; // Set to FALSE to use your custom file_name
 
