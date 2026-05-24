@@ -174,13 +174,37 @@
                     ?>
                       <hr>
                       Attachment :
-                      <b> <?php foreach (explode(';', $x->attachment_name) as $key => $xx) { ?>
-                          <a style="color: white;" href="<?= base_url('upload/task_comment/' . $attach[$key]) ?>" download>
-                            <?= $xx . " || " ?>
-                          </a>
-                      <?php }
-                        } ?>
+                      <b>
+                        <?php foreach (explode(';', $x->attachment_name) as $key => $xx) {
+                          $array_ext = explode('.', $xx);
+                          $extension = end($array_ext);
+                          if (in_array(strtolower($extension), ['jpg', 'jpeg', 'png', 'gif'])) { ?>
+                            <a style="color: white;" href="#" data-toggle="modal" data-target="#modalImage<?= $key ?>">
+                              <?= $xx . " || " ?>
+                            </a>
 
+                            <div class="modal fade" id="modalImage<?= $key ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                              <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Attachment</h5>
+                                  </div>
+                                  <div class="modal-body">
+                                    <img src="<?= base_url('upload/task_comment/') . $attach[$key] ?>" alt="attachment" width="100%">
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          <?php } else { ?>
+                            <a style="color: white;" href="<?= base_url('upload/task_comment/' . $attach[$key]) ?>" target="_blank">
+                              <?= $xx . " || " ?>
+                            </a>
+                      <?php }
+                        }
+                      } ?>
                       </b>
                   </div>
                 </div>
