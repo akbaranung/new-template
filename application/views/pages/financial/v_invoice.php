@@ -103,8 +103,15 @@
 											if ($i['status_bayar'] == "0" and $i['status_void'] != "1") {
 												$piutang = $i['total_denganpph'] - $i['total_termin']; ?>
 												<td>
-													<a href="#" class="badge badge-pill badge-danger" data-toggle="modal" data-target="#void<?= $i['Id'] ?>">Void</a>
-													<a href="#" class="badge badge-pill badge-info" data-toggle="modal" data-target="#modal<?= $i['Id'] ?>">Bayar</a>
+													<div class="btn-group" role="group">
+														<button type="button" class="btn btn-warning dropdown-toggle btn-sm text-white" data-toggle="dropdown" aria-expanded="false">
+															Proses
+														</button>
+														<div class="dropdown-menu">
+															<a href="#" class="dropdown-item text-danger" data-toggle="modal" data-target="#void<?= $i['Id'] ?>">Void</a>
+															<a href="#" class="dropdown-item text-info" data-toggle="modal" data-target="#modal<?= $i['Id'] ?>">Bayar</a>
+														</div>
+													</div>
 
 													<div class="modal fade" id="modal<?= $i['Id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
 														<div class="modal-dialog modal-lg">
@@ -302,10 +309,23 @@
 											} ?>
 											</td>
 											<td>
-												<a href="<?= base_url('financial/print_invoice/' . $i['Id']) ?>" class="badge badge-pill badge-primary" target="_blank">
-													Cetak
-												</a>
-												<a href="#" class="badge badge-pill badge-dark" data-toggle="modal" data-target="#modalRiwayat<?= $i['Id'] ?>">Riwayat</a>
+												<button type="button" class="btn btn-success dropdown-toggle btn-sm text-white" data-toggle="dropdown" aria-expanded="false">
+													Aksi
+												</button>
+												<div class="dropdown-menu">
+													<a href="<?= base_url('financial/print_invoice/' . $i['Id']) ?>" class="dropdown-item text-primary" target="_blank">
+														Cetak
+													</a>
+													<a href="#" class="dropdown-item text-dark" data-toggle="modal" data-target="#modalRiwayat<?= $i['Id'] ?>">Riwayat</a>
+													<?php
+													if ($i['status_bayar'] == "0" and $i['status_void'] != "1") {
+													?>
+														<a href="<?= base_url('financial/edit_invoice/' . $i['Id']) ?>" class="dropdown-item text-danger">
+															Edit
+														</a>
+													<?php
+													} ?>
+												</div>
 
 												<div class="modal fade" id="modalRiwayat<?= $i['Id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
 													<div class="modal-dialog modal-lg">
@@ -365,14 +385,6 @@
 														</div>
 													</div>
 												</div>
-												<?php
-												if ($i['status_bayar'] == "0" and $i['status_void'] != "1") {
-												?>
-													<a href="<?= base_url('financial/edit_invoice/' . $i['Id']) ?>" class="badge badge-pill badge-pink">
-														Edit
-													</a>
-												<?php
-												} ?>
 											</td>
 										</tr>
 
