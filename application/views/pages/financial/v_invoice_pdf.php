@@ -291,8 +291,6 @@
 		?>
 
 		<!-- ══ HEADER ══ -->
-
-		<p class="invoice-title">INVOICE</p>
 		<table class="header-table">
 			<tbody>
 				<tr>
@@ -304,6 +302,11 @@
 					<td style="text-align: right; vertical-align: top;">
 						<table style="margin-left: auto; margin-top: 8px;">
 							<tbody>
+								<tr>
+									<td colspan="2">
+										<p class="invoice-title">INVOICE</p>
+									</td>
+								</tr>
 								<tr>
 									<td class="invoice-meta-label" style="padding-right: 12px;">Referensi</td>
 									<td class="invoice-meta-value"><?= $slug ?></td>
