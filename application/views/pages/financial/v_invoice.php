@@ -102,208 +102,11 @@
 
 											if ($i['status_bayar'] == "0" and $i['status_void'] != "1") {
 												$piutang = $i['total_denganpph'] - $i['total_termin']; ?>
-												<td>
-													<div class="btn-group" role="group">
-														<button type="button" class="btn btn-warning dropdown-toggle btn-sm text-white" data-toggle="dropdown" aria-expanded="false">
-															Proses
-														</button>
-														<div class="dropdown-menu">
-															<a href="#" class="dropdown-item text-danger" data-toggle="modal" data-target="#void<?= $i['Id'] ?>">Void</a>
-															<a href="#" class="dropdown-item text-info" data-toggle="modal" data-target="#modal<?= $i['Id'] ?>">Bayar</a>
-														</div>
-													</div>
 
-													<div class="modal fade" id="modal<?= $i['Id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
-														<div class="modal-dialog modal-lg">
-															<div class="modal-content">
-																<div class="modal-header">
-																	<h4 class="modal-title" id="myModalLabel">
-																		<?= $i['no_invoice'] ?>
-																	</h4>
-																</div>
-
-																<?php
-																if ($i['jenis_invoice'] == "agen_smu") {
-																	$url_payment = "financial/paid_inv_sales/";
-																} else {
-																	$url_payment = "financial/paid/";
-																} ?>
-																<form action="<?= base_url($url_payment . $i['Id']) ?>" method="post">
-																	<div class="modal-body">
-																		<div class="table-responsive">
-																			<table class="table table-hover">
-																				<thead>
-																					<tr>
-																						<th>#</th>
-																						<th>Tanggals</th>
-																						<th>Nominal</th>
-																						<th>Keterangan</th>
-																					</tr>
-																				</thead>
-																				<tbody>
-																					<?php
-																					$no = 1;
-																					$list = $this->cb->where('id_invoice', $i['Id'])->get('t_log_pembayaran')->result();
-
-																					if ($list) {
-
-																						foreach ($list as $l) : ?>
-																							<tr>
-																								<td><?= $no++; ?></td>
-																								<td><?= format_indo($l->created_at) ?></td>
-																								<td><?= rupiah($l->nominal_bayar) ?></td>
-																								<td><?= $l->keterangan ?></td>
-																							</tr>
-																						<?php
-																						endforeach;
-																					} else {
-																						?>
-																						<tr>
-																							<td colspan="3">Tidak ada riwayat pembayaran</td>
-																						</tr>
-																					<?php
-																					}
-
-																					?>
-																				</tbody>
-																			</table>
-																		</div>
-																		<div class="row">
-																			<div class="col-sm-6 col-xs-12">
-																				<div class="form-group">
-																					<label for="nominal_invoice" class="form-label">Nominal Invoice</label>
-																					<input type="text" name="nominal_invoice" id="nominal_invoice<?= $i['Id'] ?>" class="form-control" value="<?= rupiah($i['total_denganpph']) ?>" readonly>
-																				</div>
-																			</div>
-																			<div class="col-sm-6 col-xs-12">
-																				<div class="form-group">
-																					<label for="piutang" class="form-label">Belum bayar</label>
-																					<input type="text" name="piutang" id="piutang<?= $i['Id'] ?>" class="form-control" value="<?= rupiah($piutang) ?>" readonly>
-																				</div>
-																			</div>
-																			<div class="col-sm-6 col-xs-12">
-																				<div class="form-group">
-																					<label for="nominal_bayar" class="form-label">Nominal bayar</label>
-																					<input type="text" name="nominal_bayar" id="nominal_bayar<?= $i['Id'] ?>" class="form-control" value="<?= rupiah(($i['opsi_termin'] == 0) ? $piutang : '0', 0, ',', '.') ?>" <?= ($i['opsi_termin'] == 0) ? 'readonly' : '' ?> required>
-																				</div>
-																			</div>
-																			<div class="col-sm-6 col-xs-12">
-																				<div class="form-group">
-																					<label for="tanggal_bayar" class="form-label">Tanggal bayar</label>
-																					<input type="date" name="tanggal_bayar" id="tanggal_bayar" class="form-control" value="<?= date('Y-m-d') ?>" required>
-																				</div>
-																			</div>
-																			<?php
-																			if ($i['jenis_invoice'] == "agen_smu") {
-																			?>
-																				<div class="col-sm-6 col-xs-12">
-																					<div class="form-group">
-																						<label for="coa_kas" class="form-label">CoA Kas</label>
-																						<select name="coa_kas" id="coa_kas<?= $i['Id'] ?>" class="select2 form-control" required>
-																							<option value="">:: Pilih CoA Kas</option>
-																							<?php
-																							foreach ($coa_kas as $c) :
-																							?>
-																								<option value="<?= $c->no_sbb ?>"><?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?></option>
-																							<?php
-																							endforeach; ?>
-																						</select>
-																					</div>
-																				</div>
-																			<?php
-																			} else {
-																			?>
-																				<div class="col-sm-6 col-xs-12">
-																					<div class="form-group">
-																						<label for="coa_debit" class="form-label">CoA Debit</label>
-																						<select name="coa_debit" id="coa_debit<?= $i['Id'] ?>" class="select2 form-control" required>
-																							<option value="">:: Pilih CoA Kas</option>
-																							<?php
-																							foreach ($coa_kas as $c) :
-																							?>
-																								<option value="<?= $c->no_sbb ?>"><?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?></option>
-																							<?php
-																							endforeach; ?>
-																						</select>
-																					</div>
-																				</div>
-																				<div class="col-sm-6 col-xs-12">
-																					<div class="form-group">
-																						<label for="coa_kredit" class="form-label">CoA Kredit</label>
-																						<select name="coa_kredit" id="coa_kredit<?= $i['Id'] ?>" class="select2 form-control" required>
-																							<option value="">:: Pilih CoA Kas</option>
-																							<?php
-																							foreach ($coa_pendapatan as $c) :
-																							?>
-																								<option value="<?= $c->no_sbb ?>"><?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?></option>
-																							<?php
-																							endforeach; ?>
-																						</select>
-																					</div>
-																				</div>
-																			<?php
-																			} ?>
-																			<div class="col-sm-2 col-xs-12">
-																				<div class="form-group">
-																					<label for="Lunas" class="form-label">Lunas <?= $i['opsi_termin'] ?></label>
-																					<div class="checkbox text-end">
-																						<input type="checkbox" name="status_bayar" id="status_bayar<?= $i['Id'] ?>" value="1" <?= ($i['opsi_termin'] == 0) ? 'checked ' : '' ?>> Ya
-																					</div>
-																				</div>
-																			</div>
-
-																			<div class="col-sm-12 col-xs-12">
-																				<div class="form-group">
-																					<label for="keterangan" class="form-label">Keterangan</label>
-																					<textarea name="keterangan" id="keterangan" class="form-control uppercase" required>Pembayaran invoice nomor <?= $i['no_invoice'] ?></textarea>
-																				</div>
-																			</div>
-																		</div>
-																	</div>
-																	<div class="modal-footer">
-																		<button type="button" class="btn btn-secondary" data-dismiss="modal">
-																			Close
-																		</button>
-																		<button type="submit" class="btn btn-primary">
-																			Process
-																		</button>
-																	</div>
-																</form>
-															</div>
-														</div>
-													</div>
-
-													<div class="modal fade" id="void<?= $i['Id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
-														<div class="modal-dialog modal-sm">
-															<div class="modal-content">
-																<div class="modal-header">
-																	<h4 class="modal-title" id="myModalLabel">
-																		<?= $i['no_invoice'] ?>
-																	</h4>
-																</div>
-																<form action="<?= base_url('financial/void_invoice/' . $i['no_invoice']) ?>" method="post">
-																	<div class="modal-body">
-																		<div class="row">
-																			<div class="col-sm-12 col-xs-12">
-																				<div class="form-group">
-																					<label for="keterangan" class="form-label">Alasan Void</label>
-																					<textarea name="keterangan" id="keterangan" class="form-control uppercase" required></textarea>
-																				</div>
-																			</div>
-																		</div>
-																	</div>
-																	<div class="modal-footer">
-																		<button type="button" class="btn btn-secondary" data-dismiss="modal">
-																			Close
-																		</button>
-																		<button type="submit" class="btn btn-primary">
-																			Process
-																		</button>
-																	</div>
-																</form>
-															</div>
-														</div>
-													</div>
+												<td style="background-color: #ffc505; color: white;">
+													<!-- <span class="badge badge-pill badge-success">Sudah dibayar</span> -->
+													<!-- Sudah dibayar -->
+													Proses
 												</td>
 											<?php
 											} ?>
@@ -313,6 +116,8 @@
 													Aksi
 												</button>
 												<div class="dropdown-menu">
+													<a href="#" class="dropdown-item text-danger" data-toggle="modal" data-target="#void<?= $i['Id'] ?>">Void</a>
+													<a href="#" class="dropdown-item text-info" data-toggle="modal" data-target="#modal<?= $i['Id'] ?>">Bayar</a>
 													<a href="<?= base_url('financial/print_invoice/' . $i['Id']) ?>" class="dropdown-item text-primary" target="_blank">
 														Cetak
 													</a>
@@ -320,7 +125,7 @@
 													<?php
 													if ($i['status_bayar'] == "0" and $i['status_void'] != "1") {
 													?>
-														<a href="<?= base_url('financial/edit_invoice/' . $i['Id']) ?>" class="dropdown-item text-danger">
+														<a href="<?= base_url('financial/edit_invoice/' . $i['Id']) ?>" class="dropdown-item text-success">
 															Edit
 														</a>
 													<?php
@@ -379,6 +184,198 @@
 																<div class="modal-footer">
 																	<button type="button" class="btn btn-secondary" data-dismiss="modal">
 																		Close
+																	</button>
+																</div>
+															</form>
+														</div>
+													</div>
+												</div>
+
+												<div class="modal fade" id="modal<?= $i['Id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
+													<div class="modal-dialog modal-lg">
+														<div class="modal-content">
+															<div class="modal-header">
+																<h4 class="modal-title" id="myModalLabel">
+																	<?= $i['no_invoice'] ?>
+																</h4>
+															</div>
+
+															<?php
+															if ($i['jenis_invoice'] == "agen_smu") {
+																$url_payment = "financial/paid_inv_sales/";
+															} else {
+																$url_payment = "financial/paid/";
+															} ?>
+															<form action="<?= base_url($url_payment . $i['Id']) ?>" method="post">
+																<div class="modal-body">
+																	<div class="table-responsive">
+																		<table class="table table-hover">
+																			<thead>
+																				<tr>
+																					<th>#</th>
+																					<th>Tanggals</th>
+																					<th>Nominal</th>
+																					<th>Keterangan</th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																				<?php
+																				$no = 1;
+																				$list = $this->cb->where('id_invoice', $i['Id'])->get('t_log_pembayaran')->result();
+
+																				if ($list) {
+
+																					foreach ($list as $l) : ?>
+																						<tr>
+																							<td><?= $no++; ?></td>
+																							<td><?= format_indo($l->created_at) ?></td>
+																							<td><?= rupiah($l->nominal_bayar) ?></td>
+																							<td><?= $l->keterangan ?></td>
+																						</tr>
+																					<?php
+																					endforeach;
+																				} else {
+																					?>
+																					<tr>
+																						<td colspan="3">Tidak ada riwayat pembayaran</td>
+																					</tr>
+																				<?php
+																				}
+
+																				?>
+																			</tbody>
+																		</table>
+																	</div>
+																	<div class="row">
+																		<div class="col-sm-6 col-xs-12">
+																			<div class="form-group">
+																				<label for="nominal_invoice" class="form-label">Nominal Invoice</label>
+																				<input type="text" name="nominal_invoice" id="nominal_invoice<?= $i['Id'] ?>" class="form-control" value="<?= rupiah($i['total_denganpph']) ?>" readonly>
+																			</div>
+																		</div>
+																		<div class="col-sm-6 col-xs-12">
+																			<div class="form-group">
+																				<label for="piutang" class="form-label">Belum bayar</label>
+																				<input type="text" name="piutang" id="piutang<?= $i['Id'] ?>" class="form-control" value="<?= rupiah($piutang) ?>" readonly>
+																			</div>
+																		</div>
+																		<div class="col-sm-6 col-xs-12">
+																			<div class="form-group">
+																				<label for="nominal_bayar" class="form-label">Nominal bayar</label>
+																				<input type="text" name="nominal_bayar" id="nominal_bayar<?= $i['Id'] ?>" class="form-control" value="<?= rupiah(($i['opsi_termin'] == 0) ? $piutang : '0', 0, ',', '.') ?>" <?= ($i['opsi_termin'] == 0) ? 'readonly' : '' ?> required>
+																			</div>
+																		</div>
+																		<div class="col-sm-6 col-xs-12">
+																			<div class="form-group">
+																				<label for="tanggal_bayar" class="form-label">Tanggal bayar</label>
+																				<input type="date" name="tanggal_bayar" id="tanggal_bayar" class="form-control" value="<?= date('Y-m-d') ?>" required>
+																			</div>
+																		</div>
+																		<?php
+																		if ($i['jenis_invoice'] == "agen_smu") {
+																		?>
+																			<div class="col-sm-6 col-xs-12">
+																				<div class="form-group">
+																					<label for="coa_kas" class="form-label">CoA Kas</label>
+																					<select name="coa_kas" id="coa_kas<?= $i['Id'] ?>" class="select2 form-control" required>
+																						<option value="">:: Pilih CoA Kas</option>
+																						<?php
+																						foreach ($coa_kas as $c) :
+																						?>
+																							<option value="<?= $c->no_sbb ?>"><?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?></option>
+																						<?php
+																						endforeach; ?>
+																					</select>
+																				</div>
+																			</div>
+																		<?php
+																		} else {
+																		?>
+																			<div class="col-sm-6 col-xs-12">
+																				<div class="form-group">
+																					<label for="coa_debit" class="form-label">CoA Debit</label>
+																					<select name="coa_debit" id="coa_debit<?= $i['Id'] ?>" class="select2 form-control" required>
+																						<option value="">:: Pilih CoA Kas</option>
+																						<?php
+																						foreach ($coa_kas as $c) :
+																						?>
+																							<option value="<?= $c->no_sbb ?>"><?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?></option>
+																						<?php
+																						endforeach; ?>
+																					</select>
+																				</div>
+																			</div>
+																			<div class="col-sm-6 col-xs-12">
+																				<div class="form-group">
+																					<label for="coa_kredit" class="form-label">CoA Kredit</label>
+																					<select name="coa_kredit" id="coa_kredit<?= $i['Id'] ?>" class="select2 form-control" required>
+																						<option value="">:: Pilih CoA Kas</option>
+																						<?php
+																						foreach ($coa_pendapatan as $c) :
+																						?>
+																							<option value="<?= $c->no_sbb ?>"><?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?></option>
+																						<?php
+																						endforeach; ?>
+																					</select>
+																				</div>
+																			</div>
+																		<?php
+																		} ?>
+																		<div class="col-sm-2 col-xs-12">
+																			<div class="form-group">
+																				<label for="Lunas" class="form-label">Lunas <?= $i['opsi_termin'] ?></label>
+																				<div class="checkbox text-end">
+																					<input type="checkbox" name="status_bayar" id="status_bayar<?= $i['Id'] ?>" value="1" <?= ($i['opsi_termin'] == 0) ? 'checked ' : '' ?>> Ya
+																				</div>
+																			</div>
+																		</div>
+
+																		<div class="col-sm-12 col-xs-12">
+																			<div class="form-group">
+																				<label for="keterangan" class="form-label">Keterangan</label>
+																				<textarea name="keterangan" id="keterangan" class="form-control uppercase" required>Pembayaran invoice nomor <?= $i['no_invoice'] ?></textarea>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+																<div class="modal-footer">
+																	<button type="button" class="btn btn-secondary" data-dismiss="modal">
+																		Close
+																	</button>
+																	<button type="submit" class="btn btn-primary">
+																		Process
+																	</button>
+																</div>
+															</form>
+														</div>
+													</div>
+												</div>
+
+												<div class="modal fade" id="void<?= $i['Id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
+													<div class="modal-dialog modal-sm">
+														<div class="modal-content">
+															<div class="modal-header">
+																<h4 class="modal-title" id="myModalLabel">
+																	<?= $i['no_invoice'] ?>
+																</h4>
+															</div>
+															<form action="<?= base_url('financial/void_invoice/' . $i['no_invoice']) ?>" method="post">
+																<div class="modal-body">
+																	<div class="row">
+																		<div class="col-sm-12 col-xs-12">
+																			<div class="form-group">
+																				<label for="keterangan" class="form-label">Alasan Void</label>
+																				<textarea name="keterangan" id="keterangan" class="form-control uppercase" required></textarea>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+																<div class="modal-footer">
+																	<button type="button" class="btn btn-secondary" data-dismiss="modal">
+																		Close
+																	</button>
+																	<button type="submit" class="btn btn-primary">
+																		Process
 																	</button>
 																</div>
 															</form>
