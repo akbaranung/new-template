@@ -13,7 +13,7 @@
 						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 col-12">
 							<a href="<?= site_url('financial/create_invoice') ?>" class="btn btn-primary">Create Inv.</a>
 							<a href="<?= site_url('financial/create_invoice_penjualan') ?>" class="btn btn-pink">Create Inv. Penjualan</a>
-							<button type="button" class="btn btn-success text-white" data-toggle="modal" data-target="#modalRekapExcel">
+							<button type="button" class="btn btn-info text-white" data-toggle="modal" data-target="#modalRekapExcel">
 								<i class="fe fe-download me-1"></i> Rekap Excel
 							</button>
 
@@ -103,7 +103,7 @@
 											if ($i['status_bayar'] == "0" and $i['status_void'] != "1") {
 												$piutang = $i['total_denganpph'] - $i['total_termin']; ?>
 
-												<td style="background-color: #ffc505; color: white;">
+												<td style="background-color: #eea303; color: white;">
 													<!-- <span class="badge badge-pill badge-success">Sudah dibayar</span> -->
 													<!-- Sudah dibayar -->
 													Proses
@@ -112,20 +112,20 @@
 											} ?>
 											</td>
 											<td>
-												<button type="button" class="btn btn-success dropdown-toggle btn-sm text-white" data-toggle="dropdown" aria-expanded="false">
+												<button type="button" class="btn btn-info dropdown-toggle btn-sm text-white" data-toggle="dropdown" aria-expanded="false">
 													Aksi
 												</button>
 												<div class="dropdown-menu">
-													<a href="#" class="dropdown-item text-danger" data-toggle="modal" data-target="#void<?= $i['Id'] ?>">Void</a>
-													<a href="#" class="dropdown-item text-info" data-toggle="modal" data-target="#modal<?= $i['Id'] ?>">Bayar</a>
-													<a href="<?= base_url('financial/print_invoice/' . $i['Id']) ?>" class="dropdown-item text-primary" target="_blank">
+													<a href="#" class="dropdown-item" data-toggle="modal" data-target="#void<?= $i['Id'] ?>">Void</a>
+													<a href="#" class="dropdown-item" data-toggle="modal" data-target="#modal<?= $i['Id'] ?>">Bayar</a>
+													<a href="<?= base_url('financial/print_invoice/' . $i['Id']) ?>" class="dropdown-item" target="_blank">
 														Cetak
 													</a>
-													<a href="#" class="dropdown-item text-dark" data-toggle="modal" data-target="#modalRiwayat<?= $i['Id'] ?>">Riwayat</a>
+													<a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalRiwayat<?= $i['Id'] ?>">Riwayat</a>
 													<?php
 													if ($i['status_bayar'] == "0" and $i['status_void'] != "1") {
 													?>
-														<a href="<?= base_url('financial/edit_invoice/' . $i['Id']) ?>" class="dropdown-item text-success">
+														<a href="<?= base_url('financial/edit_invoice/' . $i['Id']) ?>" class="dropdown-item">
 															Edit
 														</a>
 													<?php
@@ -463,7 +463,7 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-					<button type="submit" class="btn btn-success">
+					<button type="submit" class="btn btn-info">
 						<i class="fe fe-download me-1"></i> Download Excel
 					</button>
 				</div>
