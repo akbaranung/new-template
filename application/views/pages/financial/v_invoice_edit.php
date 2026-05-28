@@ -60,7 +60,7 @@
 						<div class="row g-3 mt-3">
 							<div class="col-12">
 								<label class="form-label">Notes</label>
-								<textarea name="keterangan" id="keterangan" class="form-control uppercase" placeholder="Keterangan invoice..."  required><?= $inv['keterangan'] ?></textarea>
+								<textarea name="keterangan" id="keterangan" class="form-control uppercase" placeholder="Keterangan invoice..." required><?= $inv['keterangan'] ?></textarea>
 							</div>
 						</div>
 
@@ -157,19 +157,19 @@
 							</div>
 							<div class="col-md-3">
 								<label class="form-label">CoA Debit</label>
-								<select name="coa_debit" id="coa_debit" class="form-control select2" style="width:100%" required>
+								<select name="coa_debit" id="coa_debit" class="form-control select2 coa_debit" style="width:100%" required>
 									<option value="">:: Pilih CoA Debit</option>
 									<?php foreach ($pendapatan as $pd) : ?>
-										<option <?= ($pd->no_sbb == $inv['coa_debit']) ? 'selected' : '' ?> value="<?= $pd->no_sbb ?>"><?= $pd->no_sbb . ' - ' . $pd->nama_perkiraan ?></option>
+										<option <?= ($pd->no_sbb == $inv['coa_debit']) ? 'selected' : '' ?> value="<?= $pd->no_sbb ?>" data-posisi="<?= $pd->posisi ?>"><?= $pd->no_sbb . ' - ' . $pd->nama_perkiraan ?></option>
 									<?php endforeach; ?>
 								</select>
 							</div>
 							<div class="col-md-3">
 								<label class="form-label">CoA Kredit</label>
-								<select name="coa_kredit" id="coa_kredit" class="form-control select2" style="width:100%" required>
+								<select name="coa_kredit" id="coa_kredit" class="form-control select2 coa_kredit" style="width:100%" required>
 									<option value="">:: Pilih CoA Kredit</option>
 									<?php foreach ($persediaan as $ps) : ?>
-										<option <?= ($ps->no_sbb == $inv['coa_kredit']) ? 'selected' : '' ?> value="<?= $ps->no_sbb ?>"><?= $ps->no_sbb . ' - ' . $ps->nama_perkiraan ?></option>
+										<option <?= ($ps->no_sbb == $inv['coa_kredit']) ? 'selected' : '' ?> value="<?= $ps->no_sbb ?>" data-posisi="<?= $ps->posisi ?>"><?= $ps->no_sbb . ' - ' . $ps->nama_perkiraan ?></option>
 									<?php endforeach; ?>
 								</select>
 							</div>

@@ -62,10 +62,10 @@
 
 							<div class="col-md-3 mb-3">
 								<label for="coa_debit" class="form-label">Coa Debit <span class="text-danger">*</span></label>
-								<select name="coa_debit" id="coa_debit" class="form-control select2" style="width: 100%" required>
+								<select name="coa_debit" id="coa_debit" class="form-control select2 coa_debit" style="width: 100%" required>
 									<option value="">:: Pilih CoA Debit</option>
 									<?php foreach ($pendapatan as $pd): ?>
-										<option value="<?= $pd->no_sbb ?>" <?= ($inv['coa_debit'] == $pd->no_sbb) ? 'selected' : '' ?>>
+										<option value="<?= $pd->no_sbb ?>" <?= ($inv['coa_debit'] == $pd->no_sbb) ? 'selected' : '' ?> data-posisi="<?= $pd->posisi ?>">
 											<?= $pd->no_sbb . ' - ' . $pd->nama_perkiraan ?>
 										</option>
 									<?php endforeach; ?>
@@ -74,10 +74,10 @@
 
 							<div class="col-md-3 mb-3">
 								<label for="coa_kredit" class="form-label">Coa Kredit <span class="text-danger">*</span></label>
-								<select name="coa_kredit" id="coa_kredit" class="form-control select2" style="width: 100%" required>
+								<select name="coa_kredit" id="coa_kredit" class="form-control select2 coa_kredit" style="width: 100%" required>
 									<option value="">:: Pilih CoA Kredit</option>
 									<?php foreach ($persediaan as $ps): ?>
-										<option value="<?= $ps->no_sbb ?>" <?= ($inv['coa_kredit'] == $ps->no_sbb) ? 'selected' : '' ?>>
+										<option value="<?= $ps->no_sbb ?>" <?= ($inv['coa_kredit'] == $ps->no_sbb) ? 'selected' : '' ?> data-posisi="<?= $ps->posisi ?>">
 											<?= $ps->no_sbb . ' - ' . $ps->nama_perkiraan ?>
 										</option>
 									<?php endforeach; ?>
