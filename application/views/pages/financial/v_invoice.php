@@ -294,12 +294,12 @@
 																			<div class="col-sm-6 col-xs-12">
 																				<div class="form-group">
 																					<label for="coa_debit" class="form-label">CoA Debit</label>
-																					<select name="coa_debit" id="coa_debit<?= $i['Id'] ?>" class="select2 form-control" required>
-																						<option value="">:: Pilih CoA Kas</option>
+																					<select name="coa_debit" id="coa_debit<?= $i['Id'] ?>" class="select2 form-control coa_debit" required>
+																						<option value="">:: Pilih CoA Debit</option>
 																						<?php
 																						foreach ($coa_kas as $c) :
 																						?>
-																							<option value="<?= $c->no_sbb ?>"><?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?></option>
+																							<option value="<?= $c->no_sbb ?>" data-posisi="<?= $c->posisi ?>"><?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?></option>
 																						<?php
 																						endforeach; ?>
 																					</select>
@@ -308,12 +308,12 @@
 																			<div class="col-sm-6 col-xs-12">
 																				<div class="form-group">
 																					<label for="coa_kredit" class="form-label">CoA Kredit</label>
-																					<select name="coa_kredit" id="coa_kredit<?= $i['Id'] ?>" class="select2 form-control" required>
-																						<option value="">:: Pilih CoA Kas</option>
+																					<select name="coa_kredit" id="coa_kredit<?= $i['Id'] ?>" class="select2 form-control coa_kredit" required>
+																						<option value="">:: Pilih CoA Kredit</option>
 																						<?php
 																						foreach ($coa_pendapatan as $c) :
 																						?>
-																							<option value="<?= $c->no_sbb ?>"><?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?></option>
+																							<option value="<?= $c->no_sbb ?>" data-posisi="<?= $c->posisi ?>"><?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?></option>
 																						<?php
 																						endforeach; ?>
 																					</select>

@@ -1097,6 +1097,20 @@ else if ($this->session->flashdata('message_error')) {
 			return formatState(state, '#e81f63', '#3f51b5', '(-)', '(+)');
 		}
 
+		$('.coa_debit').each(function() {
+			$(this).select2({
+				templateSelection: formatStateDebit,
+				theme: 'bootstrap4',
+			});
+		});
+
+		$('.coa_kredit').each(function() {
+			$(this).select2({
+				templateSelection: formatStateKredit,
+				theme: 'bootstrap4',
+			});
+		});
+
 		$('#neraca_debit').select2({
 			// templateResult: formatStateDebit,
 			templateSelection: formatStateDebit,
