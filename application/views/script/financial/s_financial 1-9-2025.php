@@ -1235,9 +1235,7 @@
   $(document).ready(function() {
     var table = $('#table-template').DataTable({
       responsive: true,
-      rowReorder: {
-        selector: 'td:nth-child(2)'
-      },
+
       processing: true,
       serverSide: true,
       ajax: {

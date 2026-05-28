@@ -3,9 +3,7 @@
     $(document).ready(function() {
         $('#user-table').dataTable({
             // responsive: true,
-            rowReorder: {
-                selector: 'td:nth-child(2)'
-            },
+
             // If you are using Scroller, you would add 'deferRender: true' and 'scrollY' options here,
             // and optionally 'scroller: true'.
             // Example:

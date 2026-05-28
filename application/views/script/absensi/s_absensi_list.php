@@ -30,10 +30,7 @@
 
 
         $('#user-table').dataTable({
-            // responsive: true,
-            rowReorder: {
-                selector: 'td:nth-child(2)'
-            },
+
             processing: true,
             serverSide: true,
             ajax: {
@@ -56,10 +53,7 @@
         });
 
         $('#team-table').dataTable({
-            // responsive: true,
-            rowReorder: {
-                selector: 'td:nth-child(3)'
-            },
+
             processing: true,
             serverSide: true,
             ajax: {
@@ -82,10 +76,7 @@
         });
 
         $('#approval-table').dataTable({
-            // responsive: true,
-            rowReorder: {
-                selector: 'td:nth-child(3)'
-            },
+
             processing: true,
             serverSide: true,
             ajax: {

@@ -1560,9 +1560,6 @@ else if ($this->session->flashdata('message_error')) {
 	$(document).ready(function() {
 		var table = $('#table-template').DataTable({
 			responsive: true,
-			rowReorder: {
-				selector: 'td:nth-child(2)'
-			},
 			processing: true,
 			serverSide: true,
 			ajax: {
@@ -1737,9 +1734,7 @@ else if ($this->session->flashdata('message_error')) {
 	$(document).ready(function() {
 		var table = $('#table-template-2').DataTable({
 			responsive: true,
-			rowReorder: {
-				selector: 'td:nth-child(2)'
-			},
+
 			processing: true,
 			serverSide: true,
 			ajax: {

@@ -109,60 +109,33 @@
                 selectedPricingBox.classList.remove('feature');
 
                 // Generate and display the new payment details content
-                //     const detailHTML = `
-                //     <div class="detail-box mt-5">
-                //         <h3 class="f-20">Rincian Pembayaran : ${planName}</h3>
-                //         <p>Pilih jangka waktu pembayaran:</p>
-                //         <div class="month-selection">
-                //             <button class="month-btn" data-months="1">1 Bulan</button>
-                //             <button class="month-btn" data-months="3">3 Bulan</button>
-                //             <button class="month-btn" data-months="6">6 Bulan</button>
-                //             <button class="month-btn" data-months="9">9 Bulan</button>
-                //             <button class="month-btn" data-months="12">1 Tahun</button>
-                //         </div>
-
-                //         <div class="mt-4 text-center">
-                //             <h4>Total Pembayaran: <span id="total-price" class="text-bariskode">${formatRupiah(basePrice)}</span></h4>
-                //             <p class="text-muted">Untuk <span id="months-display">1</span> bulan</p>
-                //         </div>
-
-                //         <div class="mt-4 pt-3 d-flex justify-content-center">
-                //             <button type="button" id="btn-pembayaran" class="btn btn-primary btn-rounded w-50">Lanjutkan Pembayaran</a>
-                //         </div>
-                //         <div class="mt-3 d-flex justify-content-center">
-                //             <button id="back-button" class="btn btn-outline-secondary w-50">
-                //                 <i class="fa-solid fa-arrow-left"></i> Kembali ke Pilihan Plan
-                //             </button>
-                //         </div>
-                //     </div>
-                // `;
                 const detailHTML = `
-    <div class="detail-box mt-5">
-        <h3 class="f-20">Rincian Pembayaran : ${planName}</h3>
-        <p>Pilih jangka waktu pembayaran:</p>
-       <div class="month-selection">
-    <button class="month-btn btn btn-outline-primary" data-months="1">1 Bulan</button>
-    <button class="month-btn btn btn-outline-primary" data-months="3">3 Bulan</button>
-    <button class="month-btn btn btn-outline-primary" data-months="6">6 Bulan</button>
-    <button class="month-btn btn btn-outline-primary" data-months="9">9 Bulan</button>
-    <button class="month-btn btn btn-outline-primary" data-months="12">1 Tahun</button>
-</div>
-
-        <div class="mt-4 text-center">
-            <h4>Total Pembayaran: <span id="total-price" class="text-bariskode">${formatRupiah(basePrice)}</span></h4>
-            <p class="text-muted">Untuk <span id="months-display">1</span> bulan</p>
-        </div>
-
-        <div class="mt-4 pt-3 d-flex justify-content-center">
-            <button type="button" id="btn-pembayaran" class="btn btn-primary btn-rounded w-50">Lanjutkan Pembayaran</button>
-        </div>
-        <div class="mt-3 d-flex justify-content-center">
-            <button id="back-button" class="btn btn-outline-secondary w-50">
-                <i class="fa-solid fa-arrow-left"></i> Kembali ke Pilihan Plan
-            </button>
-        </div>
-    </div>
-`;
+                <div class="detail-box mt-5">
+                    <h3 class="f-20">Rincian Pembayaran : ${planName}</h3>
+                    <p>Pilih jangka waktu pembayaran:</p>
+                    <div class="month-selection">
+                        <button class="month-btn" data-months="1">1 Bulan</button>
+                        <button class="month-btn" data-months="3">3 Bulan</button>
+                        <button class="month-btn" data-months="6">6 Bulan</button>
+                        <button class="month-btn" data-months="9">9 Bulan</button>
+                        <button class="month-btn" data-months="12">1 Tahun</button>
+                    </div>
+                    
+                    <div class="mt-4 text-center">
+                        <h4>Total Pembayaran: <span id="total-price" class="text-bariskode">${formatRupiah(basePrice)}</span></h4>
+                        <p class="text-muted">Untuk <span id="months-display">1</span> bulan</p>
+                    </div>
+                    
+                    <div class="mt-4 pt-3 d-flex justify-content-center">
+                        <button type="button" id="btn-pembayaran" class="btn btn-primary btn-rounded w-50">Lanjutkan Pembayaran</a>
+                    </div>
+                    <div class="mt-3 d-flex justify-content-center">
+                        <button id="back-button" class="btn btn-outline-secondary w-50">
+                            <i class="fa-solid fa-arrow-left"></i> Kembali ke Pilihan Plan
+                        </button>
+                    </div>
+                </div>
+            `;
                 detailsContainer.classList.remove('d-none');
 
                 detailsContainer.innerHTML = detailHTML;
@@ -815,6 +788,7 @@
 
     /** ── Tampil QR Code + countdown + polling ── */
     function tampilQRCode(id_pembayaran, qr_url, trx, startStr, endStr, expire_time) {
+        // const detailsContainer = document.getElementById('pricing-details-container');
 
         // Hitung sisa waktu countdown
         let sisaDetik = 900; // default 15 menit
@@ -824,98 +798,60 @@
         }
 
         const qrHTML = `
-<div class="detail-box mt-5">
-    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-        <h3 class="f-20 mb-0">Lanjutkan Pembayaran</h3>
-        <span class="badge bg-warning text-dark fs-6 px-3 py-2">
-            ⏳ <span id="qr-countdown">60:00</span>
-        </span>
-    </div>
-
-    <div class="text-center mb-3">
-        <div id="qrcode-canvas" style="width:100%;"></div>
-    </div>
-
-    <div class="row text-center mb-3">
-        <div class="col">
-            <small class="text-muted d-block">Paket</small>
-            <strong>${trx ? trx.paket : '-'}</strong>
+    <div class="detail-box mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+            <h3 class="f-20 mb-0">Scan untuk Membayar</h3>
+            <span class="badge bg-warning text-dark fs-6 px-3 py-2">
+                ⏳ <span id="qr-countdown">15:00</span>
+            </span>
         </div>
-        <div class="col">
-            <small class="text-muted d-block">Total</small>
-            <strong class="text-bariskode">${trx ? formatRupiah(trx.nominal) : '-'}</strong>
+
+        <div class="text-center mb-3">
+            <div style="background:#fff; border-radius:16px; padding:16px; display:inline-block;
+                        box-shadow:0 2px 16px rgba(0,0,0,.12);">
+                <img src="${qr_url}" alt="QRIS Code"
+                     style="width:220px; height:220px; display:block; border-radius:4px;"
+                     onerror="this.src='${BASE_URL}assets/images/qr-error.png'">
+            </div>
         </div>
-    </div>
 
-    <div style="background:#f8f9fa; border-radius:12px; padding:14px 16px; margin-bottom:16px;">
-        <p class="fw-bold mb-2 f-12 text-muted">CARA BAYAR:</p>
-        <ol class="mb-0 ps-3" style="font-size:13px; line-height:1.8;">
-            <li>Klik tombol <strong>Bayar Sekarang via QRIS</strong> di atas</li>
-            <li>Pilih metode pembayaran QRIS di halaman Duitku</li>
-            <li>Scan QR Code menggunakan e-wallet kamu</li>
-            <li>Konfirmasi nominal & selesaikan pembayaran</li>
-        </ol>
-    </div>
+        <div class="row text-center mb-3">
+            <div class="col">
+                <small class="text-muted d-block">Paket</small>
+                <strong>${trx ? trx.paket : '-'}</strong>
+            </div>
+            <div class="col">
+                <small class="text-muted d-block">Total</small>
+                <strong class="text-bariskode">${trx ? formatRupiah(trx.nominal) : '-'}</strong>
+            </div>
+        </div>
 
-    <p class="text-center text-muted f-12">
-        Mendukung semua e-wallet berlogo QRIS 🟥<br>
-        Pembayaran akan terkonfirmasi otomatis.
-    </p>
+        <div style="background:#f8f9fa; border-radius:12px; padding:14px 16px; margin-bottom:16px;">
+            <p class="fw-bold mb-2 f-12 text-muted">CARA BAYAR:</p>
+            <ol class="mb-0 ps-3" style="font-size:13px; line-height:1.8;">
+                <li>Buka aplikasi e-wallet (GoPay, OVO, DANA, ShopeePay, dll)</li>
+                <li>Pilih menu <strong>Scan / Bayar</strong></li>
+                <li>Arahkan kamera ke QR Code di atas</li>
+                <li>Konfirmasi nominal & selesaikan pembayaran</li>
+            </ol>
+        </div>
 
-    <div class="text-center mt-3">
-        <button class="btn btn-outline-secondary btn-sm" onclick="batalQRIS()">
-            Ganti Metode Pembayaran
-        </button>
-    </div>
-</div>`;
+        <p class="text-center text-muted f-12">
+            Mendukung semua e-wallet berlogo QRIS 🟥<br>
+            Pembayaran akan terkonfirmasi otomatis.
+        </p>
+
+        <div class="text-center mt-3">
+            <button class="btn btn-outline-secondary btn-sm" onclick="batalQRIS()">
+                Ganti Metode Pembayaran
+            </button>
+        </div>
+    </div>`;
 
         detailsContainer.classList.remove('visible');
         setTimeout(() => {
             detailsContainer.innerHTML = qrHTML;
             detailsContainer.classList.add('visible');
-
-            // ── Render QR Code ──────────────────────────────────────────
-            // Cek apakah qr_url adalah URL gambar (Midtrans) atau qrString teks (Duitku)
-            // const isImageUrl = qr_url.startsWith('http') || qr_url.startsWith('https');
-            const isImageUrl = qr_url.startsWith('http') || qr_url.startsWith('https');
-
-            //     if (isImageUrl) {
-            //         // Duitku: paymentUrl → tampil sebagai tombol
-            //         const canvas = document.getElementById('qrcode-canvas');
-            //         canvas.innerHTML = `
-            // <div style="padding:20px;">
-            //     <p class="text-muted f-12 mb-3">Klik tombol di bawah untuk melanjutkan pembayaran QRIS</p>
-            //     <a href="${qr_url}" target="_blank" class="btn btn-primary btn-rounded px-4">
-            //         Bayar Sekarang via QRIS
-            //     </a>
-            // </div>`;
-            //     } 
-            if (isImageUrl) {
-                const canvas = document.getElementById('qrcode-canvas');
-                const isMobile = window.innerWidth <= 768;
-
-                const scale = isMobile ? 0.55 : 0.75;
-                const width = isMobile ? '180%' : '150%';
-                const height = isMobile ? '750px' : '650px';
-                const boxHeight = isMobile ? '420px' : '480px';
-
-                canvas.style.cssText = 'width:100%;';
-                canvas.innerHTML = `
-        <div style="width:100%; height:${boxHeight}; overflow:hidden; 
-                    border-radius:12px; position:relative;">
-            <iframe 
-                src="${qr_url}" 
-                style="width:${width}; height:${height}; border:none;
-                       transform: scale(${scale}); transform-origin: top left;
-                       position:absolute; top:0; left:0;"
-                allow="payment">
-            </iframe>
-        </div>`;
-            } else {
-                // Midtrans: qrString → render pakai qrcodejs
-                _renderQRCode(qr_url);
-            }
-            // ── End Render QR Code ──────────────────────────────────────
 
             // Countdown
             mulaiCountdown(sisaDetik, id_pembayaran);
@@ -924,91 +860,6 @@
             window._qrisPolling = setInterval(() => cekStatusQRIS(id_pembayaran), 4000);
 
         }, 500);
-    }
-
-    function bukaPopupDuitku(reference) {
-        checkout.process(reference, {
-            onSuccess: function(result) {
-                clearInterval(window._qrisPolling);
-                clearInterval(window._qrisCountdown);
-                swal.fire({
-                    icon: 'success',
-                    title: 'Pembayaran Berhasil! 🎉',
-                    text: 'Paket Anda telah aktif. Terima kasih!',
-                    showConfirmButton: false,
-                    timer: 2500
-                }).then(() => {
-                    detailsContainer.classList.remove('visible');
-                    setTimeout(() => {
-                        detailsContainer.innerHTML = `
-                        <div class="detail-box text-center mt-5">
-                            <h3 class="f-20">Pembayaran Berhasil! 🎉</h3>
-                            <p>Terima kasih! Pembayaran Anda telah berhasil dikonfirmasi.<br>
-                               Silakan logout dan login kembali untuk menikmati fitur premium Anda.
-                            </p>
-                            <div class="mt-4 pt-3">
-                                <a href="${BASE_URL}home" class="btn btn-primary btn-rounded w-75">Kembali ke Dashboard</a>
-                            </div>
-                        </div>`;
-                        detailsContainer.classList.add('visible');
-                    }, 500);
-                });
-            },
-            onPending: function(result) {
-                console.log('Pending:', result);
-            },
-            onError: function(result) {
-                swal.fire({
-                    icon: 'error',
-                    title: 'Pembayaran Gagal',
-                    text: 'Silakan coba lagi.',
-                    confirmButtonText: 'OK'
-                });
-            },
-            onClose: function() {
-                console.log('Popup ditutup');
-            }
-        });
-    }
-
-    /**
-     * Render qrString ke canvas menggunakan qrcodejs
-     * Load library dari CDN jika belum ada
-     */
-    function _renderQRCode(qrString) {
-        const containerId = 'qrcode-canvas';
-
-        function doRender() {
-            const container = document.getElementById(containerId);
-            if (!container) return;
-            container.innerHTML = ''; // bersihkan dulu
-            new QRCode(container, {
-                text: qrString,
-                width: 220,
-                height: 220,
-                colorDark: '#000000',
-                colorLight: '#ffffff',
-                correctLevel: QRCode.CorrectLevel.M
-            });
-        }
-
-        // Jika qrcodejs sudah ter-load, langsung render
-        if (typeof QRCode !== 'undefined') {
-            doRender();
-            return;
-        }
-
-        // Belum ada — load dari CDN dulu
-        const script = document.createElement('script');
-        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
-        script.onload = doRender;
-        script.onerror = () => {
-            const container = document.getElementById(containerId);
-            if (container) {
-                container.innerHTML = `<p class="text-danger f-12">Gagal memuat QR Code.<br>Refresh halaman dan coba lagi.</p>`;
-            }
-        };
-        document.head.appendChild(script);
     }
 
     /** Countdown timer QR */

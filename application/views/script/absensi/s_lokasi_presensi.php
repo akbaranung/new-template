@@ -1,10 +1,7 @@
 <script>
     $(document).ready(function() {
         $('#datatable_lokasi').dataTable({
-            // responsive: true,
-            rowReorder: {
-                selector: 'td:nth-child(2)'
-            },
+
             processing: true,
             serverSide: true,
             ajax: {

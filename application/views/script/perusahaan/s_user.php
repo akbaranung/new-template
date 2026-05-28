@@ -3,15 +3,7 @@
     $(document).ready(function() {
         $('#user-table').dataTable({
             responsive: true,
-            rowReorder: {
-                selector: 'td:nth-child(2)'
-            },
-            // If you are using Scroller, you would add 'deferRender: true' and 'scrollY' options here,
-            // and optionally 'scroller: true'.
-            // Example:
-            // deferRender: true,
-            // scrollY: 200, // or '50vh'
-            // scroller: true,
+
             processing: true,
             serverSide: true,
             ajax: {
@@ -21,17 +13,9 @@
             order: [],
             iDisplayLength: 10,
             columnDefs: [{
-                targets: -1, // Adjust target index if 'Action' column is not always the 9th column (index 8)
+                targets: -1,
                 orderable: false
             }],
-            // The 'dom' property has been replaced with the 'layout' option
-            // to place the search bar at the top, and the info and pagination controls at the bottom.
-            // layout: {
-            //     topStart: 'search',
-            //     topEnd: '',
-            //     bottomStart: 'info',
-            //     bottomEnd: 'paging'
-            // }
         });
 
         $('.btn-reset-cuti').click(function(e) {
