@@ -166,7 +166,7 @@
                   <div class="card-body">
                     <div class="row align-items-center">
                       <div class="col-md-6 col-12 gauge-text-div">
-                        <p class="small mb-0 text-primary"><b>Invoice Open</b></p>
+                        <p class="small mb-0 text-primary"><b>Invoice</b></p>
                         <!-- <h5 class="mb-0 text-pink text-kuota"><?= $total_invoice_open ?>/<?= $total_invoice ?></h5> -->
                         <h5 class="mb-0 text-pink text-kuota"><?= $total_invoice_open ?></h5>
                         <span class="small text-mute" id="invoiceOpenText"></span> <!-- Displays "X days remaining" -->
@@ -185,7 +185,7 @@
                   <div class="card-body">
                     <div class="row align-items-center">
                       <div class="col-md-6 col-12 gauge-text-div">
-                        <p class="small mb-0 text-primary"><b>Nota Open</b></p>
+                        <p class="small mb-0 text-primary"><b>Nota</b></p>
                         <!-- <h5 class="mb-0 text-pink text-kuota"><?= $total_nota_open ?>/<?= $total_nota ?></h5> -->
                         <h5 class="mb-0 text-pink text-kuota"><?= $total_nota_open ?></h5>
                         <span class="small text-mute" id="notaOpenText"></span> <!-- Displays "X days remaining" -->
