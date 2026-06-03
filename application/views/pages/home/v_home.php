@@ -160,37 +160,39 @@
           <?php
           if ($hasFinancialMenu) {
           ?>
-            <div class="col-md-4 col-6 mb-4">
+            <div class="col-md-3 col-6 mb-4">
               <a href="<?= base_url('financial/invoice') ?>">
                 <div class="card shadow">
                   <div class="card-body">
                     <div class="row align-items-center">
                       <div class="col-md-6 col-12 gauge-text-div">
                         <p class="small mb-0 text-primary"><b>Invoice Open</b></p>
-                        <h5 class="mb-0 text-pink text-kuota"><?= $total_invoice_open ?>/<?= $total_invoice ?></h5>
+                        <!-- <h5 class="mb-0 text-pink text-kuota"><?= $total_invoice_open ?>/<?= $total_invoice ?></h5> -->
+                        <h5 class="mb-0 text-pink text-kuota"><?= $total_invoice_open ?></h5>
                         <span class="small text-mute" id="invoiceOpenText"></span> <!-- Displays "X days remaining" -->
                       </div>
-                      <div class="col-md-6 gauge-div">
+                      <!-- <div class="col-md-6 gauge-div">
                         <div id="gauge7" class="gauge-container"></div>
-                      </div>
+                      </div> -->
                     </div>
                   </div>
                 </div>
               </a>
             </div>
-            <div class="col-md-4 col-6 mb-4">
+            <div class="col-md-3 col-6 mb-4">
               <a href="<?= base_url('nota') ?>">
                 <div class="card shadow">
                   <div class="card-body">
                     <div class="row align-items-center">
                       <div class="col-md-6 col-12 gauge-text-div">
                         <p class="small mb-0 text-primary"><b>Nota Open</b></p>
-                        <h5 class="mb-0 text-pink text-kuota"><?= $total_nota_open ?>/<?= $total_nota ?></h5>
+                        <!-- <h5 class="mb-0 text-pink text-kuota"><?= $total_nota_open ?>/<?= $total_nota ?></h5> -->
+                        <h5 class="mb-0 text-pink text-kuota"><?= $total_nota_open ?></h5>
                         <span class="small text-mute" id="notaOpenText"></span> <!-- Displays "X days remaining" -->
                       </div>
-                      <div class="col-md-6 gauge-div">
+                      <!-- <div class="col-md-6 gauge-div">
                         <div id="gauge8" class="gauge-container"></div>
-                      </div>
+                      </div> -->
                     </div>
                   </div>
                 </div>
