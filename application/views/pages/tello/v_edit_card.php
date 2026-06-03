@@ -68,7 +68,6 @@
               <a href="<?= site_url('task/task_view/') . $detail_task->id_task ?>" class="btn mb-2 btn-warning">Kembali</a>
               <button type="submit" class="btn mb-2 btn-primary btn-submit">Update Card</button>
             </div>
-
           </form>
         </div>
       </div>
