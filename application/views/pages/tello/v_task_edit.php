@@ -51,7 +51,7 @@
             <div class="form-group row">
               <label for="attach" class="col-sm-3 col-form-label">Description</label>
               <div class="col-sm-9">
-                <textarea name="description" id="description" class="form-control"></textarea>
+                <textarea name="description" id="description" class="form-control"><?= $task->comment ?></textarea>
               </div>
             </div>
             <div class="modal-footer">
