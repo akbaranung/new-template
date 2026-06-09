@@ -564,6 +564,13 @@
         <?php if ($current_time <= $jam_masuk_plus_two) { ?>
             <?php if (empty($result1)) { ?>
                 console.log('ada1');
+                Swal.fire({
+                    title: 'Loading...',
+                    text: 'Sedang Mempersiapkan Lokasi..',
+                    icon: 'info',
+                    showConfirmButton: false, // We don't want the user to click OK yet
+                    allowOutsideClick: false // Optional: Prevent closing by clicking outside
+                });
                 getLocation(); // Call function
             <?php } else { ?>
                 Swal.fire('Alert', 'Anda Sudah Melakukan Absensi Masuk', 'warning');
@@ -587,6 +594,13 @@
         <?php } else { ?>
             <?php if (empty($result1) && empty($result3)) { ?>
                 console.log('ada2');
+                Swal.fire({
+                    title: 'Loading...',
+                    text: 'Sedang Mempersiapkan Lokasi..',
+                    icon: 'info',
+                    showConfirmButton: false, // We don't want the user to click OK yet
+                    allowOutsideClick: false // Optional: Prevent closing by clicking outside
+                });
                 getLocation(); // Call function
             <?php } else { ?>
                 Swal.fire('Alert', 'Anda Sudah Melakukan Absensi', 'warning');
