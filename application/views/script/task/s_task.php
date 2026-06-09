@@ -1,32 +1,5 @@
 <script>
   $(document).ready(function() {
-    initUppy();
-    $('#member').select2({
-      placeholder: 'Search user',
-      ajax: {
-        url: '<?= base_url('task/search_user_task') ?>',
-        dataType: 'json',
-        delay: 250,
-        data: function(params) {
-          return {
-            q: params.term || '',
-            page: params.page || 1
-          };
-        },
-        processResults: function(data, params) {
-          params.page = params.page || 1;
-
-          return {
-            results: data.items,
-            pagination: {
-              more: data.more
-            }
-          };
-        },
-        cache: true
-      }
-    });
-
     $(".btn-submit").click(function(e) {
       e.preventDefault();
       var parent = $(this).parents("form");
@@ -95,6 +68,35 @@
         }
       });
     });
+
+    initUppy();
+    $('#member').select2({
+      placeholder: 'Search user',
+      ajax: {
+        url: '<?= base_url('task/search_user_task') ?>',
+        dataType: 'json',
+        delay: 250,
+        data: function(params) {
+          return {
+            q: params.term || '',
+            page: params.page || 1
+          };
+        },
+        processResults: function(data, params) {
+          params.page = params.page || 1;
+
+          return {
+            results: data.items,
+            pagination: {
+              more: data.more
+            }
+          };
+        },
+        cache: true
+      }
+    });
+
+
 
     <?php if ($this->session->flashdata('warning')) { ?>
       Swal.fire({

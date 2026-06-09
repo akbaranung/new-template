@@ -34,10 +34,10 @@
                         <input type="hidden" name="subtotal[]" value="<?= $row->total ?>">
                         <td align="right"><?= rupiah($row->total) ?></td>
                         <td>
-                          <select name="coa_beban[]" class="form-control select2">
+                          <select name="coa_beban[]" class="form-control select2 coa_debit">
                             <option value=""> :: Pilih Coa Beban</option>
                             <?php foreach ($coa as $c) : ?>
-                              <option value="<?= $c->no_sbb ?>"><?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?></option>
+                              <option value="<?= $c->no_sbb ?>" data-posisi="<?= $c->posisi ?>"><?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?></option>
                             <?php endforeach ?>
                           </select>
                         </td>

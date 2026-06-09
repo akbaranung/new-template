@@ -55,6 +55,43 @@
         $('#nama_direksi').attr('disabled', true);
       }
     })
+
+    function formatState(state, colorAktiva, colorPasiva, signAktiva, signPasiva) {
+      if (!state.id) {
+        return state.text;
+      }
+
+      var color = state.element.dataset.posisi == "AKTIVA" ? colorAktiva : colorPasiva;
+      var sign = state.element.dataset.posisi == "AKTIVA" ? signAktiva : signPasiva;
+
+      var $state = $('<p style="background-color: ' + color + ';"><strong style="color: #fff;">' + state.text + ' ' + sign + '</strong></p>');
+
+      return $state;
+    };
+
+    function formatStateDebit(state) {
+      return formatState(state, '#3f51b5', '#e81f63', '(+)', '(-)');
+    }
+
+    function formatStateKredit(state) {
+      return formatState(state, '#e81f63', '#3f51b5', '(-)', '(+)');
+    }
+
+    $('.coa_debit').each(function() {
+      $(this).select2({
+        width: '100%',
+        templateSelection: formatStateDebit,
+        theme: 'bootstrap4',
+      });
+    });
+
+    $('.coa_kredit').each(function() {
+      $(this).select2({
+        width: '100%',
+        templateSelection: formatStateKredit,
+        theme: 'bootstrap4',
+      });
+    });
   });
 
   $(".btn-submit").click(function(e) {

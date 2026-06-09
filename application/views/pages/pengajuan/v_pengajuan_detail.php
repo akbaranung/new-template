@@ -58,32 +58,6 @@
             ?>
             <div class="col-12 mt-4 mb-4">
               <?php
-              // if ($pengajuan->direksi != Null || $pengajuan->direksi) {
-              //   $Pengajuan = 'active';
-              //   $Supervisi = 'active';
-              //   $Keuangan = 'active';
-              //   $Direksi = 'active';
-              //   $i = 3;
-              // } else if ($pengajuan->keuangan != Null || $pengajuan->keuangan) {
-              //   $Pengajuan = 'active';
-              //   $Supervisi = 'active';
-              //   $Keuangan = 'active';
-              //   $Direksi = '';
-              //   $i = 2;
-              // } else if ($pengajuan->spv != Null || $pengajuan->spv) {
-              //   $Pengajuan = 'active';
-              //   $Supervisi = 'active';
-              //   $Keuangan = '';
-              //   $Direksi = '';
-              //   $i = 1;
-              // } else if ($pengajuan->spv == Null || !$pengajuan->spv) {
-              //   $Pengajuan = 'active';
-              //   $Supervisi = '';
-              //   $Keuangan = '';
-              //   $Direksi = '';
-              //   $i = 0;
-              // }
-
               if ($pengajuan->posisi == "Selesai") {
                 $Pengajuan = 'active';
                 $Supervisi = 'active';
@@ -137,16 +111,6 @@
               <div class="container">
                 <div class="progress-container mx-auto">
                   <div class="progress" id="progress"></div>
-                  <!-- <div class="circle active">1</div>
-                  <div class="circle">2</div>
-                  <div class="circle">3</div>
-                  <div class="circle">4</div> -->
-
-                  <!-- <div class="circle" data-label="Pengajuan">1</div>
-                  <div class="circle" data-label="Supervisi">2</div>
-                  <div class="circle" data-label="Keuangan">3</div>
-                  <div class="circle" data-label="Direksi">4</div> -->
-
                   <div class="circle <?= $Pengajuan ?>" data-label="Pengajuan">1</div>
                   <div class="circle <?= $Supervisi ?>" data-label="Supervisi">2</div>
                   <div class="circle <?= $Keuangan ?>" data-label="Keuangan">3</div>
@@ -376,21 +340,6 @@
                           <td><?= $row->qty ?></td>
                           <td align="right"><?= rupiah($row->price) ?></td>
                           <td align="right"><?= rupiah($row->total) ?></td>
-                          <!-- <td>
-                            <?php if ($row->status == 1) { ?>
-                              <select name="coa[]" id="coa-<?= $no++ ?>" class="form-control select2">
-                                <?php foreach ($coa as $c) : ?>
-                                  <option value="<?= $c->no_sbb ?>" <?= $c->no_sbb == '15110' ? 'selected' : '' ?>><?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?></option>
-                                <?php endforeach ?>
-                              </select>
-                            <?php } else { ?>
-                              <select name="coa[]" id="coa-<?= $no++ ?>" class="form-control select2" disabled>
-                                <?php foreach ($coa as $c) : ?>
-                                  <option value="<?= $c->no_sbb ?>" <?= $c->no_sbb == '15110' ? 'selected' : '' ?>><?= $c->no_sbb . ' - ' . $c->nama_perkiraan ?></option>
-                                <?php endforeach ?>
-                              </select>
-                            <?php } ?>
-                          </td> -->
                         </tr>
                       <?php endforeach ?>
                       <tr>
@@ -514,6 +463,14 @@
                     <div>
                       <button type="submit" class="btn btn-primary btn-submit">Simpan</button>
                     </div>
+                  </div>
+                </div>
+              <?php } ?>
+
+              <?php if ($this->uri->segment(4) == 'finance' and $pengajuan->posisi == 'Diarahkan ke pembayaran') { ?>
+                <div class="row">
+                  <div class="col-md-12">
+                    <a href="<?= site_url('pengajuan/bayar/') . $this->uri->segment(3) ?>" class="btn btn-success"><i class="fe fe-dollar-sign fe-12"></i> Proses Bayar</i></a>
                   </div>
                 </div>
               <?php } ?>
