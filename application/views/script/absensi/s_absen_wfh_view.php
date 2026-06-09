@@ -566,7 +566,7 @@
                 console.log('ada1');
                 Swal.fire({
                     title: 'Loading...',
-                    text: 'Sedang Mempersiapkan Lokasi..',
+                    text: 'Sedang Mempersiapkan Lokasi...',
                     icon: 'info',
                     showConfirmButton: false, // We don't want the user to click OK yet
                     allowOutsideClick: false // Optional: Prevent closing by clicking outside
@@ -582,7 +582,7 @@
                 getLocation(); // Call function
                 Swal.fire({
                     title: 'Loading...',
-                    text: 'Sedang Mempersiapkan Lokasi..',
+                    text: 'Sedang Mempersiapkan Lokasi...',
                     icon: 'info',
                     showConfirmButton: false, // We don't want the user to click OK yet
                     allowOutsideClick: false // Optional: Prevent closing by clicking outside
@@ -596,7 +596,7 @@
                 console.log('ada2');
                 Swal.fire({
                     title: 'Loading...',
-                    text: 'Sedang Mempersiapkan Lokasi..',
+                    text: 'Sedang Mempersiapkan Lokasi...',
                     icon: 'info',
                     showConfirmButton: false, // We don't want the user to click OK yet
                     allowOutsideClick: false // Optional: Prevent closing by clicking outside
