@@ -305,7 +305,7 @@
                     <!-- <p class="mt-4 pt-2 text-muted">Dirancang untuk para bangsawan muda yang mencari landasan kokoh. Dapatkan kendali penuh atas wilayah kecil Anda dan bangunlah kekuatan.</p> -->
                     <div class="pricing-plan pt-2">
                         <!-- <h4 class="text-muted"><s> $9.99</s> <span class="plan pl-3 text-dark">$8.99 </span></h4> -->
-                        <span class="plan text-bariskode">IDR. 300K</span>
+                        <span class="plan text-bariskode">IDR. 500K</span>
                         <p class="text-muted mb-0">Per Bulan</p>
                     </div>
 
@@ -348,7 +348,7 @@
 
 
                     <div class="mt-4 pt-3">
-                        <a href="" class="btn btn-primary btn-rounded pilih-tahta-btn" data-plan="1" data-price="300000">Pilih Tahta</a>
+                        <a href="" class="btn btn-primary btn-rounded pilih-tahta-btn" data-plan="1" data-price="500000">Pilih Tahta</a>
                         <!-- <a href="" class="btn btn-primary btn-rounded">Ambil Takhta Ini</a> -->
                         <!-- <a href="" class="btn btn-primary btn-rounded">Dapatkan Mahkota</a> -->
                     </div>
@@ -363,7 +363,7 @@
                     <!-- <p class="mt-4 pt-2 text-muted">Dirancang untuk para bangsawan muda yang mencari landasan kokoh. Dapatkan kendali penuh atas wilayah kecil Anda dan bangunlah kekuatan.</p> -->
                     <div class="pricing-plan pt-2">
                         <!-- <h4 class="text-muted"><s> $9.99</s> <span class="plan pl-3 text-dark">$8.99 </span></h4> -->
-                        <span class="plan text-bariskode">IDR. 500K</span>
+                        <span class="plan text-bariskode">IDR. 1000K</span>
                         <p class="text-muted mb-0">Per Bulan</p>
                     </div>
 
@@ -400,7 +400,7 @@
 
 
                     <div class="mt-4 pt-3">
-                        <a href="" class="btn btn-primary btn-rounded pilih-tahta-btn" data-plan="2" data-price="500000">Pilih Tahta</a>
+                        <a href="" class="btn btn-primary btn-rounded pilih-tahta-btn" data-plan="2" data-price="1000000">Pilih Tahta</a>
                         <!-- <a href="" class="btn btn-primary btn-rounded">Ambil Takhta Ini</a> -->
                         <!-- <a href="" class="btn btn-primary btn-rounded">Dapatkan Mahkota</a> -->
                     </div>
@@ -415,7 +415,7 @@
                     <!-- <p class="mt-4 pt-2 text-muted">Dirancang untuk para bangsawan muda yang mencari landasan kokoh. Dapatkan kendali penuh atas wilayah kecil Anda dan bangunlah kekuatan.</p> -->
                     <div class="pricing-plan pt-2">
                         <!-- <h4 class="text-muted"><s> $9.99</s> <span class="plan pl-3 text-dark">$8.99 </span></h4> -->
-                        <span class="plan text-bariskode">IDR. 1000K</span>
+                        <span class="plan text-bariskode">IDR. 1500K</span>
                         <!-- <p class="text-muted mb-0">Per Bulan</p> -->
                         <p class="mb-0">Per Bulan</p>
                     </div>
@@ -452,7 +452,7 @@
                     </div>
 
                     <div class="mt-4 pt-3">
-                        <a href="" class="btn btn-primary btn-rounded pilih-tahta-btn" data-plan="3" data-price="1000000">Pilih Tahta</a>
+                        <a href="" class="btn btn-primary btn-rounded pilih-tahta-btn" data-plan="3" data-price="1500000">Pilih Tahta</a>
                         <!-- <a href="" class="btn btn-primary btn-rounded">Ambil Takhta Ini</a> -->
                         <!-- <a href="" class="btn btn-primary btn-rounded">Dapatkan Mahkota</a> -->
                     </div>
