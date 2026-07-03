@@ -88,4 +88,22 @@ class Wa_dashboard extends CI_Controller
             ->set_content_type('application/json')
             ->set_output(json_encode($result));
     }
+
+    public function restart()
+    {
+        if ($this->session->userdata('username') == "bariskode") {
+            $has_access = TRUE;
+        } else {
+            $has_access = FALSE;
+        }
+
+        if (!$has_access) {
+            show_error('Forbidden Access: You do not have permission to view this page.', 403, '403 Forbidden');
+        }
+
+        $result = $this->whatsapp->send_raw_post('/restart');
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($result));
+    }
 }
