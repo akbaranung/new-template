@@ -73,6 +73,12 @@
                 <span class="ml-1 item-text">Reset Password User</span>
               </a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link pl-3" href="<?= site_url('wa_dashboard') ?>">
+                <i class="fe fe-terminal fe-16"></i>
+                <span class="ml-1 item-text">Api Whatsapp</span>
+              </a>
+            </li>
           </ul>
         </li>
         <!-- <li class="nav-item w-100">
