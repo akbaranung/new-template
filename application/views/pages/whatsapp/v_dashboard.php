@@ -285,8 +285,8 @@
                                     </div>
 
                                     <div class="mb-3">
-                                        <div class="card h-100">
-                                            <div class="card-body">
+                                        <div class="h-100">
+                                            <div class="">
                                                 <div class="mt-3 p-3 rounded" style="background:#f8f9fa;font-size:12px;">
                                                     <div class="font-weight-500 mb-2">Alur setelah Logout:</div>
                                                     <div style="color:#495057;">
@@ -330,7 +330,7 @@
                                                     <tr>
                                                         <td><?= $no++; ?></td>
                                                         <td><?= $log['nomor_tujuan'] ?></td>
-                                                        <td><?= substr($log['isi_pesan'], 0, 30) ?> ...</td>
+                                                        <td><?= substr($log['isi_pesan'], 0, 15) ?> ...</td>
                                                         <td><?= $log['tanggal_waktu'] ?></td>
                                                         <td><?= $log['status'] ?></td>
                                                     </tr>
