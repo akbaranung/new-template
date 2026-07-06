@@ -2,9 +2,7 @@
     const BASE_URL = '<?= base_url('wa_dashboard') ?>';
     let refreshTimer, countdownTimer, countdownVal = 10;
 
-    // ----------------------------------------------------------------
     // Log
-    // ----------------------------------------------------------------
     function addLog(msg, type = 'info') {
         const box = document.getElementById('log-box');
         const now = new Date().toLocaleTimeString('id-ID', {
@@ -21,9 +19,7 @@
         document.getElementById('log-box').innerHTML = '';
     }
 
-    // ----------------------------------------------------------------
     // Countdown
-    // ----------------------------------------------------------------
     function resetCountdown() {
         clearInterval(countdownTimer);
         countdownVal = 10;
@@ -37,9 +33,7 @@
         }, 1000);
     }
 
-    // ----------------------------------------------------------------
-    // Cek status
-    // ----------------------------------------------------------------
+    // Cek status koneksi WA
     async function checkStatus() {
         try {
             const res = await fetch(BASE_URL + '/status');
@@ -81,9 +75,7 @@
         }
     }
 
-    // ----------------------------------------------------------------
-    // Muat QR
-    // ----------------------------------------------------------------
+    // Muat QR code dari gateway
     async function loadQR() {
         const wrap = document.getElementById('qr-wrap');
         const btn = document.getElementById('btn-qr');
@@ -113,9 +105,7 @@
         btn.innerHTML = '&#x21bb; Muat ulang QR';
     }
 
-    // ----------------------------------------------------------------
-    // Logout
-    // ----------------------------------------------------------------
+    // Logout WA
     async function doLogout() {
         if (!confirm('Yakin mau logout?\n\nSesi WA akan dicabut dan folder auth_info akan dihapus otomatis.\nKamu perlu scan QR ulang setelahnya.')) return;
 
@@ -146,9 +136,7 @@
         setTimeout(checkStatus, 1000);
     }
 
-    // ----------------------------------------------------------------
-    // Restart
-    // ----------------------------------------------------------------
+    // Restart Server WA
     async function doRestart() {
         const btn = document.getElementById('btn-restart');
         btn.disabled = true;
@@ -179,17 +167,13 @@
         btn.innerHTML = '&#x21bb; Restart';
     }
 
-    // ----------------------------------------------------------------
-    // Refresh manual
-    // ----------------------------------------------------------------
+    // Refresh status dan countdown
     function doRefresh() {
         checkStatus();
         resetCountdown();
     }
 
-    // ----------------------------------------------------------------
-    // Auto-refresh setiap 10 detik
-    // ----------------------------------------------------------------
+    // Auto Refresh setiap 10 detik
     function startAutoRefresh() {
         clearInterval(refreshTimer);
         refreshTimer = setInterval(() => {

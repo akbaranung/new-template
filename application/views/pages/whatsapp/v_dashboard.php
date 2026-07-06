@@ -284,11 +284,25 @@
                                         </button>
                                     </div>
 
+                                    <div class="mb-3">
+                                        <div class="card h-100">
+                                            <div class="card-body">
+                                                <div class="mt-3 p-3 rounded" style="background:#f8f9fa;font-size:12px;">
+                                                    <div class="font-weight-500 mb-2">Alur setelah Logout:</div>
+                                                    <div style="color:#495057;">
+                                                        1. Klik <strong>Logout</strong> &rarr; sesi WA dicabut &amp; auth_info dihapus otomatis<br>
+                                                        2. Klik <strong>Restart</strong> &rarr; gateway mulai ulang koneksi<br>
+                                                        3. Klik <strong>Muat QR</strong> &rarr; scan QR baru dengan HP
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Panel kanan: Log -->
                         <div class="col-md-7 mb-3">
                             <div class="card h-100">
                                 <div class="card-header d-flex align-items-center justify-content-between">
@@ -299,12 +313,30 @@
                                     <div class="log-box" id="log-box"></div>
 
                                     <div class="mt-3 p-3 rounded" style="background:#f8f9fa;font-size:12px;">
-                                        <div class="font-weight-500 mb-2">Alur setelah Logout:</div>
-                                        <div style="color:#495057;">
-                                            1. Klik <strong>Logout</strong> &rarr; sesi WA dicabut &amp; auth_info dihapus otomatis<br>
-                                            2. Klik <strong>Restart</strong> &rarr; gateway mulai ulang koneksi<br>
-                                            3. Klik <strong>Muat QR</strong> &rarr; scan QR baru dengan HP
-                                        </div>
+                                        <table class="table table-stripped">
+                                            <thead class="thead-dark">
+                                                <tr>
+                                                    <th>No.</th>
+                                                    <th>Tujuan</th>
+                                                    <th>Pesan</th>
+                                                    <th>Waktu</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php
+                                                $no = 1;
+                                                foreach ($logs as $log) : ?>
+                                                    <tr>
+                                                        <td><?= $no++; ?></td>
+                                                        <td><?= $log['nomor_tujuan'] ?></td>
+                                                        <td><?= substr($log['isi_pesan'], 0, 30) ?> ...</td>
+                                                        <td><?= $log['tanggal_waktu'] ?></td>
+                                                        <td><?= $log['status'] ?></td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>

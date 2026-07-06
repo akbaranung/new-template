@@ -31,6 +31,7 @@ class Wa_dashboard extends CI_Controller
         $data['pages'] = 'pages/whatsapp/v_dashboard';
         $data['menus'] = $this->M_menu->get_accessible_menus($this->session->userdata('nip'));
         $data['status'] = $this->whatsapp->status();
+        $data['logs'] = $this->db->order_by('id', 'DESC')->limit(10)->get('log_whatsapp')->result_array();
 
         $this->load->view('index', $data);
     }
