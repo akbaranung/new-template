@@ -42,6 +42,7 @@
                 <th style="color: white;">Task Name</th>
                 <th style="color: white;">PIC</th>
                 <th style="color: white;">Status</th>
+                <th style="color: white;">Open Card</th>
                 <th style="color: white;">Created</th>
                 <th style="color: white;">#</th>
               </tr>
@@ -104,6 +105,12 @@
                     <td style="max-width: 150px;" onclick="openTask(<?= $data->Id ?>)" class="open-memo"><?= $data->name ?></td>
                     <td onclick="openTask(<?= $data->Id ?>)" class="open-memo"><?= $data->nama; ?></td>
                     <td onclick="openTask(<?= $data->Id ?>)" class="open-memo <?= $background_class ?>"><?= $status; ?></td>
+                    <td onclick="openTask(<?= $data->Id ?>)" class="open-memo">
+                      <?php
+                      $cardList = $this->db->get_where('task_detail', ['id_task' => $data->Id, 'activity' => 1])->num_rows();
+                      echo $cardList . ' Card' . ($cardList > 1 ? 's' : '');
+                      ?>
+                    </td>
                     <td onclick="openTask(<?= $data->Id ?>)" class="open-memo"><?= date('d/m/y | H:i:s', strtotime($data->date_created)) ?></td>
                     <td>
                       <?php if ($data->pic == $this->session->userdata('nip')) { ?>
