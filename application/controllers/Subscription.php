@@ -9,7 +9,7 @@ class Subscription extends CI_Controller
         parent::__construct();
 
         $this->load->model(['M_coa', 'M_user_access', 'M_perusahaans', 'M_subscription']);
-
+        $this->load->library('Duitku_lib');
         $this->cb = $this->load->database('corebank', TRUE);
         date_default_timezone_set('Asia/Jakarta');
     }
@@ -34,9 +34,243 @@ class Subscription extends CI_Controller
         $this->load->view('index', $data);
     }
 
+    // public function proses_bayar()
+    // {
+
+    //     if ($this->session->userdata('isLogin') == FALSE) {
+    //         $this->session->set_flashdata('error', 'Your session has expired');
+    //         redirect('auth');
+    //     } else if (!$this->session->userdata('nama_perusahaan')) {
+    //         redirect('auth');
+    //     }
+
+    //     // Set the response header to JSON
+    //     $this->output->set_content_type('application/json');
+
+    //     // Check if the request method is POST
+    //     if ($this->input->method() !== 'post') {
+    //         echo json_encode([
+    //             'status'  => 'error',
+    //             'message' => 'Invalid request method.'
+    //         ]);
+    //         return;
+    //     }
+
+    //     // Get the raw POST data from the request body
+    //     $json_data = $this->input->raw_input_stream;
+
+    //     // Decode the JSON data into a PHP associative array
+    //     $data = json_decode($json_data, true);
+
+    //     // Validate that the data was received and decoded correctly
+    //     if ($data === null) {
+    //         echo json_encode([
+    //             'status'  => 'error',
+    //             'message' => 'Invalid JSON data received.'
+    //         ]);
+    //         return;
+    //     }
+    //     // --- NEW: Generate a complete timestamp for start and end dates ---
+    //     $now = new DateTime();
+    //     $start_date_with_time = $now->format('Y-m-d H:i:s');
+
+    //     // Calculate the end date by adding months to the current time
+    //     $months = $data['months'];
+    //     $end_date_obj = clone $now;
+    //     $end_date_obj->modify("+{$months} months");
+    //     // $end_date_with_time = $end_date_obj->format('Y-m-d H:i:s');
+    //     $end_date_with_time = $end_date_obj->format('Y-m-d');
+
+    //     // Prepare the data for insertion, mapping the front-end keys to your database columns
+
+
+    //     $expired_time = clone $now;
+    //     $expired_time->modify('+24 hours');
+    //     $expired_status_bayar = $expired_time->format('Y-m-d H:i:s');
+
+    //     $add = [
+    //         "id_perusahaan" => $data['id_perusahaan'],
+    //         "paket" => $data['planName'],
+    //         "total_bulan" => $data['months'],
+    //         // "tanggal_mulai" => $data['startDate'],
+    //         // "tanggal_selesai" => $data['endDate'],
+    //         "tanggal_mulai" => $start_date_with_time,
+    //         "tanggal_selesai" => $end_date_with_time,
+    //         "nominal" => $data['confirmationPrice'],
+    //         "status_bayar" => 0, // Assuming 0 is the default for 'pending'
+    //         "expired_status_bayar" => $expired_status_bayar,
+    //     ];
+    //     $nominal = $data['confirmationPrice'];
+    //     $formatted_nominal = number_format($nominal, 0, ',', '.');
+
+
+    //     // --- Date Formatting Logic ---
+    //     // Create a mapping of English month names to Indonesian month names
+    //     $indonesian_months = [
+    //         'January' => 'Januari',
+    //         'February' => 'Februari',
+    //         'March' => 'Maret',
+    //         'April' => 'April',
+    //         'May' => 'Mei',
+    //         'June' => 'Juni',
+    //         'July' => 'Juli',
+    //         'August' => 'Agustus',
+    //         'September' => 'September',
+    //         'October' => 'Oktober',
+    //         'November' => 'November',
+    //         'December' => 'Desember'
+    //     ];
+
+    //     // Create DateTime objects from the YYYY-MM-DD strings
+    //     $start_date_obj = new DateTime($start_date_with_time);
+    //     $end_date_obj = new DateTime($end_date_with_time);
+
+    //     // Format the dates to "DD Month YYYY" and replace the month name
+    //     $tanggal_mulai_formatted = strtr($start_date_obj->format('d F Y H:i:s'), $indonesian_months);
+    //     $tanggal_selesai_formatted = strtr($end_date_obj->format('d F Y'), $indonesian_months);
+    //     // --- End Date Formatting Logic ---
+
+
+    //     $detail_perusahaan = $this->db->from('utility')->where('Id', $data['id_perusahaan'])->get()->row();
+    //     $now = (new DateTime())->format('Y-m-d H:i:s');
+
+    //     // Attempt to insert the data into the database
+    //     $confirmation_num = $this->db
+    //         ->from('premium_confirmation')
+    //         ->where('id_perusahaan', $data['id_perusahaan'])
+    //         ->where('status_bayar', 0)
+    //         ->where('expired_status_bayar >', $now) // Add this line to check for the expiration date
+    //         ->get()
+    //         ->num_rows(); // Note the s at the end of num_rows()
+
+    //     $approval_num = $this->db
+    //         ->from('premium_confirmation')
+    //         ->where('id_perusahaan', $data['id_perusahaan'])
+    //         ->where('status_bayar', 1)
+    //         ->where('approval', 0)
+    //         ->get()
+    //         ->num_rows(); // Note the s at the end of num_rows()
+
+    //     if ($approval_num) {
+
+    //         $confirmation_detail = $this->db
+    //             ->from('premium_confirmation')
+    //             ->where('id_perusahaan', $data['id_perusahaan'])
+    //             ->where('status_bayar', 1)
+    //             ->where('approval', 0)
+    //             ->get()
+    //             ->row(); // Note the s at the end of num_rows()
+    //         echo json_encode([
+    //             'status'  => 'proses',
+    //             'message' => 'Anda sudah melakukan Proses Pembayaran dengan Paket :' . $confirmation_detail->paket,
+    //         ]);
+    //     } else if ($confirmation_num) {
+    //         $confirmation_detail = $this->db
+    //             ->from('premium_confirmation')
+    //             ->where('id_perusahaan', $data['id_perusahaan'])
+    //             ->where('status_bayar', 0)
+    //             ->where('expired_status_bayar >', $now) // Add this line to check for the expiration date
+    //             ->get()
+    //             ->row(); // Note the s at the end of num_rows()
+
+    //         $this->db->from('users');
+    //         $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
+    //         $this->db->where('t_cabang.id_perusahaan', $confirmation_detail->id_perusahaan);
+    //         $this->db->where('nama_jabatan', 'Super Admin');
+    //         $this->db->where('level_jabatan', 99);
+    //         $detail_user = $this->db->get()->row();
+
+    //         $link_konfirmasi = base_url('Subscription/proses_bayar_konfirmasi_link/' . $confirmation_detail->id);
+
+    //         $msg_user_whatsapp = "Halo, " . $detail_perusahaan->nama_perusahaan . "! ✨\n\nPemesanan paket premium Anda telah kami terima.\n\nBerikut rincian pesanan Anda:\n\n"
+    //             . "- Paket: *" . $data['planName'] . "*\n"
+    //             . "- Jangka Waktu: *" . $data['months'] . "* Bulan\n"
+    //             . "- Total Tagihan: *Rp. " . $formatted_nominal . "*\n\n"
+    //             . "Pembayaran melalui:\n\n"
+    //             . "*Bank Syariah Indonesia (BSI)*\n"
+    //             . "Nomor Rekening: *79 7070 7004*\n"
+    //             . "Atas Nama: *PT. Baris Kode Indonesia*\n\n"
+    //             . "Mohon lakukan pembayaran dalam waktu 24 jam dan konfirmasi pembelian paket dengan mengklik link di bawah ini:\n"
+    //             . $link_konfirmasi . "\n\n"
+    //             . "Terima kasih atas kerja sama Anda.\n\n"
+    //             . "Hormat kami,\n"
+    //             . "Tim Baris Kode Indonesia";
+
+    //         if ($this->api_whatsapp->wa_notif($msg_user_whatsapp, $detail_user->phone)) {
+    //             $whatsapp_send = True;
+    //         } else {
+    //             $whatsapp_send = false;
+    //         }
+
+    //         echo json_encode([
+    //             'status'  => 'success',
+    //             'message' => 'Anda sudah pernah melakukan Proses Pembayaran dengan Paket :' . $confirmation_detail->paket,
+    //             'id_pembayaran' => $confirmation_detail->id,
+    //             'confirmation_detail' => $confirmation_detail,
+    //             'whatsapp_send' => $whatsapp_send,
+    //             'whatsapp_number' => $detail_user->phone,
+
+    //         ]);
+    //     } else {
+    //         if ($this->db->insert('premium_confirmation', $add)) {
+    //             $last_id = $this->db->insert_id();
+
+    //             $confirmation_detail = $this->db
+    //                 ->from('premium_confirmation')
+    //                 ->where('id', $last_id)
+    //                 ->get()
+    //                 ->row(); // Note the s at the end of num_rows()
+
+    //             $this->db->from('users');
+    //             $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
+    //             $this->db->where('t_cabang.id_perusahaan', $confirmation_detail->id_perusahaan);
+    //             $this->db->where('nama_jabatan', 'Super Admin');
+    //             $this->db->where('level_jabatan', 99);
+    //             $detail_user = $this->db->get()->row();
+
+    //             $link_konfirmasi = base_url('Subscription/proses_bayar_konfirmasi_link/' . $last_id);
+
+    //             $msg_user_whatsapp = "Halo, " . $detail_perusahaan->nama_perusahaan . "! ✨\n\nPembelian paket premium Anda telah kami terima.\n\nBerikut rincian pesanan Anda:\n\n"
+    //                 . "- Paket: *" . $data['planName'] . "*\n"
+    //                 . "- Jangka Waktu: *" . $data['months'] . "* Bulan\n"
+    //                 . "- Total Tagihan: *Rp. " . $formatted_nominal . "*\n\n"
+    //                 . "Mohon segera lakukan pembayaran melalui:\n\n"
+    //                 . "*Bank Syariah Indonesia (BSI)*\n"
+    //                 . "Nomor Rekening: *79 7070 7004*\n"
+    //                 . "Atas Nama: *PT. Baris Kode Indonesia*\n\n"
+    //                 . "Setelah melakukan pembayaran, mohon konfirmasi pembelian paket dengan mengklik link di bawah ini:\n"
+    //                 . $link_konfirmasi . "\n\n"
+    //                 . "Terima kasih atas kerja sama Anda.\n\n"
+    //                 . "Hormat kami,\n"
+    //                 . "Tim Baris Kode Indonesia";
+
+    //             if ($this->api_whatsapp->wa_notif($msg_user_whatsapp, $detail_user->phone)) {
+    //                 $whatsapp_send = True;
+    //             } else {
+    //                 $whatsapp_send = false;
+    //             }
+
+
+    //             echo json_encode([
+    //                 'status'  => 'success',
+    //                 'message' => 'Pembayaran berhasil disimpan. Silahkan menunggu konfirmasi.',
+    //                 'id_pembayaran' => $last_id,
+    //                 'confirmation_detail' => $confirmation_detail,
+    //                 'whatsapp_send' => $whatsapp_send,
+    //                 'whatsapp_number' => $detail_user->phone,
+    //             ]);
+    //         } else {
+    //             // Send a detailed error response if the insertion fails
+    //             echo json_encode([
+    //                 'status'  => 'error',
+    //                 'message' => 'Gagal menyimpan pembayaran ke database.'
+    //             ]);
+    //         }
+    //     }
+    // }
+
     public function proses_bayar()
     {
-
         if ($this->session->userdata('isLogin') == FALSE) {
             $this->session->set_flashdata('error', 'Your session has expired');
             redirect('auth');
@@ -44,68 +278,49 @@ class Subscription extends CI_Controller
             redirect('auth');
         }
 
-        // Set the response header to JSON
         $this->output->set_content_type('application/json');
 
-        // Check if the request method is POST
         if ($this->input->method() !== 'post') {
-            echo json_encode([
-                'status'  => 'error',
-                'message' => 'Invalid request method.'
-            ]);
+            echo json_encode(['status' => 'error', 'message' => 'Invalid request method.']);
             return;
         }
 
-        // Get the raw POST data from the request body
         $json_data = $this->input->raw_input_stream;
+        $data      = json_decode($json_data, true);
 
-        // Decode the JSON data into a PHP associative array
-        $data = json_decode($json_data, true);
-
-        // Validate that the data was received and decoded correctly
         if ($data === null) {
-            echo json_encode([
-                'status'  => 'error',
-                'message' => 'Invalid JSON data received.'
-            ]);
+            echo json_encode(['status' => 'error', 'message' => 'Invalid JSON data received.']);
             return;
         }
-        // --- NEW: Generate a complete timestamp for start and end dates ---
-        $now = new DateTime();
+
+        $now                  = new DateTime();
         $start_date_with_time = $now->format('Y-m-d H:i:s');
-
-        // Calculate the end date by adding months to the current time
-        $months = $data['months'];
-        $end_date_obj = clone $now;
+        $months               = $data['months'];
+        $end_date_obj         = clone $now;
         $end_date_obj->modify("+{$months} months");
-        // $end_date_with_time = $end_date_obj->format('Y-m-d H:i:s');
-        $end_date_with_time = $end_date_obj->format('Y-m-d');
+        $end_date_with_time   = $end_date_obj->format('Y-m-d');
 
-        // Prepare the data for insertion, mapping the front-end keys to your database columns
-
-
-        $expired_time = clone $now;
+        $expired_time         = clone $now;
         $expired_time->modify('+24 hours');
         $expired_status_bayar = $expired_time->format('Y-m-d H:i:s');
 
         $add = [
-            "id_perusahaan" => $data['id_perusahaan'],
-            "paket" => $data['planName'],
-            "total_bulan" => $data['months'],
-            // "tanggal_mulai" => $data['startDate'],
-            // "tanggal_selesai" => $data['endDate'],
-            "tanggal_mulai" => $start_date_with_time,
-            "tanggal_selesai" => $end_date_with_time,
-            "nominal" => $data['confirmationPrice'],
-            "status_bayar" => 0, // Assuming 0 is the default for 'pending'
+            "id_perusahaan"        => $data['id_perusahaan'],
+            "paket"                => $data['planName'],
+            "total_bulan"          => $data['months'],
+            "tanggal_mulai"        => $start_date_with_time,
+            "tanggal_selesai"      => $end_date_with_time,
+            "nominal"              => $data['confirmationPrice'],
+            "status_bayar"         => 0,
             "expired_status_bayar" => $expired_status_bayar,
+            // Kolom baru: simpan metode bayar (qris / bsi)
+            // Tambahkan kolom `metode_bayar` VARCHAR(10) DEFAULT 'bsi' di tabel premium_confirmation
+            "metode_bayar"         => $data['metode_bayar'] ?? 'bsi',
         ];
-        $nominal = $data['confirmationPrice'];
+
+        $nominal           = $data['confirmationPrice'];
         $formatted_nominal = number_format($nominal, 0, ',', '.');
 
-
-        // --- Date Formatting Logic ---
-        // Create a mapping of English month names to Indonesian month names
         $indonesian_months = [
             'January' => 'Januari',
             'February' => 'Februari',
@@ -121,153 +336,656 @@ class Subscription extends CI_Controller
             'December' => 'Desember'
         ];
 
-        // Create DateTime objects from the YYYY-MM-DD strings
-        $start_date_obj = new DateTime($start_date_with_time);
-        $end_date_obj = new DateTime($end_date_with_time);
-
-        // Format the dates to "DD Month YYYY" and replace the month name
-        $tanggal_mulai_formatted = strtr($start_date_obj->format('d F Y H:i:s'), $indonesian_months);
-        $tanggal_selesai_formatted = strtr($end_date_obj->format('d F Y'), $indonesian_months);
-        // --- End Date Formatting Logic ---
-
+        $start_date_obj           = new DateTime($start_date_with_time);
+        $end_date_obj_fmt         = new DateTime($end_date_with_time);
+        $tanggal_mulai_formatted  = strtr($start_date_obj->format('d F Y H:i:s'), $indonesian_months);
+        $tanggal_selesai_formatted = strtr($end_date_obj_fmt->format('d F Y'), $indonesian_months);
 
         $detail_perusahaan = $this->db->from('utility')->where('Id', $data['id_perusahaan'])->get()->row();
-        $now = (new DateTime())->format('Y-m-d H:i:s');
+        $now_str           = (new DateTime())->format('Y-m-d H:i:s');
 
-        // Attempt to insert the data into the database
-        $confirmation_num = $this->db
-            ->from('premium_confirmation')
+        // Cek apakah sudah ada pembayaran pending atau menunggu approval
+        $confirmation_num = $this->db->from('premium_confirmation')
             ->where('id_perusahaan', $data['id_perusahaan'])
             ->where('status_bayar', 0)
-            ->where('expired_status_bayar >', $now) // Add this line to check for the expiration date
-            ->get()
-            ->num_rows(); // Note the s at the end of num_rows()
+            ->where('expired_status_bayar >', $now_str)
+            ->get()->num_rows();
 
-        $approval_num = $this->db
-            ->from('premium_confirmation')
+        $approval_num = $this->db->from('premium_confirmation')
             ->where('id_perusahaan', $data['id_perusahaan'])
             ->where('status_bayar', 1)
             ->where('approval', 0)
-            ->get()
-            ->num_rows(); // Note the s at the end of num_rows()
+            ->get()->num_rows();
 
+        // --- Sudah ada yang menunggu approval admin ---
         if ($approval_num) {
-
-            $confirmation_detail = $this->db
-                ->from('premium_confirmation')
+            $confirmation_detail = $this->db->from('premium_confirmation')
                 ->where('id_perusahaan', $data['id_perusahaan'])
-                ->where('status_bayar', 1)
-                ->where('approval', 0)
-                ->get()
-                ->row(); // Note the s at the end of num_rows()
+                ->where('status_bayar', 1)->where('approval', 0)
+                ->get()->row();
             echo json_encode([
                 'status'  => 'proses',
-                'message' => 'Anda sudah melakukan Proses Pembayaran dengan Paket :' . $confirmation_detail->paket,
+                'message' => 'Anda sudah melakukan Proses Pembayaran dengan Paket: ' . $confirmation_detail->paket,
             ]);
-        } else if ($confirmation_num) {
-            $confirmation_detail = $this->db
-                ->from('premium_confirmation')
+            return;
+        }
+
+        // --- Sudah ada pending payment yang belum expire ---
+        if ($confirmation_num) {
+            $confirmation_detail = $this->db->from('premium_confirmation')
                 ->where('id_perusahaan', $data['id_perusahaan'])
                 ->where('status_bayar', 0)
-                ->where('expired_status_bayar >', $now) // Add this line to check for the expiration date
-                ->get()
-                ->row(); // Note the s at the end of num_rows()
+                ->where('expired_status_bayar >', $now_str)
+                ->get()->row();
 
-            $this->db->from('users');
-            $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
-            $this->db->where('t_cabang.id_perusahaan', $confirmation_detail->id_perusahaan);
-            $this->db->where('nama_jabatan', 'Super Admin');
-            $this->db->where('level_jabatan', 99);
-            $detail_user = $this->db->get()->row();
+            $detail_user = $this->_get_super_admin($confirmation_detail->id_perusahaan);
 
-            $link_konfirmasi = base_url('Subscription/proses_bayar_konfirmasi_link/' . $confirmation_detail->id);
-
-            $msg_user_whatsapp = "Halo, " . $detail_perusahaan->nama_perusahaan . "! ✨\n\nPemesanan paket premium Anda telah kami terima.\n\nBerikut rincian pesanan Anda:\n\n"
-                . "- Paket: *" . $data['planName'] . "*\n"
-                . "- Jangka Waktu: *" . $data['months'] . "* Bulan\n"
-                . "- Total Tagihan: *Rp. " . $formatted_nominal . "*\n\n"
-                . "Pembayaran melalui:\n\n"
-                . "*Bank Syariah Indonesia (BSI)*\n"
-                . "Nomor Rekening: *79 7070 7004*\n"
-                . "Atas Nama: *PT. Baris Kode Indonesia*\n\n"
-                . "Mohon lakukan pembayaran dalam waktu 24 jam dan konfirmasi pembelian paket dengan mengklik link di bawah ini:\n"
-                . $link_konfirmasi . "\n\n"
-                . "Terima kasih atas kerja sama Anda.\n\n"
-                . "Hormat kami,\n"
-                . "Tim Baris Kode Indonesia";
-
-            if ($this->api_whatsapp->wa_notif($msg_user_whatsapp, $detail_user->phone)) {
-                $whatsapp_send = True;
-            } else {
-                $whatsapp_send = false;
+            // Jika metode QRIS — buat ulang QR dari Midtrans (order_id sudah ada)
+            if (($data['metode_bayar'] ?? 'bsi') === 'qris') {
+                $qris_result = $this->_buat_qris(
+                    $confirmation_detail->id,
+                    $nominal,
+                    $detail_perusahaan,
+                    $data['planName']
+                );
+                if (!$qris_result['success']) {
+                    echo json_encode(['status' => 'error', 'message' => $qris_result['message']]);
+                    return;
+                }
+                echo json_encode([
+                    'status'              => 'success',
+                    'message'             => 'Pesanan lama ditemukan. Silakan selesaikan pembayaran QRIS.',
+                    'id_pembayaran'       => $confirmation_detail->id,
+                    'confirmation_detail' => $confirmation_detail,
+                    'metode_bayar'        => 'qris',
+                    'qr_url'              => $qris_result['qr_url'],
+                    'expire'              => $qris_result['expire'],
+                    'whatsapp_send'       => false,
+                ]);
+                return;
             }
 
+            // Jika metode BSI — kirim WA seperti sebelumnya
+            $link_konfirmasi   = base_url('Subscription/proses_bayar_konfirmasi_link/' . $confirmation_detail->id);
+            $msg_user_whatsapp = $this->_msg_wa_bsi($detail_perusahaan->nama_perusahaan, $data, $formatted_nominal, $link_konfirmasi, true);
+            $whatsapp_send     = $this->api_whatsapp->wa_notif($msg_user_whatsapp, $detail_user->phone);
+
             echo json_encode([
-                'status'  => 'success',
-                'message' => 'Anda sudah pernah melakukan Proses Pembayaran dengan Paket :' . $confirmation_detail->paket,
-                'id_pembayaran' => $confirmation_detail->id,
+                'status'              => 'success',
+                'message'             => 'Anda sudah pernah melakukan Proses Pembayaran dengan Paket: ' . $confirmation_detail->paket,
+                'id_pembayaran'       => $confirmation_detail->id,
                 'confirmation_detail' => $confirmation_detail,
-                'whatsapp_send' => $whatsapp_send,
-                'whatsapp_number' => $detail_user->phone,
-
+                'metode_bayar'        => 'bsi',
+                'whatsapp_send'       => (bool) $whatsapp_send,
+                'whatsapp_number'     => $detail_user->phone,
             ]);
-        } else {
-            if ($this->db->insert('premium_confirmation', $add)) {
-                $last_id = $this->db->insert_id();
+            return;
+        }
 
-                $confirmation_detail = $this->db
-                    ->from('premium_confirmation')
-                    ->where('id', $last_id)
-                    ->get()
-                    ->row(); // Note the s at the end of num_rows()
+        // --- Buat transaksi baru ---
+        if ($this->db->insert('premium_confirmation', $add)) {
+            $last_id             = $this->db->insert_id();
+            $confirmation_detail = $this->db->from('premium_confirmation')->where('id', $last_id)->get()->row();
+            $detail_user         = $this->_get_super_admin($confirmation_detail->id_perusahaan);
 
-                $this->db->from('users');
-                $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
-                $this->db->where('t_cabang.id_perusahaan', $confirmation_detail->id_perusahaan);
-                $this->db->where('nama_jabatan', 'Super Admin');
-                $this->db->where('level_jabatan', 99);
-                $detail_user = $this->db->get()->row();
+            // === QRIS ===
+            if (($data['metode_bayar'] ?? 'bsi') === 'qris') {
+                $qris_result = $this->_buat_qris($last_id, $nominal, $detail_perusahaan, $data['planName']);
 
-                $link_konfirmasi = base_url('Subscription/proses_bayar_konfirmasi_link/' . $last_id);
+                if (!$qris_result['success']) {
+                    echo json_encode(['status' => 'error', 'message' => $qris_result['message']]);
+                    return;
+                }
 
-                $msg_user_whatsapp = "Halo, " . $detail_perusahaan->nama_perusahaan . "! ✨\n\nPembelian paket premium Anda telah kami terima.\n\nBerikut rincian pesanan Anda:\n\n"
+                // Simpan order_id Midtrans ke DB (opsional, butuh kolom midtrans_order_id)
+                $this->db->where('id', $last_id)->update('premium_confirmation', [
+                    'midtrans_order_id' => $qris_result['order_id'],
+                    'metode_bayar'      => 'qris',
+                ]);
+
+                // Kirim WA notifikasi QRIS
+                $msg_qris = "Halo, " . $detail_perusahaan->nama_perusahaan . "! ✨\n\n"
+                    . "Pesanan paket premium Anda telah diterima.\n\n"
                     . "- Paket: *" . $data['planName'] . "*\n"
                     . "- Jangka Waktu: *" . $data['months'] . "* Bulan\n"
                     . "- Total Tagihan: *Rp. " . $formatted_nominal . "*\n\n"
-                    . "Mohon segera lakukan pembayaran melalui:\n\n"
-                    . "*Bank Syariah Indonesia (BSI)*\n"
-                    . "Nomor Rekening: *79 7070 7004*\n"
-                    . "Atas Nama: *PT. Baris Kode Indonesia*\n\n"
-                    . "Setelah melakukan pembayaran, mohon konfirmasi pembelian paket dengan mengklik link di bawah ini:\n"
-                    . $link_konfirmasi . "\n\n"
-                    . "Terima kasih atas kerja sama Anda.\n\n"
-                    . "Hormat kami,\n"
-                    . "Tim Baris Kode Indonesia";
+                    . "Silakan scan QR Code yang tampil di layar menggunakan aplikasi e-wallet Anda (GoPay, OVO, DANA, dll).\n\n"
+                    . "QR berlaku selama *15 menit*. Pembayaran akan terkonfirmasi otomatis.\n\n"
+                    . "Terima kasih,\nTim Baris Kode Indonesia";
 
-                if ($this->api_whatsapp->wa_notif($msg_user_whatsapp, $detail_user->phone)) {
-                    $whatsapp_send = True;
-                } else {
-                    $whatsapp_send = false;
-                }
-
+                $whatsapp_send = (bool) $this->api_whatsapp->wa_notif($msg_qris, $detail_user->phone);
 
                 echo json_encode([
-                    'status'  => 'success',
-                    'message' => 'Pembayaran berhasil disimpan. Silahkan menunggu konfirmasi.',
-                    'id_pembayaran' => $last_id,
+                    'status'              => 'success',
+                    'message'             => 'Silakan scan QR Code untuk menyelesaikan pembayaran.',
+                    'id_pembayaran'       => $last_id,
                     'confirmation_detail' => $confirmation_detail,
-                    'whatsapp_send' => $whatsapp_send,
-                    'whatsapp_number' => $detail_user->phone,
+                    'metode_bayar'        => 'qris',
+                    'qr_url'              => $qris_result['qr_url'],
+                    'expire'              => $qris_result['expire'],
+                    'whatsapp_send'       => $whatsapp_send,
+                    'whatsapp_number'     => $detail_user->phone,
                 ]);
-            } else {
-                // Send a detailed error response if the insertion fails
-                echo json_encode([
-                    'status'  => 'error',
-                    'message' => 'Gagal menyimpan pembayaran ke database.'
-                ]);
+                return;
             }
+
+            // === BSI (alur lama) ===
+            $link_konfirmasi   = base_url('Subscription/proses_bayar_konfirmasi_link/' . $last_id);
+            $msg_user_whatsapp = $this->_msg_wa_bsi($detail_perusahaan->nama_perusahaan, $data, $formatted_nominal, $link_konfirmasi, false);
+            $whatsapp_send     = (bool) $this->api_whatsapp->wa_notif($msg_user_whatsapp, $detail_user->phone);
+
+            echo json_encode([
+                'status'              => 'success',
+                'message'             => 'Pembayaran berhasil disimpan. Silahkan menunggu konfirmasi.',
+                'id_pembayaran'       => $last_id,
+                'confirmation_detail' => $confirmation_detail,
+                'metode_bayar'        => 'bsi',
+                'whatsapp_send'       => $whatsapp_send,
+                'whatsapp_number'     => $detail_user->phone,
+            ]);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Gagal menyimpan pembayaran ke database.']);
         }
     }
+
+    // ---------------------------------------------------------------
+    // 2. BARU: Cek status QRIS — dipanggil oleh frontend (polling)
+    // ---------------------------------------------------------------
+    // public function cek_status_qris($id_pembayaran = '')
+    // {
+    //     $this->output->set_content_type('application/json');
+
+    //     if (empty($id_pembayaran)) {
+    //         echo json_encode(['status' => 'error']);
+    //         return;
+    //     }
+
+    //     $trx = $this->db->from('premium_confirmation')->where('id', $id_pembayaran)->get()->row();
+    //     if (!$trx) {
+    //         echo json_encode(['status' => 'error', 'message' => 'Data tidak ditemukan.']);
+    //         return;
+    //     }
+
+    //     // Sudah settlement sebelumnya
+    //     if ($trx->status_bayar == 1) {
+    //         echo "Sudah Settlement Sebelumnya";
+    //         echo json_encode(['status' => 'settlement']);
+    //         return;
+    //     }
+
+    //     // Tanya ke Midtrans
+    //     $result        = $this->duitku_lib->check_status($trx->midtrans_order_id);
+    //     $midtrans_stat = $result['transaction_status'] ?? 'error';
+
+    //     if (in_array($midtrans_stat, ['settlement', 'capture'])) {
+    //         // Update status DB → lunas
+    //         $this->db->where('id', $id_pembayaran)->update('premium_confirmation', [
+    //             'status_bayar' => 1,
+    //             'approval'     => 1, // QRIS = otomatis approved, tidak perlu manual
+    //         ]);
+
+    //         if (in_array($midtrans_stat, ['settlement', 'capture'])) {
+    //             // Update status DB → lunas
+    //             $this->db->where('id', $id_pembayaran)->update('premium_confirmation', [
+    //                 'status_bayar' => 1,
+    //                 'approval'     => 1,
+    //                 'tanggal_bayar' => date('Y-m-d H:i:s'),
+    //             ]);
+
+    //             // Ambil detail perusahaan
+    //             $detail_perusahaan = $this->db->from('utility')->where('Id', $trx->id_perusahaan)->get()->row();
+    //             $total_bulan       = $trx->total_bulan;
+
+    //             // Hitung start & expired date
+    //             if ($detail_perusahaan->is_premium) {
+    //                 // Gunakan expired_day dari utility yang sudah ada
+    //                 $raw_expired_date = $detail_perusahaan->expired_day ?? 'now';
+    //                 $expired_date_now = new DateTime($raw_expired_date);
+    //                 $expired_date_now->modify("+$total_bulan months");
+    //                 $start_date   = $detail_perusahaan->start_day ?? date('Y-m-d H:i:s');
+    //                 $expired_date = $expired_date_now->format('Y-m-d H:i:s');
+    //                 echo $expired_date;
+    //             } else {
+    //                 // Perusahaan belum premium, mulai dari sekarang
+    //                 $start_date   = date('Y-m-d H:i:s');
+    //                 $expired_date = date('Y-m-d H:i:s', strtotime("+$total_bulan months"));
+    //             }
+    //             // Tentukan kuota berdasarkan paket
+    //             if ($trx->paket == 'Saudagar Kaya') {
+    //                 $nama_paket = 'Saudagar Kaya';
+    //                 $kuota_invoice = 1000;
+    //                 $kuota_memo = 100;
+    //                 $kuota_pengajuan_biaya = 1000;
+    //                 $kuota_user = 5;
+    //                 $kuota_cabang = 1;
+    //                 $is_premium = 0;
+    //             } elseif ($trx->paket == 'Bangsawan Muda') {
+    //                 $nama_paket = 'Bangsawan Muda';
+    //                 $kuota_invoice = 3000;
+    //                 $kuota_memo = 500;
+    //                 $kuota_pengajuan_biaya = 3000;
+    //                 $kuota_user = 15;
+    //                 $kuota_cabang = 3;
+    //                 $is_premium = 1;
+    //             } elseif ($trx->paket == 'Kesatria Sejati') {
+    //                 $nama_paket = 'Kesatria Sejati';
+    //                 $kuota_invoice = 5000;
+    //                 $kuota_memo = 1000;
+    //                 $kuota_pengajuan_biaya = 5000;
+    //                 $kuota_user = 25;
+    //                 $kuota_cabang = 5;
+    //                 $is_premium = 1;
+    //             } elseif ($trx->paket == 'Raja Sultan') {
+    //                 $nama_paket = 'Raja Sultan';
+    //                 $kuota_invoice = 10000;
+    //                 $kuota_memo = 3000;
+    //                 $kuota_pengajuan_biaya = 10000;
+    //                 $kuota_user = 50;
+    //                 $kuota_cabang = 10;
+    //                 $is_premium = 1;
+    //             }
+
+    //             // Update utility
+    //             $this->db->where('Id', $trx->id_perusahaan)->update('utility', [
+    //                 'nama_paket'            => $nama_paket,
+    //                 'kuota_invoice'         => $kuota_invoice,
+    //                 'kuota_memo'            => $kuota_memo,
+    //                 'kuota_pengajuan_biaya' => $kuota_pengajuan_biaya,
+    //                 'kuota_user'            => $kuota_user,
+    //                 'kuota_cabang'          => $kuota_cabang,
+    //                 'is_premium'            => $is_premium,
+    //                 'start_day'             => $start_date,
+    //                 'expired_day'           => $expired_date,
+    //             ]);
+
+    //             // Posting jurnal
+    //             $keterangan = "PDT Paket *{$trx->paket}*, Perusahaan *{$detail_perusahaan->nama_perusahaan}*.";
+    //             $this->posting('10201', '40102', $keterangan, $this->_parse_rupiah($trx->nominal), date('Y-m-d H:i:s'), NULL);
+
+    //             // Kirim WA konfirmasi sukses
+    //             $this->_kirim_wa_qris_sukses($trx);
+
+    //             echo json_encode(['status' => 'settlement']);
+    //         }
+
+    //         // Kirim WA konfirmasi sukses
+    //         $this->_kirim_wa_qris_sukses($trx);
+
+    //         // echo json_encode(['status' => 'settlement']);
+    //     } elseif (in_array($midtrans_stat, ['expire', 'cancel', 'deny'])) {
+    //         echo json_encode(['status' => $midtrans_stat]);
+    //     } else {
+    //         echo json_encode(['status' => 'pending']);
+    //     }
+    // }
+
+    public function cek_status_qris($id_pembayaran = '')
+    {
+        if (ob_get_length()) ob_clean();
+        $this->output->set_content_type('application/json');
+
+        if (empty($id_pembayaran)) {
+            echo json_encode(['status' => 'error']);
+            return;
+        }
+
+        $trx = $this->db->from('premium_confirmation')->where('id', $id_pembayaran)->get()->row();
+        if (!$trx) {
+            echo json_encode(['status' => 'error', 'message' => 'Data tidak ditemukan.']);
+            return;
+        }
+
+        // Sudah settlement sebelumnya, skip cek Duitku
+        if ($trx->status_bayar == 1) {
+            echo json_encode(['status' => 'settlement']);
+            return;
+        }
+
+        // Tanya ke Duitku
+        $result      = $this->duitku_lib->check_status($trx->midtrans_order_id, $trx->nominal);
+        $duitku_stat = $result['statusCode'] ?? 'error';
+        // echo json_encode(['debug_result' => $result, 'debug_stat' => $duitku_stat]);
+        // die();
+
+        if ($duitku_stat === '00') {
+
+            // Ambil detail perusahaan
+            $detail_perusahaan = $this->db->from('utility')->where('Id', $trx->id_perusahaan)->get()->row();
+            $total_bulan       = $trx->total_bulan;
+
+            // Hitung start & expired date
+            if ($detail_perusahaan->is_premium || $detail_perusahaan->nama_paket == "Saudagar Kaya") {
+                $raw_expired_date = $detail_perusahaan->expired_day ?? 'now';
+                $expired_date_now = new DateTime($raw_expired_date);
+                $expired_date_now->modify("+$total_bulan months");
+                $start_date   = $detail_perusahaan->start_day ?? date('Y-m-d H:i:s');
+                $expired_date = $expired_date_now->format('Y-m-d H:i:s');
+            } else {
+                $start_date   = date('Y-m-d H:i:s');
+                $expired_date = date('Y-m-d H:i:s', strtotime("+$total_bulan months"));
+            }
+
+            // Tentukan kuota berdasarkan paket
+            if ($trx->paket == 'Saudagar Kaya') {
+                $nama_paket = 'Saudagar Kaya';
+                $kuota_invoice = 1000;
+                $kuota_memo = 100;
+                $kuota_pengajuan_biaya = 1000;
+                $kuota_user = 5;
+                $kuota_cabang = 1;
+                $is_premium = 0;
+            } elseif ($trx->paket == 'Bangsawan Muda') {
+                $nama_paket = 'Bangsawan Muda';
+                $kuota_invoice = 3000;
+                $kuota_memo = 500;
+                $kuota_pengajuan_biaya = 3000;
+                $kuota_user = 15;
+                $kuota_cabang = 3;
+                $is_premium = 1;
+            } elseif ($trx->paket == 'Kesatria Sejati') {
+                $nama_paket = 'Kesatria Sejati';
+                $kuota_invoice = 5000;
+                $kuota_memo = 1000;
+                $kuota_pengajuan_biaya = 5000;
+                $kuota_user = 25;
+                $kuota_cabang = 5;
+                $is_premium = 1;
+            } elseif ($trx->paket == 'Raja Sultan') {
+                $nama_paket = 'Raja Sultan';
+                $kuota_invoice = 10000;
+                $kuota_memo = 3000;
+                $kuota_pengajuan_biaya = 10000;
+                $kuota_user = 50;
+                $kuota_cabang = 10;
+                $is_premium = 1;
+            }
+
+            // Update premium_confirmation
+            $this->db->where('id', $id_pembayaran)->update('premium_confirmation', [
+                'status_bayar'  => 1,
+                'approval'      => 1,
+                'tanggal_bayar' => date('Y-m-d H:i:s'),
+            ]);
+
+            // Update utility
+            $this->db->where('Id', $trx->id_perusahaan)->update('utility', [
+                'nama_paket'            => $nama_paket,
+                'kuota_invoice'         => $kuota_invoice,
+                'kuota_memo'            => $kuota_memo,
+                'kuota_pengajuan_biaya' => $kuota_pengajuan_biaya,
+                'kuota_user'            => $kuota_user,
+                'kuota_cabang'          => $kuota_cabang,
+                'is_premium'            => $is_premium,
+                'start_day'             => $start_date,
+                'expired_day'           => $expired_date,
+            ]);
+
+            // Posting jurnal
+            $keterangan = "PDT Paket *{$trx->paket}*, Perusahaan *{$detail_perusahaan->nama_perusahaan}*.";
+            $this->posting('10201', '40102', $keterangan, $this->_parse_rupiah($trx->nominal), date('Y-m-d H:i:s'), NULL);
+
+            // Kirim WA konfirmasi sukses
+            $this->_kirim_wa_qris_sukses($trx);
+
+            echo json_encode(['status' => 'settlement']);
+        } elseif ($duitku_stat === '02') {
+            echo json_encode(['status' => 'expire']);
+        } else {
+            echo json_encode(['status' => 'pending']);
+        }
+    }
+
+    // ---------------------------------------------------------------
+    // 3. BARU: Webhook Midtrans (daftarkan URL ini di dashboard Midtrans)
+    //    URL: https://domainmu.com/Subscription/midtrans_notification
+    // ---------------------------------------------------------------
+    public function midtrans_notification()
+    {
+        $payload = json_decode(file_get_contents('php://input'), true);
+
+        if (empty($payload)) {
+            http_response_code(400);
+            echo json_encode(['message' => 'Empty payload']);
+            return;
+        }
+
+        if (!$this->duitku_lib->verify_notification($payload)) {
+            http_response_code(403);
+            echo json_encode(['message' => 'Invalid signature']);
+            return;
+        }
+
+        // order_id format: QRIS-{id_pembayaran}-{timestamp}
+        $parts          = explode('-', $payload['order_id']);
+        $id_pembayaran  = $parts[1] ?? null;
+        $status         = $payload['transaction_status'];
+
+        if ($id_pembayaran && in_array($status, ['settlement', 'capture'])) {
+            $trx = $this->db->from('premium_confirmation')->where('id', $id_pembayaran)->get()->row();
+            if ($trx && $trx->status_bayar == 0) {
+                $this->db->where('id', $id_pembayaran)->update('premium_confirmation', [
+                    'status_bayar' => 1,
+                    'approval'     => 1,
+                ]);
+
+                $this->_kirim_wa_qris_sukses($trx);
+            }
+        }
+
+        http_response_code(200);
+        echo json_encode(['message' => 'OK']);
+    }
+
+// ---------------------------------------------------------------
+// PRIVATE HELPERS
+// ---------------------------------------------------------------
+
+    /** Buat QRIS via Midtrans */
+    private function _buat_qris($id_pembayaran, $nominal, $detail_perusahaan, $plan_name)
+    {
+        $order_id = 'QRIS-' . $id_pembayaran . '-' . time();
+        $result   = $this->duitku_lib->create_qris(
+            $order_id,
+            $nominal,
+            [
+                'name'  => $detail_perusahaan->nama_perusahaan,
+                'email' => !empty($detail_perusahaan->email) ? $detail_perusahaan->email : 'noreply@bariskode.com',
+                'phone' => $detail_perusahaan->phone ?? '',
+            ],
+            'Pembayaran ' . $plan_name,
+            60
+        );
+
+        // echo json_encode(['debug' => $result]);
+        // die();
+
+        if (isset($result['error']) || ($result['statusCode'] ?? '') !== '00') {
+            return [
+                'success' => false,
+                'message' => $result['statusMessage'] ?? $result['error'] ?? 'Gagal membuat QRIS.',
+            ];
+        }
+
+        return [
+            'success'     => true,
+            'order_id'    => $order_id,
+            'qr_url'      => $result['paymentUrl'],  // ganti dari qrString ke paymentUrl
+            'expire'      => date('Y-m-d H:i:s', strtotime('+60 minutes')),
+            'reference'   => $result['reference'] ?? '',
+        ];
+    }
+
+    public function test_cek_status()
+    {
+        if (ob_get_length()) ob_clean();
+        $this->output->set_content_type('application/json');
+
+        $order_id = 'QRIS-20-1778554820'; // ganti dengan order_id yang aktif
+        $amount   = 1;              // ganti dengan nominal yang sesuai
+
+        $result = $this->duitku_lib->check_status($order_id, $amount);
+        echo json_encode($result);
+    }
+
+
+
+    /** Ambil data Super Admin perusahaan */
+    private function _get_super_admin($id_perusahaan)
+    {
+        $this->db->from('users');
+        $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
+        $this->db->where('t_cabang.id_perusahaan', $id_perusahaan);
+        $this->db->where('nama_jabatan', 'Super Admin');
+        $this->db->where('level_jabatan', 99);
+        return $this->db->get()->row();
+    }
+
+    /** Pesan WA untuk metode BSI */
+    private function _msg_wa_bsi($nama_perusahaan, $data, $formatted_nominal, $link_konfirmasi, $is_existing)
+    {
+        $intro = $is_existing
+            ? "Pemesanan paket premium Anda telah kami terima."
+            : "Pembelian paket premium Anda telah kami terima.";
+
+        $action = $is_existing
+            ? "Mohon lakukan pembayaran dalam waktu 24 jam dan konfirmasi pembelian paket dengan mengklik link di bawah ini:"
+            : "Setelah melakukan pembayaran, mohon konfirmasi pembelian paket dengan mengklik link di bawah ini:";
+
+        return "Halo, {$nama_perusahaan}! ✨\n\n{$intro}\n\n"
+            . "Berikut rincian pesanan Anda:\n\n"
+            . "- Paket: *{$data['planName']}*\n"
+            . "- Jangka Waktu: *{$data['months']}* Bulan\n"
+            . "- Total Tagihan: *Rp. {$formatted_nominal}*\n\n"
+            . "Pembayaran melalui:\n\n"
+            . "*Bank Syariah Indonesia (BSI)*\n"
+            . "Nomor Rekening: *79 7070 7004*\n"
+            . "Atas Nama: *PT. Baris Kode Indonesia*\n\n"
+            . "{$action}\n{$link_konfirmasi}\n\n"
+            . "Terima kasih atas kerja sama Anda.\n\nHormat kami,\nTim Baris Kode Indonesia";
+    }
+
+    /** Kirim WA notifikasi QRIS sukses */
+    private function _kirim_wa_qris_sukses($trx)
+    {
+        $detail_perusahaan = $this->db->from('utility')->where('Id', $trx->id_perusahaan)->get()->row();
+        $detail_user       = $this->_get_super_admin($trx->id_perusahaan);
+
+        if (!$detail_user) return;
+
+        $nominal_fmt = number_format($trx->nominal, 0, ',', '.');
+
+        $msg = "Halo, " . $detail_perusahaan->nama_perusahaan . "! 🎉\n\n"
+            . "Pembayaran QRIS Anda telah *berhasil dikonfirmasi*!\n\n"
+            . "Rincian transaksi:\n"
+            . "- Paket: *{$trx->paket}*\n"
+            . "- Jangka Waktu: *{$trx->total_bulan}* Bulan\n"
+            . "- Total Dibayar: *Rp. {$nominal_fmt}*\n"
+            . "- Berlaku Hingga: *{$trx->tanggal_selesai}*\n\n"
+            . "Paket Anda telah aktif. Selamat menggunakan layanan kami!\n\n"
+            . "Terima kasih,\nTim Baris Kode Indonesia";
+
+        $this->api_whatsapp->wa_notif($msg, $detail_user->phone);
+    }
+
+    public function buat_qris_untuk_pembayaran($id_pembayaran = '')
+    {
+        if (ob_get_length()) ob_clean();
+
+        $this->output->set_content_type('application/json');
+
+        if (empty($id_pembayaran)) {
+            echo json_encode(['status' => 'error', 'message' => 'ID tidak valid.']);
+            return;
+        }
+
+        $trx = $this->db->from('premium_confirmation')->where('id', $id_pembayaran)->get()->row();
+        if (!$trx) {
+            echo json_encode(['status' => 'error', 'message' => 'Data transaksi tidak ditemukan.']);
+            return;
+        }
+
+        $detail_perusahaan = $this->db->from('utility')->where('Id', $trx->id_perusahaan)->get()->row();
+
+        $qris_result = $this->_buat_qris(
+            $id_pembayaran,
+            $trx->nominal,
+            // 1, // Override nominal untuk testing
+            $detail_perusahaan,
+            $trx->paket
+        );
+
+        if (!$qris_result['success']) {
+            echo json_encode(['status' => 'error', 'message' => $qris_result['message']]);
+            return;
+        }
+
+        // Simpan order_id Midtrans ke tabel
+        $this->db->where('id', $id_pembayaran)->update('premium_confirmation', [
+            'midtrans_order_id' => $qris_result['order_id'],
+            'metode_bayar'      => 'qris',
+        ]);
+
+        // Format tanggal untuk frontend
+        $indonesian_months = [
+            'January' => 'Januari',
+            'February' => 'Februari',
+            'March' => 'Maret',
+            'April' => 'April',
+            'May' => 'Mei',
+            'June' => 'Juni',
+            'July' => 'Juli',
+            'August' => 'Agustus',
+            'September' => 'September',
+            'October' => 'Oktober',
+            'November' => 'November',
+            'December' => 'Desember'
+        ];
+        $start_obj = new DateTime($trx->tanggal_mulai);
+        $end_obj   = new DateTime($trx->tanggal_selesai);
+        $start_str = strtr($start_obj->format('d F Y'), $indonesian_months);
+        $end_str   = strtr($end_obj->format('d F Y'), $indonesian_months);
+
+        // echo json_encode([
+        //     'status'              => 'success',
+        //     'qr_url'              => $qris_result['qr_url'], // ini sudah paymentUrl
+        //     'expire'              => $qris_result['expire'],
+        //     'confirmation_detail' => $trx,
+        //     'start_str'           => $start_str,
+        //     'end_str'             => $end_str,
+        // ]);
+        echo json_encode([
+            'status'              => 'success',
+            'qr_url'              => $qris_result['qr_url'],
+            'reference'           => $qris_result['reference'], // tambah ini
+            'expire'              => $qris_result['expire'],
+            'confirmation_detail' => $trx,
+            'start_str'           => $start_str,
+            'end_str'             => $end_str,
+        ]);
+    }
+
+    /**
+     * Ambil detail pembayaran untuk ditampilkan ulang di frontend (BSI flow).
+     * GET: Subscription/get_detail_pembayaran/{id}
+     */
+    public function get_detail_pembayaran($id_pembayaran = '')
+    {
+        $this->output->set_content_type('application/json');
+
+        if (empty($id_pembayaran)) {
+            echo json_encode(['status' => 'error']);
+            return;
+        }
+
+        $trx = $this->db->from('premium_confirmation')->where('id', $id_pembayaran)->get()->row();
+        if (!$trx) {
+            echo json_encode(['status' => 'error', 'message' => 'Data tidak ditemukan.']);
+            return;
+        }
+
+        echo json_encode(['status' => 'success', 'data' => $trx]);
+    }
+
 
     public function proses_bayar_konfirmasi($id)
     {
@@ -587,6 +1305,7 @@ Mohon untuk memproses pembayaran segera.";
             // Updated data for the row
             $row[] = $formatted_start_date;
             $row[] = $formatted_end_date;
+            $row[] = strtoupper($cat->metode_bayar);
             $row[] = $formatted_nominal;
 
             // $button_update = '<button class="btn btn-warning text-white" data-toggle="modal" data-id="' . $cat->id . '" data-target="#edit_modal" type="button" style="color: white;">Edit</button>';
@@ -604,7 +1323,7 @@ Mohon untuk memproses pembayaran segera.";
                       <button class="btn btn-primary text-white" data-toggle="modal" data-id="' . $cat->id . '" data-target="#approval_modal" type="button" style="color: white;">Approval</button>';
 
                 $status = "Belum Dikonfirmasi";
-            } else if ($cat->status_bayar == 1 && $cat->approval == 1) {
+            } else if ($cat->status_bayar == 1) {
                 $button_konfirmasi = '';
 
                 if ($cat->approval == 1) {
@@ -772,7 +1491,7 @@ Mohon untuk memproses pembayaran segera.";
                     $kuota_memo = 500;
                     $kuota_pengajuan_biaya = 3000;
                     $kuota_user = 15;
-                    $kuota_cabang = 2;
+                    $kuota_cabang = 3;
                     $is_premium = 1;
                 } else if ($confirmation_detail->paket == "Kesatria Sejati") {
                     $nama_paket = "Kesatria Sejati";
@@ -958,7 +1677,7 @@ Mohon untuk memproses pembayaran segera.";
             ->get($table)
             ->row();
 
-        return $row->nominal;
+        return $row->nominal ?? 0;
     }
 
     private function _parse_rupiah($rupiah)

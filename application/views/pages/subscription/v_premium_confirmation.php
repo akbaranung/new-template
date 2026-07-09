@@ -63,6 +63,7 @@
                   <th class="text-center">Bulan</th>
                   <th class="text-center">Tanggal Mulai</th>
                   <th class="text-center">Tanggal Selesai</th>
+                  <th class="text-center">Metode Bayar</th>
                   <th class="text-center">Nominal</th>
                   <th class="text-center">Status</th>
                   <th class="text-center">#</th>

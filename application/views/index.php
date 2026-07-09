@@ -39,6 +39,7 @@
   <link rel="stylesheet" href="<?= base_url('assets') ?>/dataTables/css/datatables.min.css">
   <link rel="manifest" href="<?= base_url() ?>assets/_manifest.json" />
 
+  <script src="https://app-sandbox.duitku.com/assets/js/duitku.js"></script>
 </head>
 
 <body class="vertical  light  ">
@@ -58,10 +59,12 @@
     <main role="main" class="main-content" <?= $margin_subs ?>>
       <?php
 
+      // $this->db->select('DISTINCT(nama_jabatan)');
       $this->db->from('users');
       $this->db->join($this->cb->database . '.t_cabang', 't_cabang.uid = users.id_cabang');
       $this->db->where('t_cabang.id_perusahaan', $this->session->userdata('user_perusahaan_id'));
       $this->db->where('nama_jabatan !=', 'Super Admin');
+      // $this->db->where_in('nama_jabatan', ['Direktur', 'Manager', 'Keuangan', 'Staff']);
       $total_user = $this->db->get()->num_rows(); // Get the number of rows
 
       $max_users_for_100_percent = 4; // Define your maximum limit

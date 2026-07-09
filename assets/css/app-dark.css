@@ -8031,7 +8031,7 @@ select {
     width: 100%; }
   /* fix table responsive */
   .table {
-    display: block;
+    /* display: block; */
     overflow-x: auto; }
   .fc-bootstrap table tbody {
     width: 100%; }

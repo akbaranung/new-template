@@ -207,30 +207,30 @@
     }
 
     .month-selection {
-        display: flex !important;
-        flex-wrap: wrap;
+        display: flex;
         justify-content: center;
-        gap: 15px !important;
+        gap: 15px;
         margin-top: 30px;
     }
 
     .month-btn {
-        min-width: 90px;
-        border-radius: 50px !important;
-        font-size: 13px;
-        transition: all 0.2s;
-    }
-
-    .month-btn.selected {
-        background-color: #3f51b5 !important;
-        color: #fff !important;
-        border-color: #3f51b5 !important;
+        padding: 10px 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        cursor: pointer;
+        background-color: #f8f9fa;
+        transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
     }
 
     .month-btn:hover {
-        background-color: #3f51b5 !important;
-        color: #fff !important;
-        border-color: #3f51b5 !important;
+        background-color: #e2e6ea;
+    }
+
+    .month-btn.selected {
+        background-color: #3f51b5;
+        color: #fff;
+        border-color: #3f51b5;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
 
     .selected-col {
