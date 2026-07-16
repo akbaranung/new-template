@@ -82,7 +82,16 @@
 											<td><?= $i['nama_customer'] ?></td>
 											<td class="text-right"><?= rupiah($i['total_nonpph'], 0) ?></td>
 											<!-- <td class="text-right"><?= rupiah($i['total_termin'], 0) ?></td> -->
-											<td class="text-right"><?= rupiah($i['total_nonpph'] - $i['total_termin'], 0) ?></td>
+											<td class="text-right">
+												<?php
+												if ($i['besaran_pph'] > 0) {
+													$outs = $i['total_nonpph'] - $i['total_termin'] - $i['besaran_pph'];
+												} else {
+													$outs = $i['total_nonpph'] - $i['total_termin'];
+												}
+												?>
+												<?= rupiah($outs, 0) ?>
+											</td>
 											<td><?= isset($i['created_by_name']) ? $i['created_by_name'] : 'N/A' ?></td>
 											<?php
 											if ($i['status_void'] == "1") {
@@ -127,6 +136,7 @@
 														Cetak
 													</a>
 													<a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalRiwayat<?= $i['Id'] ?>">Riwayat</a>
+													<a href="#" class="dropdown-item" data-toggle="modal" data-target="#modalJurnal<?= $i['Id'] ?>">Jurnal</a>
 													<?php
 													if ($i['status_bayar'] == "0" and $i['status_void'] != "1") {
 													?>
@@ -154,6 +164,7 @@
 																					<th>#</th>
 																					<th>Tanggal</th>
 																					<th>Nominal</th>
+																					<th>PPH</th>
 																					<th>Keterangan</th>
 																				</tr>
 																			</thead>
@@ -161,14 +172,13 @@
 																				<?php
 																				$no = 1;
 																				$list = $this->cb->where('id_invoice', $i['Id'])->get('t_log_pembayaran')->result();
-
 																				if ($list) {
-
 																					foreach ($list as $l) : ?>
 																						<tr>
 																							<td><?= $no++; ?></td>
 																							<td><?= format_indo($l->created_at) ?></td>
 																							<td><?= rupiah($l->nominal_bayar) ?></td>
+																							<td><?= rupiah($i['besaran_pph']) ?></td>
 																							<td><?= $l->keterangan ?></td>
 																						</tr>
 																					<?php
@@ -192,6 +202,67 @@
 																	</button>
 																</div>
 															</form>
+														</div>
+													</div>
+												</div>
+
+												<div class="modal fade" id="modalJurnal<?= $i['Id'] ?>" tabindex="-1" role="dialog" aria-hidden="true">
+													<div class="modal-dialog modal-lg">
+														<div class="modal-content">
+															<div class="modal-header">
+																<h4 class="modal-title" id="myModalLabel">
+																	Riwayat Jurnal <?= $i['no_invoice'] ?>
+																</h4>
+															</div>
+															<div class="modal-body">
+																<div class="table-responsive">
+																	<table class="table table-hover">
+																		<thead>
+																			<tr>
+																				<th>#</th>
+																				<th>Tanggal</th>
+																				<th>Debit</th>
+																				<th>Kredit</th>
+																				<th>Nominal</th>
+																				<th>Keterangan</th>
+																			</tr>
+																		</thead>
+																		<tbody>
+																			<?php
+																			$no = 1;
+																			$cabang = $this->session->userdata('kode_cabang');
+																			$list = $this->cb->group_start()
+																				->where('id_invoice', $i['Id'])->or_like('keterangan', 'invoice nomor ' . $i['no_invoice'], 'both')->group_end()->where('id_cabang', $cabang)->get('jurnal_neraca')->result();
+																			if ($list) {
+																				foreach ($list as $l) : ?>
+																					<tr>
+																						<td><?= $no++; ?></td>
+																						<td><?= format_indo($l->tanggal) ?></td>
+																						<td><?= $l->akun_debit ?></td>
+																						<td><?= $l->akun_kredit ?></td>
+																						<td><?= rupiah($l->jumlah_debit) ?></td>
+																						<td><?= $l->keterangan ?></td>
+																					</tr>
+																				<?php
+																				endforeach;
+																			} else {
+																				?>
+																				<tr>
+																					<td colspan="3">Tidak ada riwayat pembayaran</td>
+																				</tr>
+																			<?php
+																			}
+
+																			?>
+																		</tbody>
+																	</table>
+																</div>
+															</div>
+															<div class="modal-footer">
+																<button type="button" class="btn btn-secondary" data-dismiss="modal">
+																	Close
+																</button>
+															</div>
 														</div>
 													</div>
 												</div>
