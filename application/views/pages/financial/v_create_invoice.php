@@ -108,18 +108,18 @@
 								</p>
 								<div class="row g-3">
 									<div class="col-md-4">
-										<label class="form-label">CoA Debit</label>
+										<label class="form-label">CoA PAD Kas</label>
 										<select name="coa_debit" id="coa_debit" class="form-control select2 coa_debit" style="width:100%" required>
-											<option value="">:: Pilih CoA Debit</option>
+											<option value="">:: Pilih CoA PAD Kas</option>
 											<?php foreach ($pendapatan as $pd) : ?>
 												<option value="<?= $pd->no_sbb ?>" data-posisi="<?= $pd->posisi ?>"><?= $pd->no_sbb . ' - ' . $pd->nama_perkiraan ?></option>
 											<?php endforeach; ?>
 										</select>
 									</div>
 									<div class="col-md-4">
-										<label class="form-label">CoA Kredit</label>
+										<label class="form-label">CoA PAD Pendapatan</label>
 										<select name="coa_kredit" id="coa_kredit" class="form-control select2 coa_kredit" style="width:100%" required>
-											<option value="">:: Pilih CoA Kredit</option>
+											<option value="">:: Pilih CoA PAD Pendapatan</option>
 											<?php foreach ($persediaan as $ps) : ?>
 												<option value="<?= $ps->no_sbb ?>" data-posisi="<?= $ps->posisi ?>"><?= $ps->no_sbb . ' - ' . $ps->nama_perkiraan ?></option>
 											<?php endforeach; ?>

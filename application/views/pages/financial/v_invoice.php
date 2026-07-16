@@ -298,9 +298,9 @@
 																		?>
 																			<div class="col-sm-6 col-xs-12">
 																				<div class="form-group">
-																					<label for="coa_debit" class="form-label">CoA Debit</label>
+																					<label for="coa_debit" class="form-label">CoA Kas</label>
 																					<select name="coa_debit" id="coa_debit<?= $i['Id'] ?>" class="select2 form-control coa_debit" required>
-																						<option value="">:: Pilih CoA Debit</option>
+																						<option value="">:: Pilih CoA Kas</option>
 																						<?php
 																						foreach ($coa_kas as $c) :
 																						?>
@@ -312,9 +312,9 @@
 																			</div>
 																			<div class="col-sm-6 col-xs-12">
 																				<div class="form-group">
-																					<label for="coa_kredit" class="form-label">CoA Kredit</label>
+																					<label for="coa_kredit" class="form-label">CoA Pendapatan</label>
 																					<select name="coa_kredit" id="coa_kredit<?= $i['Id'] ?>" class="select2 form-control coa_kredit" required>
-																						<option value="">:: Pilih CoA Kredit</option>
+																						<option value="">:: Pilih CoA Pendapatan</option>
 																						<?php
 																						foreach ($coa_pendapatan as $c) :
 																						?>
