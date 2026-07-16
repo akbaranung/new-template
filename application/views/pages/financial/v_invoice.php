@@ -72,7 +72,10 @@
 							<tbody>
 								<?php
 								if ($invoices) {
-									foreach ($invoices as $i) : ?>
+
+									foreach ($invoices as $i) :
+										$piutang = $i['total_denganpph'] - $i['total_termin'];
+								?>
 										<tr>
 											<td><?= $i['no_invoice'] ?></td>
 											<td><?= format_indo($i['tanggal_invoice']) ?></td>
@@ -101,8 +104,8 @@
 											}
 
 											if ($i['status_bayar'] == "0" and $i['status_void'] != "1") {
-												$piutang = $i['total_denganpph'] - $i['total_termin']; ?>
-
+												// $piutang = $i['total_denganpph'] - $i['total_termin'];
+											?>
 												<td style="background-color: #eea303; color: white;">
 													<!-- <span class="badge badge-pill badge-success">Sudah dibayar</span> -->
 													<!-- Sudah dibayar -->
@@ -116,8 +119,10 @@
 													Aksi
 												</button>
 												<div class="dropdown-menu">
-													<a href="#" class="dropdown-item" data-toggle="modal" data-target="#void<?= $i['Id'] ?>">Void</a>
-													<a href="#" class="dropdown-item" data-toggle="modal" data-target="#modal<?= $i['Id'] ?>">Bayar</a>
+													<?php if ($i['status_bayar'] == 0 and $i['status_void'] != "1") : ?>
+														<a href="#" class="dropdown-item" data-toggle="modal" data-target="#void<?= $i['Id'] ?>">Void</a>
+														<a href="#" class="dropdown-item" data-toggle="modal" data-target="#modal<?= $i['Id'] ?>">Bayar</a>
+													<?php endif ?>
 													<a href="<?= base_url('financial/print_invoice/' . $i['Id']) ?>" class="dropdown-item" target="_blank">
 														Cetak
 													</a>
