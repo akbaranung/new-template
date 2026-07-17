@@ -382,7 +382,7 @@
                     <div class="row justify-content-center g-3 mb-4">
 
                         <!-- Kartu QRIS -->
-                        <div class="col-12 col-md-5">
+                        <div class="col-12 col-md-5 d-none">
                             <div class="payment-card" id="card-qris" onclick="pilihMetode('qris')"
                                  style="border:2px solid #dee2e6; border-radius:12px; padding:20px; cursor:pointer;
                                         text-align:center; transition:all .2s; background:#fff;">
