@@ -94,6 +94,9 @@ class Auth extends CI_Controller
 
 
         $this->session->set_userdata('isLogin', TRUE);
+        if ($username == "Bariskode") {
+          $username = strtolower($username);
+        }
         $this->session->set_userdata('username', $username);
         $this->session->set_userdata('user_user_id', $data->id);
         $this->session->set_userdata('level', $data->level);
