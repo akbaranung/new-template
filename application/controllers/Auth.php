@@ -76,7 +76,8 @@ class Auth extends CI_Controller
         'success' => false,
         'msg' => !empty($errors) ? array_values($errors)[0] : 'Validasi gagal.'
       ];
-      redirect('auth');
+      $this->output->set_content_type('application/json')->set_output(json_encode($response));
+      return;   // wajib, jangan lanjut ke proses login
     } else {
       $cek = $this->M_login->ambilPengguna($username, 1);
       $data = $this->M_login->datapengguna($username);
