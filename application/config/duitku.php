@@ -10,11 +10,17 @@ defined('BASEPATH') or exit('No direct script access allowed');
 | is_production: false = Sandbox (testing), true = Production
 */
 
-$config['duitku_merchant_code'] = 'DS30540'; // Ganti dengan Merchant Code kamu
-$config['duitku_api_key']       = 'efcf29b7d5836c3ca7c573c6539ed2b5';       // Ganti dengan API Key kamu
-$config['duitku_is_production'] = false;                 // Ubah ke true saat live
+// SANDBOX
+// $config['duitku_merchant_code'] = 'DS30540'; // Ganti dengan Merchant Code kamu
+// $config['duitku_api_key']       = 'efcf29b7d5836c3ca7c573c6539ed2b5';       // Ganti dengan API Key kamu
+// $config['duitku_is_production'] = false;                 // Ubah ke true saat live
+// PRODUCTION
+$config['duitku_merchant_code'] = 'D23877'; // Ganti dengan Merchant Code kamu
+$config['duitku_api_key']       = '54b1b64a5daed67d1aa7cb9c0c0b7e1f';       // Ganti dengan API Key kamu
+$config['duitku_is_production'] = true;                 // Ubah ke true saat live
 $config['duitku_base_url'] = $config['duitku_is_production']
-    ? 'https://passport.duitku.com/webapi/api/'
+    // ? 'https://passport.duitku.com/webapi/api/'
+    ? 'https://api-prod.duitku.com/api/'
     : 'https://api-sandbox.duitku.com/api/';  // <-- BEDA dari sebelumnya
 // $config['duitku_callback_url']  = base_url('Subscription/duitku_notification');
 // $config['duitku_return_url']    = base_url('Subscription/duitku_return');

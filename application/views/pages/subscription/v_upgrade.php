@@ -207,30 +207,30 @@
     }
 
     .month-selection {
-        display: flex;
+        display: flex !important;
+        flex-wrap: wrap;
         justify-content: center;
-        gap: 15px;
+        gap: 15px !important;
         margin-top: 30px;
     }
 
     .month-btn {
-        padding: 10px 20px;
-        border: 1px solid #ccc;
-        border-radius: 10px;
-        cursor: pointer;
-        background-color: #f8f9fa;
-        transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
-    }
-
-    .month-btn:hover {
-        background-color: #e2e6ea;
+        min-width: 90px;
+        border-radius: 50px !important;
+        font-size: 13px;
+        transition: all 0.2s;
     }
 
     .month-btn.selected {
-        background-color: #3f51b5;
-        color: #fff;
-        border-color: #3f51b5;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        background-color: #3f51b5 !important;
+        color: #fff !important;
+        border-color: #3f51b5 !important;
+    }
+
+    .month-btn:hover {
+        background-color: #3f51b5 !important;
+        color: #fff !important;
+        border-color: #3f51b5 !important;
     }
 
     .selected-col {
@@ -317,7 +317,7 @@
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
                             Manajemen Penugasan (Tello)</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
-                            Nota Penjualan</p>
+                            Nota Penjualan (POS)</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>3000</b>
                             Invoice / Bulan</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>500</b>
@@ -375,7 +375,7 @@
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
                             Manajemen Penugasan (Tello)</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
-                            Nota Penjualan</p>
+                            Nota Penjualan (POS)</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>5000</b>
                             Invoice / Bulan</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>1000</b>
@@ -428,7 +428,7 @@
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
                             Manajemen Penugasan (Tello)</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
-                            Nota Penjualan</p>
+                            Nota Penjualan (POS)</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>10000</b>
                             Invoice / Bulan</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>3000</b>
@@ -484,7 +484,7 @@
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
                             Manajemen Penugasan (Tello)</p>
                             <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
-                            Nota Penjualan</p>
+                            Nota Penjualan (POS)</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>25000</b>
                             Invoice / Bulan</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>10000</b>
@@ -546,7 +546,7 @@
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> Jumlah Cabang <b>1</b></p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>1</b> User</p>
                         <p class="mb-2"><i class="fa-solid fa-xmark fa-lg text-danger" style="color: #3ad29f;"></i> <b>Unlimited</b>
-                            Nota Penjualan</p>
+                            Nota Penjualan (POS)</p>
                         <p class="mb-2"><i class="fa-solid fa-xmark fa-lg text-danger" style="color: #3ad29f;"></i> <b>1000</b>
                             Pengajuan Multi Layer Approval / Bulan</p>
                         <p class="mb-2"><i class="fa-solid fa-xmark fa-lg text-danger f-18 mr-2"></i>Fitur
@@ -596,7 +596,7 @@
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
                             Manajemen Penugasan (Tello)</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
-                            Nota Penjualan</p>
+                            Nota Penjualan (POS)</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>Unlimited</b>
                             Item</p>
                         <p class="mb-2"><i class="fa-solid fa-check fa-lg" style="color: #3ad29f;"></i> <b>1000</b>

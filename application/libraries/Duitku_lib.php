@@ -95,7 +95,9 @@ class Duitku_lib
             'signature'       => $signature,
         ];
 
-        $url = 'https://sandbox.duitku.com/webapi/api/merchant/transactionStatus';
+        // $url = 'https://sandbox.duitku.com/webapi/api/merchant/transactionStatus';
+        $url = 'https://passport.duitku.com/webapi/api/merchant/transactionStatus';
+
         $ch  = curl_init();
 
         curl_setopt_array($ch, [
