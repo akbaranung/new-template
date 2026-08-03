@@ -294,7 +294,7 @@
         <!-- <div class="row pt-4 justify-content-center"> -->
 
         <!-- </div> -->
-        <div class="row pt-2 justify-content-center">
+        <div class="row pt-2 justify-content-center" id="daftar_harga">
 
             <div class="col-lg-3 nopadding">
                 <div class="pricing-box mt-4 noborderradius-right" id="pricing-1">

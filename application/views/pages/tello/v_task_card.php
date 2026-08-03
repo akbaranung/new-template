@@ -43,64 +43,67 @@
               <a href="<?= site_url('task') ?>" class="btn btn-warning mb-3"><i class="fe fe-chevron-left"></i> Back</a>
             </div>
           </div>
-          <table class="table table-hover table-sm">
-            <thead style="background-color:#3498db;">
-              <tr>
-                <th style="color: white;">Card Name</th>
-                <th style="color: white;">Responsible</th>
-                <th style="color: white;">Start Date</th>
-                <th style="color: white;">Due Date</th>
-                <th style="color: white;">Activity</th>
-                <th style="color: white;">Action</th>
-                <th style="color: white;"></th>
-              </tr>
-            </thead>
-            <tbody>
-              <?php
-              if (empty($task_detail)) { ?>
+
+          <div class="table-responsive">
+            <table class="table table-hover table-sm">
+              <thead style="background-color:#3498db;">
                 <tr>
-                  <td colspan="6" class="text-center">Data tidak ditemukan</td>
+                  <th style="color: white;">Card Name</th>
+                  <th style="color: white;">Responsible</th>
+                  <th style="color: white;">Start Date</th>
+                  <th style="color: white;">Due Date</th>
+                  <th style="color: white;">Activity</th>
+                  <th style="color: white;">Action</th>
+                  <th style="color: white;"></th>
                 </tr>
-                <?php } else {
-                $nip = $this->session->userdata('nip');
-                foreach ($task_detail as $data) {
-                  $user_read = $this->db->select('id_detail')->from('task_detail')
-                    ->where('id_detail', $data->id_detail)
-                    // ->like('read', $nip, 'both')
-                    // ->like('CONCAT(";", read, ";")', ';' . $nip . ';', 'both')
-                    ->where("CONCAT(' ', `read`, ' ') LIKE '% " . $nip . " %'")
-                    ->get()->num_rows();
-                  if ($data->activity == '1') {
-                    // $activity = "<p class='badge badge-pill badge-success'>Open</p>";;
-                    $activity = "Open";
-                    $background_class = "bg-primary text-white";
-                  } else if ($data->activity == '2') {
-                    // $activity = "<p class='badge badge-pill badge-warning'>Pending</p>";
-                    $activity = "Pending";
-                    $background_class = "bg-warning text-white";
-                  } else {
-                    // $activity = "<p class='badge badge-pill badge-secondary'>Closed</p>";
-                    $activity = "Closed";
-                    $background_class = "bg-secondary text-white";
-                  }
-                ?>
+              </thead>
+              <tbody>
+                <?php
+                if (empty($task_detail)) { ?>
                   <tr>
-                    <td class="open-task-detail" onclick="openCard(<?= $data->id_detail ?>)"><?= $data->task_name; ?></td>
-                    <td style="max-width: 150px;" class="open-task-detail" onclick="openCard(<?= $data->id_detail ?>)"><?= $data->nama ?></td>
-                    <td class="open-task-detail" onclick="openCard(<?= $data->id_detail ?>)"><?= $data->start_date; ?></td>
-                    <td class="open-task-detail" onclick="openCard(<?= $data->id_detail ?>)"><?= $data->due_date; ?></td>
-                    <td class="open-task-detail <?= $background_class ?>" onclick="openCard(<?= $data->id_detail ?>)"><?= $activity ?></td>
-                    <td>
-                      <a href="<?= site_url('task/card_edit/') . $data->id_task . '/' . $data->id_detail ?>" class="btn btn-outline-pink"><span class="fe fe-edit-3"></span></a>
-                      <?php if (empty($user_read)) { ?>
-                        <span class="badge badge-pill badge-danger">New</span>
-                      <?php } ?>
-                    </td>
+                    <td colspan="6" class="text-center">Data tidak ditemukan</td>
                   </tr>
-              <?php }
-              } ?>
-            </tbody>
-          </table>
+                  <?php } else {
+                  $nip = $this->session->userdata('nip');
+                  foreach ($task_detail as $data) {
+                    $user_read = $this->db->select('id_detail')->from('task_detail')
+                      ->where('id_detail', $data->id_detail)
+                      // ->like('read', $nip, 'both')
+                      // ->like('CONCAT(";", read, ";")', ';' . $nip . ';', 'both')
+                      ->where("CONCAT(' ', `read`, ' ') LIKE '% " . $nip . " %'")
+                      ->get()->num_rows();
+                    if ($data->activity == '1') {
+                      // $activity = "<p class='badge badge-pill badge-success'>Open</p>";;
+                      $activity = "Open";
+                      $background_class = "bg-primary text-white";
+                    } else if ($data->activity == '2') {
+                      // $activity = "<p class='badge badge-pill badge-warning'>Pending</p>";
+                      $activity = "Pending";
+                      $background_class = "bg-warning text-white";
+                    } else {
+                      // $activity = "<p class='badge badge-pill badge-secondary'>Closed</p>";
+                      $activity = "Closed";
+                      $background_class = "bg-secondary text-white";
+                    }
+                  ?>
+                    <tr>
+                      <td class="open-task-detail" onclick="openCard(<?= $data->id_detail ?>)"><?= $data->task_name; ?></td>
+                      <td style="max-width: 150px;" class="open-task-detail" onclick="openCard(<?= $data->id_detail ?>)"><?= $data->nama ?></td>
+                      <td class="open-task-detail" onclick="openCard(<?= $data->id_detail ?>)"><?= $data->start_date; ?></td>
+                      <td class="open-task-detail" onclick="openCard(<?= $data->id_detail ?>)"><?= $data->due_date; ?></td>
+                      <td class="open-task-detail <?= $background_class ?>" onclick="openCard(<?= $data->id_detail ?>)"><?= $activity ?></td>
+                      <td>
+                        <a href="<?= site_url('task/card_edit/') . $data->id_task . '/' . $data->id_detail ?>" class="btn btn-outline-pink"><span class="fe fe-edit-3"></span></a>
+                        <?php if (empty($user_read)) { ?>
+                          <span class="badge badge-pill badge-danger">New</span>
+                        <?php } ?>
+                      </td>
+                    </tr>
+                <?php }
+                } ?>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div> <!-- .col-12 -->

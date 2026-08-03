@@ -241,12 +241,14 @@
 
       },
       error: function(xhr, status, error) {
-        console.error('AJAX Error:', status, error, xhr.responseText); // Log full error for debugging
-        Swal.fire(
-          'Kesalahan Jaringan!', // More specific error message
-          'Terjadi kesalahan komunikasi dengan server. Silakan coba lagi.',
-          'error'
-        );
+        console.error(status, xhr.status, xhr.responseText); // ini yang penting
+        Swal.fire({
+          icon: "error",
+          title: "Terjadi kesalahan",
+          text: "Silakan coba lagi.",
+          showConfirmButton: false,
+          timer: 1500,
+        });
       }
     });
   }

@@ -463,6 +463,172 @@
             // Wait for the fade-out animation to finish
         }
 
+        <?php
+        if ($this->session->flashdata('proses') == 'lanjut_bayar') {
+        ?>
+            lanjutBayar();
+        <?php
+        }
+        ?>
+
+        function lanjutBayar() {
+
+            console.log('Masuk Lanjut Bayar');
+
+            const url = `${BASE_URL}Subscription/proses_lanjut_bayar`;
+
+            // Fetch call using the dynamic URL
+            fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: '{}' // ← ganti dari JSON.stringify(data)
+                })
+                .then(response => {
+                    swal.close();
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.status == "success") {
+
+                        swal.fire({
+                            customClass: 'slow-animation',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            title: 'Berhasil!',
+                            text: data.message,
+                            timer: 2000
+                        }).then(() => {
+
+                            const allPricingCols = document.querySelectorAll('.col-lg-3.nopadding');
+
+                            allPricingCols.forEach(col => {
+                                col.querySelector('.pricing-box').classList.add('hidden');
+
+                                setTimeout(() => {
+                                    col.classList.add('d-none');
+                                }, 500);
+                            });
+
+                            setTimeout(() => {
+
+                                const id_pembayaran = data.id_pembayaran;
+                                const startDate = new Date(data.confirmation_detail.tanggal_mulai.split(' ')[0]);
+                                const endDate = new Date(data.confirmation_detail.tanggal_selesai.split(' ')[0]);
+                                const startStr = formatDate(startDate);
+                                const endStr = formatDate(endDate);
+
+                                // ── Jika server sudah kembalikan QR (pending QRIS lama) ──────
+
+                                // ── Tampil pilihan metode pembayaran ─────────────────────────
+                                const pilihanHTML = `
+                <div class="detail-box mt-5">
+                    <h3 class="f-20">Konfirmasi Pembayaran</h3>
+                    <p>Terima kasih telah memilih Plan <strong>${data.confirmation_detail.paket}</strong>. Berikut rincian pesanan Anda:</p>
+                    <ul class="list-unstyled mb-3">
+                        <li><strong>Paket</strong> ${data.confirmation_detail.paket}</li>
+                        <li><strong>Jangka Waktu</strong> ${data.confirmation_detail.total_bulan} Bulan</li>
+                        <li><strong>Tanggal Mulai</strong> ${startStr}</li>
+                        <li><strong>Tanggal Selesai</strong> ${endStr}</li>
+                    </ul>
+                    <hr>
+                    <h4 class="text-center">Total Tagihan:</h4>
+                    <h2 class="text-bariskode text-center">${formatRupiah(data.confirmation_detail.nominal)}</h2>
+                    <p class="text-center text-muted f-12">Total akhir sudah termasuk 3 digit unik untuk konfirmasi transaksi.</p>
+
+                    <hr class="my-4">
+                    <h5 class="text-center mb-3">Pilih Metode Pembayaran</h5>
+
+                    <div class="row justify-content-center g-3 mb-4">
+
+                        <!-- Kartu QRIS -->
+                        <div class="col-12 col-md-5">
+                            <div class="payment-card" id="card-qris" onclick="pilihMetode('qris')"
+                                 style="border:2px solid #dee2e6; border-radius:12px; padding:20px; cursor:pointer;
+                                        text-align:center; transition:all .2s; background:#fff;">
+                                <div style="font-size:2rem; margin-bottom:8px;">📱</div>
+                                <h6 class="fw-bold mb-1">QRIS</h6>
+                                <small class="text-muted">GoPay · OVO · DANA · ShopeePay · dll</small>
+                                <div class="mt-2">
+                                    <span class="badge bg-success" style="color:#fff">Otomatis & Instan</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Kartu Transfer BSI -->
+                        <div class="col-12 col-md-5">
+                            <div class="payment-card" id="card-bsi" onclick="pilihMetode('bsi')"
+                                 style="border:2px solid #dee2e6; border-radius:12px; padding:20px; cursor:pointer;
+                                        text-align:center; transition:all .2s; background:#fff;">
+                                <img src="${BASE_URL}assets/images/bank/BSI_1.png" alt="BSI"
+                                     style="height:36px; margin-bottom:8px; object-fit:contain;">
+                                <h6 class="fw-bold mb-1">Transfer BSI</h6>
+                                <small class="text-muted">Bank Syariah Indonesia<br>Rekening 79 7070 7004</small>
+                                <div class="mt-2">
+                                    <span class="badge bg-secondary" style="color:#fff">Konfirmasi Manual</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-center">
+                        <button type="button" id="btn-lanjut-bayar" class="btn btn-primary btn-rounded px-5"
+                                disabled onclick="lanjutBayar(${id_pembayaran}, '${data.confirmation_detail.paket}')">
+                            Lanjutkan Pembayaran
+                        </button>
+                    </div>
+                </div>
+                `;
+
+                                detailsContainer.innerHTML = pilihanHTML;
+                                detailsContainer.classList.remove('d-none');
+                                detailsContainer.classList.add('visible');
+
+                                console.log('DetailContainer Muncul');
+
+                            }, 500);
+                        });
+
+                    } else if (data.status == "proses") {
+                        swal.fire({
+                            customClass: 'slow-animation',
+                            icon: 'info',
+                            showConfirmButton: false,
+                            title: 'Proses!',
+                            text: data.message,
+                            timer: 3000
+                        }).then(() => {
+                            detailsContainer.classList.remove('visible');
+                            setTimeout(() => {
+                                detailsContainer.innerHTML = fourthDetailHTML;
+                                detailsContainer.classList.add('visible');
+                            }, 500);
+                        });
+                    } else {
+                        swal.fire({
+                            customClass: 'slow-animation',
+                            icon: 'error',
+                            showConfirmButton: false,
+                            title: 'Gagal!',
+                            text: data.message,
+                            timer: 1500
+                        });
+                    }
+                })
+                .catch((error) => {
+                    swal.close();
+
+                    console.error('Error:', error);
+                    // Handle errors, e.g., show an error message to the user
+                    alert('Terjadi kesalahan saat mengonfirmasi pembayaran. Silakan coba lagi.');
+                });
+
+        }
+
         function handlePilihDonasiClick(event) {
             event.preventDefault(); // Prevent the default link behavior
 

@@ -428,61 +428,120 @@ class Subscription extends CI_Controller
             $confirmation_detail = $this->db->from('premium_confirmation')->where('id', $last_id)->get()->row();
             $detail_user         = $this->_get_super_admin($confirmation_detail->id_perusahaan);
 
-            // === QRIS ===
-            if (($data['metode_bayar'] ?? 'bsi') === 'qris') {
-                $qris_result = $this->_buat_qris($last_id, $nominal, $detail_perusahaan, $data['planName']);
-
-                if (!$qris_result['success']) {
-                    echo json_encode(['status' => 'error', 'message' => $qris_result['message']]);
-                    return;
-                }
-
-                // Simpan order_id Midtrans ke DB (opsional, butuh kolom midtrans_order_id)
-                $this->db->where('id', $last_id)->update('premium_confirmation', [
-                    'midtrans_order_id' => $qris_result['order_id'],
-                    'metode_bayar'      => 'qris',
-                ]);
-
-                // Kirim WA notifikasi QRIS
-                $msg_qris = "Halo, " . $detail_perusahaan->nama_perusahaan . "! ✨\n\n"
-                    . "Pesanan paket premium Anda telah diterima.\n\n"
-                    . "- Paket: *" . $data['planName'] . "*\n"
-                    . "- Jangka Waktu: *" . $data['months'] . "* Bulan\n"
-                    . "- Total Tagihan: *Rp. " . $formatted_nominal . "*\n\n"
-                    . "Silakan scan QR Code yang tampil di layar menggunakan aplikasi e-wallet Anda (GoPay, OVO, DANA, dll).\n\n"
-                    . "QR berlaku selama *15 menit*. Pembayaran akan terkonfirmasi otomatis.\n\n"
-                    . "Terima kasih,\nTim Baris Kode Indonesia";
-
-                $whatsapp_send = (bool) $this->api_whatsapp->wa_notif($msg_qris, $detail_user->phone);
-
-                echo json_encode([
-                    'status'              => 'success',
-                    'message'             => 'Silakan scan QR Code untuk menyelesaikan pembayaran.',
-                    'id_pembayaran'       => $last_id,
-                    'confirmation_detail' => $confirmation_detail,
-                    'metode_bayar'        => 'qris',
-                    'qr_url'              => $qris_result['qr_url'],
-                    'expire'              => $qris_result['expire'],
-                    'whatsapp_send'       => $whatsapp_send,
-                    'whatsapp_number'     => $detail_user->phone,
-                ]);
-                return;
-            }
 
             // === BSI (alur lama) ===
             $link_konfirmasi   = base_url('Subscription/proses_bayar_konfirmasi_link/' . $last_id);
-            $msg_user_whatsapp = $this->_msg_wa_bsi($detail_perusahaan->nama_perusahaan, $data, $formatted_nominal, $link_konfirmasi, false);
+            $msg_user_whatsapp = $this->_msg_wa_awal($detail_perusahaan->nama_perusahaan, $data, $formatted_nominal, $link_konfirmasi, false);
             $whatsapp_send     = (bool) $this->api_whatsapp->wa_notif($msg_user_whatsapp, $detail_user->phone);
 
             echo json_encode([
                 'status'              => 'success',
-                'message'             => 'Pembayaran berhasil disimpan. Silahkan menunggu konfirmasi.',
+                'message'             => 'Pemesanan berhasil disimpan. Silahkan melakukan pembayaran.',
                 'id_pembayaran'       => $last_id,
                 'confirmation_detail' => $confirmation_detail,
-                'metode_bayar'        => 'bsi',
+                // 'metode_bayar'        => 'bsi',
                 'whatsapp_send'       => $whatsapp_send,
                 'whatsapp_number'     => $detail_user->phone,
             ]);
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Gagal menyimpan pembayaran ke database.']);
+        }
+    }
+
+    public function lanjutBayar()
+    {
+        $this->session->set_flashdata('proses', 'lanjut_bayar');
+
+        redirect('subscription/upgrade');
+    }
+
+    public function proses_lanjut_bayar()
+    {
+        $now                  = new DateTime();
+        $start_date_with_time = $now->format('Y-m-d H:i:s');
+
+        $expired_time         = clone $now;
+        $expired_time->modify('+24 hours');
+
+        $detail_perusahaan = $this->db->from('utility')->where('Id', $this->session->userdata('user_perusahaan_id'))->get()->row();
+        $now_str           = (new DateTime())->format('Y-m-d H:i:s');
+
+        // Cek apakah sudah ada pembayaran pending atau menunggu approval
+        $confirmation_num = $this->db->from('premium_confirmation')
+            ->where('id_perusahaan', $this->session->userdata('user_perusahaan_id'))
+            ->where('status_bayar', 0)
+            ->where('expired_status_bayar >', $now_str)
+            ->get()->num_rows();
+
+        $approval_num = $this->db->from('premium_confirmation')
+            ->where('id_perusahaan', $this->session->userdata('user_perusahaan_id'))
+            ->where('status_bayar', 1)
+            ->where('approval', 0)
+            ->get()->num_rows();
+
+        // --- Sudah ada yang menunggu approval admin ---
+        if ($approval_num) {
+            $confirmation_detail = $this->db->from('premium_confirmation')
+                ->where('id_perusahaan', $this->session->userdata('user_perusahaan_id'))
+                ->where('status_bayar', 1)->where('approval', 0)
+                ->get()->row();
+            echo json_encode([
+                'status'  => 'proses',
+                'message' => 'Anda sudah melakukan Proses Pembayaran dengan Paket: ' . $confirmation_detail->paket,
+            ]);
+            return;
+        }
+
+        // --- Sudah ada pending payment yang belum expire ---
+        if ($confirmation_num) {
+            $confirmation_detail = $this->db->from('premium_confirmation')
+                ->where('id_perusahaan', $this->session->userdata('user_perusahaan_id'))
+                ->where('status_bayar', 0)
+                ->where('expired_status_bayar >', $now_str)
+                ->get()->row();
+
+            $detail_user = $this->_get_super_admin($confirmation_detail->id_perusahaan);
+
+            // Jika metode QRIS — buat ulang QR dari Midtrans (order_id sudah ada)
+            if (($data['metode_bayar'] ?? 'bsi') === 'qris') {
+                $qris_result = $this->_buat_qris(
+                    $confirmation_detail->id,
+                    $confirmation_detail->nominal,
+                    $detail_perusahaan,
+                    $confirmation_detail->paket
+                );
+                if (!$qris_result['success']) {
+                    echo json_encode(['status' => 'error', 'message' => $qris_result['message']]);
+                    return;
+                }
+                echo json_encode([
+                    'status'              => 'success',
+                    'message'             => 'Pesanan lama ditemukan. Silakan selesaikan pembayaran QRIS.',
+                    'id_pembayaran'       => $confirmation_detail->id,
+                    'confirmation_detail' => $confirmation_detail,
+                    'metode_bayar'        => 'qris',
+                    'qr_url'              => $qris_result['qr_url'],
+                    'expire'              => $qris_result['expire'],
+                    'whatsapp_send'       => false,
+                ]);
+                return;
+            }
+
+            // Jika metode BSI — kirim WA seperti sebelumnya
+            $link_konfirmasi   = base_url('Subscription/proses_bayar_konfirmasi_link/' . $confirmation_detail->id);
+            // $msg_user_whatsapp = $this->_msg_wa_bsi($detail_perusahaan->nama_perusahaan, $data, $formatted_nominal, $link_konfirmasi, true);
+            // $whatsapp_send     = $this->api_whatsapp->wa_notif($msg_user_whatsapp, $detail_user->phone);
+
+            echo json_encode([
+                'status'              => 'success',
+                'message'             => 'Anda sudah pernah melakukan Proses Pembayaran dengan Paket: ' . $confirmation_detail->paket,
+                'id_pembayaran'       => $confirmation_detail->id,
+                'confirmation_detail' => $confirmation_detail,
+                'metode_bayar'        => 'bsi',
+                // 'whatsapp_send'       => (bool) $whatsapp_send,
+                'whatsapp_number'     => $detail_user->phone,
+            ]);
+            return;
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Gagal menyimpan pembayaran ke database.']);
         }
@@ -861,6 +920,32 @@ class Subscription extends CI_Controller
             . "Nomor Rekening: *79 7070 7004*\n"
             . "Atas Nama: *PT. Baris Kode Indonesia*\n\n"
             . "{$action}\n{$link_konfirmasi}\n\n"
+            . "Terima kasih atas kerja sama Anda.\n\nHormat kami,\nTim Baris Kode Indonesia";
+    }
+
+    /** Pesan WA untuk metode BSI */
+    private function _msg_wa_awal($nama_perusahaan, $data, $formatted_nominal, $link_konfirmasi, $is_existing)
+    {
+        $intro = $is_existing
+            ? "Pesanan paket premium Anda telah kami terima dan saat ini *sedang dalam proses pembayaran*."
+            : "Pembelian paket premium Anda telah kami terima.";
+
+        $action = $is_existing
+            ? "Mohon lakukan pembayaran dalam waktu 24 jam dan konfirmasi pembelian paket dengan mengklik link di bawah ini:"
+            : "Setelah melakukan pembayaran, mohon konfirmasi pembelian paket dengan mengklik link di bawah ini:";
+
+        return "Halo, {$nama_perusahaan}! ✨\n\n{$intro}\n\n"
+            . "Berikut rincian pesanan Anda:\n\n"
+            . "- Paket: *{$data['planName']}*\n"
+            . "- Jangka Waktu: *{$data['months']}* Bulan\n"
+            . "- Total Tagihan: *Rp. {$formatted_nominal}*\n\n"
+
+            . "Silakan buka halaman pembayaran berikut untuk memilih metode \n"
+            . "pembayaran (QRIS / Virtual Account, atau Transfer Bank BSI):"
+            . "{$action}\n{$link_konfirmasi}\n\n"
+            . "Link di atas bisa Anda buka kembali kapan saja selama pesanan \n"
+            . "masih aktif (berlaku 24 jam). Di halaman tersebut Anda juga \n"
+            . "dapat *membatalkan pembayaran* bila ingin mengganti paket.\n"
             . "Terima kasih atas kerja sama Anda.\n\nHormat kami,\nTim Baris Kode Indonesia";
     }
 
