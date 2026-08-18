@@ -381,8 +381,9 @@
 
                     <div class="row justify-content-center g-3 mb-4">
 
+
                         <!-- Kartu QRIS -->
-                        <div class="col-12 col-md-5">
+                        <div class="col-12 col-md-5 d-none">
                             <div class="payment-card" id="card-qris" onclick="pilihMetode('qris')"
                                  style="border:2px solid #dee2e6; border-radius:12px; padding:20px; cursor:pointer;
                                         text-align:center; transition:all .2s; background:#fff;">
@@ -391,6 +392,20 @@
                                 <small class="text-muted">GoPay · OVO · DANA · ShopeePay · dll</small>
                                 <div class="mt-2">
                                     <span class="badge bg-success">Otomatis & Instan</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Kartu VA -->
+                        <div class="col-12 col-md-5">
+                            <div class="payment-card" id="card-va" onclick="pilihMetode('va')"
+                                 style="border:2px solid #dee2e6; border-radius:12px; padding:20px; cursor:pointer;
+                                        text-align:center; transition:all .2s; background:#fff;">
+                                <div style="font-size:2rem; margin-bottom:8px;">📱</div>
+                                <h6 class="fw-bold mb-1">Virtual Account</h6>
+                                <small class="text-muted">BCA, Mandiri, BNI, BRI, BSI · dll</small>
+                                <div class="mt-2">
+                                    <span class="badge bg-success text-white">Otomatis & Instan</span>
                                 </div>
                             </div>
                         </div>
@@ -405,7 +420,7 @@
                                 <h6 class="fw-bold mb-1">Transfer BSI</h6>
                                 <small class="text-muted">Bank Syariah Indonesia<br>Rekening 79 7070 7004</small>
                                 <div class="mt-2">
-                                    <span class="badge bg-secondary">Konfirmasi Manual</span>
+                                    <span class="badge bg-secondary text-white">Konfirmasi Manual</span>
                                 </div>
                             </div>
                         </div>
@@ -465,13 +480,13 @@
 
         <?php
         if ($this->session->flashdata('proses') == 'lanjut_bayar') {
-        ?>
-            lanjutBayar();
+            ?>
+            lanjutBayar_link();
         <?php
         }
         ?>
 
-        function lanjutBayar() {
+        function lanjutBayar_link() {
 
             console.log('Masuk Lanjut Bayar');
 
@@ -546,7 +561,7 @@
                     <div class="row justify-content-center g-3 mb-4">
 
                         <!-- Kartu QRIS -->
-                        <div class="col-12 col-md-5">
+                        <div class="col-12 col-md-5 d-none">
                             <div class="payment-card" id="card-qris" onclick="pilihMetode('qris')"
                                  style="border:2px solid #dee2e6; border-radius:12px; padding:20px; cursor:pointer;
                                         text-align:center; transition:all .2s; background:#fff;">
@@ -554,7 +569,21 @@
                                 <h6 class="fw-bold mb-1">QRIS</h6>
                                 <small class="text-muted">GoPay · OVO · DANA · ShopeePay · dll</small>
                                 <div class="mt-2">
-                                    <span class="badge bg-success" style="color:#fff">Otomatis & Instan</span>
+                                    <span class="badge bg-success">Otomatis & Instan</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Kartu VA -->
+                        <div class="col-12 col-md-5">
+                            <div class="payment-card" id="card-va" onclick="pilihMetode('va')"
+                                 style="border:2px solid #dee2e6; border-radius:12px; padding:20px; cursor:pointer;
+                                        text-align:center; transition:all .2s; background:#fff;">
+                                <div style="font-size:2rem; margin-bottom:8px;">📱</div>
+                                <h6 class="fw-bold mb-1">Virtual Account</h6>
+                                <small class="text-muted">BCA, Mandiri, BNI, BRI, BSI · dll</small>
+                                <div class="mt-2">
+                                    <span class="badge bg-success text-white">Otomatis & Instan</span>
                                 </div>
                             </div>
                         </div>
@@ -779,14 +808,27 @@
         });
 
         // Highlight kartu terpilih
-        const warna = metode === 'qris' ? '#00C48C' : '#1a7f37';
         const card = document.getElementById('card-' + metode);
+
+        let warna;
+        if(metode == 'qris'){
+            warna = '#00C48C';
+            card.style.background = '#f0fdf8';
+        }else if(metode == 'va'){
+            warna = '#006fc4ff';
+            card.style.background = '#f0fdf8';
+        }else{
+            warna = '#1a7f37';
+            card.style.background = '#f6fff0';
+
+        }
         card.style.borderColor = warna;
-        card.style.background = metode === 'qris' ? '#f0fdf8' : '#f6fff0';
+        // card.style.background = metode === 'qris' ? '#f0fdf8' : '#f6fff0';
         card.style.boxShadow = `0 0 0 3px ${warna}33`;
 
         document.getElementById('btn-lanjut-bayar').disabled = false;
     }
+
 
     /** Lanjutkan sesuai metode yang dipilih */
     function lanjutBayar(id_pembayaran, nama_paket) {
@@ -794,9 +836,301 @@
 
         if (metodeBayarDipilih === 'qris') {
             prosesQRIS(id_pembayaran);
+        }else if (metodeBayarDipilih === 'va') {
+            prosesVA(id_pembayaran, nama_paket);
         } else {
             prosesBSI(id_pembayaran, nama_paket);
         }
+    }
+
+    // ============================================================
+    // VIRTUAL ACCOUNT
+    // ============================================================
+
+    /** Daftar bank VA — kode mengikuti paymentMethod Duitku */
+    const DAFTAR_BANK_VA = [
+        { kode: 'BC', nama: 'BCA Virtual Account',          logo: 'BCA.png' },
+        { kode: 'M2', nama: 'Mandiri Virtual Account',      logo: 'MANDIRI.png' },
+        { kode: 'BR', nama: 'BRIVA',                        logo: 'BRI.png' },
+        { kode: 'I1', nama: 'BNI Virtual Account',          logo: 'BNI.png' },
+        { kode: 'BV', nama: 'BSI Virtual Account',          logo: 'BSI_1.png' },
+        { kode: 'BT', nama: 'Permata Bank Virtual Account', logo: 'PERMATA.png' },
+        { kode: 'B1', nama: 'CIMB Niaga Virtual Account',   logo: 'CIMB.png' },
+        { kode: 'DM', nama: 'Danamon Virtual Account',      logo: 'DANAMON.png' },
+        { kode: 'VA', nama: 'Maybank Virtual Account',      logo: 'MAYBANK.png' },
+        { kode: 'NC', nama: 'Bank Neo Commerce/BNC',        logo: 'BNC.png' },
+        { kode: 'AG', nama: 'Bank Artha Graha',             logo: 'ARTHAGRAHA.png' },
+        { kode: 'S1', nama: 'Bank Sahabat Sampoerna',       logo: 'SAMPOERNA.png' },
+        { kode: 'A1', nama: 'ATM Bersama',                  logo: 'ATMBERSAMA.png' },
+    ];
+
+    /** State bank yang dipilih */
+    let bankVADipilih = null;
+
+    /** Handle klik kartu bank */
+    function pilihBankVA(kode) {
+        bankVADipilih = kode;
+
+        document.querySelectorAll('.bank-card').forEach(el => {
+            el.style.borderColor = '#dee2e6';
+            el.style.background = '#fff';
+            el.style.boxShadow = 'none';
+        });
+
+        const card = document.getElementById('bank-' + kode);
+        if (card) {
+            card.style.borderColor = '#006fc4';
+            card.style.background = '#f0f7ff';
+            card.style.boxShadow = '0 0 0 3px #006fc433';
+        }
+
+        const btn = document.getElementById('btn-buat-va');
+        if (btn) btn.disabled = false;
+    }
+
+    /** ── VA: tampilkan kartu pilihan bank ── */
+    function prosesVA(id_pembayaran, nama_paket) {
+        // Simpan tampilan pilihan metode supaya tombol "Kembali" bisa memulihkannya
+        window._htmlPilihanMetode = detailsContainer.innerHTML;
+        bankVADipilih = null;
+
+        const kartuBank = DAFTAR_BANK_VA.map(b => `
+            <div class="col-6 col-md-4 col-lg-3">
+                <div class="bank-card" id="bank-${b.kode}" onclick="pilihBankVA('${b.kode}')"
+                     style="border:2px solid #dee2e6; border-radius:12px; padding:14px 10px; cursor:pointer;
+                            text-align:center; transition:all .2s; background:#fff; height:100%;
+                            display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                    <img src="${BASE_URL}assets/images/bank/${b.logo}" alt="${b.nama}"
+                         style="height:30px; object-fit:contain; margin-bottom:8px; max-width: 105px"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div style="display:none; height:30px; width:52px; margin-bottom:8px; border-radius:6px;
+                                background:#eef2ff; color:#3f51b5; font-weight:700; font-size:13px;
+                                align-items:center; justify-content:center;">${b.kode}</div>
+                    <small class="fw-bold" style="line-height:1.25; font-size:12px;">${b.nama}</small>
+                </div>
+            </div>
+        `).join('');
+
+        const vaHTML = `
+        <div class="detail-box mt-5">
+            <h3 class="f-20">Pilih Bank Virtual Account</h3>
+            <p class="text-muted">Paket <strong>${nama_paket}</strong> — silakan pilih bank tujuan transfer.
+               Nomor Virtual Account akan dibuat otomatis setelah Anda menekan tombol di bawah.</p>
+
+            <div class="row g-2 g-md-3 mt-3 mb-4">
+                ${kartuBank}
+            </div>
+
+            <div class="d-flex justify-content-center">
+                <button type="button" id="btn-buat-va" class="btn btn-primary btn-rounded px-5" disabled
+                        onclick="buatVA(${id_pembayaran})">
+                    Buat Virtual Account
+                </button>
+            </div>
+            <div class="mt-3 d-flex justify-content-center">
+                <button type="button" class="btn btn-outline-secondary btn-rounded px-4" onclick="kembaliKeMetode()">
+                    <i class="fa-solid fa-arrow-left"></i> Kembali ke Pilihan Metode
+                </button>
+            </div>
+        </div>`;
+
+        detailsContainer.classList.remove('visible');
+        setTimeout(() => {
+            detailsContainer.innerHTML = vaHTML;
+            detailsContainer.classList.add('visible');
+        }, 500);
+    }
+
+    /** Kembali ke kartu pilihan metode pembayaran */
+    function kembaliKeMetode() {
+        if (!window._htmlPilihanMetode) return;
+
+        detailsContainer.classList.remove('visible');
+        setTimeout(() => {
+            detailsContainer.innerHTML = window._htmlPilihanMetode;
+            detailsContainer.classList.add('visible');
+            if (metodeBayarDipilih) pilihMetode(metodeBayarDipilih);
+        }, 500);
+    }
+
+    /** ── VA: minta nomor Virtual Account ke server ── */
+    function buatVA(id_pembayaran) {
+        if (!bankVADipilih) return;
+
+        swal.fire({
+            title: 'Membuat Virtual Account...',
+            text: 'Mohon tunggu sebentar',
+            icon: 'info',
+            showConfirmButton: false,
+            allowOutsideClick: false,
+            didOpen: () => swal.showLoading()
+        });
+
+        fetch(`${BASE_URL}Subscription/buat_va_untuk_pembayaran/${id_pembayaran}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ bank_code: bankVADipilih })
+            })
+            .then(r => r.json())
+            .then(res => {
+                swal.close();
+                if (res.status !== 'success') {
+                    swal.fire({
+                        icon: 'error',
+                        title: 'Gagal!',
+                        text: res.message || 'Tidak dapat membuat Virtual Account.',
+                        timer: 2500,
+                        showConfirmButton: false
+                    });
+                    return;
+                }
+                tampilVA(id_pembayaran, res.qr_url, res.confirmation_detail, res.start_str, res.end_str, res.expire);
+            })
+            .catch(err => {
+                swal.close();
+                console.error('Fetch error:', err);
+                swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Koneksi gagal. Coba lagi.',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            });
+    }
+
+    /** Salin nomor VA ke clipboard */
+    function salinVA() {
+        const el = document.getElementById('va-number');
+        if (!el) return;
+        const nomor = el.innerText.trim();
+
+        const selesai = () => swal.fire({
+            icon: 'success',
+            title: 'Tersalin!',
+            text: nomor,
+            timer: 1200,
+            showConfirmButton: false
+        });
+
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(nomor).then(selesai);
+        } else {
+            const tmp = document.createElement('textarea');
+            tmp.value = nomor;
+            tmp.style.position = 'fixed';
+            tmp.style.opacity = '0';
+            document.body.appendChild(tmp);
+            tmp.select();
+            document.execCommand('copy');
+            document.body.removeChild(tmp);
+            selesai();
+        }
+    }
+
+    /** Countdown timer VA */
+    function mulaiCountdownVA(detik, id_pembayaran) {
+        clearInterval(window._vaCountdown);
+        let s = detik;
+        const el = document.getElementById('va-countdown');
+
+        function tick() {
+            if (!el) {
+                clearInterval(window._vaCountdown);
+                return;
+            }
+            const jam = String(Math.floor(s / 3600)).padStart(2, '0');
+            const m = String(Math.floor((s % 3600) / 60)).padStart(2, '0');
+            const sec = String(s % 60).padStart(2, '0');
+            el.textContent = (s >= 3600 ? jam + ':' : '') + m + ':' + sec;
+
+            if (s <= 300) el.closest('.badge').className = 'badge bg-danger fs-6 px-3 py-2';
+            if (s <= 0) {
+                clearInterval(window._vaCountdown);
+                clearInterval(window._vaPolling);
+                swal.fire({
+                    icon: 'warning',
+                    title: 'Virtual Account Kadaluarsa',
+                    text: 'Nomor VA sudah kadaluarsa. Silakan mulai ulang proses pembayaran.',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    detailsContainer.classList.remove('visible');
+                    setTimeout(() => {
+                        detailsContainer.innerHTML = '';
+                    }, 500);
+                });
+            }
+            s--;
+        }
+        tick();
+        window._vaCountdown = setInterval(tick, 1000);
+    }
+
+    /** Polling cek status VA */
+    function cekStatusVA(id_pembayaran) {
+        fetch(`${BASE_URL}Subscription/cek_status_va/${id_pembayaran}`)
+            .then(r => r.json())
+            .then(res => {
+                if (res.status === 'settlement') {
+                    clearInterval(window._vaPolling);
+                    clearInterval(window._vaCountdown);
+
+                    swal.fire({
+                        customClass: 'slow-animation',
+                        icon: 'success',
+                        title: 'Pembayaran Berhasil! 🎉',
+                        text: 'Paket Anda telah aktif. Terima kasih!',
+                        showConfirmButton: false,
+                        timer: 2500
+                    }).then(() => {
+                        detailsContainer.classList.remove('visible');
+                        const suksesHTML = `
+    <div class="detail-box text-center mt-5">
+        <h3 class="f-20">Pembayaran Berhasil! 🎉</h3>
+        <p>Terima kasih! Pembayaran Anda melalui Virtual Account telah berhasil dikonfirmasi secara otomatis.<br>
+           Paket langganan Anda kini telah aktif dan siap digunakan.<br>
+           Silakan logout dan login kembali untuk menikmati fitur premium Anda.
+        </p>
+        <div class="mt-4 pt-3">
+            <a href="${BASE_URL}home" class="btn btn-primary btn-rounded w-75">Kembali ke Dashboard</a>
+        </div>
+    </div>`;
+                        setTimeout(() => {
+                            detailsContainer.innerHTML = suksesHTML;
+                            detailsContainer.classList.add('visible');
+                        }, 500);
+                    });
+
+                } else if (['expire', 'cancel', 'deny'].includes(res.status)) {
+                    clearInterval(window._vaPolling);
+                    clearInterval(window._vaCountdown);
+                    swal.fire({
+                        icon: 'error',
+                        title: 'Pembayaran Gagal',
+                        text: 'Status: ' + res.status + '. Silakan coba lagi.',
+                        confirmButtonText: 'OK'
+                    });
+                }
+                // 'pending' → lanjut polling
+            })
+            .catch(err => console.error('Polling VA error:', err));
+    }
+
+    /** Batalkan VA, kembali ke pilihan metode */
+    function batalVA() {
+        // clearInterval(window._vaPolling);
+        // clearInterval(window._vaCountdown);
+        swal.fire({
+            icon: 'info',
+            title: 'Dibatalkan',
+            text: 'Silakan pilih metode pembayaran kembali.',
+            confirmButtonText: 'OK'
+        }).then(() => {
+            // detailsContainer.classList.remove('visible');
+            setTimeout(() => {
+                lanjutBayar_link2();
+            }, 500);
+        });
     }
 
     /** ── QRIS: request QR Code ke server ── */
@@ -1092,6 +1426,114 @@
         }, 500);
     }
 
+    function tampilVA(id_pembayaran, qr_url, trx, startStr, endStr, expire_time) {
+
+        // Hitung sisa waktu countdown
+        let sisaDetik = 900; // default 15 menit
+        if (expire_time) {
+            const expDate = new Date(expire_time.replace(' ', 'T'));
+            sisaDetik = Math.max(0, Math.round((expDate - Date.now()) / 1000));
+        }
+
+        const qrHTML = `
+<div class="detail-box mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+        <h3 class="f-20 mb-0">Lanjutkan Pembayaran</h3>
+        <span class="badge bg-warning text-dark fs-6 px-3 py-2">
+            ⏳ <span id="qr-countdown">60:00</span>
+        </span>
+    </div>
+
+    <div class="text-center mb-3">
+        <div id="qrcode-canvas" style="width:100%;"></div>
+    </div>
+
+    <div class="row text-center mb-3">
+        <div class="col">
+            <small class="text-muted d-block">Paket</small>
+            <strong>${trx ? trx.paket : '-'}</strong>
+        </div>
+        <div class="col">
+            <small class="text-muted d-block">Total</small>
+            <strong class="text-bariskode">${trx ? formatRupiah(trx.nominal) : '-'}</strong>
+        </div>
+    </div>
+
+    <div style="background:#f8f9fa; border-radius:12px; padding:14px 16px; margin-bottom:16px;">
+        <p class="fw-bold mb-2 f-12 text-muted">CARA BAYAR:</p>
+        <ol class="mb-0 ps-3" style="font-size:13px; line-height:1.8;">
+            <li>Klik tombol <strong>Cek Transaksi</strong> di atas</li>
+            <li>Pilih bank Virtual Account yang kamu inginkan (misal: BCA, Mandiri, BRI)</li>
+            <li>Salin <strong>Nomor Virtual Account</strong> yang muncul di layar</li>
+            <li>Buka aplikasi m-Banking / ATM, pilih menu <strong>Transfer / Pembayaran Virtual Account</strong></li>
+            <li>Masukkan nomor VA, periksa nama & nominal, lalu selesaikan pembayaran</li>
+        </ol>
+    </div>
+
+    <div class="text-center mt-3">
+        <button class="btn btn-outline-secondary btn-sm" onclick="batalVA()">
+            Ganti Metode Pembayaran
+        </button>
+    </div>
+</div>`;
+
+        detailsContainer.classList.remove('visible');
+        setTimeout(() => {
+            detailsContainer.innerHTML = qrHTML;
+            detailsContainer.classList.add('visible');
+
+            // ── Render QR Code ──────────────────────────────────────────
+            // Cek apakah qr_url adalah URL gambar (Midtrans) atau qrString teks (Duitku)
+            // const isImageUrl = qr_url.startsWith('http') || qr_url.startsWith('https');
+            const isImageUrl = qr_url.startsWith('http') || qr_url.startsWith('https');
+
+            //     if (isImageUrl) {
+            //         // Duitku: paymentUrl → tampil sebagai tombol
+            //         const canvas = document.getElementById('qrcode-canvas');
+            //         canvas.innerHTML = `
+            // <div style="padding:20px;">
+            //     <p class="text-muted f-12 mb-3">Klik tombol di bawah untuk melanjutkan pembayaran QRIS</p>
+            //     <a href="${qr_url}" target="_blank" class="btn btn-primary btn-rounded px-4">
+            //         Bayar Sekarang via QRIS
+            //     </a>
+            // </div>`;
+            //     } 
+            if (isImageUrl) {
+                const canvas = document.getElementById('qrcode-canvas');
+                const isMobile = window.innerWidth <= 768;
+
+                const scale = isMobile ? 0.55 : 0.75;
+                const width = isMobile ? '180%' : '150%';
+                const height = isMobile ? '750px' : '650px';
+                const boxHeight = isMobile ? '420px' : '480px';
+
+                canvas.style.cssText = 'width:100%;';
+                canvas.innerHTML = `
+        <div style="width:100%; height:${boxHeight}; overflow:hidden; 
+                    border-radius:12px; position:relative;">
+            <iframe 
+                src="${qr_url}" 
+                style="width:${width}; height:${height}; border:none;
+                       transform: scale(${scale}); transform-origin: top left;
+                       position:absolute; top:0; left:0;"
+                allow="payment">
+            </iframe>
+        </div>`;
+            } else {
+                // Midtrans: qrString → render pakai qrcodejs
+                _renderQRCode(qr_url);
+            }
+            // ── End Render QR Code ──────────────────────────────────────
+
+            // Countdown
+            mulaiCountdown(sisaDetik, id_pembayaran);
+
+            // Polling status setiap 4 detik
+            window._qrisPolling = setInterval(() => cekStatusQRIS(id_pembayaran), 4000);
+
+        }, 500);
+    }
+
     function bukaPopupDuitku(reference) {
         checkout.process(reference, {
             onSuccess: function(result) {
@@ -1279,8 +1721,174 @@
         }).then(() => {
             detailsContainer.classList.remove('visible');
             setTimeout(() => {
-                detailsContainer.innerHTML = '';
+                // detailsContainer.innerHTML = '';
+                lanjutBayar_link2();
             }, 500);
         });
     }
+
+    function lanjutBayar_link2() {
+
+            console.log('Masuk Lanjut Bayar');
+
+            const url = `${BASE_URL}Subscription/proses_lanjut_bayar`;
+
+            // Fetch call using the dynamic URL
+            fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: '{}' // ← ganti dari JSON.stringify(data)
+                })
+                .then(response => {
+                    swal.close();
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.status == "success") {
+
+                        
+
+                            const allPricingCols = document.querySelectorAll('.col-lg-3.nopadding');
+
+                            allPricingCols.forEach(col => {
+                                col.querySelector('.pricing-box').classList.add('hidden');
+
+                                setTimeout(() => {
+                                    col.classList.add('d-none');
+                                }, 500);
+                            });
+
+                            setTimeout(() => {
+
+                                const id_pembayaran = data.id_pembayaran;
+                                const startDate = new Date(data.confirmation_detail.tanggal_mulai.split(' ')[0]);
+                                const endDate = new Date(data.confirmation_detail.tanggal_selesai.split(' ')[0]);
+                                const startStr = formatDate(startDate);
+                                const endStr = formatDate(endDate);
+
+                                // ── Jika server sudah kembalikan QR (pending QRIS lama) ──────
+
+                                // ── Tampil pilihan metode pembayaran ─────────────────────────
+                                const pilihanHTML = `
+                <div class="detail-box mt-5">
+                    <h3 class="f-20">Konfirmasi Pembayaran</h3>
+                    <p>Terima kasih telah memilih Plan <strong>${data.confirmation_detail.paket}</strong>. Berikut rincian pesanan Anda:</p>
+                    <ul class="list-unstyled mb-3">
+                        <li><strong>Paket</strong> ${data.confirmation_detail.paket}</li>
+                        <li><strong>Jangka Waktu</strong> ${data.confirmation_detail.total_bulan} Bulan</li>
+                        <li><strong>Tanggal Mulai</strong> ${startStr}</li>
+                        <li><strong>Tanggal Selesai</strong> ${endStr}</li>
+                    </ul>
+                    <hr>
+                    <h4 class="text-center">Total Tagihan:</h4>
+                    <h2 class="text-bariskode text-center">${formatRupiah(data.confirmation_detail.nominal)}</h2>
+                    <p class="text-center text-muted f-12">Total akhir sudah termasuk 3 digit unik untuk konfirmasi transaksi.</p>
+
+                    <hr class="my-4">
+                    <h5 class="text-center mb-3">Pilih Metode Pembayaran</h5>
+
+                    <div class="row justify-content-center g-3 mb-4">
+
+                        <!-- Kartu QRIS -->
+                        <div class="col-12 col-md-5 d-none">
+                            <div class="payment-card" id="card-qris" onclick="pilihMetode('qris')"
+                                 style="border:2px solid #dee2e6; border-radius:12px; padding:20px; cursor:pointer;
+                                        text-align:center; transition:all .2s; background:#fff;">
+                                <div style="font-size:2rem; margin-bottom:8px;">📱</div>
+                                <h6 class="fw-bold mb-1">QRIS</h6>
+                                <small class="text-muted">GoPay · OVO · DANA · ShopeePay · dll</small>
+                                <div class="mt-2">
+                                    <span class="badge bg-success">Otomatis & Instan</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Kartu VA -->
+                        <div class="col-12 col-md-5">
+                            <div class="payment-card" id="card-va" onclick="pilihMetode('va')"
+                                 style="border:2px solid #dee2e6; border-radius:12px; padding:20px; cursor:pointer;
+                                        text-align:center; transition:all .2s; background:#fff;">
+                                <div style="font-size:2rem; margin-bottom:8px;">📱</div>
+                                <h6 class="fw-bold mb-1">Virtual Account</h6>
+                                <small class="text-muted">BCA, Mandiri, BNI, BRI, BSI · dll</small>
+                                <div class="mt-2">
+                                    <span class="badge bg-success text-white">Otomatis & Instan</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Kartu Transfer BSI -->
+                        <div class="col-12 col-md-5">
+                            <div class="payment-card" id="card-bsi" onclick="pilihMetode('bsi')"
+                                 style="border:2px solid #dee2e6; border-radius:12px; padding:20px; cursor:pointer;
+                                        text-align:center; transition:all .2s; background:#fff;">
+                                <img src="${BASE_URL}assets/images/bank/BSI_1.png" alt="BSI"
+                                     style="height:36px; margin-bottom:8px; object-fit:contain;">
+                                <h6 class="fw-bold mb-1">Transfer BSI</h6>
+                                <small class="text-muted">Bank Syariah Indonesia<br>Rekening 79 7070 7004</small>
+                                <div class="mt-2">
+                                    <span class="badge bg-secondary" style="color:#fff">Konfirmasi Manual</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-center">
+                        <button type="button" id="btn-lanjut-bayar" class="btn btn-primary btn-rounded px-5"
+                                disabled onclick="lanjutBayar(${id_pembayaran}, '${data.confirmation_detail.paket}')">
+                            Lanjutkan Pembayaran
+                        </button>
+                    </div>
+                </div>
+                `;
+
+                                detailsContainer.innerHTML = pilihanHTML;
+                                detailsContainer.classList.remove('d-none');
+                                detailsContainer.classList.add('visible');
+
+                                console.log('DetailContainer Muncul');
+
+                            }, 500);
+                        
+
+                    } else if (data.status == "proses") {
+                        swal.fire({
+                            customClass: 'slow-animation',
+                            icon: 'info',
+                            showConfirmButton: false,
+                            title: 'Proses!',
+                            text: data.message,
+                            timer: 3000
+                        }).then(() => {
+                            detailsContainer.classList.remove('visible');
+                            setTimeout(() => {
+                                detailsContainer.innerHTML = fourthDetailHTML;
+                                detailsContainer.classList.add('visible');
+                            }, 500);
+                        });
+                    } else {
+                        swal.fire({
+                            customClass: 'slow-animation',
+                            icon: 'error',
+                            showConfirmButton: false,
+                            title: 'Gagal!',
+                            text: data.message,
+                            timer: 1500
+                        });
+                    }
+                })
+                .catch((error) => {
+                    swal.close();
+
+                    console.error('Error:', error);
+                    // Handle errors, e.g., show an error message to the user
+                    alert('Terjadi kesalahan saat mengonfirmasi pembayaran. Silakan coba lagi.');
+                });
+
+        }
 </script>
