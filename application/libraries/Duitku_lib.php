@@ -39,7 +39,7 @@ class Duitku_lib
      * @param  int     $expiry_min  Menit kedaluwarsa (default 60 menit)
      * @return array   Response dari Duitku
      */
-    public function create_qris($order_id, $amount, $customer, $item_name = 'Pembayaran', $expiry_min = 60)
+    public function create_qris($order_id, $amount, $bank_code, $customer,  $item_name = 'Pembayaran', $expiry_min = 60)
     {
         $expiry_period = $expiry_min;
         // $signature     = md5($this->merchant_code . $order_id . $amount . $this->api_key);
@@ -49,7 +49,8 @@ class Duitku_lib
         $payload = [
             'merchantCode'     => $this->merchant_code,
             'paymentAmount'    => (int) $amount,
-            'paymentMethod'    => 'QR',
+            // 'paymentMethod'    => 'QR',
+            'paymentMethod'    => $bank_code,
             'merchantOrderId'  => $order_id,
             'productDetails'   => $item_name,
             'additionalParam'  => '',

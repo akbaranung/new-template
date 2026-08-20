@@ -43,6 +43,8 @@
         // const detailsContainer = document.getElementById('pricing-details-container');
         const pricingRow = document.querySelector('.row.justify-content-center');
         const BASE_URL = '<?php echo base_url(); ?>';
+        const tahta_sekarang = '<?= $utility['nama_paket'] ?>';
+        const is_premium = '<?= $utility['is_premium'] ?>';
 
         // Store the original columns to re-insert them later
         const originalCols = Array.from(document.querySelectorAll('.col-lg-3.nopadding'));
@@ -74,6 +76,17 @@
 
             const allPricingCols = document.querySelectorAll('.col-lg-3.nopadding');
 
+            if (is_premium == '1') {
+                if (planName != tahta_sekarang) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Paket Tidak Sesuai',
+                        text: 'Anda masih memiliki paket aktif. Silakan lanjutkan pembayaran sesuai paket yang sedang berjalan atau tunggu hingga masa aktif berakhir. Jika tetap ingin mengganti silahkan hubungi admin',
+                        confirmButtonText: 'Mengerti'
+                    });
+                    return;
+                }
+            }
             allPricingCols.forEach(col => {
                 if (col.querySelector('.pricing-box') !== selectedPricingBox) {
                     col.querySelector('.pricing-box').classList.add('hidden');
@@ -262,6 +275,7 @@
             const totalPrice = basePrice * months;
             const randomDigits = Math.floor(Math.random() * 900) + 100; // Generate 3 random digits (100-999)
             const confirmationPrice = totalPrice + randomDigits;
+            const OriginPrice = totalPrice;
             const formatDateForDatabase = (date) => {
                 const year = date.getFullYear();
                 const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -277,6 +291,7 @@
                 startDate: dbStartStr,
                 endDate: dbEndStr,
                 confirmationPrice: confirmationPrice,
+                OriginPrice: OriginPrice,
                 id_perusahaan: "<?php echo $this->session->userdata('user_perusahaan_id'); ?>"
             };
 
@@ -370,61 +385,59 @@
                         <li><strong>Jangka Waktu</strong> ${data.confirmation_detail.total_bulan} Bulan</li>
                         <li><strong>Tanggal Mulai</strong> ${startStr}</li>
                         <li><strong>Tanggal Selesai</strong> ${endStr}</li>
-                    </ul>
-                    <hr>
-                    <h4 class="text-center">Total Tagihan:</h4>
-                    <h2 class="text-bariskode text-center">${formatRupiah(data.confirmation_detail.nominal)}</h2>
-                    <p class="text-center text-muted f-12">Total akhir sudah termasuk 3 digit unik untuk konfirmasi transaksi.</p>
-
+                    </ul
                     <hr class="my-4">
                     <h5 class="text-center mb-3">Pilih Metode Pembayaran</h5>
 
-                    <div class="row justify-content-center g-3 mb-4">
+                    <div class="payment-row">
 
+    <!-- Kartu VA -->
+    <div class="col-12 col-md-5">
+        <div class="payment-card" id="card-va" onclick="pilihMetode('va')">
+            <div class="pc-logo"><span class="pc-emoji">📱</span></div>
+            <div class="pc-title">Virtual Account</div>
 
-                        <!-- Kartu QRIS -->
-                        <div class="col-12 col-md-5 d-none">
-                            <div class="payment-card" id="card-qris" onclick="pilihMetode('qris')"
-                                 style="border:2px solid #dee2e6; border-radius:12px; padding:20px; cursor:pointer;
-                                        text-align:center; transition:all .2s; background:#fff;">
-                                <div style="font-size:2rem; margin-bottom:8px;">📱</div>
-                                <h6 class="fw-bold mb-1">QRIS</h6>
-                                <small class="text-muted">GoPay · OVO · DANA · ShopeePay · dll</small>
-                                <div class="mt-2">
-                                    <span class="badge bg-success">Otomatis & Instan</span>
-                                </div>
-                            </div>
-                        </div>
+            <div class="pc-label">Total Tagihan</div>
+            <div class="pc-price">${formatRupiah(Number(data.confirmation_detail.nominal_asli))}</div>
+            <p class="pc-note">Belum termasuk biaya layanan</p>
 
-                        <!-- Kartu VA -->
-                        <div class="col-12 col-md-5">
-                            <div class="payment-card" id="card-va" onclick="pilihMetode('va')"
-                                 style="border:2px solid #dee2e6; border-radius:12px; padding:20px; cursor:pointer;
-                                        text-align:center; transition:all .2s; background:#fff;">
-                                <div style="font-size:2rem; margin-bottom:8px;">📱</div>
-                                <h6 class="fw-bold mb-1">Virtual Account</h6>
-                                <small class="text-muted">BCA, Mandiri, BNI, BRI, BSI · dll</small>
-                                <div class="mt-2">
-                                    <span class="badge bg-success text-white">Otomatis & Instan</span>
-                                </div>
-                            </div>
-                        </div>
+            <div class="pc-divider"></div>
+            <div class="pc-info">
+                BCA &middot; Mandiri &middot; BNI &middot; BRI &middot; BSI<br>
+                dan bank lainnya
+            </div>
 
-                        <!-- Kartu Transfer BSI -->
-                        <div class="col-12 col-md-5">
-                            <div class="payment-card" id="card-bsi" onclick="pilihMetode('bsi')"
-                                 style="border:2px solid #dee2e6; border-radius:12px; padding:20px; cursor:pointer;
-                                        text-align:center; transition:all .2s; background:#fff;">
-                                <img src="${BASE_URL}assets/images/bank/BSI_1.png" alt="BSI"
-                                     style="height:36px; margin-bottom:8px; object-fit:contain;">
-                                <h6 class="fw-bold mb-1">Transfer BSI</h6>
-                                <small class="text-muted">Bank Syariah Indonesia<br>Rekening 79 7070 7004</small>
-                                <div class="mt-2">
-                                    <span class="badge bg-secondary text-white">Konfirmasi Manual</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <div class="pc-badge-wrap">
+                <span class="pc-badge pc-badge-instan">&#9889; Otomatis &amp; Instan</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Kartu Transfer BSI -->
+    <div class="col-12 col-md-5">
+        <div class="payment-card" id="card-bsi" onclick="pilihMetode('bsi')">
+            <div class="pc-logo">
+                <img src="${BASE_URL}assets/images/bank/BSI_1.png" alt="BSI">
+            </div>
+            <div class="pc-title">Transfer BSI</div>
+
+            <div class="pc-label">Total Tagihan</div>
+            <div class="pc-price">${formatRupiah(data.confirmation_detail.nominal)}</div>
+            <p class="pc-note">Sudah termasuk 3 digit unik untuk konfirmasi transaksi</p>
+
+            <div class="pc-divider"></div>
+            <div class="pc-info">
+                Bank Syariah Indonesia<br>
+                <span class="pc-rek">79 7070 7004</span>
+            </div>
+
+            <div class="pc-badge-wrap">
+                <span class="pc-badge pc-badge-manual">&#128337; Konfirmasi Manual</span>
+            </div>
+        </div>
+    </div>
+
+</div>
 
                     <div class="d-flex justify-content-center">
                         <button type="button" id="btn-lanjut-bayar" class="btn btn-primary btn-rounded px-5"
@@ -480,7 +493,7 @@
 
         <?php
         if ($this->session->flashdata('proses') == 'lanjut_bayar') {
-            ?>
+        ?>
             lanjutBayar_link();
         <?php
         }
@@ -550,59 +563,58 @@
                         <li><strong>Tanggal Mulai</strong> ${startStr}</li>
                         <li><strong>Tanggal Selesai</strong> ${endStr}</li>
                     </ul>
-                    <hr>
-                    <h4 class="text-center">Total Tagihan:</h4>
-                    <h2 class="text-bariskode text-center">${formatRupiah(data.confirmation_detail.nominal)}</h2>
-                    <p class="text-center text-muted f-12">Total akhir sudah termasuk 3 digit unik untuk konfirmasi transaksi.</p>
-
                     <hr class="my-4">
                     <h5 class="text-center mb-3">Pilih Metode Pembayaran</h5>
 
-                    <div class="row justify-content-center g-3 mb-4">
+                    <div class="payment-row">
 
-                        <!-- Kartu QRIS -->
-                        <div class="col-12 col-md-5 d-none">
-                            <div class="payment-card" id="card-qris" onclick="pilihMetode('qris')"
-                                 style="border:2px solid #dee2e6; border-radius:12px; padding:20px; cursor:pointer;
-                                        text-align:center; transition:all .2s; background:#fff;">
-                                <div style="font-size:2rem; margin-bottom:8px;">📱</div>
-                                <h6 class="fw-bold mb-1">QRIS</h6>
-                                <small class="text-muted">GoPay · OVO · DANA · ShopeePay · dll</small>
-                                <div class="mt-2">
-                                    <span class="badge bg-success">Otomatis & Instan</span>
-                                </div>
-                            </div>
-                        </div>
+    <!-- Kartu VA -->
+    <div class="col-12 col-md-5">
+        <div class="payment-card" id="card-va" onclick="pilihMetode('va')">
+            <div class="pc-logo"><span class="pc-emoji">📱</span></div>
+            <div class="pc-title">Virtual Account</div>
 
-                        <!-- Kartu VA -->
-                        <div class="col-12 col-md-5">
-                            <div class="payment-card" id="card-va" onclick="pilihMetode('va')"
-                                 style="border:2px solid #dee2e6; border-radius:12px; padding:20px; cursor:pointer;
-                                        text-align:center; transition:all .2s; background:#fff;">
-                                <div style="font-size:2rem; margin-bottom:8px;">📱</div>
-                                <h6 class="fw-bold mb-1">Virtual Account</h6>
-                                <small class="text-muted">BCA, Mandiri, BNI, BRI, BSI · dll</small>
-                                <div class="mt-2">
-                                    <span class="badge bg-success text-white">Otomatis & Instan</span>
-                                </div>
-                            </div>
-                        </div>
+            <div class="pc-label">Total Tagihan</div>
+            <div class="pc-price">${formatRupiah(Number(data.confirmation_detail.nominal_asli))}</div>
+            <p class="pc-note">Belum termasuk biaya layanan</p>
 
-                        <!-- Kartu Transfer BSI -->
-                        <div class="col-12 col-md-5">
-                            <div class="payment-card" id="card-bsi" onclick="pilihMetode('bsi')"
-                                 style="border:2px solid #dee2e6; border-radius:12px; padding:20px; cursor:pointer;
-                                        text-align:center; transition:all .2s; background:#fff;">
-                                <img src="${BASE_URL}assets/images/bank/BSI_1.png" alt="BSI"
-                                     style="height:36px; margin-bottom:8px; object-fit:contain;">
-                                <h6 class="fw-bold mb-1">Transfer BSI</h6>
-                                <small class="text-muted">Bank Syariah Indonesia<br>Rekening 79 7070 7004</small>
-                                <div class="mt-2">
-                                    <span class="badge bg-secondary" style="color:#fff">Konfirmasi Manual</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <div class="pc-divider"></div>
+            <div class="pc-info">
+                BCA &middot; Mandiri &middot; BNI &middot; BRI &middot; BSI<br>
+                dan bank lainnya
+            </div>
+
+            <div class="pc-badge-wrap">
+                <span class="pc-badge pc-badge-instan">&#9889; Otomatis &amp; Instan</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Kartu Transfer BSI -->
+    <div class="col-12 col-md-5">
+        <div class="payment-card" id="card-bsi" onclick="pilihMetode('bsi')">
+            <div class="pc-logo">
+                <img src="${BASE_URL}assets/images/bank/BSI_1.png" alt="BSI">
+            </div>
+            <div class="pc-title">Transfer BSI</div>
+
+            <div class="pc-label">Total Tagihan</div>
+            <div class="pc-price">${formatRupiah(data.confirmation_detail.nominal)}</div>
+            <p class="pc-note">Sudah termasuk 3 digit unik untuk konfirmasi transaksi</p>
+
+            <div class="pc-divider"></div>
+            <div class="pc-info">
+                Bank Syariah Indonesia<br>
+                <span class="pc-rek">79 7070 7004</span>
+            </div>
+
+            <div class="pc-badge-wrap">
+                <span class="pc-badge pc-badge-manual">&#128337; Konfirmasi Manual</span>
+            </div>
+        </div>
+    </div>
+
+</div>
 
                     <div class="d-flex justify-content-center">
                         <button type="button" id="btn-lanjut-bayar" class="btn btn-primary btn-rounded px-5"
@@ -811,13 +823,13 @@
         const card = document.getElementById('card-' + metode);
 
         let warna;
-        if(metode == 'qris'){
+        if (metode == 'qris') {
             warna = '#00C48C';
             card.style.background = '#f0fdf8';
-        }else if(metode == 'va'){
+        } else if (metode == 'va') {
             warna = '#006fc4ff';
             card.style.background = '#f0fdf8';
-        }else{
+        } else {
             warna = '#1a7f37';
             card.style.background = '#f6fff0';
 
@@ -836,7 +848,7 @@
 
         if (metodeBayarDipilih === 'qris') {
             prosesQRIS(id_pembayaran);
-        }else if (metodeBayarDipilih === 'va') {
+        } else if (metodeBayarDipilih === 'va') {
             prosesVA(id_pembayaran, nama_paket);
         } else {
             prosesBSI(id_pembayaran, nama_paket);
@@ -848,20 +860,71 @@
     // ============================================================
 
     /** Daftar bank VA — kode mengikuti paymentMethod Duitku */
-    const DAFTAR_BANK_VA = [
-        { kode: 'BC', nama: 'BCA Virtual Account',          logo: 'BCA.png' },
-        { kode: 'M2', nama: 'Mandiri Virtual Account',      logo: 'MANDIRI.png' },
-        { kode: 'BR', nama: 'BRIVA',                        logo: 'BRI.png' },
-        { kode: 'I1', nama: 'BNI Virtual Account',          logo: 'BNI.png' },
-        { kode: 'BV', nama: 'BSI Virtual Account',          logo: 'BSI_1.png' },
-        { kode: 'BT', nama: 'Permata Bank Virtual Account', logo: 'PERMATA.png' },
-        { kode: 'B1', nama: 'CIMB Niaga Virtual Account',   logo: 'CIMB.png' },
-        { kode: 'DM', nama: 'Danamon Virtual Account',      logo: 'DANAMON.png' },
-        { kode: 'VA', nama: 'Maybank Virtual Account',      logo: 'MAYBANK.png' },
-        { kode: 'NC', nama: 'Bank Neo Commerce/BNC',        logo: 'BNC.png' },
-        { kode: 'AG', nama: 'Bank Artha Graha',             logo: 'ARTHAGRAHA.png' },
-        { kode: 'S1', nama: 'Bank Sahabat Sampoerna',       logo: 'SAMPOERNA.png' },
-        { kode: 'A1', nama: 'ATM Bersama',                  logo: 'ATMBERSAMA.png' },
+    const DAFTAR_BANK_VA = [{
+            kode: 'BC',
+            nama: 'BCA Virtual Account',
+            logo: 'BCA.png'
+        },
+        {
+            kode: 'M2',
+            nama: 'Mandiri Virtual Account',
+            logo: 'MANDIRI.png'
+        },
+        {
+            kode: 'BR',
+            nama: 'BRIVA',
+            logo: 'BRI.png'
+        },
+        {
+            kode: 'I1',
+            nama: 'BNI Virtual Account',
+            logo: 'BNI.png'
+        },
+        {
+            kode: 'BV',
+            nama: 'BSI Virtual Account',
+            logo: 'BSI_1.png'
+        },
+        {
+            kode: 'BT',
+            nama: 'Permata Bank Virtual Account',
+            logo: 'PERMATA.png'
+        },
+        {
+            kode: 'B1',
+            nama: 'CIMB Niaga Virtual Account',
+            logo: 'CIMB.png'
+        },
+        {
+            kode: 'DM',
+            nama: 'Danamon Virtual Account',
+            logo: 'DANAMON.png'
+        },
+        {
+            kode: 'VA',
+            nama: 'Maybank Virtual Account',
+            logo: 'MAYBANK.png'
+        },
+        {
+            kode: 'NC',
+            nama: 'Bank Neo Commerce/BNC',
+            logo: 'BNC.png'
+        },
+        {
+            kode: 'AG',
+            nama: 'Bank Artha Graha',
+            logo: 'ARTHAGRAHA.png'
+        },
+        {
+            kode: 'S1',
+            nama: 'Bank Sahabat Sampoerna',
+            logo: 'SAMPOERNA.png'
+        },
+        {
+            kode: 'A1',
+            nama: 'ATM Bersama',
+            logo: 'ATMBERSAMA.png'
+        },
     ];
 
     /** State bank yang dipilih */
@@ -870,6 +933,7 @@
     /** Handle klik kartu bank */
     function pilihBankVA(kode) {
         bankVADipilih = kode;
+        console.log('pilihBankVA : ' + bankVADipilih);
 
         document.querySelectorAll('.bank-card').forEach(el => {
             el.style.borderColor = '#dee2e6';
@@ -895,7 +959,7 @@
         bankVADipilih = null;
 
         const kartuBank = DAFTAR_BANK_VA.map(b => `
-            <div class="col-6 col-md-4 col-lg-3">
+            <div class="col-6 col-md-4 col-lg-3 mb-2">
                 <div class="bank-card" id="bank-${b.kode}" onclick="pilihBankVA('${b.kode}')"
                      style="border:2px solid #dee2e6; border-radius:12px; padding:14px 10px; cursor:pointer;
                             text-align:center; transition:all .2s; background:#fff; height:100%;
@@ -968,8 +1032,12 @@
 
         fetch(`${BASE_URL}Subscription/buat_va_untuk_pembayaran/${id_pembayaran}`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ bank_code: bankVADipilih })
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    bank_code: bankVADipilih
+                })
             })
             .then(r => r.json())
             .then(res => {
@@ -1729,52 +1797,52 @@
 
     function lanjutBayar_link2() {
 
-            console.log('Masuk Lanjut Bayar');
+        console.log('Masuk Lanjut Bayar');
 
-            const url = `${BASE_URL}Subscription/proses_lanjut_bayar`;
+        const url = `${BASE_URL}Subscription/proses_lanjut_bayar`;
 
-            // Fetch call using the dynamic URL
-            fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: '{}' // ← ganti dari JSON.stringify(data)
-                })
-                .then(response => {
-                    swal.close();
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.status == "success") {
+        // Fetch call using the dynamic URL
+        fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: '{}' // ← ganti dari JSON.stringify(data)
+            })
+            .then(response => {
+                swal.close();
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.status == "success") {
 
-                        
 
-                            const allPricingCols = document.querySelectorAll('.col-lg-3.nopadding');
 
-                            allPricingCols.forEach(col => {
-                                col.querySelector('.pricing-box').classList.add('hidden');
+                    const allPricingCols = document.querySelectorAll('.col-lg-3.nopadding');
 
-                                setTimeout(() => {
-                                    col.classList.add('d-none');
-                                }, 500);
-                            });
+                    allPricingCols.forEach(col => {
+                        col.querySelector('.pricing-box').classList.add('hidden');
 
-                            setTimeout(() => {
+                        setTimeout(() => {
+                            col.classList.add('d-none');
+                        }, 500);
+                    });
 
-                                const id_pembayaran = data.id_pembayaran;
-                                const startDate = new Date(data.confirmation_detail.tanggal_mulai.split(' ')[0]);
-                                const endDate = new Date(data.confirmation_detail.tanggal_selesai.split(' ')[0]);
-                                const startStr = formatDate(startDate);
-                                const endStr = formatDate(endDate);
+                    setTimeout(() => {
 
-                                // ── Jika server sudah kembalikan QR (pending QRIS lama) ──────
+                        const id_pembayaran = data.id_pembayaran;
+                        const startDate = new Date(data.confirmation_detail.tanggal_mulai.split(' ')[0]);
+                        const endDate = new Date(data.confirmation_detail.tanggal_selesai.split(' ')[0]);
+                        const startStr = formatDate(startDate);
+                        const endStr = formatDate(endDate);
 
-                                // ── Tampil pilihan metode pembayaran ─────────────────────────
-                                const pilihanHTML = `
+                        // ── Jika server sudah kembalikan QR (pending QRIS lama) ──────
+
+                        // ── Tampil pilihan metode pembayaran ─────────────────────────
+                        const pilihanHTML = `
                 <div class="detail-box mt-5">
                     <h3 class="f-20">Konfirmasi Pembayaran</h3>
                     <p>Terima kasih telah memilih Plan <strong>${data.confirmation_detail.paket}</strong>. Berikut rincian pesanan Anda:</p>
@@ -1784,59 +1852,59 @@
                         <li><strong>Tanggal Mulai</strong> ${startStr}</li>
                         <li><strong>Tanggal Selesai</strong> ${endStr}</li>
                     </ul>
-                    <hr>
-                    <h4 class="text-center">Total Tagihan:</h4>
-                    <h2 class="text-bariskode text-center">${formatRupiah(data.confirmation_detail.nominal)}</h2>
-                    <p class="text-center text-muted f-12">Total akhir sudah termasuk 3 digit unik untuk konfirmasi transaksi.</p>
-
+                   
                     <hr class="my-4">
                     <h5 class="text-center mb-3">Pilih Metode Pembayaran</h5>
 
-                    <div class="row justify-content-center g-3 mb-4">
+                    <div class="payment-row">
 
-                        <!-- Kartu QRIS -->
-                        <div class="col-12 col-md-5 d-none">
-                            <div class="payment-card" id="card-qris" onclick="pilihMetode('qris')"
-                                 style="border:2px solid #dee2e6; border-radius:12px; padding:20px; cursor:pointer;
-                                        text-align:center; transition:all .2s; background:#fff;">
-                                <div style="font-size:2rem; margin-bottom:8px;">📱</div>
-                                <h6 class="fw-bold mb-1">QRIS</h6>
-                                <small class="text-muted">GoPay · OVO · DANA · ShopeePay · dll</small>
-                                <div class="mt-2">
-                                    <span class="badge bg-success">Otomatis & Instan</span>
-                                </div>
-                            </div>
-                        </div>
+    <!-- Kartu VA -->
+    <div class="col-12 col-md-5">
+        <div class="payment-card" id="card-va" onclick="pilihMetode('va')">
+            <div class="pc-logo"><span class="pc-emoji">📱</span></div>
+            <div class="pc-title">Virtual Account</div>
 
-                        <!-- Kartu VA -->
-                        <div class="col-12 col-md-5">
-                            <div class="payment-card" id="card-va" onclick="pilihMetode('va')"
-                                 style="border:2px solid #dee2e6; border-radius:12px; padding:20px; cursor:pointer;
-                                        text-align:center; transition:all .2s; background:#fff;">
-                                <div style="font-size:2rem; margin-bottom:8px;">📱</div>
-                                <h6 class="fw-bold mb-1">Virtual Account</h6>
-                                <small class="text-muted">BCA, Mandiri, BNI, BRI, BSI · dll</small>
-                                <div class="mt-2">
-                                    <span class="badge bg-success text-white">Otomatis & Instan</span>
-                                </div>
-                            </div>
-                        </div>
+            <div class="pc-label">Total Tagihan</div>
+            <div class="pc-price">${formatRupiah(Number(data.confirmation_detail.nominal_asli))}</div>
+            <p class="pc-note">Belum termasuk biaya layanan</p>
 
-                        <!-- Kartu Transfer BSI -->
-                        <div class="col-12 col-md-5">
-                            <div class="payment-card" id="card-bsi" onclick="pilihMetode('bsi')"
-                                 style="border:2px solid #dee2e6; border-radius:12px; padding:20px; cursor:pointer;
-                                        text-align:center; transition:all .2s; background:#fff;">
-                                <img src="${BASE_URL}assets/images/bank/BSI_1.png" alt="BSI"
-                                     style="height:36px; margin-bottom:8px; object-fit:contain;">
-                                <h6 class="fw-bold mb-1">Transfer BSI</h6>
-                                <small class="text-muted">Bank Syariah Indonesia<br>Rekening 79 7070 7004</small>
-                                <div class="mt-2">
-                                    <span class="badge bg-secondary" style="color:#fff">Konfirmasi Manual</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <div class="pc-divider"></div>
+            <div class="pc-info">
+                BCA &middot; Mandiri &middot; BNI &middot; BRI &middot; BSI<br>
+                dan bank lainnya
+            </div>
+
+            <div class="pc-badge-wrap">
+                <span class="pc-badge pc-badge-instan">&#9889; Otomatis &amp; Instan</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Kartu Transfer BSI -->
+    <div class="col-12 col-md-5">
+        <div class="payment-card" id="card-bsi" onclick="pilihMetode('bsi')">
+            <div class="pc-logo">
+                <img src="${BASE_URL}assets/images/bank/BSI_1.png" alt="BSI">
+            </div>
+            <div class="pc-title">Transfer BSI</div>
+
+            <div class="pc-label">Total Tagihan</div>
+            <div class="pc-price">${formatRupiah(data.confirmation_detail.nominal)}</div>
+            <p class="pc-note">Sudah termasuk 3 digit unik untuk konfirmasi transaksi</p>
+
+            <div class="pc-divider"></div>
+            <div class="pc-info">
+                Bank Syariah Indonesia<br>
+                <span class="pc-rek">79 7070 7004</span>
+            </div>
+
+            <div class="pc-badge-wrap">
+                <span class="pc-badge pc-badge-manual">&#128337; Konfirmasi Manual</span>
+            </div>
+        </div>
+    </div>
+
+</div>
 
                     <div class="d-flex justify-content-center">
                         <button type="button" id="btn-lanjut-bayar" class="btn btn-primary btn-rounded px-5"
@@ -1847,48 +1915,48 @@
                 </div>
                 `;
 
-                                detailsContainer.innerHTML = pilihanHTML;
-                                detailsContainer.classList.remove('d-none');
-                                detailsContainer.classList.add('visible');
+                        detailsContainer.innerHTML = pilihanHTML;
+                        detailsContainer.classList.remove('d-none');
+                        detailsContainer.classList.add('visible');
 
-                                console.log('DetailContainer Muncul');
+                        console.log('DetailContainer Muncul');
 
-                            }, 500);
-                        
+                    }, 500);
 
-                    } else if (data.status == "proses") {
-                        swal.fire({
-                            customClass: 'slow-animation',
-                            icon: 'info',
-                            showConfirmButton: false,
-                            title: 'Proses!',
-                            text: data.message,
-                            timer: 3000
-                        }).then(() => {
-                            detailsContainer.classList.remove('visible');
-                            setTimeout(() => {
-                                detailsContainer.innerHTML = fourthDetailHTML;
-                                detailsContainer.classList.add('visible');
-                            }, 500);
-                        });
-                    } else {
-                        swal.fire({
-                            customClass: 'slow-animation',
-                            icon: 'error',
-                            showConfirmButton: false,
-                            title: 'Gagal!',
-                            text: data.message,
-                            timer: 1500
-                        });
-                    }
-                })
-                .catch((error) => {
-                    swal.close();
 
-                    console.error('Error:', error);
-                    // Handle errors, e.g., show an error message to the user
-                    alert('Terjadi kesalahan saat mengonfirmasi pembayaran. Silakan coba lagi.');
-                });
+                } else if (data.status == "proses") {
+                    swal.fire({
+                        customClass: 'slow-animation',
+                        icon: 'info',
+                        showConfirmButton: false,
+                        title: 'Proses!',
+                        text: data.message,
+                        timer: 3000
+                    }).then(() => {
+                        detailsContainer.classList.remove('visible');
+                        setTimeout(() => {
+                            detailsContainer.innerHTML = fourthDetailHTML;
+                            detailsContainer.classList.add('visible');
+                        }, 500);
+                    });
+                } else {
+                    swal.fire({
+                        customClass: 'slow-animation',
+                        icon: 'error',
+                        showConfirmButton: false,
+                        title: 'Gagal!',
+                        text: data.message,
+                        timer: 1500
+                    });
+                }
+            })
+            .catch((error) => {
+                swal.close();
 
-        }
+                console.error('Error:', error);
+                // Handle errors, e.g., show an error message to the user
+                alert('Terjadi kesalahan saat mengonfirmasi pembayaran. Silakan coba lagi.');
+            });
+
+    }
 </script>

@@ -288,10 +288,22 @@ class Subscription extends CI_Controller
             return;
         }
 
+
+        $this->db->select('is_premium, expired_day, start_day');
+        $this->db->where('Id', $data['id_perusahaan']);
+        $perusahaan_detail = $this->db->get('utility')->row(); // Using 'utility' table as per your query
+
         $now = new DateTime();
-        $start_date_with_time = $now->format('Y-m-d H:i:s');
         $months = $data['months'];
-        $end_date_obj = clone $now;
+        if ($this->session->userdata('is_premium')) {
+            $start_date_with_time = $perusahaan_detail->expired_day;
+
+            $end_date_obj = new DateTime($perusahaan_detail->expired_day);
+        } else {
+            $start_date_with_time = $now->format('Y-m-d H:i:s');
+
+            $end_date_obj = clone $now;
+        }
         $end_date_obj->modify("+{$months} months");
         $end_date_with_time = $end_date_obj->format('Y-m-d');
 
@@ -306,6 +318,7 @@ class Subscription extends CI_Controller
             'tanggal_mulai' => $start_date_with_time,
             'tanggal_selesai' => $end_date_with_time,
             'nominal' => $data['confirmationPrice'],
+            'nominal_asli' => $data['OriginPrice'],
             'status_bayar' => 0,
             'expired_status_bayar' => $expired_status_bayar,
             // Kolom baru: simpan metode bayar (qris / bsi)
@@ -873,6 +886,7 @@ class Subscription extends CI_Controller
         $result = $this->duitku_lib->create_qris(
             $order_id,
             $nominal,
+            $bank_code,
             [
                 'name' => $detail_perusahaan->nama_perusahaan,
                 'email' => !empty($detail_perusahaan->email) ? $detail_perusahaan->email : 'noreply@bariskode.com',
@@ -880,7 +894,6 @@ class Subscription extends CI_Controller
             ],
             'Pembayaran ' . $plan_name,
             60,
-            $bank_code
         );
 
         // echo json_encode(['debug' => $result]);
@@ -910,6 +923,9 @@ class Subscription extends CI_Controller
         $input = json_decode($this->input->raw_input_stream, true);
         $bank_code = isset($input['bank_code']) ? trim($input['bank_code']) : null;
 
+        // echo ($bank_code);  
+        // exit();
+
         if (empty($id_pembayaran)) {
             echo json_encode(['status' => 'error', 'message' => 'ID tidak valid.']);
             return;
@@ -925,7 +941,7 @@ class Subscription extends CI_Controller
 
         $qris_result = $this->_buat_qris(
             $id_pembayaran,
-            $trx->nominal,
+            $trx->nominal_asli,
             // 1, // Override nominal untuk testing
             $detail_perusahaan,
             $trx->paket,

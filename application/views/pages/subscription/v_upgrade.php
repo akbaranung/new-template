@@ -255,6 +255,165 @@
         position: absolute;
         right: 0;
     }
+
+    .text_nominal {
+        border-style: solid;
+        border-radius: 0.25rem;
+    }
+
+    /* ===== Payment Method Cards ===== */
+    .payment-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: stretch;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+
+    .payment-card {
+        border: 2px solid #e9ecef;
+        border-radius: 20px;
+        padding: 28px 22px;
+        background: #fff;
+        box-shadow: 0px 5px 30px -10px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        text-align: center;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow: hidden;
+        transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+    }
+
+    .payment-card:hover {
+        transform: translateY(-6px);
+        border-color: #3f51b5;
+        box-shadow: 0 15px 30px rgba(63, 81, 181, .18);
+    }
+
+    .payment-card.active {
+        border-color: #3f51b5;
+        background: #f7f8ff;
+        box-shadow: 0 15px 30px rgba(63, 81, 181, .2);
+    }
+
+    .payment-card.active::before {
+        content: "\2713";
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        width: 26px;
+        height: 26px;
+        line-height: 26px;
+        border-radius: 50%;
+        background: #3f51b5;
+        color: #fff;
+        font-size: 14px;
+    }
+
+    /* Logo disamakan tingginya biar sejajar */
+    .pc-logo {
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 14px;
+    }
+
+    .pc-logo img {
+        max-height: 100%;
+        max-width: 150px;
+        object-fit: contain;
+    }
+
+    .pc-logo .pc-emoji {
+        font-size: 2.2rem;
+        line-height: 1;
+    }
+
+    .pc-title {
+        font-weight: 700;
+        font-size: 1.05rem;
+        color: #212529;
+        margin-bottom: 16px;
+    }
+
+    .pc-label {
+        font-size: .7rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #adb5bd;
+        margin-bottom: 6px;
+    }
+
+    .pc-price {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #3f51b5;
+        line-height: 1.2;
+        margin-bottom: 8px;
+    }
+
+    .pc-note {
+        font-size: .72rem;
+        color: #adb5bd;
+        line-height: 1.5;
+        margin-bottom: 0;
+        min-height: 34px;
+    }
+
+    .pc-divider {
+        border-top: 1px dashed #e9ecef;
+        margin: 18px 0 14px;
+    }
+
+    .pc-info {
+        font-size: .8rem;
+        color: #6c757d;
+        line-height: 1.6;
+    }
+
+    .pc-rek {
+        font-weight: 600;
+        color: #495057;
+        letter-spacing: 1px;
+    }
+
+    /* Badge didorong ke bawah biar sejajar di kedua kartu */
+    .pc-badge-wrap {
+        margin-top: auto;
+        padding-top: 16px;
+    }
+
+    .pc-badge {
+        display: inline-block;
+        padding: 6px 16px;
+        border-radius: 50px;
+        font-size: .72rem;
+        font-weight: 600;
+    }
+
+    .pc-badge-instan {
+        background: #d7f5e3;
+        color: #0f7a48;
+    }
+
+    .pc-badge-manual {
+        background: #fff3cd;
+        color: #8a6100;
+    }
+
+    @media (max-width: 767px) {
+        .payment-card {
+            padding: 24px 18px;
+        }
+
+        .pc-price {
+            font-size: 1.4rem;
+        }
+    }
 </style>
 
 <section class="section" id="pricing">

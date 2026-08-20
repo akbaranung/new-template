@@ -39,6 +39,7 @@ class M_check_subscription extends CI_Model
                 if ($utility_data->expired_day !== NULL && $expired_timestamp < $current_timestamp) {
                     // *** Subscription has EXPIRED ***
                     $data = array(
+                        'nama_paket' => NULL,
                         'kuota_invoice' => 1000,
                         // 'kuota_memo' => 100,
                         'kuota_memo' => 0,
