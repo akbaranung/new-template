@@ -56,7 +56,7 @@
       <div class="mb-2 align-items-center">
         <div class="row mt-1 align-items-center">
           <div class="col-12 text-left pl-4">
-            <h5 class="mb-1 text-primary">Kuota Penggunaan</h5>
+            <h5 class="mb-1 text-primary">Kuota Penggunaan <?= $perusahaan->nama_paket ? "Paket : " . $perusahaan->nama_paket : "" ?></h5>
           </div>
         </div>
         <div class="row justify-content-center">
